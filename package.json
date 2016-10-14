@@ -1,7 +1,7 @@
 {
-  "name": "este",
+  "name": "Hibbo",
   "private": true,
-  "//": "Check all github.com/este/este#dev-tasks",
+  "//": "https://github.com/neosis91/project-hibbo",
   "scripts": {
     "ava": "ava",
     "ava:watch": "ava --watch",

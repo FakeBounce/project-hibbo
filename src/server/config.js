@@ -25,14 +25,14 @@ nconf.defaults({
   },
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction: process.env.NODE_ENV === 'production',
-  locales: ['cs', 'de', 'en', 'es', 'fr', 'pt', 'ro'],
+  locales: ['en', 'fr'],
   port: process.env.PORT || 3000,
   // Enable hot reload on remote device. Note it prevents offline testing,
   // because it depends on ip.address(), which doesn't work with disabled wifi.
   // How do we access a website running on localhost from mobile browser?
   // stackoverflow.com/questions/3132105
   remoteHotReload: false,
-  sentryUrl: 'https://f297cec9c9654088b8ccf1ea9136c458@app.getsentry.com/77415',
+  sentryUrl: 'https://c994fabb4439485f9e3d49de18a2d459@sentry.io/106204',
 });
 
 export default nconf.get();
