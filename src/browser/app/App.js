@@ -23,6 +23,7 @@ import Offline from '../offline/OfflinePage';
 import SignIn from '../auth/SignInPage';
 import Todos from '../todos/TodosPage';
 import Map from '../map/MapPage';
+import Dungeons from '../dungeons/DungeonsPage';
 
 // v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
 const bootstrap4Metas: any = [
@@ -66,6 +67,7 @@ let App = ({ currentLocale, currentTheme }) => (
       <Match pattern="/signin" component={SignIn} />
       <Match pattern="/todos" component={Todos} />
       <Match pattern="/map" component={Map} />
+      <Match pattern="/dungeons" component={Dungeons} />
       <Match authorized pattern="/me" component={Me} />
       <Miss component={NotFound} />
       <Footer />

@@ -50,6 +50,10 @@ const LinkMessages = defineMessages({
     defaultMessage: 'Default test',
     id: 'app.links.map',
   },
+  dungeon: {
+    defaultMessage: 'New dungeon',
+    id: 'app.links.map',
+  },
 });
 
 export default LinkMessages;

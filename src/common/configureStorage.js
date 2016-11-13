@@ -11,6 +11,7 @@ const stateToSave = [
   ['intl', 'currentLocale'],
   ['themes', 'currentTheme'],
   ['todos'],['maptiles'],
+  ['dungeons'],
   ['users', 'viewer'],
 ];
 
