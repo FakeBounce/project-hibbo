@@ -10,14 +10,43 @@ import { firebase } from '../../common/lib/redux-firebase';
 
 const State = Record({
     map: Map(),
+    loaded: false,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
     switch (action.type) {
 
+        case actions.FIREBASE_LOAD_DUNGEON: {
+            const dungeon = new Dungeon(action.payload);
+            return state.update('map', map => map.set(dungeon.id, dungeon));
+        }
+
+        case actions.LIST_DUNGEONS: {
+            const dungeons = action.payload.reduce((dungeons, json) =>
+                dungeons.set(json.id, new Dungeon(json)),Map());
+            return state.update('map', map => map.merge(dungeons));
+        }
+
         case actions.LAUNCH_DUNGEON: {
             const dungeon = new Dungeon(action.payload);
             return state.update('map', map => map.set(dungeon.id, dungeon));
+        }
+
+        case actions.ON_ACTIVE_DUNGEON: {
+            const dungeons = action.payload.reduce((dungeons, json) =>
+                dungeons.set(json.id, new Dungeon(json)),Map());
+
+            return state.update('map', map => map.merge(dungeons));
+        }
+
+        case actions.LOAD_DUNGEONS: {
+            const dungeons = action.payload.reduce((dungeons, json) =>
+                dungeons.set(json.id, new Dungeon(json))
+                ,Map());
+
+            return state
+                .update('map', map => map.merge(dungeons))
+                .set('loaded',true);
         }
 
         default:

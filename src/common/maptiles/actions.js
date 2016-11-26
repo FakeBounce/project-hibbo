@@ -21,8 +21,40 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
 // CREATE + SAVE VERSION
   export const maptileCompleted = () => ({ getUid, now, firebase }) => {
     var id = getUid();
+    var dungeon = "dungeon1";
     firebase.update({
       [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
+
+      // ADD FAKE DUNGEON
+      //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
+
+      //ADD FAKE MAP
+     /* [`maps/${id}`]:
+    { id: id,
+      maptiles:
+      {
+        0:
+          {
+            0:`http://fakebounce.fr/asset/img/forest.png`,
+            1:`http://fakebounce.fr/asset/img/forest.png`,
+            2:`http://fakebounce.fr/asset/img/forest.png`
+          },
+        1:
+          {
+            0:`http://fakebounce.fr/asset/img/grass.png`,
+            1:`http://fakebounce.fr/asset/img/grass.png`,
+            2:`http://fakebounce.fr/asset/img/grass.png`
+          },
+        2:
+        {
+          0:`http://fakebounce.fr/asset/img/forest.png`,
+          1:`http://fakebounce.fr/asset/img/forest.png`,
+          2:`http://fakebounce.fr/asset/img/forest.png`
+        }
+      }
+    },*/
+
+
     });
     return {
       type: MAPTILE_COMPLETED,

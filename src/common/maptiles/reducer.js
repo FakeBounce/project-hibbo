@@ -20,6 +20,7 @@ import { firebase } from '../../common/lib/redux-firebase';
 const State = Record({
   map: Map(),
 }, 'maptiles');
+
 /* no error but no db
 const saveMaptile = maptile => ({ firebase }) => {
   const promise = firebaseDatabase.ref('maptiles/'+maptile.id).set({

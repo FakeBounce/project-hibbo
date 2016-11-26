@@ -1,3 +1,40 @@
 /**
  * Created by Ben on 13/11/2016.
  */
+import React from 'react';
+import Maptile from './Maptile';
+import { Block, Flex } from '../app/components';
+import { connect } from 'react-redux';
+
+const Maptiles = ({ maptiles }) => {
+
+    if (!maptiles.size) {
+        return (
+            <Block>
+                No maptiles yet
+            </Block>
+        );
+    }
+
+    const list = maptiles
+        .toList()
+
+    return (
+        <Block>
+            {list.map(maptile =>
+                <Flex key={maptile.id}>
+                    <Maptile
+                        maptile={maptile}
+                    />
+                </Flex>
+            )}
+        </Block>
+    );
+};
+
+Maptiles.propTypes = {
+    maptiles: React.PropTypes.object.isRequired
+};
+export default connect(state => ({
+    maptiles: state.maptiles.map,
+}), { })(Maptiles);
