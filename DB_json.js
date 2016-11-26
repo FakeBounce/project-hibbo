@@ -27,20 +27,16 @@ var bdd = {
         "name":"xxxlolxxx",
         "level":1,
         "class":"warrior",
-        "...":"...",
-        /*
-         Remplacer "... : ..." par :
-         Vie
-         Énergie
-         Armure
-         Dégâts
-         Portée
-         Déplacement
-         Réduction de dégâts pur
-         Réduction de dégâts en %
-         Renvoi de dégâts
-         Points d’action par tour (exemple : attaquer coûte 10 actions)
-         */
+        "life" : 15000,
+        "energy" : 1000,
+        "armor" : 0,
+        "damage" : 100,
+        "range" : 1,
+        "movement" : 2,
+        "damage_reduction_flat" : 50,
+        "damage_reduction_percent" : 0,
+        "damage_return" : 0,
+        "action" : 10, // (exemple : attaquer coûte 10 actions)
         "experience":850,
             "equipped_stuff":{
             "id_stuff1":true,
@@ -63,29 +59,26 @@ var bdd = {
         "class1" : {
             "name":"warrior",
             "type" : "pj",
-            "...":"...",
-            /*
-             Nom des sprites (??)
-             Vie
-             Vie par niveau (float)
-             Énergie
-             Énergie par niveau (float)
-             Armure
-             Dégâts
-             Dégâts par niveau (float)
-             Portée
-             Portée par niveau (float)
-             Déplacement
-             Déplacement par niveau (float)
-             Réduction de dégâts pur
-             Réduction de dégâts pur par niveau (float)
-             Réduction de dégâts en %
-             Réduction de dégâts en % par niveau (float)
-             Renvoi de dégâts
-             Renvoi de dégâts par niveau (float)
-             Points d’action par tour (exemple : attaquer coûte 10 actions)
-             Points d’action par tour par niveau (float)
-             */
+            "sprites_name" : "warrior",
+            "life" : 15000,
+            "life_lvl" : 1500,
+            "energy" : 1000,
+            "energy_lvl" : 100,
+            "armor" : 0,
+            "damage" : 100,
+            "damage_lvl" : 10,
+            "range" : 1,
+            "range_lvl" : 0.02,
+            "movement" : 2,
+            "movement_lvl" : 0.05,
+            "damage_reduction_flat" : 50,
+            "damage_reduction_flat_lvl" : 5,
+            "damage_reduction_percent" : 0,
+            "damage_reduction_percent_lvl" : 0,
+            "damage_return" : 0,
+            "damage_return_lvl" : 0,
+            "action" : 10, // (exemple : attaquer coûte 10 actions)
+            "action_lvl" : 0.05,
             "possible_stuff":{
                 "id_stuff1":true,
                 "id_stuff3":true
@@ -114,51 +107,51 @@ var bdd = {
     },
     "spells": {
         "spell1" : {
-            "name":"lightning struck",
-            "...":"...",
-            /*
-             Remplacer "... : ..." par :
-             Animation (gif)
-             Dégâts instantanés
-             Dégâts sur le temps
-             Augmentation de dégâts instantanés
-             Réduction de dégâts instantanés
-             Type de dégâts
-             Réduction de dégâts pure (comme une armure, temporaire)
-             Augmentation de dégâts pure (temporaire)
-             Réduction de dégâts %(comme une armure, temporaire)
-             Augmentation de dégâts %(temporaire)
-             Renvoi de dégâts
-             Augmentation de vie maximum
-             Réduction de vie maximum
-             Soin instantané
-             Soin sur le temps
-             Déplacement instantané
-             Augmentation des déplacements
-             Réduction des déplacements
-             Regain d’énergie
-             Regain d’énergie sur le temps
-             Portée minimale
-             Portée linéaire
-             Portée diagonale
-             Portée linéaire de zone
-             Portée diagonale de zone
-             Cône (boolean)
-             Zone sur cible (boolean)
-             Effet de la zone devant (boolean)
-             Effet de la zone derrière(boolean)
-             Effet de la zone à gauche(boolean)
-             Effet de la zone à droite (boolean)
-             Casse les objets cassables (boolean)
-             Temps d’incantation
-             Durée (en tours)
-             Coût en énergie
-             Coût en vie
-             Coût en action
-             Nombre d’utilisations
-             Temps de repos avant réutilisation
-             Description
-             */
+            "name":"lightning strike",
+            "animation" : "spell1.gif",
+            "damage_instant" : 500,
+            "damage_time" : 0,
+            "damage_instant_buff" : 0,
+            "damage_instant_debuff" : 0,
+            "damage_type" : "lightning",
+            "damage_debuff_flat" : 0,
+            "damage_buff_flat" : 0,
+            "damage_debuff_percent" : 0,
+            "damage_buff_percent" : 0,
+            "damage_return" : 0,
+            "life_buff" : 0,
+            "life_debuff" : 0,
+            "heal_instant" : 0,
+            "heal_time" : 0,
+            "heal_percent_instant" : 0,
+            "heal_percent_time" : 0,
+            "movement_instant" : 0,
+            "movement_buff" : 0,
+            "movement_debuff" : 1,
+            "energy_heal" : 0,
+            "energy_time" : 0,
+            "energy_percent_heal" : 0,
+            "energy_percent_time" : 0,
+            "range_minimum" : 0,
+            "range_linear" : 4,
+            "range_diagonal" : 3,
+            "aoe_linear" : 0,
+            "aoe_diagonal" : 0,
+            "range_cone" : false,
+            "range_on_target" : false,
+            "aoe_front" : false,
+            "aoe_back" : false,
+            "aoe_right" : false,
+            "aoe_left" : false,
+            "can_break" : false,
+            "cast_time" : 0,
+            "duration" : 0,
+            "energy_cost" : 500,
+            "life_cost" : 0,
+            "action_cost" : 5,
+            "uses" : -1,
+            "rest" : 0,
+            "description" : "A lightning come from your hands and strike your ennemy",
         },
         "spell2":"...",
         "spell3":"..."
@@ -172,29 +165,23 @@ var bdd = {
     },
     "stats_stuffs": {
         "stats_stuffs1" : {
-            "name":"deadly death blade",
-            "...":"...",
-            /*
-             Remplacer "... : ..." par :
-             Coût
-             Image
-             Type (Casque, arme…)
-             Panoplie
-             Niveau requis
-             Vie supplémentaire
-             Énergie supplémentaire
-             Armure supplémentaire
-             Réduction de dégâts pure
-             Réduction de dégâts %
-             Renvoi de dégâts supplémentaire
-             Dégâts
-             Dégâts supplémentaire purs
-             Dégâts supplémentaires %
-             Dégâts de compétences purs supplémentaires
-             Dégâts de compétences % supplémentaires
-             Nombre d’actions requises pour attaque de base (Attaquer : 5 actions)
-
-             */
+            "name" : "deadly death blade",
+            "money_cost" : 1500000,
+            "image" : "deadly_death_blade.png",
+            "type" : "one handed weapon",
+            // "set" : "deadly death knight of death",
+            "lvl_required" : 45,
+            "life_buff" : 5000,
+            "energy_buff" : 500,
+            "armor_buff" : 0,
+            "damage_reduction_flat" : 0,
+            "damage_reduction_percent" : 0,
+            "damage" : 5750,
+            "damage_buff_flat" : 0,
+            "damage_buff_percent" : 15,
+            "skill_damage_buff_flat" : 0,
+            "skill_damage_buff_percent" : 0,
+            "action" : 10, //(Attaquer : 5 actions)
         },
         "stats_stuffs2":"...",
         "stats_stuffs3":"..."
@@ -202,39 +189,38 @@ var bdd = {
     "items": {
         "item1" : {
             "name":"life potion v5",
-            "...":"...",
-            /*
-             Remplacer "... : ..." par :
-             Image
-             Dégâts instantanés
-             Dégâts sur le temps
-             Augmentation de dégâts instantanés
-             Réduction de dégâts instantanés
-             Type de dégâts
-             Réduction de dégâts pure (comme une armure, temporaire)
-             Augmentation de dégâts pure (temporaire)
-             Réduction de dégâts %(comme une armure, temporaire)
-             Augmentation de dégâts %(temporaire)
-             Renvoi de dégâts
-             Augmentation de vie maximum
-             Réduction de vie maximum
-             Soin instantané
-             Soin sur le temps
-             Déplacement instantané
-             Augmentation des déplacements
-             Réduction des déplacements
-             Regain d’énergie
-             Regain d’énergie sur le temps
-             Portée
-             Sort lié
-             Casse les objets cassables (boolean)
-             Durée (en tours)
-             Coût en action
-             Nombre d’emplacements requis (place dans l’inventaire)
-             Nombre d’utilisations
-             Temps de repos avant réutilisation
-             Description
-             */
+            "damage_instant" : 0,
+            "damage_time" : 0,
+            "damage_instant_buff" : 0,
+            "damage_instant_debuff" : 0,
+            "damage_type" : "lightning",
+            "damage_debuff_flat" : 0,
+            "damage_buff_flat" : 0,
+            "damage_debuff_percent" : 0,
+            "damage_buff_percent" : 0,
+            "damage_return" : 0,
+            "life_buff" : 0,
+            "life_debuff" : 0,
+            "heal_instant" : 0,
+            "heal_time" : 0,
+            "heal_percent_instant" : 0,
+            "heal_percent_time" : 0,
+            "movement_instant" : 0,
+            "movement_buff" : 0,
+            "movement_debuff" : 0,
+            "energy_heal" : 0,
+            "energy_time" : 0,
+            "energy_percent_heal" : 0,
+            "energy_percent_time" : 0,
+            "range" : 4,
+            "spell" : 15,
+            "can_break" : false,
+            "duration" : 0,
+            "action_cost" : 5,
+            "inventory" : 1,
+            "uses" : 1,
+            "rest" : 0,
+            "description" : "Heal from all damages",
         },
         "item2":"...",
         "item3":"..."
@@ -255,13 +241,42 @@ var bdd = {
     "type_maps": {
         "type_map1" : {
             "maptiles" : {
-
+                0 : {
+                    0 : "id_maptile_wall",
+                    1 : "id_maptile_wall",
+                    2 : "id_maptile_wall",
+                    3 : "id_maptile_wall",
+                    4 : "id_maptile_grass",
+                    "..." : "...",
+                },
+                1 : {
+                    0 : "id_maptile_wall",
+                    1 : "id_maptile_wall",
+                    2 : "id_maptile_wall",
+                    3 : "id_maptile_wall",
+                    4 : "id_maptile_wall",
+                    "..." : "...",
+                },
+                "..." : "...",
             },
             "characters" : {
-
+                0 : {
+                    4 : "id_character_monster",
+                },
+                1 : {
+                    3 : "id_character_player",
+                    4 : "id_character_monster",
+                },
+                "..." : "...",
             },
             "items" : {
-
+                0 : {
+                    4 : "id_potion_full_life",
+                },
+                1 : {
+                    4 : "id_potion_full_energy",
+                },
+                "..." : "...",
             },
         },
         "type_map2":"...",
@@ -304,15 +319,12 @@ var bdd = {
             "maptiles" : {
 
             },
-            "npcs" : {
+            "characters" : {
 
             },
             "items" : {
 
             },
-            "pcs" : {
-
-            }
         },
         "map2":"...",
         "map3":"..."
