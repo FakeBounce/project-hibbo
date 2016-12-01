@@ -49,7 +49,7 @@ const maptilesReducer = (state = new State(), action) => {
 
     case actions.MAPTILE_COMPLETED: {
       const maptile = new MapTile(action.payload);
-      return state.update('map', map => map.set(maptile.id, maptile));
+      return state;
     }
 
     case actions.FIREBASE_SAVE_MAPTILE: {

@@ -12,16 +12,6 @@ import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadDungeons } from '../../common/dungeons/actions';
 
-const styles = {
-    user: {
-        display: 'inline-block',
-    },
-    gravatar: {
-        borderRadius: '25%',
-        margin: '.5em',
-        maxHeight: 50,
-    },
-};
 /*
 const Dungeon = ({ dungeon }) => (
     <View>
@@ -35,7 +25,7 @@ Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
 };
 */
-let Dungeons = ({ LoadDungeons, loaded, dungeons }) => (
+let Dungeons = ({ loaded, dungeons }) => (
     <View>
         {!loaded ?
             <Loading />

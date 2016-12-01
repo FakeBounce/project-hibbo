@@ -10,8 +10,7 @@ const DungeonsPage = () => (
     <View>
         <Title message={linksMessages.map} />
         <Block>
-            <Dungeons>
-            </Dungeons>
+            <Dungeons/>
         </Block>
     </View>
 );

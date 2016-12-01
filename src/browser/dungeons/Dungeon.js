@@ -28,8 +28,6 @@ const Dungeon = ({ dungeon, firebaseLoadDungeon }: Props) => {
                 {dungeon.description}
             </Text>
             <Text onClick={() => firebaseLoadDungeon() }> Load the dungeon</Text>
-            <Map>
-            </Map>
         </Block>
     );
 };

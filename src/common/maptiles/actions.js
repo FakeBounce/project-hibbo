@@ -19,16 +19,18 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
 
 
 // CREATE + SAVE VERSION
-  export const maptileCompleted = () => ({ getUid, now, firebase }) => {
+  export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase }) => {
     var id = getUid();
-    var dungeon = "dungeon1";
+    var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
     firebase.update({
       [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
 
       // ADD FAKE DUNGEON
       //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
+      // [`typeDungeons/${id}`]: { id: id, name : `Practice`,description : `Training dungeon`, idMap1: `603414e3-d8fc-4b3f-ac56-376160eb7958`},
+      //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
-      //ADD FAKE MAP
+        //ADD FAKE MAP
      /* [`maps/${id}`]:
     { id: id,
       maptiles:

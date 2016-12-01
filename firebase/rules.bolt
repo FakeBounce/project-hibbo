@@ -68,10 +68,25 @@ type MapTile {
 }
 
 type Dungeon {
+  description: LongString,
   id: ShortRequiredString,
   map: ShortRequiredString,
   name: LongString,
-  description: LongString,
+}
+
+type Dungeons {
+    dungeon: Dungeon,
+}
+
+type typeDungeons {
+    description: LongString
+    id: ShortRequiredString,
+    idMap1: ShortRequiredString,
+    name: LongString,
+}
+type activeDungeons {
+  createdAt: CurrentTimestamp,
+  dungeon: Dungeon
 }
 
 // Paths
@@ -119,7 +134,17 @@ path /maptile/{uid} is MapTile {
   write() { true }
 }
 
-path /dungeon {
+path /typeDungeons {
+  read() { true } // Sure we can limit access here as well.
+}
+
+path /typeDungeons/{uid} is Dungeons[] {
+  create() { isViewer(uid) }
+  update() { true }
+  delete() { true }
+}
+
+path /dungeons/{uid} is Dungeon {
   create() { true }
   update() { true }
   delete() { true }
@@ -127,10 +152,12 @@ path /dungeon {
   write() { true }
 }
 
-path /dungeon/{uid} is Dungeon {
-  create() { true }
+path /activeDungeons {
+  read() { true } // Sure we can limit access here as well.
+}
+
+path /activeDungeons/{uid} is activeDungeons[] {
+  create() { isViewer(uid) }
   update() { true }
   delete() { true }
-  read() { true }
-  write() { true }
 }

@@ -11,6 +11,7 @@ import { firebase } from '../../common/lib/redux-firebase';
 const State = Record({
     map: Map(),
     loaded: false,
+    test: null,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -40,13 +41,18 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_DUNGEONS: {
-            const dungeons = action.payload.reduce((dungeons, json) =>
+
+            const dungeons = action.payload.dungeons;
+
+            return state.update('map', map => map.merge(dungeons))
+                .set('loaded', true);
+            /*const dungeons = action.payload.reduce((dungeons, json) =>
                 dungeons.set(json.id, new Dungeon(json))
                 ,Map());
 
             return state
                 .update('map', map => map.merge(dungeons))
-                .set('loaded',true);
+                .set('loaded',true);*/
         }
 
         default:
