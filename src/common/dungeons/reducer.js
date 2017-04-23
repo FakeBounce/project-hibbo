@@ -6,12 +6,13 @@ import * as actions from './actions';
 import Dungeon from './dungeon';
 import { Map } from 'immutable';
 import { Record } from '../transit';
+import { Seq } from 'immutable';
 import { firebase } from '../../common/lib/redux-firebase';
 
 const State = Record({
     map: Map(),
     loaded: false,
-    test: null,
+    dungeonLoaded: null,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -43,16 +44,14 @@ const dungeonsReducer = (state = new State(), action) => {
         case actions.LOAD_DUNGEONS: {
 
             const dungeons = action.payload.dungeons;
+            const presence = action.payload;
+            const list = presence && Seq(presence).map(dungeons => Seq(dungeons)
+                    .last()
+                ).toList();
 
             return state.update('map', map => map.merge(dungeons))
-                .set('loaded', true);
-            /*const dungeons = action.payload.reduce((dungeons, json) =>
-                dungeons.set(json.id, new Dungeon(json))
-                ,Map());
-
-            return state
-                .update('map', map => map.merge(dungeons))
-                .set('loaded',true);*/
+                .set('loaded', true)
+                .set('dungeonLoaded', list);
         }
 
         default:

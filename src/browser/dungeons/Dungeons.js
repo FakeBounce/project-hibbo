@@ -1,9 +1,6 @@
 /**
  * Created by Ben on 13/11/2016.
  */
-/**
- * Created by Ben on 13/11/2016.
- */
 
 import React from 'react';
 import Dungeon from './Dungeon';
@@ -12,19 +9,26 @@ import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadDungeons } from '../../common/dungeons/actions';
 
-/*
-const Dungeon = ({ dungeon }) => (
-    <View>
-        <Dungeon>
 
-        </Dungeon>
-    </View>
-);
+// const Dungeon = ({ dungeon }) => {
+//     const styles = {
+//         title: {
+//             cursor: 'pointer',
+//         }
+//     };
+//     return (
+//         <Block>
+//             <Text style={styles.title}>
+//                 Description : {dungeon.description}
+//             </Text>
+//         </Block>
+//     );
+// };
 
 Dungeon.propTypes = {
-    dungeon: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.object.isRequired
 };
-*/
+
 let Dungeons = ({ loaded, dungeons }) => (
     <View>
         {!loaded ?
@@ -52,6 +56,6 @@ Dungeons = firebase((database, props) => {
 })(Dungeons);
 
 export default connect(state => ({
-    dungeons: state.dungeons.map,
+    dungeons: state.dungeons.dungeonLoaded,
     loaded: state.dungeons.loaded,
 }), { LoadDungeons })(Dungeons);
