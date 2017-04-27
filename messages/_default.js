@@ -154,7 +154,7 @@ export default [
   },
   {
     "id": "firebase.error.EMAIL_TAKEN",
-    "defaultMessage": "The new user account cannot be created because the\n      specified email address is already in use.",
+    "defaultMessage": "The new user account cannot be created because the\n      specified email address is already in usesss.",
   },
   {
     "id": "firebase.error.INVALID_EMAIL",

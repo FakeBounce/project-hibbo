@@ -9,10 +9,9 @@ import { Block, Text } from '../app/components';
 
 type Props = {
     dungeon: Object,
-    firebaseLoadDungeon: () => void,
 };
-
-const Dungeon = ({ dungeon, firebaseLoadDungeon }: Props) => {
+console.log(this.props);
+const Dungeon = ({ dungeon }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -27,7 +26,7 @@ const Dungeon = ({ dungeon, firebaseLoadDungeon }: Props) => {
             <Text style={styles.title}>
                 {dungeon.description}
             </Text>
-            <Text onClick={() => firebaseLoadDungeon() }> Load the dungeon</Text>
+            <Text> Load the dungeon</Text>
         </Block>
     );
 };

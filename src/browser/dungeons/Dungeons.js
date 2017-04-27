@@ -6,25 +6,54 @@
  */
 
 import React from 'react';
-import Dungeon from './Dungeon';
+//import Dungeon from './Dungeon';
 import { Block, View, Text,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadDungeons } from '../../common/dungeons/actions';
 
-/*
 const Dungeon = ({ dungeon }) => (
     <View>
-        <Dungeon>
-
-        </Dungeon>
+        <Block>
+            <Text>
+                {dungeon.description}
+            </Text>
+            <Text> Loadeee the dungeon</Text>
+        </Block>
     </View>
 );
+
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
 };
-*/
+/* TEST version todo
+const Dungeons = ({ loaded, dungeons }) => {
+    if (loaded) {
+        if(!dungeons) {
+            <Text>No dungeon is online.</Text>
+        }
+    }
+    else {
+        <Loading />
+    }
+
+    const list = dungeons
+        .toList();
+
+    return (
+        <View>
+            {list.map(dungeon =>
+                <Block key={dungeon.id}>
+                    <Dungeon
+                        dungeon={dungeon}
+                    />
+                </Block>
+            )}
+        </View>
+    );
+};*/
+
 let Dungeons = ({ loaded, dungeons }) => (
     <View>
         {!loaded ?
