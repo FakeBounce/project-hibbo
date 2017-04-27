@@ -10,7 +10,7 @@ import { Block, Text } from '../app/components';
 type Props = {
     dungeon: Object,
 };
-console.log(this.props);
+
 const Dungeon = ({ dungeon }: Props) => {
     const styles = {
         title: {
@@ -24,9 +24,8 @@ const Dungeon = ({ dungeon }: Props) => {
     return (
         <Block>
             <Text style={styles.title}>
-                {dungeon.description}
+                Description : {dungeon.description}
             </Text>
-            <Text> Load the dungeon</Text>
         </Block>
     );
 };

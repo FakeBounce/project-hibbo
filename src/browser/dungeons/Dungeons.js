@@ -1,9 +1,6 @@
 /**
  * Created by Ben on 13/11/2016.
  */
-/**
- * Created by Ben on 13/11/2016.
- */
 
 import React from 'react';
 //import Dungeon from './Dungeon';
@@ -25,34 +22,9 @@ const Dungeon = ({ dungeon }) => (
 
 
 Dungeon.propTypes = {
-    dungeon: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.object.isRequired
 };
-/* TEST version todo
-const Dungeons = ({ loaded, dungeons }) => {
-    if (loaded) {
-        if(!dungeons) {
-            <Text>No dungeon is online.</Text>
-        }
-    }
-    else {
-        <Loading />
-    }
 
-    const list = dungeons
-        .toList();
-
-    return (
-        <View>
-            {list.map(dungeon =>
-                <Block key={dungeon.id}>
-                    <Dungeon
-                        dungeon={dungeon}
-                    />
-                </Block>
-            )}
-        </View>
-    );
-};*/
 
 let Dungeons = ({ loaded, dungeons }) => (
     <View>
@@ -81,6 +53,6 @@ Dungeons = firebase((database, props) => {
 })(Dungeons);
 
 export default connect(state => ({
-    dungeons: state.dungeons.map,
+    dungeons: state.dungeons.dungeonLoaded,
     loaded: state.dungeons.loaded,
 }), { LoadDungeons })(Dungeons);

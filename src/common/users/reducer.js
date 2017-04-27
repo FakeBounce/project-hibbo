@@ -30,6 +30,7 @@ const usersReducer = (state = new State(), action) => {
           .sortBy(userPresence => userPresence.authenticatedAt)
           .map(userPresence => new User(userPresence.user))
           .toList();
+
       return state
         .set('online', online)
         .set('onlineLoaded', true);
