@@ -4,15 +4,15 @@
 
 
 import React from 'react';
-import WorldMap from './WorldMap';
 import { Block, Text } from '../app/components';
-import { LoadWorldMap } from '../../common/worldmap/actions';
+
 
 type Props = {
     dungeon: Object,
+    loadWorldMap: () => void,
 };
 
-const Dungeon = ({ dungeon }: Props) => {
+const Dungeon = ({ dungeon,loadWorldMap }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -22,27 +22,23 @@ const Dungeon = ({ dungeon }: Props) => {
         },
     };
 
-var wm = {
-    'id':3,
-    'maptiles' : ['http://fakebounce.fr/asset/img/forest.png'],
-    'name' : 'testwm'
-};
-    console.log('wm');
-console.log(wm);
+console.log("maxime",dungeon);
     return (
         <Block>
-            <Text style={styles.title}>
+            <Text style={styles.title}
+                  onClick={() => loadWorldMap(dungeon.worldmap)}>
                 Description : {dungeon.description}
             </Text>
-            <WorldMap
-                worldmap={wm}
-            ></WorldMap>
+            {/*<WorldMap*/}
+                {/*worldmap={dungeon.worldmap}*/}
+            {/*></WorldMap>*/}
         </Block>
     );
 };
 
 Dungeon.propTypes = {
-    dungeon: React.PropTypes.object.isRequired
+    dungeon: React.PropTypes.object.isRequired,
+    loadWorldMap: React.PropTypes.func.isRequired
 };
 
 export default Dungeon;

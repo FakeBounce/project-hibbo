@@ -16,7 +16,6 @@ const worldMapReducer = (state = new State(), action) => {
             console.log(action.payload);
             return state;
         }
-
         default:
             return state;
 

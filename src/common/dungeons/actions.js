@@ -7,16 +7,17 @@ export const FIREBASE_LOAD_DUNGEON = 'FIREBASE_LOAD_DUNGEON';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LIST_DUNGEONS = 'LIST_DUNGEONS';
 export const ON_ACTIVE_DUNGEON = 'ON_ACTIVE_DUNGEON';
+export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 
-export const firebaseLoadDungeon = (dungeon) =>  ({ firebase }) => {
-
-    const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
-    const promise = firebase(`dungeons/${id}`);
-    return {
-        type: FIREBASE_LOAD_DUNGEON,
-        payload: promise,
-    };
-};
+// export const firebaseLoadDungeon = (dungeon) =>  ({ firebase }) => {
+//
+//     const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
+//     const promise = firebase(`dungeons/${id}`);
+//     return {
+//         type: FIREBASE_LOAD_DUNGEON,
+//         payload: promise,
+//     };
+// };
 
 export const LoadDungeons = (snap: Object) => {
     const dungeons = snap.val();
@@ -26,21 +27,31 @@ export const LoadDungeons = (snap: Object) => {
     };
 };
 
-export const listDungeons = (dungeon) =>  ({ firebase }) => {
-
-    const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
-    const promise = firebase(`dungeons`);
+export const loadWorldMap = (id) =>  ({ firebase }) => {
+    console.log(id);
+    const promise = firebase(`maps/${id}`);
+    console.log("promise",promise);
     return {
-        type: LIST_DUNGEON,
-        payload: promise,
+        type: LOAD_WORLD_MAP,
+        payload: 'test',
     };
 };
 
-
-export const onActiveDungeon = (snap: Object) => {
-    const dungeons = snap.val();
-    return {
-        type: ON_ACTIVE_DUNGEON,
-        payload: { dungeons },
-    };
-};
+// export const listDungeons = (dungeon) =>  ({ firebase }) => {
+//
+//     const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
+//     const promise = firebase(`dungeons`);
+//     return {
+//         type: LIST_DUNGEON,
+//         payload: promise,
+//     };
+// };
+//
+//
+// export const onActiveDungeon = (snap: Object) => {
+//     const dungeons = snap.val();
+//     return {
+//         type: ON_ACTIVE_DUNGEON,
+//         payload: { dungeons },
+//     };
+// };

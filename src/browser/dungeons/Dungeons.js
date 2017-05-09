@@ -7,13 +7,14 @@ import Dungeon from './Dungeon';
 import { Block, View, Text,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons } from '../../common/dungeons/actions';
+import { LoadDungeons, loadWorldMap } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
-    dungeon: React.PropTypes.object.isRequired
+    dungeon: React.PropTypes.object.isRequired,
+    loadWorldMap : React.PropTypes.func.isRequired
 };
 
-let Dungeons = ({ loaded, dungeons }) => (
+let Dungeons = ({ loaded, dungeons, loadWorldMap }) => (
     <View>
         {!loaded ?
             <Loading />
@@ -21,7 +22,7 @@ let Dungeons = ({ loaded, dungeons }) => (
             <Text>No dungeon is online.</Text>
             :
             dungeons.map(dungeon =>
-                <Dungeon key={dungeon.id} dungeon={dungeon} />
+                <Dungeon key={dungeon.id} dungeon={dungeon} loadWorldMap={loadWorldMap} />
             )
         }
     </View>
@@ -30,6 +31,7 @@ let Dungeons = ({ loaded, dungeons }) => (
 Dungeons.propTypes = {
     dungeons: React.PropTypes.object,
     loaded: React.PropTypes.bool.isRequired,
+    loadWorldMap : React.PropTypes.func.isRequired
 };
 
 Dungeons = firebase((database, props) => {
@@ -42,4 +44,4 @@ Dungeons = firebase((database, props) => {
 export default connect(state => ({
     dungeons: state.dungeons.dungeonLoaded,
     loaded: state.dungeons.loaded,
-}), { LoadDungeons })(Dungeons);
+}), { LoadDungeons, loadWorldMap })(Dungeons);
