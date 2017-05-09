@@ -21,13 +21,13 @@ const Dungeon = ({ dungeon }: Props) => {
             cursor: 'pointer',
         },
     };
-console.log(dungeon.worldmap);
-console.log('wm');
+
 var wm = {
     'id':3,
-    'maptiles' : '5',
+    'maptiles' : ['http://fakebounce.fr/asset/img/forest.png'],
     'name' : 'testwm'
 };
+    console.log('wm');
 console.log(wm);
     return (
         <Block>
@@ -36,7 +36,6 @@ console.log(wm);
             </Text>
             <WorldMap
                 worldmap={wm}
-                LoadWorldMap={LoadWorldMap}
             ></WorldMap>
         </Block>
     );
