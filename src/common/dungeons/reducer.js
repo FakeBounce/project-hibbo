@@ -42,7 +42,6 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_DUNGEONS: {
-
             const dungeons = action.payload.dungeons;
             const presence = action.payload;
             const list = presence && Seq(presence).map(dungeons => Seq(dungeons)

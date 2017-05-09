@@ -9,22 +9,6 @@ import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadDungeons } from '../../common/dungeons/actions';
 
-
-// const Dungeon = ({ dungeon }) => {
-//     const styles = {
-//         title: {
-//             cursor: 'pointer',
-//         }
-//     };
-//     return (
-//         <Block>
-//             <Text style={styles.title}>
-//                 Description : {dungeon.description}
-//             </Text>
-//         </Block>
-//     );
-// };
-
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired
 };

@@ -4,7 +4,7 @@
 
 
 import React from 'react';
-import Map from './Map';
+import WorldMap from './WorldMap';
 import { Block, Text } from '../app/components';
 
 type Props = {
@@ -26,6 +26,7 @@ const Dungeon = ({ dungeon }: Props) => {
             <Text style={styles.title}>
                 Description : {dungeon.description}
             </Text>
+            <WorldMap worldmap={dungeon.map}></WorldMap>
         </Block>
     );
 };
