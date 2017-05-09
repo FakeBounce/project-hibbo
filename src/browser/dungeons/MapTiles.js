@@ -2,7 +2,7 @@
  * Created by Ben on 13/11/2016.
  */
 import React from 'react';
-import Maptile from './Maptile';
+import MapTile from './MapTile';
 import { Block, Flex } from '../app/components';
 import { connect } from 'react-redux';
 
