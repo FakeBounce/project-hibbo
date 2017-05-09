@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import Maptiles from './Maptiles';
+import MapTiles from './MapTiles';
 import { Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
