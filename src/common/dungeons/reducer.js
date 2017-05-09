@@ -12,6 +12,7 @@ const State = Record({
     map: Map(),
     loaded: false,
     dungeonLoaded: null,
+    worldmap: Map()
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -54,10 +55,22 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('dungeonLoaded', list);
         }
 
-        case actions.LOAD_WORLD_MAP: {
+        // case actions.LOAD_WORLD_MAP: {
+        //     console.log('payload');
+        //     console.log(action.payload);
+        //     return state;
+        // }
+
+        case actions.LOAD_WORLD_MAP_SUCCESS: {
             console.log('payload');
             console.log(action.payload);
-            return state;
+            const presence = action.payload;
+            const list = presence && Seq(presence).map(maps => Seq(maps)
+                    .last()
+                ).toList();
+
+            return state.update('worldmap', map => map.merge(presence))
+                .set('loaded', true);
         }
 
         default:

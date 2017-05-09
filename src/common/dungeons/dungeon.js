@@ -7,7 +7,7 @@ const Dungeon = Record({
     "id": "",
     "name" : "",
     "worldmap" : "",
-    "description" : ""
+    "description" : "",
 }, 'dungeon');
 
 export default Dungeon;
