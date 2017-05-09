@@ -28,12 +28,18 @@ export const LoadDungeons = (snap: Object) => {
 };
 
 export const loadWorldMap = (id) =>  ({ firebase }) => {
-    console.log(id);
-    const promise = firebase(`maps/${id}`);
-    console.log("promise",promise);
+    var path = 'maps/'+id;
+    let worldmap;
+    const promise = firebase.database.ref(path).once('value').then(function(snapshot) {
+        worldmap = snapshot.val();
+        return Promise.all(worldmap);
+    });
+    console.log(promise);
+
+
     return {
         type: LOAD_WORLD_MAP,
-        payload: 'test',
+        payload: { worldmap },
     };
 };
 

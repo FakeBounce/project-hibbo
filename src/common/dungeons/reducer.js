@@ -54,6 +54,12 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('dungeonLoaded', list);
         }
 
+        case actions.LOAD_WORLD_MAP: {
+            console.log('payload');
+            console.log(action.payload);
+            return state;
+        }
+
         default:
             return state;
 
