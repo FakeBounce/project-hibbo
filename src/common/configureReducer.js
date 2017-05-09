@@ -9,6 +9,7 @@ import todos from './todos/reducer';
 import users from './users/reducer';
 import maptiles from './maptiles/reducer';
 import dungeons from './dungeons/reducer';
+import worldmap from './worldmap/reducer';
 
 import { FIREBASE_ON_AUTH } from '../common/lib/redux-firebase/actions';
 import { combineReducers } from 'redux';
@@ -47,6 +48,7 @@ const configureReducer = (initialState: Object) => {
     themes,
     todos,
     users,
+    worldmap,
   });
 
   // The power of higher-order reducers, http://slides.com/omnidan/hor

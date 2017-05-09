@@ -6,7 +6,7 @@ import { Record } from '../transit';
 const Dungeon = Record({
     "id": "",
     "name" : "",
-    "maps" : "",
+    "worldmap" : "",
     "description" : ""
 }, 'dungeon');
 

@@ -7,7 +7,6 @@ import Dungeon from './dungeon';
 import { Map } from 'immutable';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
-import { firebase } from '../../common/lib/redux-firebase';
 
 const State = Record({
     map: Map(),

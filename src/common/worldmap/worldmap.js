@@ -2,7 +2,7 @@ import { Record } from '../transit';
 
 const WorldMap = Record({
     id: '',
-    maptiles: object,
+    maptiles: null,
     name: ''
 }, 'worldmap');
 

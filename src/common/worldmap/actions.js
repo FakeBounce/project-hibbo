@@ -8,6 +8,6 @@ export const LoadWorldMap = (id) =>  ({ firebase }) => {
     console.log("promise",promise);
     return {
         type: LOAD_WORLD_MAP,
-        payload: promise,
+        payload: 'test',
     };
 };

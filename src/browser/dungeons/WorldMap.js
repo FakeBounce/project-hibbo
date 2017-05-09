@@ -6,38 +6,33 @@ import React from 'react';
 import Maptiles from './Maptiles';
 import { Flex, Text, View } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadWorldMap } from '../../common/worldmap/actions';
 import { connect } from 'react-redux';
 
 type Props = {
     worldmap: Object,
-    maptiles: Object,
-    LoadWorldMap: React.PropTypes.func.isRequired
+    LoadWorldMap: () => void,
 };
 
-let WorldMap = ({ worldmap,maptiles }: Props) => {
-    console.log('worldmap');
-    console.log(worldmap);
+let WorldMap = ({ worldmap }: Props) => {
     return (
         <View>
-          {/*<Text onClick={() => LoadWorldMap(worldmap.map)}>Bijour</Text>*/}
+          <Text onClick={() => LoadWorldMap(worldmap.id)}> Bijour</Text>
         </View>
     );
 };
 
 WorldMap.propTypes = {
-    worldmap: React.PropTypes.object.isRequired
+    worldmap: React.PropTypes.object.isRequired,
+    LoadWorldMap: React.PropTypes.func.isRequired,
 };
 
-WorldMap = firebase((database, props) => {
-    const WorldMapRef = database.child('maps');
-    return [
-        [WorldMapRef, 'on', 'value', props.LoadWorldMap],
-    ];
-})(WorldMap);
+// WorldMap = firebase((database, props) => {
+//     const WorldMapRef = database.child('maps');
+//     return [
+//         [WorldMapRef, 'on', 'value', props.LoadWorldMap],
+//     ];
+// })(WorldMap);
 
 //export default WorldMap;
 
-export default connect(state => ({
-     worldmap: state.worldmap
- }), { LoadWorldMap })(WorldMap);
+export default WorldMap;
