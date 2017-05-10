@@ -23,7 +23,16 @@ html {
 
 body {
   // Remove the margin in all browsers.
-  margin: 0;
+  background-image: url("/assets/images/wallpaper.jpg");
+background-size: cover;
+background-repeat: no-repeat;
+overflow-x: hidden;
+color: #cccccc;
+background-attachment:fixed;
+}
+
+.title-hibbo{
+  text-align: center;
 }
 
 // Yes, we can still override inline style globally.

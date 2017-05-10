@@ -18,7 +18,7 @@ const typography = {
 };
 
 const colors = {
-  primary: '#08e',
+  primary: '#333',
   secondary: '#888',
   info: '#08e',
   success: '#1c7',
@@ -67,6 +67,7 @@ export const compute = (theme: Object) => ({
     fontFamily: theme.fontFamily, // inherited
     fontSize: theme.fontSizes[4], // inherited
     lineHeight: theme.lineHeight, // inherited
+    opacity: 0.7,
   },
   Toolbar: {
     marginTop: theme.scale[2],
