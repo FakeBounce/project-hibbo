@@ -14,7 +14,7 @@ Dungeon.propTypes = {
     loadWorldMap : React.PropTypes.func.isRequired
 };
 
-let Dungeons = ({ loaded, dungeons, loadWorldMap }) => (
+let Dungeons = ({ loaded, dungeons, loadWorldMap, viewer }) => (
     <View>
         {!loaded ?
             <Loading />
@@ -31,7 +31,8 @@ let Dungeons = ({ loaded, dungeons, loadWorldMap }) => (
 Dungeons.propTypes = {
     dungeons: React.PropTypes.object,
     loaded: React.PropTypes.bool.isRequired,
-    loadWorldMap : React.PropTypes.func.isRequired
+    loadWorldMap : React.PropTypes.func.isRequired,
+    viewer: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
@@ -44,4 +45,5 @@ Dungeons = firebase((database, props) => {
 export default connect(state => ({
     dungeons: state.dungeons.dungeonLoaded,
     loaded: state.dungeons.loaded,
+    viewer: state.users.viewer
 }), { LoadDungeons, loadWorldMap })(Dungeons);

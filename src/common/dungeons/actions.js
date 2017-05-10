@@ -46,7 +46,7 @@ export const loadWorldMap = (id) =>  ({ firebase }) => {
             return await firebase.database.ref(path).once('value').then(function(snapshot){ return snapshot.val()});
         } catch (error) {
             if (messages[error.code]) {
-                throw mapFirebaseErrorToEsteValidationError(error.code);
+                console.log('An error occured. We could not load the dungeon. Try again later.');
             }
             throw error;
         }
