@@ -3,14 +3,12 @@
  */
 
 import { Range } from 'immutable';
-import { firebase } from '../../common/lib/redux-firebase';
 export const FIREBASE_LOAD_DUNGEON = 'FIREBASE_LOAD_DUNGEON';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LIST_DUNGEONS = 'LIST_DUNGEONS';
 export const ON_ACTIVE_DUNGEON = 'ON_ACTIVE_DUNGEON';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
-const fire = firebase;
 
 // export const firebaseLoadDungeon = (dungeon) =>  ({ firebase }) => {
 //

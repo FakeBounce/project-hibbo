@@ -22,8 +22,6 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
             cursor: 'pointer',
         },
     };
-    console.log('viewer');
-    console.log(viewer);
 
     return (
         <Block>
