@@ -31,30 +31,73 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
         //ADD FAKE MAP
-     /* [`maps/${id}`]:
-    { id: id,
-      maptiles:
-      {
-        0:
-          {
-            0:`http://fakebounce.fr/asset/img/forest.png`,
-            1:`http://fakebounce.fr/asset/img/forest.png`,
-            2:`http://fakebounce.fr/asset/img/forest.png`
-          },
-        1:
-          {
-            0:`http://fakebounce.fr/asset/img/grass.png`,
-            1:`http://fakebounce.fr/asset/img/grass.png`,
-            2:`http://fakebounce.fr/asset/img/grass.png`
-          },
-        2:
-        {
-          0:`http://fakebounce.fr/asset/img/forest.png`,
-          1:`http://fakebounce.fr/asset/img/forest.png`,
-          2:`http://fakebounce.fr/asset/img/forest.png`
-        }
+     /* firebase.update({
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
+      id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
+      maptiles: {
+      0: {
+      0: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      1: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      2: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
       }
-    },*/
+      },
+      1: {
+      0: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      1: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      2: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      }
+      },
+      2: {
+      0: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      1: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      },
+      2: {
+      completed: false,
+      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      image: "/asset/images/forest.png",
+      title: "forest"
+      }
+      }
+      },
+      }
+      */
 
 
     });

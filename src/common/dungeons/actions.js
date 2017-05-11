@@ -3,12 +3,14 @@
  */
 
 import { Range } from 'immutable';
+import { firebase } from '../../common/lib/redux-firebase';
 export const FIREBASE_LOAD_DUNGEON = 'FIREBASE_LOAD_DUNGEON';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LIST_DUNGEONS = 'LIST_DUNGEONS';
 export const ON_ACTIVE_DUNGEON = 'ON_ACTIVE_DUNGEON';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
+const fire = firebase;
 
 // export const firebaseLoadDungeon = (dungeon) =>  ({ firebase }) => {
 //
@@ -28,26 +30,33 @@ export const LoadDungeons = (snap: Object) => {
     };
 };
 
-export const loadWorldMap = (id) =>  ({ firebase }) => {
-    var path = 'maps/'+id;
-    // let worldmap;
-    // let promises = [];
-    // const promise = firebase.database.ref(path).once('value').then(function(snapshot) {
-    //     promises.push(snapshot.val());
-    //     return Promise.all(promise).then(data => {
-    //         return {
-    //             type: LOAD_WORLD_MAP,
-    //             payload: { data },
-    //         };
-    //     });
-    // });
+export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
+    console.log('dwmid: '+dungeon.worldmap);
+    var path = 'maps/'+dungeon.worldmap;
+    var Uid = getUid();
     const getPromise = async () => {
         try {
-            return await firebase.database.ref(path).once('value').then(function(snapshot){ return snapshot.val()});
+            return await firebase.database.ref(path).once('value').then(function(snapshot){
+                let worldmap = snapshot.val();
+                let dungeonActive = {
+                    id: dungeon.id,
+                    name: dungeon.name,
+                    description: dungeon.description,
+                    user :
+                        {id:viewer.id, displayName:viewer.displayName,email:viewer.email},
+                    dungeon:worldmap,
+                    createdAt: now()
+                };
+                if(worldmap.id)
+                {
+                    firebase.update({
+                        [`activeDungeons/${Uid}`]: dungeonActive,
+                    });
+                }
+                return dungeonActive;
+            });
         } catch (error) {
-            if (messages[error.code]) {
-                console.log('An error occured. We could not load the dungeon. Try again later.');
-            }
+            console.log('An error occured. We could not load the dungeon. Try again later.');
             throw error;
         }
     };
@@ -56,22 +65,3 @@ export const loadWorldMap = (id) =>  ({ firebase }) => {
         payload: getPromise(),
     }
 };
-
-// export const listDungeons = (dungeon) =>  ({ firebase }) => {
-//
-//     const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
-//     const promise = firebase(`dungeons`);
-//     return {
-//         type: LIST_DUNGEON,
-//         payload: promise,
-//     };
-// };
-//
-//
-// export const onActiveDungeon = (snap: Object) => {
-//     const dungeons = snap.val();
-//     return {
-//         type: ON_ACTIVE_DUNGEON,
-//         payload: { dungeons },
-//     };
-// };

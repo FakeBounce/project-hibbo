@@ -11,28 +11,50 @@ import { LoadDungeons, loadWorldMap } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
-    loadWorldMap : React.PropTypes.func.isRequired
+    loadWorldMap : React.PropTypes.func.isRequired,
+    viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons, loadWorldMap, viewer }) => (
+let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
+
+    const list = dungeonsOP
+        .toList();
+    return (
     <View>
         {!loaded ?
             <Loading />
             : !dungeons ?
-            <Text>No dungeon is online.</Text>
-            :
-            dungeons.map(dungeon =>
-                <Dungeon key={dungeon.id} dungeon={dungeon} loadWorldMap={loadWorldMap} />
-            )
+                <Text>No dungeon is online.</Text>
+                :
+                dungeons.map(dungeon =>
+                    <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                )
         }
+        {viewer ?
+            list.map(todo =>
+                viewer.id == todo.user.id ?
+                <Block key={todo.id}>
+                    <Text>{todo.description}</Text>
+                </Block>
+                    :
+                    <Text>No dungeon</Text>
+            )
+            :
+            <Text>Veuillez vous connecter</Text>
+        }
+
+
+        {/*<Text> {test} </Text>*/}
     </View>
-);
+    );
+};
 
 Dungeons.propTypes = {
     dungeons: React.PropTypes.object,
     loaded: React.PropTypes.bool.isRequired,
     loadWorldMap : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
+    dungeonsOP: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
@@ -44,6 +66,7 @@ Dungeons = firebase((database, props) => {
 
 export default connect(state => ({
     dungeons: state.dungeons.dungeonLoaded,
+    dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
-    viewer: state.users.viewer
+    viewer: state.dungeons.viewer,
 }), { LoadDungeons, loadWorldMap })(Dungeons);

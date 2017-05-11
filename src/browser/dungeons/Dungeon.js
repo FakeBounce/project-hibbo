@@ -10,9 +10,10 @@ import { Block, Text } from '../app/components';
 type Props = {
     dungeon: Object,
     loadWorldMap: () => void,
+    viewer: Object,
 };
 
-const Dungeon = ({ dungeon,loadWorldMap }: Props) => {
+const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -21,12 +22,13 @@ const Dungeon = ({ dungeon,loadWorldMap }: Props) => {
             cursor: 'pointer',
         },
     };
+    console.log('viewer');
+    console.log(viewer);
 
-console.log("maxime",dungeon);
     return (
         <Block>
             <Text style={styles.title}
-                  onClick={() => loadWorldMap(dungeon.worldmap)}>
+                  onClick={() => loadWorldMap(dungeon,viewer)}>
                 Description : {dungeon.description}
             </Text>
             {/*<WorldMap*/}
@@ -38,7 +40,8 @@ console.log("maxime",dungeon);
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
-    loadWorldMap: React.PropTypes.func.isRequired
+    loadWorldMap: React.PropTypes.func.isRequired,
+    viewer: React.PropTypes.object,
 };
 
 export default Dungeon;

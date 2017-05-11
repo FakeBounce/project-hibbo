@@ -7,16 +7,24 @@ import Dungeon from './dungeon';
 import { Map } from 'immutable';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
+import { firebaseActions } from '../lib/redux-firebase';
 
 const State = Record({
     map: Map(),
     loaded: false,
     dungeonLoaded: null,
     worldmap: Map(),
+    viewer: null,
+    dungeonsOP: Map(),
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
     switch (action.type) {
+
+        case firebaseActions.FIREBASE_ON_AUTH: {
+            const { user } = action.payload;
+            return state.set('viewer', user);
+        }
 
         case actions.FIREBASE_LOAD_DUNGEON: {
             const dungeon = new Dungeon(action.payload);
@@ -61,14 +69,13 @@ const dungeonsReducer = (state = new State(), action) => {
         // }
 
         case actions.LOAD_WORLD_MAP_SUCCESS: {
-            console.log(viewer);
-            const presence = action.payload;
-            const list = presence && Seq(presence).map(maps => Seq(maps)
-                    .last()
-                ).toList();
+            const dungeonsOP = action.payload;
+            const list = Seq(dungeonsOP)
+            // .map(dungeonpPresence => new Dungeon(dungeonpPresence))
+                .toList();
+            // state.dungeonsOP[action.payload.id].set(action.payload);
 
-            return state.update('worldmap', map => map.merge(presence))
-                .set('loaded', true);
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
         }
 
         default:
