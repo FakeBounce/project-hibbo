@@ -1,5 +1,5 @@
 /**
- * Created by Ben on 13/11/2016.
+ * Created by Fakebounce on 13/11/2016.
  */
 
 import * as actions from './actions';

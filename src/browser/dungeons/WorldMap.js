@@ -1,9 +1,9 @@
 /**
- * Created by Ben on 13/11/2016.
+ * Created by Fakebounce on 13/11/2016.
  */
 
 import React from 'react';
-import MapTiles from './MapTiles';
+import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
@@ -20,13 +20,13 @@ let WorldMap = ({ worldmap }: Props) => {
             { Object.keys(worldmap.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
                     return(
-                        <Image
-                            src={worldmap.maptiles[keyRow][keyCol].image}
+                        <MapTile
+                            maptile={worldmap.maptiles[keyRow][keyCol]}
                         />
                     );
                 })
                 return (
-                  <Block>{col}</Block>
+                  <Flex>{col}</Flex>
                 );
 
             })

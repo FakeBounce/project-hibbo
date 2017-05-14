@@ -1,9 +1,10 @@
 /**
- * Created by Ben on 13/11/2016.
+ * Created by Fakebounce on 13/11/2016.
  */
 
 import React from 'react';
-import { Image } from '../app/components';
+import Character from './Character';
+import { Flex,Image } from '../app/components';
 
 type Props = {
     maptile: Object,
@@ -14,15 +15,27 @@ const Maptile = ({ maptile }: Props) => {
         title: {
             cursor: 'pointer',
         },
-        delete: {
-            cursor: 'pointer',
-        },
     };
+    var character = false;
+    if(typeof maptile.character !== 'undefined')
+    {
+        character = true;
+    }
 
     return (
-        <Image style={styles.title}>
-            {maptile.id}
-        </Image>
+    <Flex>
+        {character ?
+            <Flex>
+                <Image src={maptile.image} style={styles.title}/>
+                <Character character={maptile.character}/>
+            </Flex>
+            :
+            <Flex>
+                <Image src={maptile.image} style={styles.title}/>
+            </Flex>
+
+        }
+    </Flex>
     );
 };
 

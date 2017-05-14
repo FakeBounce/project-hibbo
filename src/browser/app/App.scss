@@ -35,5 +35,20 @@ background-attachment:fixed;
   text-align: center;
 }
 
+.monster {
+  position: absolute;
+  z-index: 5;
+  height: 32px;
+  width: 32px;
+}
+
+.map_tile {
+  margin: 0px!important;
+  padding: 0px!important;
+  margin-left: -4px!important;
+  height: 34px;
+  width: 34px;
+}
+
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css

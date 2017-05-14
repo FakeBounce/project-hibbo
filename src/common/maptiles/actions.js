@@ -22,8 +22,8 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
   export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase }) => {
     var id = getUid();
     var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
-    firebase.update({
-      [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
+    // firebase.update({
+    //   [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
 
       // ADD FAKE DUNGEON
       //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
@@ -31,7 +31,7 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
         //ADD FAKE MAP
-     /* firebase.update({
+      firebase.update({
       [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
       id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
       maptiles: {
@@ -39,19 +39,25 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       0: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
-      title: "forest"
+      image: "/assets/images/forest.png",
+      title: "forest",
+      character: {
+        image:"/assets/images/classes/gface.png"
+      }
       },
       1: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
-      title: "forest"
+      image: "/assets/images/forest.png",
+      title: "forest",
+      character: {
+        image:"/assets/images/monsters/Warrior.png"
+      }
       },
       2: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       }
       },
@@ -59,19 +65,19 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       0: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       },
       1: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       },
       2: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       }
       },
@@ -79,25 +85,24 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       0: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       },
       1: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       },
       2: {
       completed: false,
       id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
-      image: "/asset/images/forest.png",
+      image: "/assets/images/forest.png",
       title: "forest"
       }
       }
       },
       }
-      */
 
 
     });
