@@ -4,6 +4,7 @@
 
 import React from 'react';
 import Dungeon from './Dungeon';
+import WorldMap from './WorldMap';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
@@ -27,6 +28,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
         var dungeon;
         var rows = 0;
         var cols = 0;
+        var dungeonActive = false;
         dungeonsOP.toList().map(dungeonOP => dungeon = dungeonOP);
         // dungeonsOP.toList().map(dungeonOP => rows = dungeonOP.dungeon.maptiles.length);
         // dungeonsOP.toList().map(dungeonOP => cols = dungeonOP.dungeon.maptiles[0].length);
@@ -40,6 +42,10 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
                 }
                 rowsMap.push(<Block>{colsMap}</Block>);
             }
+            dungeonActive = true;
+        }
+        else {
+            dungeonActive = false;
         }
     }
 
@@ -47,29 +53,26 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
     <View>
         {!loaded ?
             <Loading />
-            : !dungeons ?
-                <Text>No dungeon is online.</Text>
+            : viewer ?
+                dungeonActive?
+                    list.map(worldmap =>
+                        viewer.id == worldmap.user.id ?
+                            <Block key={worldmap.id}>
+                                <Text>{worldmap.description}</Text>
+                                <WorldMap worldmap={dungeon.dungeon}/>
+                                {/*{rowsMap}*/}
+                            </Block>
+                            :
+                            <Text></Text>
+                    )
                 :
-                dungeons.map(dungeon =>
-                    <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
-                )
+                dungeons ?
+                    dungeons.map(dungeon =>
+                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                    )
+                    : <Text>Il n'y a pas encore de donjons.</Text>
+            : <Text>Veuillez vous connecter</Text>
         }
-        {viewer ?
-            list.map(dungeon =>
-                viewer.id == dungeon.user.id ?
-                <Block key={dungeon.id}>
-                    <Text>{dungeon.description}</Text>
-                    {rowsMap}
-                </Block>
-                    :
-                    <Text>No dungeon</Text>
-            )
-            :
-            <Text>Veuillez vous connecter</Text>
-        }
-
-
-        {/*<Text> {test} </Text>*/}
     </View>
     );
 };

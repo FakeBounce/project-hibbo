@@ -4,7 +4,7 @@
 
 import React from 'react';
 import MapTiles from './MapTiles';
-import { Flex, Text, View,Image } from '../app/components';
+import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 
@@ -13,11 +13,25 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap }: Props) => {
+    console.log('worldmap');
+    console.log(worldmap);
     return (
         <View>
-            <Image
-                src={worldmap.maptiles}
-            />
+            { Object.keys(worldmap.maptiles).map(function (keyRow) {
+                var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
+                    return(
+                        <Image
+                            src={worldmap.maptiles[keyRow][keyCol].image}
+                        />
+                    );
+                })
+                return (
+                  <Block>{col}</Block>
+                );
+
+            })
+
+            }
         </View>
     );
 };
