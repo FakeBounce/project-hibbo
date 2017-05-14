@@ -29,7 +29,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
         var rows = 0;
         var cols = 0;
         var dungeonActive = false;
-        dungeonsOP.toList().map(dungeonOP => dungeon = dungeonOP);
+        dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
         // dungeonsOP.toList().map(dungeonOP => rows = dungeonOP.dungeon.maptiles.length);
         // dungeonsOP.toList().map(dungeonOP => cols = dungeonOP.dungeon.maptiles[0].length);
 
