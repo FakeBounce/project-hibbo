@@ -50,5 +50,61 @@ background-attachment:fixed;
   width: 34px;
 }
 
+#app{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  position: fixed;
+}
+
+.container_app{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1024px;
+  height: 496px;
+  margin: auto;
+  position: absolute;
+}
+
+
+.login_image {
+  background: rgba(0, 0, 0, 0) url("/assets/images/login/login.png") no-repeat scroll 0 0;
+  height: 313px;
+  margin: 75px auto;
+  width: 562px;
+}
+
+.login_title{
+  font-size: 29px;
+  padding-top: 38px;
+  text-align: center;
+}
+
+.auth_form{
+  padding:2em 3em 3em 3em ;
+  max-width:none;
+  width: 100%;
+}
+
+.auth_form label {
+  text-transform: uppercase;
+  color: grey;
+  font-weight: 400;
+  letter-spacing: 1px;
+  width: 40%;
+  text-align: center;
+}
+
+.auth_form_email, .auth_form_password{
+  display: inline-block;
+ }
+
+.auth_form_actions{
+  margin-top: 30px;
+}
+
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css
