@@ -8,9 +8,11 @@ import { Flex,Image } from '../app/components';
 
 type Props = {
     maptile: Object,
+    row: Object,
+    col: Object
 };
 
-const Maptile = ({ maptile }: Props) => {
+const Maptile = ({ maptile,row,col }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -27,7 +29,7 @@ const Maptile = ({ maptile }: Props) => {
         {character ?
             <Flex>
                 <Image src={maptile.image} style={styles.title}/>
-                <Character character={maptile.character}/>
+                <Character row={row} col={col} character={maptile.character}/>
             </Flex>
             :
             <Flex>

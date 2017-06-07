@@ -78,6 +78,12 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
         }
 
+        case actions.ATTACK_MONSTER: {
+            console.log('reducer ok');
+            console.log(action.payload);
+            return state;
+        }
+
         default:
             return state;
     }
