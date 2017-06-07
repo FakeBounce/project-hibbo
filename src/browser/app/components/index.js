@@ -14,6 +14,9 @@ export { default as Title } from './Title';
 export { default as View } from './View';
 export { default as focus } from './focus';
 export { default as fxbml } from './fxbml';
+export { default as Login } from './Login';
+export { default as ContainerApp } from './ContainerApp';
+export { default as Div } from './Div';
 
 // Rebass components
 // github.com/jxnblk/rebass

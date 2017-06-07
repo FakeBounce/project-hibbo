@@ -102,7 +102,11 @@ export default [
   },
   {
     "id": "auth.email.emailLegend",
-    "defaultMessage": "Email",
+    "defaultMessage": "Votre email : ",
+  },
+  {
+    "id": "auth.email.passwordLegend",
+    "defaultMessage": "Votre password : ",
   },
   {
     "id": "auth.email.emailPlaceholder",

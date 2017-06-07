@@ -16,6 +16,7 @@ import {
   Space,
   View,
   focus,
+  Link
 } from '../app/components';
 
 type State = {
@@ -81,54 +82,84 @@ class Email extends React.Component {
       : emailMessages.emailLegend;
 
     return (
-      <Form onSubmit={this.onFormSubmit} small>
-        <Panel theme="primary">
-          <PanelHeader>
-            <FormattedMessage {...legendMessage} />
-          </PanelHeader>
+      <Form onSubmit={this.onFormSubmit} className="auth_form">
           <Input
             {...fields.email}
+            className="auth_form_email"
             disabled={disabled}
-            label=""
+            label={intl.formatMessage(emailMessages.emailLegend)}
             maxLength={100}
-            placeholder={intl.formatMessage(emailMessages.emailPlaceholder)}
+            placeholder=""
+            hideLabel
           />
           {!forgetPasswordIsShown &&
             <Input
               {...fields.password}
+              className="auth_form_password"
               disabled={disabled}
-              label=""
+              label={intl.formatMessage(emailMessages.passwordLegend)}
               maxLength={1000}
-              placeholder={intl.formatMessage(emailMessages.passwordPlaceholder)}
+              placeholder=""
               type="password"
+              hideLabel
             />
           }
           {!forgetPasswordIsShown ?
-            <View>
-              <Button disabled={disabled}>
-                <FormattedMessage {...buttonsMessages.signIn} />
-              </Button>
-              <Space />
-              <Button
-                disabled={disabled}
-                onClick={this.onSignUpClick}
-                type="button"
-              >
-                <FormattedMessage {...buttonsMessages.signUp} />
-              </Button>
-              <Space />
-              <Button
-                disabled={disabled}
-                onClick={this.onForgetPasswordClick}
-                type="button"
-              >
-                <FormattedMessage {...emailMessages.passwordForgotten} />
-              </Button>
-              {recoveryEmailSent &&
-                <Message>
-                  <FormattedMessage {...emailMessages.recoveryEmailSent} />
-                </Message>
-              }
+            <View className="auth_form_actions">
+                <Button
+                    disabled={disabled}
+                    onClick={this.onForgetPasswordClick}
+                    type="button"
+                    style={{
+                        boxShadow: 'none',
+                        color: 'white',
+                        padding: '30px 16px 0px 16px'
+                    }}
+                >
+                    <FormattedMessage {...emailMessages.passwordForgotten} />
+                </Button>
+                <Button
+                    style={{
+                    backgroundColor: 'transparent',
+                    backgroundImage: 'url("/assets/images/login/login button.png")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundAttachment: 'scroll',
+                    height: '53px',
+                    width: '115px',
+                    color: 'grey',
+                    boxShadow: 'none',
+                        float: 'right',
+                        marginRight: '10px'
+                    }}
+                >
+                    <FormattedMessage {...buttonsMessages.signIn} />
+                </Button>
+                <Space />
+                <Button
+                    disabled={disabled}
+                    onClick={this.onSignUpClick}
+                    type="button"
+                    style={{
+                    backgroundColor: 'transparent',
+                    backgroundImage: 'url("/assets/images/login/register button.png")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundAttachment: 'scroll',
+                    height: '53px',
+                    width: '115px',
+                    color: 'grey',
+                    boxShadow: 'none',
+                        float: 'right',
+                        marginRight: '10px'
+                    }}
+                >
+                    <FormattedMessage {...buttonsMessages.signUp} />
+                </Button>
+                <Space />
+                {recoveryEmailSent &&
+                    <Message>
+                        <FormattedMessage {...emailMessages.recoveryEmailSent} />
+                    </Message>
+                }
             </View>
           :
             <View>
@@ -145,7 +176,6 @@ class Email extends React.Component {
               </Button>
             </View>
           }
-        </Panel>
       </Form>
     );
   }

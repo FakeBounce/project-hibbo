@@ -3,8 +3,12 @@ import { defineMessages } from 'react-intl';
 
 const emailMessages = defineMessages({
   emailLegend: {
-    defaultMessage: 'Email',
+    defaultMessage: 'Your Email : ',
     id: 'auth.email.emailLegend',
+  },
+  passwordLegend: {
+    defaultMessage: 'Your Password : ',
+    id: 'auth.email.passwordLegend',
   },
   passwordRecoveryLegend: {
     defaultMessage: 'Email Password Recovery',
@@ -15,7 +19,7 @@ const emailMessages = defineMessages({
     id: 'auth.email.emailPlaceholder',
   },
   passwordPlaceholder: {
-    defaultMessage: 'password',
+    defaultMessage: 'Your Password',
     id: 'auth.email.passwordPlaceholder',
   },
   passwordForgotten: {

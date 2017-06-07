@@ -8,12 +8,8 @@ import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import {
-  Block,
-  Loading,
-  Message,
-  PageHeader,
-  Title,
-  View,
+    Login,
+    Div
 } from '../app/components';
 
 let SignInPage = ({ disabled, intl, location, viewer }) => (
@@ -23,10 +19,14 @@ let SignInPage = ({ disabled, intl, location, viewer }) => (
         location.state &&
         location.state.from &&
         location.state.from.pathname
-      ) || '/'}
+      ) || '/game'}
     />
   :
-    <View>
+      <Login className="login_image" >
+          <Div className="login_title">Connexion</Div>
+          <Email />
+      </Login>
+    /*<View>
       <Title message={linksMessages.signIn} />
       <PageHeader heading={intl.formatMessage(linksMessages.signIn)} />
       <Block>
@@ -41,7 +41,7 @@ let SignInPage = ({ disabled, intl, location, viewer }) => (
           {message => <Message>{message}</Message>}
         </Loading>
       }
-    </View>
+    </View>*/
 );
 
 SignInPage.propTypes = {

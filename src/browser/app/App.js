@@ -7,7 +7,7 @@ import Helmet from 'react-helmet';
 import React from 'react';
 import favicon from '../../common/app/favicon';
 import start from '../../common/app/start';
-import { Container } from '../app/components';
+import { ContainerApp } from '../app/components';
 import { Match, ThemeProvider } from '../../common/app/components';
 import { Miss } from 'react-router';
 import { connect } from 'react-redux';
@@ -43,35 +43,11 @@ let App = ({ currentLocale, currentTheme }) => (
     key={currentTheme} // github.com/yahoo/react-intl/issues/234#issuecomment-163366518
     theme={themes[currentTheme] || themes.initial}
   >
-    <Container>
-      <Helmet
-        htmlAttributes={{ lang: currentLocale }}
-        meta={[
-          ...bootstrap4Metas,
-          {
-            name: 'description',
-            content: 'Dev stack and starter kit for functional and universal React apps',
-          },
-          ...favicon.meta,
-        ]}
-        link={[
-          ...favicon.link,
-        ]}
-      />
-      <Header />
-      <Match exactly pattern="/" component={Home} />
-      <Match pattern="/fields" component={Fields} />
-      <Match pattern="/users" component={Users} />
-      <Match pattern="/intl" component={Intl} />
-      <Match pattern="/offline" component={Offline} />
-      <Match pattern="/signin" component={SignIn} />
-      <Match pattern="/todos" component={Todos} />
-      <Match pattern="/map" component={Map} />
-      <Match pattern="/dungeons" component={Dungeons} />
-      <Match authorized pattern="/me" component={Me} />
+    <ContainerApp className="container_app">
+      <Match exactly pattern="/" component={SignIn} />
+      <Match authorized pattern="/game" component={Dungeons} />
       <Miss component={NotFound} />
-      <Footer />
-    </Container>
+    </ContainerApp>
   </ThemeProvider>
 );
 
