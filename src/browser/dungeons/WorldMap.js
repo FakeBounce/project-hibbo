@@ -16,7 +16,7 @@ let WorldMap = ({ worldmap }: Props) => {
     console.log('worldmap');
     console.log(worldmap);
     return (
-        <View>
+        <View className="cadre">
             { Object.keys(worldmap.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
                     return(
