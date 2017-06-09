@@ -35,13 +35,15 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
 
         if(dungeon)
         {
+            //Exemple
             for (var i=0; i < dungeon.dungeon.maptiles.length; i++) {
                 colsMap = [];
                 for (var j=0; j < dungeon.dungeon.maptiles[i].length; j++) {
-                    colsMap.push(<Image src={dungeon.dungeon.maptiles[i][j].image}></Image>);
+                    colsMap.push(<Image key={dungeon.dungeon.maptiles[i][j].id} src={dungeon.dungeon.maptiles[i][j].image}></Image>);
                 }
                 rowsMap.push(<Block>{colsMap}</Block>);
             }
+            //Fin exemple
             dungeonActive = true;
         }
         else {
@@ -59,8 +61,11 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
                         viewer.id == worldmap.user.id ?
                             <Block key={worldmap.id}>
                                 <Text>{worldmap.description}</Text>
-                                <WorldMap worldmap={dungeon.dungeon}/>
-                                {/*{rowsMap}*/}
+                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon}/>
+                                {/*
+                                    Exemple d'affichage:
+                                    {rowsMap}
+                                */}
                             </Block>
                             :
                             <Text></Text>

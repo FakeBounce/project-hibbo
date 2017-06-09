@@ -5,6 +5,7 @@
 import { Range } from 'immutable';
 export const FIREBASE_LOAD_DUNGEON = 'FIREBASE_LOAD_DUNGEON';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const ATTACK_MONSTER = 'ATTACK_MONSTER';
 export const LIST_DUNGEONS = 'LIST_DUNGEONS';
 export const ON_ACTIVE_DUNGEON = 'ON_ACTIVE_DUNGEON';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
@@ -26,6 +27,17 @@ export const LoadDungeons = (snap: Object) => {
         type: LOAD_DUNGEONS,
         payload: { dungeons },
     };
+};
+
+export const attackMonster = (character,row,col) => {
+    console.log('action ok');
+    console.log(character);
+    console.log(row);
+    console.log(col);
+    return {
+        type: ATTACK_MONSTER,
+        payload: character
+    }
 };
 
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {

@@ -13,24 +13,22 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap }: Props) => {
-    console.log('worldmap');
-    console.log(worldmap);
     return (
         <View>
           <div className="cadre-gauche"></div>
           <div className="cadre-droite">
             <div className="cadre">
               { Object.keys(worldmap.maptiles).map(function (keyRow) {
-                  var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
-                      return(
-                          <MapTile
-                              maptile={worldmap.maptiles[keyRow][keyCol]}
-                          />
-                      );
-                  })
-                  return (
-                    <Flex>{col}</Flex>
+                var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
+                  return(
+                    <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                             row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                    />
                   );
+                })
+                return (
+                  <Flex key={keyRow} >{col}</Flex>
+                );
 
               })
 
