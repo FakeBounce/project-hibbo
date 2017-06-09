@@ -46,6 +46,7 @@ let App = ({ currentLocale, currentTheme }) => (
     <ContainerApp className="container_app">
       <Match exactly pattern="/" component={SignIn} />
       <Match authorized pattern="/game" component={Dungeons} />
+      <Match pattern="/map" component={Map} />
       <Miss component={NotFound} />
     </ContainerApp>
   </ThemeProvider>
