@@ -110,13 +110,97 @@ background-attachment:fixed;
 
 // map
 
+.cadre-gauche{
+  float: left;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 380px;
+  height: 350px;
+  border-right: 1px solid #fff;
+
+}
+
 .cadre {
-  background: url("/assets/images/cadre.png") no-repeat;
-  background-size: contain;
+  background-color: rgba(0, 0, 0, 0.3);
+  background-size: cover;
   padding: 5%;
   margin: 0 auto;
   width: 644px;
+  float: right;
 }
+
+
+.cadre-droit{
+
+}
+
+.cadre-objets{
+  background-color: rgba(0, 0, 0, 0.3);
+  width:644px;
+  display: flex;
+  height:100px;
+  float: right;
+  border-top:1px solid #fff;
+}
+
+.objets{
+  height:100px;
+  width:100%;
+  display: flex;
+  padding:2%;
+}
+
+
+
+.objet{
+  width: 12%;
+  display: block;
+  float: left;
+  margin:0 0.5%;
+  border:1px solid #fff;
+}
+
+.objet1{
+  background: url("/assets/images/objets/1.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet2{
+  background: url("/assets/images/objets/2.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet3{
+  background: url("/assets/images/objets/3.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet4{
+  background: url("/assets/images/objets/4.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet5{
+  background: url("/assets/images/objets/5.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet6{
+  background: url("/assets/images/objets/6.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet7{
+  background: url("/assets/images/objets/7.jpg") no-repeat;
+  background-size: cover;
+}
+
+.objet8{
+  background: url("/assets/images/objets/8.jpg") no-repeat;
+  background-size: cover;
+}
+
+
 
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css

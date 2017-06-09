@@ -16,22 +16,39 @@ let WorldMap = ({ worldmap }: Props) => {
     console.log('worldmap');
     console.log(worldmap);
     return (
-        <View className="cadre">
-            { Object.keys(worldmap.maptiles).map(function (keyRow) {
-                var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
-                    return(
-                        <MapTile
-                            maptile={worldmap.maptiles[keyRow][keyCol]}
-                        />
-                    );
-                })
-                return (
-                  <Flex>{col}</Flex>
-                );
+        <View>
+          <div className="cadre-gauche"></div>
+          <div className="cadre-droite">
+            <div className="cadre">
+              { Object.keys(worldmap.maptiles).map(function (keyRow) {
+                  var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
+                      return(
+                          <MapTile
+                              maptile={worldmap.maptiles[keyRow][keyCol]}
+                          />
+                      );
+                  })
+                  return (
+                    <Flex>{col}</Flex>
+                  );
 
-            })
+              })
 
-            }
+              }
+            </div>
+            <div className="cadre-objets">
+              <div className="objets">
+                <div className="objet objet1"></div>
+                <div className="objet objet2"></div>
+                <div className="objet objet3"></div>
+                <div className="objet objet4"></div>
+                <div className="objet objet5"></div>
+                <div className="objet objet6"></div>
+                <div className="objet objet7"></div>
+                <div className="objet objet8"></div>
+              </div>
+            </div>
+          </div>
         </View>
     );
 };
