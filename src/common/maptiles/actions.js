@@ -21,6 +21,15 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
 // CREATE + SAVE VERSION
   export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase }) => {
     var id = getUid();
+    var id1 = getUid();
+    var id2 = getUid();
+    var id3 = getUid();
+    var id4 = getUid();
+    var id5 = getUid();
+    var id6 = getUid();
+    var id7 = getUid();
+    var id8 = getUid();
+    var id9 = getUid();
     var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
     // firebase.update({
     //   [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
@@ -38,25 +47,29 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       0: {
       0: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id1,
       image: "/assets/images/forest.png",
       title: "forest",
       character: {
-        image:"/assets/images/classes/gface.png"
+        image:"/assets/images/classes/gface.png",
+        damage:100,
+        health:15000
       }
       },
       1: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id2,
       image: "/assets/images/forest.png",
       title: "forest",
       character: {
-        image:"/assets/images/monsters/Warrior.png"
+        image:"/assets/images/monsters/Warrior.png",
+          damage:250,
+          health:400
       }
       },
       2: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id3,
       image: "/assets/images/forest.png",
       title: "forest"
       }
@@ -64,19 +77,19 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       1: {
       0: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id4,
       image: "/assets/images/forest.png",
       title: "forest"
       },
       1: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id5,
       image: "/assets/images/forest.png",
       title: "forest"
       },
       2: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id6,
       image: "/assets/images/forest.png",
       title: "forest"
       }
@@ -84,19 +97,19 @@ export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
       2: {
       0: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id7,
       image: "/assets/images/forest.png",
       title: "forest"
       },
       1: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id8,
       image: "/assets/images/forest.png",
       title: "forest"
       },
       2: {
       completed: false,
-      id: "0c6d7a0e-d8ef-4e3e-bd28-d41053a374fc",
+      id: id9,
       image: "/assets/images/forest.png",
       title: "forest"
       }
