@@ -46,11 +46,44 @@ export const attackMonster = (character,row,col) => {
     }
 };
 
-export const moveCharacter = (row,col) => {
-    console.log('action ok');
+export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
+    let canMove = false;
+    let message = '';
+    let totalRow = dungeon.user.row - row;
+    let totalCol = dungeon.user.col - col;
+    //Transform total difference to positive int
+    if(totalCol < 0)
+    {
+        totalCol = totalCol*-1;
+    }
+    //Transform total difference to positive int
+    if(totalRow < 0)
+    {
+        totalRow = totalRow*-1;
+    }
+    //Check if user can move to location
+    if(totalRow+totalCol > 1)
+    {
+        message = 'You are too far from this location.';
+    }
+    else
+    {
+        canMove = true;
+    }
+
+    if(canMove)
+    {
+        dungeon.dungeon.maptiles[row][col].character = dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
+        delete dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
+        dungeon.user.row = row;
+        dungeon.user.col = col;
+        firebase.update({
+            [`activeDungeons/${dungeon.id}`]: dungeon,
+        });
+    }
     return {
         type: MOVE_CHARACTER,
-        payload: row
+        payload: dungeon
     }
 };
 

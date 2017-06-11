@@ -8,6 +8,7 @@ import { Map } from 'immutable';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
 import { firebaseActions } from '../lib/redux-firebase';
+import firebase from '../lib/redux-firebase/firebase';
 
 const State = Record({
     map: Map(),
@@ -62,6 +63,12 @@ const dungeonsReducer = (state = new State(), action) => {
             console.log('reducer ok');
             console.log(action.payload);
             return state;
+        }
+
+        case actions.MOVE_CHARACTER: {
+            let payload = action.payload;
+
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
         default:

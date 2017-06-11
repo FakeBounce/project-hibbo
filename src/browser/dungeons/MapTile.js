@@ -9,13 +9,13 @@ import { connect } from 'react-redux';
 import { moveCharacter } from '../../common/dungeons/actions';
 
 type Props = {
-    user: Object,
+    dungeon: Object,
     maptile: Object,
     row: Object,
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,user, moveCharacter }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -28,13 +28,13 @@ const Maptile = ({ maptile,row,col,user, moveCharacter }: Props) => {
     }
 
     const tryMoveCharacter = function(){
-        moveCharacter(row,col);
+        moveCharacter(dungeon,row,col);
     };
 
     return (
     <Flex>
         {character ?
-            <Flex>
+            <Flex onClick={tryMoveCharacter}>
                 <Image src={maptile.image} style={styles.title}/>
                 <Character row={row} col={col} character={maptile.character}/>
             </Flex>
@@ -50,7 +50,7 @@ const Maptile = ({ maptile,row,col,user, moveCharacter }: Props) => {
 
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
-    user: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.object.isRequired,
     moveCharacter: React.PropTypes.func.isRequired
 };
 

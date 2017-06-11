@@ -65,7 +65,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
                         viewer.id == worldmap.user.id ?
                             <Block key={worldmap.id}>
                                 <Text>{worldmap.description}</Text>
-                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} user={dungeon.user}/>
+                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>
                                 {/*
                                     Exemple d'affichage:
                                     {rowsMap}
