@@ -7,6 +7,9 @@ import { ValidationError } from '../validation';
 
 export const FIREBASE_OFF_QUERY = 'FIREBASE_OFF_QUERY';
 export const FIREBASE_ON_AUTH = 'FIREBASE_ON_AUTH';
+export const FIREBASE_ON_AUTH_DUNGEON_ERROR = 'FIREBASE_ON_AUTH_DUNGEON_ERROR';
+export const FIREBASE_ON_AUTH_DUNGEON_START = 'FIREBASE_ON_AUTH_DUNGEON_START';
+export const FIREBASE_ON_AUTH_DUNGEON_SUCCESS = 'FIREBASE_ON_AUTH_DUNGEON_SUCCESS';
 export const FIREBASE_ON_PERMISSION_DENIED = 'FIREBASE_ON_PERMISSION_DENIED';
 export const FIREBASE_ON_QUERY = 'FIREBASE_ON_QUERY';
 export const FIREBASE_RESET_PASSWORD_ERROR = 'FIREBASE_RESET_PASSWORD_ERROR';
@@ -92,13 +95,27 @@ const saveUser = user => ({ firebase }) => {
   const { email, ...json } = user.toJS();
   // With Firebase multi-path updates, we can update values at multiple
   // locations at the same time atomically.
-  const promise = firebase.update({
-    [`users/${user.id}`]: json,
-    [`users-emails/${user.id}`]: { email },
-  });
+
+    const getPromise = async () => {
+        try {
+            return await firebase.database.ref('/users/' + user.id).once('value').then(function(snapshot) {
+                var username = snapshot.val();
+                const promise = firebase.update({
+                    [`users/${user.id}/displayName`]: json.displayName,
+                    [`users/${user.id}/id`]: json.id,
+                    [`users/${user.id}/photoURL`]: json.photoURL,
+                    [`users-emails/${user.id}`]: { email },
+                });
+                return username;
+            });
+        } catch (error) {
+            console.log('An error occured. We could not load the dungeon. Try again later.');
+            throw error;
+        }
+    };
   return {
     type: 'FIREBASE_SAVE_USER',
-    payload: promise,
+    payload: getPromise(),
   };
 };
 

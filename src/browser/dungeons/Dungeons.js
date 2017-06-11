@@ -8,7 +8,7 @@ import WorldMap from './WorldMap';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons, loadWorldMap } from '../../common/dungeons/actions';
+import { LoadDungeons,preLoadActiveDungeon, loadWorldMap } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -16,11 +16,10 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
+let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap, viewer }) => {
 
     const list = dungeonsOP
         .toList();
-
     if(dungeonsOP)
     {
         var rowsMap = [];
@@ -47,6 +46,10 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP, loadWorldMap, viewer }) => {
             dungeonActive = true;
         }
         else {
+            if(viewer.dungeonActive != null)
+            {
+                preLoadActiveDungeon(viewer);
+            }
             dungeonActive = false;
         }
     }
@@ -86,6 +89,7 @@ Dungeons.propTypes = {
     dungeons: React.PropTypes.object,
     loaded: React.PropTypes.bool.isRequired,
     loadWorldMap : React.PropTypes.func.isRequired,
+    preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
 };
@@ -102,4 +106,4 @@ export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
     viewer: state.dungeons.viewer,
-}), { LoadDungeons, loadWorldMap })(Dungeons);
+}), { LoadDungeons,preLoadActiveDungeon, loadWorldMap })(Dungeons);

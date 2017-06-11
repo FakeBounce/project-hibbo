@@ -21,8 +21,6 @@ const usersReducer = (state = new State(), action) => {
 
     case actions.ON_USERS_PRESENCE: {
       const { presence } = action.payload;
-        console.log('presence');
-        console.log(presence);
       const online = presence &&
         Seq(presence)
           .map(userPresences => Seq(userPresences)
@@ -32,11 +30,6 @@ const usersReducer = (state = new State(), action) => {
           .sortBy(userPresence => userPresence.authenticatedAt)
           .map(userPresence => new User(userPresence.user))
           .toList();
-
-        console.log('payload');
-        console.log(action.payload);
-        console.log('list');
-        console.log(online);
       return state
         .set('online', online)
         .set('onlineLoaded', true);

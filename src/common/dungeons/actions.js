@@ -3,23 +3,13 @@
  */
 
 import { Range } from 'immutable';
-export const FIREBASE_LOAD_DUNGEON = 'FIREBASE_LOAD_DUNGEON';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
+export const PRELOAD_ACTIVE_DUNGEON_SUCCESS = 'PRELOAD_ACTIVE_DUNGEON_SUCCESS';
 export const ATTACK_MONSTER = 'ATTACK_MONSTER';
-export const LIST_DUNGEONS = 'LIST_DUNGEONS';
-export const ON_ACTIVE_DUNGEON = 'ON_ACTIVE_DUNGEON';
+export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
-
-// export const firebaseLoadDungeon = (dungeon) =>  ({ firebase }) => {
-//
-//     const id = "15f053bc-d52d-4f70-ae41-5f3912b18fef";
-//     const promise = firebase(`dungeons/${id}`);
-//     return {
-//         type: FIREBASE_LOAD_DUNGEON,
-//         payload: promise,
-//     };
-// };
 
 export const LoadDungeons = (snap: Object) => {
     const dungeons = snap.val();
@@ -27,6 +17,25 @@ export const LoadDungeons = (snap: Object) => {
         type: LOAD_DUNGEONS,
         payload: { dungeons },
     };
+};
+
+export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
+    var path = 'activeDungeons/'+viewer.dungeonActive;
+    const getPromise = async () => {
+        try {
+            return await firebase.database.ref(path).once('value').then(function(snapshot){
+                let dungeonActive = snapshot.val();
+                return dungeonActive;
+            });
+        } catch (error) {
+            console.log('An error occured. We could not load the dungeon. Try again later.');
+            throw error;
+        }
+    };
+    return {
+        type: PRELOAD_ACTIVE_DUNGEON,
+        payload: getPromise(),
+    }
 };
 
 export const attackMonster = (character,row,col) => {
@@ -40,8 +49,22 @@ export const attackMonster = (character,row,col) => {
     }
 };
 
+export const moveCharacter = (row,col) => {
+    console.log('action ok');
+    console.log(row);
+    console.log(col);
+    return {
+        type: MOVE_CHARACTER,
+        payload: row
+    }
+};
+
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
     console.log('dwmid: '+dungeon.worldmap);
+    console.log('user: ');
+    console.log(viewer);
+    console.log('dungeon: ');
+    console.log(dungeon);
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
     const getPromise = async () => {
@@ -49,18 +72,24 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let worldmap = snapshot.val();
                 let dungeonActive = {
-                    id: dungeon.id,
+                    id: Uid,
+                    dungeonId: dungeon.id,
                     name: dungeon.name,
                     description: dungeon.description,
                     user :
-                        {id:viewer.id, displayName:viewer.displayName,email:viewer.email},
+                        {id:viewer.id, displayName:viewer.displayName},
                     dungeon:worldmap,
                     createdAt: now()
                 };
                 if(worldmap.id)
                 {
+                    console.log('dungeonActive :');
+                    console.log(dungeonActive);
                     firebase.update({
                         [`activeDungeons/${Uid}`]: dungeonActive,
+                    });
+                    firebase.update({
+                        [`users/${viewer.id}/dungeonActive`]: Uid,
                     });
                 }
                 return dungeonActive;
