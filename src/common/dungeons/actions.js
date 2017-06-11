@@ -40,9 +40,6 @@ export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
 
 export const attackMonster = (character,row,col) => {
     console.log('action ok');
-    console.log(character);
-    console.log(row);
-    console.log(col);
     return {
         type: ATTACK_MONSTER,
         payload: character
@@ -51,8 +48,6 @@ export const attackMonster = (character,row,col) => {
 
 export const moveCharacter = (row,col) => {
     console.log('action ok');
-    console.log(row);
-    console.log(col);
     return {
         type: MOVE_CHARACTER,
         payload: row
@@ -60,11 +55,6 @@ export const moveCharacter = (row,col) => {
 };
 
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
-    console.log('dwmid: '+dungeon.worldmap);
-    console.log('user: ');
-    console.log(viewer);
-    console.log('dungeon: ');
-    console.log(dungeon);
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
     const getPromise = async () => {
@@ -77,14 +67,12 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     name: dungeon.name,
                     description: dungeon.description,
                     user :
-                        {id:viewer.id, displayName:viewer.displayName},
+                        {id:viewer.id, displayName:viewer.displayName, row:0,col:0},
                     dungeon:worldmap,
                     createdAt: now()
                 };
                 if(worldmap.id)
                 {
-                    console.log('dungeonActive :');
-                    console.log(dungeonActive);
                     firebase.update({
                         [`activeDungeons/${Uid}`]: dungeonActive,
                     });

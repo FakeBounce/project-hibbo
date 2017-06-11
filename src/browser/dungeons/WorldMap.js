@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 
 type Props = {
     worldmap: Object,
+    user: Object,
 };
 
-let WorldMap = ({ worldmap }: Props) => {
+let WorldMap = ({ worldmap,user }: Props) => {
     return (
         <View>
           <div className="cadre-gauche"></div>
@@ -22,7 +23,7 @@ let WorldMap = ({ worldmap }: Props) => {
                 var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
                   return(
                     <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
-                             row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                             user={user} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
                     />
                   );
                 })
@@ -53,6 +54,7 @@ let WorldMap = ({ worldmap }: Props) => {
 
 WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired,
 };
 
 // WorldMap = firebase((database, props) => {

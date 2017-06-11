@@ -5,6 +5,7 @@
 import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
+import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
@@ -46,7 +47,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
             dungeonActive = true;
         }
         else {
-            if(viewer.dungeonActive != null)
+            if(viewer && viewer.dungeonActive != false)
             {
                 preLoadActiveDungeon(viewer);
             }
@@ -64,7 +65,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
                         viewer.id == worldmap.user.id ?
                             <Block key={worldmap.id}>
                                 <Text>{worldmap.description}</Text>
-                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon}/>
+                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} user={dungeon.user}/>
                                 {/*
                                     Exemple d'affichage:
                                     {rowsMap}
@@ -81,6 +82,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
+        <SignOut/>
     </View>
     );
 };

@@ -9,13 +9,13 @@ import { connect } from 'react-redux';
 import { moveCharacter } from '../../common/dungeons/actions';
 
 type Props = {
-    viewer: Object,
+    user: Object,
     maptile: Object,
     row: Object,
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,viewer, moveCharacter }: Props) => {
+const Maptile = ({ maptile,row,col,user, moveCharacter }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -50,10 +50,8 @@ const Maptile = ({ maptile,row,col,viewer, moveCharacter }: Props) => {
 
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired,
+    user: React.PropTypes.object.isRequired,
     moveCharacter: React.PropTypes.func.isRequired
 };
 
-export default connect(state => ({
-    viewer: state.users.viewer
-}), { moveCharacter }) (Maptile);
+export default connect(state => ({}), { moveCharacter }) (Maptile);
