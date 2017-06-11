@@ -47,7 +47,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
             dungeonActive = true;
         }
         else {
-            if(viewer && viewer.dungeonActive != false)
+            if(viewer && viewer.active_dungeon != false)
             {
                 preLoadActiveDungeon(viewer);
             }

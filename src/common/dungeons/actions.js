@@ -22,7 +22,6 @@ export const LoadDungeons = (snap: Object) => {
 
 export const LoadSkills = (snap: Object) => {
     const skills = snap.val();
-    console.log(skills);
     return {
         type: LOAD_SKILLS,
         payload: { skills },
@@ -30,7 +29,7 @@ export const LoadSkills = (snap: Object) => {
 };
 
 export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
-    var path = 'activeDungeons/'+viewer.dungeonActive;
+    var path = 'activeDungeons/'+viewer.active_dungeon;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -59,9 +58,26 @@ export const attackMonster = (character,row,col) => {
 export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
+    let direction = '';
     let totalRow = dungeon.user.row - row;
     let totalCol = dungeon.user.col - col;
-    //Transform total difference to positive int
+    if(totalRow > 0)
+    {
+        direction = 'down';
+    }
+    else if(totalRow<0)
+    {
+        direction = 'up';
+    }
+    else if(totalCol>0)
+    {
+        direction = 'right';
+    }
+    else if(totalCol<0)
+    {
+        direction = 'left';
+    }
+        //Transform total difference to positive int
     if(totalCol < 0)
     {
         totalCol = totalCol*-1;
@@ -99,7 +115,7 @@ export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     return {
         type: MOVE_CHARACTER,
         payload: dungeon,
-        component: { canMove: canMove,message: message}
+        component: { canMove: canMove,message: message,direction: direction}
     }
 };
 
@@ -112,7 +128,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                 let worldmap = snapshot.val();
                 let dungeonActive = {
                     id: Uid,
-                    dungeonId: dungeon.id,
+                    dungeon_id: dungeon.id,
                     name: dungeon.name,
                     description: dungeon.description,
                     user :
@@ -126,7 +142,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                         [`activeDungeons/${Uid}`]: dungeonActive,
                     });
                     firebase.update({
-                        [`users/${viewer.id}/dungeonActive`]: Uid,
+                        [`users/${viewer.id}/active_dungeon`]: Uid,
                     });
                 }
                 return dungeonActive;

@@ -33,11 +33,12 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
         if(isMoving.component.canMove)
         {
             error_message = '';
+
         }
         else
         {
             error_message = isMoving.component.message;
-            console.log(error_message);
+            alert(error_message);
         }
     };
 
@@ -51,13 +52,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
             :
             <Flex onClick={tryMoveCharacter}>
                 <Image src={maptile.image} style={styles.title}/>
-                {error_message ?
-                    <Text>{error_message}</Text>
-                    :
-                    <Text/>
-                }
             </Flex>
-
         }
     </Flex>
     );

@@ -23,7 +23,22 @@ const dungeonsReducer = (state = new State(), action) => {
     switch (action.type) {
 
         case firebaseActions.FIREBASE_SAVE_USER_SUCCESS: {
-            return state.set('viewer', action.payload);
+            let viewer = state.viewer;
+            if(!viewer)
+            {
+                return state.set('viewer', action.payload);
+            }
+            else
+            {
+                return state;
+            }
+        }
+
+        case actions.LOAD_SKILLS: {
+            const skills = action.payload;
+            let viewer = state.viewer;
+            viewer.skills = skills.skills;
+            return state.set('viewer', viewer);
         }
 
         case actions.LOAD_DUNGEONS: {
@@ -51,11 +66,6 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.PRELOAD_ACTIVE_DUNGEON_SUCCESS: {
             const dungeonsOP = action.payload;
-            const list = Seq(dungeonsOP)
-            // .map(dungeonpPresence => new Dungeon(dungeonpPresence))
-                .toList();
-            // state.dungeonsOP[action.payload.id].set(action.payload);
-
             return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
         }
 

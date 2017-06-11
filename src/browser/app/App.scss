@@ -38,8 +38,9 @@ background-attachment:fixed;
 .monster {
   position: absolute;
   z-index: 5;
-  height: 32px;
-  width: 32px;
+  height: 46px;
+  width: 46px;
+  margin-left: 1px;
 }
 
 .map_tile {
