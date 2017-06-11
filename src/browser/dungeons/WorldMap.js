@@ -34,6 +34,7 @@ let WorldMap = ({ worldmap,dungeon }: Props) => {
               })
 
               }
+            {/*<Text>{dungeon.error_message}</Text>*/}
             </div>
             <div className="cadre-objets">
               <div className="objets">

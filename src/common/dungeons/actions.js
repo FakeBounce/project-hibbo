@@ -4,6 +4,7 @@
 
 import { Range } from 'immutable';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const LOAD_SKILLS = 'LOAD_SKILLS';
 export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
 export const PRELOAD_ACTIVE_DUNGEON_SUCCESS = 'PRELOAD_ACTIVE_DUNGEON_SUCCESS';
 export const ATTACK_MONSTER = 'ATTACK_MONSTER';
@@ -16,6 +17,15 @@ export const LoadDungeons = (snap: Object) => {
     return {
         type: LOAD_DUNGEONS,
         payload: { dungeons },
+    };
+};
+
+export const LoadSkills = (snap: Object) => {
+    const skills = snap.val();
+    console.log(skills);
+    return {
+        type: LOAD_SKILLS,
+        payload: { skills },
     };
 };
 
@@ -77,13 +87,19 @@ export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
         delete dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
         dungeon.user.row = row;
         dungeon.user.col = col;
+        dungeon.error_message = '';
         firebase.update({
             [`activeDungeons/${dungeon.id}`]: dungeon,
         });
     }
+    else
+    {
+        dungeon.error_message = message;
+    }
     return {
         type: MOVE_CHARACTER,
-        payload: dungeon
+        payload: dungeon,
+        component: { canMove: canMove,message: message}
     }
 };
 

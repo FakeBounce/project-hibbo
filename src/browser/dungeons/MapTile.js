@@ -4,7 +4,7 @@
 
 import React from 'react';
 import Character from './Character';
-import { Flex,Image } from '../app/components';
+import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
 import { moveCharacter } from '../../common/dungeons/actions';
 
@@ -22,13 +22,23 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
         },
     };
     var character = false;
+    let error_message = '';
     if(typeof maptile.character !== 'undefined')
     {
         character = true;
     }
 
     const tryMoveCharacter = function(){
-        moveCharacter(dungeon,row,col);
+        let isMoving = moveCharacter(dungeon,row,col);
+        if(isMoving.component.canMove)
+        {
+            error_message = '';
+        }
+        else
+        {
+            error_message = isMoving.component.message;
+            console.log(error_message);
+        }
     };
 
     return (
@@ -41,6 +51,11 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
             :
             <Flex onClick={tryMoveCharacter}>
                 <Image src={maptile.image} style={styles.title}/>
+                {error_message ?
+                    <Text>{error_message}</Text>
+                    :
+                    <Text/>
+                }
             </Flex>
 
         }

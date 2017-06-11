@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,preLoadActiveDungeon, loadWorldMap } from '../../common/dungeons/actions';
+import { LoadDungeons,LoadSkills,preLoadActiveDungeon, loadWorldMap } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -98,8 +98,10 @@ Dungeons.propTypes = {
 
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
+    const SkillsRef = database.child('skills');
     return [
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
+        [SkillsRef, 'on', 'value', props.LoadSkills],
     ];
 })(Dungeons);
 
@@ -108,4 +110,4 @@ export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
     viewer: state.dungeons.viewer,
-}), { LoadDungeons,preLoadActiveDungeon, loadWorldMap })(Dungeons);
+}), { LoadDungeons,LoadSkills,preLoadActiveDungeon, loadWorldMap })(Dungeons);
