@@ -38,6 +38,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   var id15 = getUid();
   var id16 = getUid();
   var id17 = getUid();
+  var id18 = getUid();
+  var id19 = getUid();
+  var id20 = getUid();
+  var id21 = getUid();
+  var id22 = getUid();
+  var id23 = getUid();
+  var id24 = getUid();
+  var id25 = getUid();
   var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
   // firebase.update({
   //   [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
@@ -49,8 +57,8 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
   //ADD FAKE MAP
   firebase.update({
-      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7959`]: {
-          id: '603414e3-d8fc-4b3f-ac56-376160eb7959', name: `first`, maptiles: {
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`, maptiles: {
               0: {
                   0: {
                       completed: false,
@@ -127,67 +135,122 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
   //ADD FAKE SKILLS
   firebase.update({
-      [`skills`]: {
-          0: {
-              get: true,
-              id: id10,
-              css: "objet0",
-              title: "fiole0"
-          },
-          1: {
-              get: true,
-              id: id11,
-              css: "objet1",
-              title: "fiole1"
-          },
-          2: {
-              get: true,
-              id: id12,
-              css: "objet2",
-              title: "fiole2"
-          },
-          3: {
-              get: true,
-              id: id13,
-              css: "objet3",
-              title: "fiole3"
-          },
-          4: {
-              get: true,
-              id: id14,
-              css: "objet4",
-              title: "fiole4"
-          },
-          5: {
-              get: true,
-              id: id15,
-              css: "objet5",
-              title: "fiole5"
-          },
-          6: {
-              get: true,
-              id: id16,
-              css: "objet6",
-              title: "fiole6"
-          },
-          7: {
-              get: false,
-              id: id17,
-              css: "objet7",
-              title: "fiole7"
-          }
-      }
+    [`skills`]: {
+      0: {
+        get: true,
+        id: id10,
+        css: "objet0",
+        title: "fiole0"
+      },
+      1: {
+        get: true,
+        id: id11,
+        css: "objet1",
+        title: "fiole1"
+      },
+      2: {
+        get: true,
+        id: id12,
+        css: "objet2",
+        title: "fiole2"
+      },
+      3: {
+        get: true,
+        id: id13,
+        css: "objet3",
+        title: "fiole3"
+      },
+      4: {
+        get: true,
+        id: id14,
+        css: "objet4",
+        title: "fiole4"
+      },
+      5: {
+        get: true,
+        id: id15,
+        css: "objet5",
+        title: "fiole5"
+      },
+      6: {
+        get: true,
+        id: id16,
+        css: "objet6",
+        title: "fiole6"
+      },
+      7: {
+        get: false,
+        id: id17,
+        css: "objet7",
+        title: "fiole7"
+      },
+    }
   });
 
-  return {
-      type: MAPTILE_COMPLETED,
-      payload: {
-          createdAt: now(),
-          id: id,
-          title: `MapTile #123`,
+  //ADD FAKE WEAPONS
+  firebase.update({
+    [`weapons`]: {
+      0: {
+        get: true,
+        id: id18,
+        css: "weapon0",
+        title: "weapon0"
       },
+      1: {
+        get: true,
+        id: id19,
+        css: "weapon1",
+        title: "weapon1"
+      },
+      2: {
+        get: true,
+        id: id20,
+        css: "weapon2",
+        title: "weapon2"
+      },
+      3: {
+        get: true,
+        id: id21,
+        css: "weapon3",
+        title: "weapon3"
+      },
+      4: {
+        get: true,
+        id: id22,
+        css: "weapon4",
+        title: "weapon4"
+      },
+      5: {
+        get: true,
+        id: id23,
+        css: "weapon5",
+        title: "weapon5"
+      },
+      6: {
+        get: true,
+        id: id24,
+        css: "weapon6",
+        title: "weapon6"
+      },
+      7: {
+        get: false,
+        id: id25,
+        css: "weapon7",
+        title: "weapon7"
+      }
+    }});
+
+  return {
+    type: MAPTILE_COMPLETED,
+    payload: {
+      createdAt: now(),
+      id: id,
+      title: `MapTile #123`,
+    },
   };
 };
+
+
 
 
 // CREATE ONLY
