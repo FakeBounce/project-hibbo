@@ -16,6 +16,7 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap,dungeon,viewer }) => {
+    console.log('worldmap');
     return (
         <View>
           <div className="cadre-gauche"></div>

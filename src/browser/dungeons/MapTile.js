@@ -21,6 +21,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
             cursor: 'pointer',
         },
     };
+    console.log('maptile');
     var character = false;
     let error_message = '';
     if(typeof maptile.character !== 'undefined')
