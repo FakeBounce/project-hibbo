@@ -2,15 +2,10 @@
 import React from 'react';
 import errorMessages from '../../common/auth/errorMessages';
 import { FormattedMessage } from 'react-intl';
-import { Message } from '../app/components';
+import { Div } from '../app/components';
 import { connect } from 'react-redux';
 import { firebaseMessages } from '../../common/lib/redux-firebase';
 
-const styles = {
-  message: {
-    display: 'inline-block',
-  },
-};
 
 const SignInError = ({ error }) => {
   if (!error) return null;
@@ -20,13 +15,13 @@ const SignInError = ({ error }) => {
     firebaseMessages[error.name];
 
   return (
-    <Message style={styles.message} theme="error">
+    <Div className="form_auth_error" >
       {message ?
         <FormattedMessage {...message} values={error.params} />
       :
         error.toString()
       }
-    </Message>
+    </Div>
   );
 };
 

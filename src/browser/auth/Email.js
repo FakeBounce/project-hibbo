@@ -2,6 +2,7 @@
 import React from 'react';
 import buttonsMessages from '../../common/app/buttonsMessages';
 import emailMessages from '../../common/auth/emailMessages';
+import SignInError from './SignInError';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
@@ -11,12 +12,11 @@ import {
   Form,
   Input,
   Message,
-  Panel,
-  PanelHeader,
   Space,
   View,
   focus,
-  Link
+  Loading,
+Div
 } from '../app/components';
 
 type State = {
@@ -55,7 +55,7 @@ class Email extends React.Component {
 
   onForgetPasswordClick = () => {
     const { forgetPasswordIsShown } = this.state;
-    this.setState({ forgetPasswordIsShown: !forgetPasswordIsShown });
+      this.setState({ forgetPasswordIsShown: !forgetPasswordIsShown });
   };
 
   resetPassword() {
@@ -104,6 +104,22 @@ class Email extends React.Component {
               hideLabel
             />
           }
+          {recoveryEmailSent &&
+              <Div className="form_auth_error">
+                  {intl.formatMessage(emailMessages.recoveryEmailSent)}
+              </Div>
+
+          }
+          {!disabled &&
+            <SignInError />
+          }
+
+          {disabled &&
+          <Loading>
+              {message => <Message>{message}</Message>}
+          </Loading>
+          }
+
           {!forgetPasswordIsShown ?
             <View className="auth_form_actions">
                 <Button
@@ -119,6 +135,7 @@ class Email extends React.Component {
                     <FormattedMessage {...emailMessages.passwordForgotten} />
                 </Button>
                 <Button
+                    disabled={disabled}
                     style={{
                     backgroundColor: 'transparent',
                     backgroundImage: 'url("/assets/images/login/login button.png")',
@@ -154,22 +171,42 @@ class Email extends React.Component {
                 >
                     <FormattedMessage {...buttonsMessages.signUp} />
                 </Button>
-                <Space />
-                {recoveryEmailSent &&
-                    <Message>
-                        <FormattedMessage {...emailMessages.recoveryEmailSent} />
-                    </Message>
-                }
             </View>
           :
-            <View>
-              <Button disabled={disabled}>
+            <View className="auth_form_actions">
+              <Button
+                  disabled={disabled}
+                  style={{
+                      backgroundColor: 'transparent',
+                      backgroundImage: 'url("/assets/images/login/register button.png")',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundAttachment: 'scroll',
+                      height: '53px',
+                      width: '115px',
+                      color: 'grey',
+                      boxShadow: 'none',
+                      float: 'right',
+                      marginRight: '10px'
+                  }}
+              >
                 <FormattedMessage {...emailMessages.resetPassword} />
               </Button>
               <Space />
               <Button
                 disabled={disabled}
                 onClick={this.onForgetPasswordClick}
+                style={{
+                    backgroundColor: 'transparent',
+                    backgroundImage: 'url("/assets/images/login/register button.png")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundAttachment: 'scroll',
+                    height: '53px',
+                    width: '115px',
+                    color: 'grey',
+                    boxShadow: 'none',
+                    float: 'right',
+                    marginRight: '10px'
+                }}
                 type="button"
               >
                 <FormattedMessage {...buttonsMessages.dismiss} />
@@ -177,6 +214,7 @@ class Email extends React.Component {
             </View>
           }
       </Form>
+
     );
   }
 

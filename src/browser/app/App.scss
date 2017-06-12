@@ -86,7 +86,7 @@ background-attachment:fixed;
 }
 
 .auth_form{
-  padding:2em 3em 3em 3em ;
+  padding:25px 3em 3em 3em ;
   max-width:none;
   width: 100%;
 }
@@ -102,10 +102,23 @@ background-attachment:fixed;
 
 .auth_form_email, .auth_form_password{
   display: inline-block;
+  height: 30px;
+
  }
 
 .auth_form_actions{
-  margin-top: 30px;
+  margin-top: 40px;
+}
+
+.form_auth_error{
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  margin-bottom: -25px;
+}
+
+.form_auth_error_empty{
+  height: 15px;
 }
 
 // map

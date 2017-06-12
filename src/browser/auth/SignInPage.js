@@ -9,7 +9,8 @@ import { connect } from 'react-redux';
 import { injectIntl, intlShape } from 'react-intl';
 import {
     Login,
-    Div
+    Div,
+    Loading
 } from '../app/components';
 
 let SignInPage = ({ disabled, intl, location, viewer }) => (
@@ -26,22 +27,6 @@ let SignInPage = ({ disabled, intl, location, viewer }) => (
           <Div className="login_title">Connexion</Div>
           <Email />
       </Login>
-    /*<View>
-      <Title message={linksMessages.signIn} />
-      <PageHeader heading={intl.formatMessage(linksMessages.signIn)} />
-      <Block>
-        <Social />
-      </Block>
-      <Block>
-        <Email />
-      </Block>
-      <SignInError />
-      {disabled &&
-        <Loading>
-          {message => <Message>{message}</Message>}
-        </Loading>
-      }
-    </View>*/
 );
 
 SignInPage.propTypes = {
@@ -52,7 +37,7 @@ SignInPage.propTypes = {
 };
 
 SignInPage = injectIntl(SignInPage);
-
+1
 export default connect(state => ({
   disabled: state.auth.formDisabled,
   viewer: state.users.viewer,

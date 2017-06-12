@@ -126,7 +126,7 @@ export default [
   },
   {
     "id": "auth.email.recoveryEmailSent",
-    "defaultMessage": "L'email de récupération du mot de passe a été envoyé.",
+    "defaultMessage": "L'email contenant votre nouveau mot de passe a été envoyé.",
   },
   {
     "id": "auth.email.resetPassword",
@@ -150,7 +150,7 @@ export default [
   },
   {
     "id": "firebase.error.EMAIL_TAKEN",
-    "defaultMessage": "Le nouveau compte utilisateur ne peut pas être créé car l'email indiqué est déjà utilisé.",
+    "defaultMessage": "Le compte utilisateur ne peut pas être créé car l'email indiqué est déjà utilisé.",
   },
   {
     "id": "firebase.error.INVALID_EMAIL",
