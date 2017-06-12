@@ -42,6 +42,12 @@ let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
                         var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
                           return (<div key={skill.id} className={classObjet}></div>);
                       })
+                  },
+                  {
+                    viewer.weapons.map(weapon => {
+                      var classObjet = weapon.get ? 'objet ' + weapon.css : 'objet objetVide';
+                      return (<div key={weapon.id} className={classObjet}></div>);
+                    })
                   }
               </div>
             </div>

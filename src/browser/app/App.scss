@@ -164,8 +164,9 @@ background-attachment:fixed;
   height: 200px;
   float: right;
   border-top: 1px solid #fff;
-  background: url(/assets/images/box-competence2.png) no-repeat;
+  background: url(/assets/images/box-competence3.png) no-repeat;
   background-size: contain;
+  opacity: 0.9;
 }
 
 .objets {
@@ -234,6 +235,56 @@ background-attachment:fixed;
   background-size: cover;
   cursor: pointer;
 }
+
+.weapon0{
+  background: url("/assets/images/weapons/0.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon1{
+  background: url("/assets/images/weapons/1.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon2{
+  background: url("/assets/images/weapons/2.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon3{
+  background: url("/assets/images/weapons/3.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon4{
+  background: url("/assets/images/weapons/4.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon5{
+  background: url("/assets/images/weapons/5.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon6{
+  background: url("/assets/images/weapons/6.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon7{
+  background: url("/assets/images/weapons/7.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+
 
 .objetVide{
   background: url("/assets/images/objets/vide.jpg") no-repeat;
