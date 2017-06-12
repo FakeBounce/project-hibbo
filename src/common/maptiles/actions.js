@@ -48,81 +48,81 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
   //ADD FAKE MAP
-  // firebase.update({
-  //     [`maps/603414e3-d8fc-4b3f-ac56-376160eb7959`]: {
-  //         id: '603414e3-d8fc-4b3f-ac56-376160eb7959', name: `first`, maptiles: {
-  //             0: {
-  //                 0: {
-  //                     completed: false,
-  //                     id: id1,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest",
-  //                     character: {
-  //                         image:"/assets/images/classes/gface.png",
-  //                         damage:100,
-  //                         health:15000
-  //                     }
-  //                 },
-  //                 1: {
-  //                     completed: false,
-  //                     id: id2,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest",
-  //                     character: {
-  //                         image:"/assets/images/monsters/Warrior.png",
-  //                         damage:250,
-  //                         health:400
-  //                     }
-  //                 },
-  //                 2: {
-  //                     completed: false,
-  //                     id: id3,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 }
-  //             },
-  //             1: {
-  //                 0: {
-  //                     completed: false,
-  //                     id: id4,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 },
-  //                 1: {
-  //                     completed: false,
-  //                     id: id5,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 },
-  //                 2: {
-  //                     completed: false,
-  //                     id: id6,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 }
-  //             },
-  //             2: {
-  //                 0: {
-  //                     completed: false,
-  //                     id: id7,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 },
-  //                 1: {
-  //                     completed: false,
-  //                     id: id8,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 },
-  //                 2: {
-  //                     completed: false,
-  //                     id: id9,
-  //                     image: "/assets/images/forest.png",
-  //                     title: "forest"
-  //                 }
-  //             }
-  //         }
-  //     });
+  firebase.update({
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7959`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7959', name: `first`, maptiles: {
+              0: {
+                  0: {
+                      completed: false,
+                      id: id1,
+                      image: "casegrass",
+                      title: "forest",
+                      character: {
+                          image:"/assets/images/classes/gface.png",
+                          damage:100,
+                          health:15000
+                      }
+                  },
+                  1: {
+                      completed: false,
+                      id: id2,
+                      image: "casegrass",
+                      title: "forest",
+                      character: {
+                          image:"/assets/images/monsters/Warrior.png",
+                          damage:250,
+                          health:400
+                      }
+                  },
+                  2: {
+                      completed: false,
+                      id: id3,
+                      image: "caseforest",
+                      title: "forest"
+                  }
+              },
+              1: {
+                  0: {
+                      completed: false,
+                      id: id4,
+                      image: "casegrass",
+                      title: "forest"
+                  },
+                  1: {
+                      completed: false,
+                      id: id5,
+                      image: "casegrass",
+                      title: "forest"
+                  },
+                  2: {
+                      completed: false,
+                      id: id6,
+                      image: "caseforest",
+                      title: "forest"
+                  }
+              },
+              2: {
+                  0: {
+                      completed: false,
+                      id: id7,
+                      image: "caseforest",
+                      title: "forest"
+                  },
+                  1: {
+                      completed: false,
+                      id: id8,
+                      image: "caseforest",
+                      title: "forest"
+                  },
+                  2: {
+                      completed: false,
+                      id: id9,
+                      image: "caseforest",
+                      title: "forest"
+                  }
+              }
+          }
+      }});
 
 
   //ADD FAKE SKILLS

@@ -42,17 +42,16 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
         }
     };
 
+  var classImage = "case " + maptile.image;
     return (
     <Flex>
-        {character ?
-            <Flex onClick={tryMoveCharacter}>
-                <Image src={maptile.image} style={styles.title}/>
+        {
+          character ?
+            <Flex className={classImage} onClick={tryMoveCharacter}>
                 <Character row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex onClick={tryMoveCharacter}>
-                <Image src={maptile.image} style={styles.title}/>
-            </Flex>
+            <Flex className={classImage} onClick={tryMoveCharacter}></Flex>
         }
     </Flex>
     );

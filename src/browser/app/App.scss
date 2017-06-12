@@ -44,12 +44,34 @@ background-attachment:fixed;
 }
 
 .map_tile {
-  margin: 0px!important;
-  padding: 0px!important;
+  margin: 0 !important;
+  padding: 0 !important;
   margin-left: -4px!important;
   height: 34px;
   width: 34px;
 }
+
+.case{
+  width:50px;
+  height:50px;
+}
+
+.caseforest{
+  background: url("/assets/images/forest.png") no-repeat;
+  background-size: cover;
+}
+
+.casegrass{
+  background: url("/assets/images/forest.png") no-repeat;
+  background-size: cover;
+}
+
+.caseleftdoor{
+  background: url("/assets/images/forest.png") no-repeat;
+  background-size: cover;
+}
+
+
 
 #app{
   bottom: 0;
@@ -164,40 +186,53 @@ background-attachment:fixed;
 .objet1{
   background: url("/assets/images/objets/1.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet2{
   background: url("/assets/images/objets/2.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet3{
   background: url("/assets/images/objets/3.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet4{
   background: url("/assets/images/objets/4.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet5{
   background: url("/assets/images/objets/5.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet6{
   background: url("/assets/images/objets/6.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
 .objet7{
   background: url("/assets/images/objets/7.jpg") no-repeat;
   background-size: cover;
+  cursor: pointer;
 }
 
-.objet8{
+.objet0{
   background: url("/assets/images/objets/8.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.objetVide{
+  background: url("/assets/images/objets/vide.jpg") no-repeat;
   background-size: cover;
 }
 
