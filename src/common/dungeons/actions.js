@@ -5,6 +5,7 @@
 import { Range } from 'immutable';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
+export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
 export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
 export const PRELOAD_ACTIVE_DUNGEON_SUCCESS = 'PRELOAD_ACTIVE_DUNGEON_SUCCESS';
 export const ATTACK_MONSTER = 'ATTACK_MONSTER';
@@ -19,6 +20,16 @@ export const LoadDungeons = (snap: Object) => {
         payload: { dungeons },
     };
 };
+
+export const ReloadWorldMap = (snap: Object) => {
+    const dungeons = snap.val();
+    return {
+        type: RELOAD_WORLD_MAP,
+        payload: { dungeons },
+    };
+};
+
+
 
 export const LoadSkills = (snap: Object) => {
     const skills = snap.val();
@@ -105,7 +116,7 @@ export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
         dungeon.user.col = col;
         dungeon.error_message = '';
         firebase.update({
-            [`activeDungeons/${dungeon.id}`]: dungeon,
+            [`activeDungeons/${dungeon.user.id}`]: dungeon,
         });
     }
     else
@@ -139,7 +150,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                 if(worldmap.id)
                 {
                     firebase.update({
-                        [`activeDungeons/${Uid}`]: dungeonActive,
+                        [`activeDungeons/${viewer.id}`]: dungeonActive,
                     });
                     firebase.update({
                         [`users/${viewer.id}/active_dungeon`]: Uid,

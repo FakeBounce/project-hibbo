@@ -49,8 +49,8 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
   //ADD FAKE MAP
   firebase.update({
-      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7959`]: {
-          id: '603414e3-d8fc-4b3f-ac56-376160eb7959', name: `first`, maptiles: {
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`, maptiles: {
               0: {
                   0: {
                       completed: false,

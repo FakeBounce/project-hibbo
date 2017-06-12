@@ -69,6 +69,16 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
         }
 
+        case actions.RELOAD_WORLD_MAP: {
+            const dungeonsOP = action.payload.dungeons;
+            if(dungeonsOP)
+            {
+                return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP[state.viewer.id]));
+            }
+            return state;
+
+        }
+
         case actions.ATTACK_MONSTER: {
             console.log('reducer ok');
             console.log(action.payload);
@@ -77,7 +87,10 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.MOVE_CHARACTER: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let viewer = state.viewer;
+            viewer.row = payload.user.row;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('viewer',viewer);
         }
 
         default:
