@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 
 type Props = {
     worldmap: Object,
+    dungeon: Object,
 };
 
-let WorldMap = ({ worldmap }: Props) => {
+let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
     return (
         <View>
           <div className="cadre-gauche"></div>
@@ -22,7 +23,7 @@ let WorldMap = ({ worldmap }: Props) => {
                 var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
                   return(
                     <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
-                             row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                             dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
                     />
                   );
                 })
@@ -36,14 +37,12 @@ let WorldMap = ({ worldmap }: Props) => {
             </div>
             <div className="cadre-objets">
               <div className="objets">
-                <div className="objet objet1"></div>
-                <div className="objet objet2"></div>
-                <div className="objet objet3"></div>
-                <div className="objet objet4"></div>
-                <div className="objet objet5"></div>
-                <div className="objet objet6"></div>
-                <div className="objet objet7"></div>
-                <div className="objet objet8"></div>
+                  {
+                      viewer.skills.map(skill => {
+                        var classObjet = skill.get? 'objet ' + skill.css : 'objet objetVide';
+                          return (<div key={skill.id} className={classObjet}></div>);
+                      })
+                  }
               </div>
             </div>
           </div>
@@ -53,15 +52,12 @@ let WorldMap = ({ worldmap }: Props) => {
 
 WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object.isRequired,
 };
 
-// WorldMap = firebase((database, props) => {
-//     const WorldMapRef = database.child('maps');
-//     return [
-//         [WorldMapRef, 'on', 'value', props.LoadWorldMap],
-//     ];
-// })(WorldMap);
 
-//export default WorldMap;
 
-export default WorldMap;
+export default connect(state => ({
+    viewer: state.dungeons.viewer,
+}), { })(WorldMap);

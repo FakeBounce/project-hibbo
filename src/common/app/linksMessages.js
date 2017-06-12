@@ -52,7 +52,7 @@ const LinkMessages = defineMessages({
   },
   dungeon: {
     defaultMessage: 'New dungeon',
-    id: 'app.links.map',
+    id: 'app.links.dungeon',
   },
 });
 

@@ -138,7 +138,7 @@ class Email extends React.Component {
                     disabled={disabled}
                     style={{
                     backgroundColor: 'transparent',
-                    backgroundImage: 'url("/assets/images/login/login button.png")',
+                    backgroundImage: 'url("/assets/images/login/loginbutton.png")',
                     backgroundRepeat: 'no-repeat',
                     backgroundAttachment: 'scroll',
                     height: '53px',
@@ -158,7 +158,7 @@ class Email extends React.Component {
                     type="button"
                     style={{
                     backgroundColor: 'transparent',
-                    backgroundImage: 'url("/assets/images/login/register button.png")',
+                    backgroundImage: 'url("/assets/images/login/registerbutton.png")',
                     backgroundRepeat: 'no-repeat',
                     backgroundAttachment: 'scroll',
                     height: '53px',

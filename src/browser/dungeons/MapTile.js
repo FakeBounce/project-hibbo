@@ -4,45 +4,54 @@
 
 import React from 'react';
 import Character from './Character';
-import { Flex,Image } from '../app/components';
+import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
 import { moveCharacter } from '../../common/dungeons/actions';
 
 type Props = {
-    viewer: Object,
+    dungeon: Object,
     maptile: Object,
     row: Object,
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,viewer, moveCharacter }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
         },
     };
     var character = false;
+    let error_message = '';
     if(typeof maptile.character !== 'undefined')
     {
         character = true;
     }
 
     const tryMoveCharacter = function(){
-        moveCharacter(row,col);
+        let isMoving = moveCharacter(dungeon,row,col);
+        if(isMoving.component.canMove)
+        {
+            error_message = '';
+
+        }
+        else
+        {
+            error_message = isMoving.component.message;
+            alert(error_message);
+        }
     };
 
+  var classImage = "case " + maptile.image;
     return (
     <Flex>
-        {character ?
-            <Flex>
-                <Image src={maptile.image} style={styles.title}/>
+        {
+          character ?
+            <Flex className={classImage} onClick={tryMoveCharacter}>
                 <Character row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex onClick={tryMoveCharacter}>
-                <Image src={maptile.image} style={styles.title}/>
-            </Flex>
-
+            <Flex className={classImage} onClick={tryMoveCharacter}></Flex>
         }
     </Flex>
     );
@@ -50,10 +59,8 @@ const Maptile = ({ maptile,row,col,viewer, moveCharacter }: Props) => {
 
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.object.isRequired,
     moveCharacter: React.PropTypes.func.isRequired
 };
 
-export default connect(state => ({
-    viewer: state.users.viewer
-}), { moveCharacter }) (Maptile);
+export default connect(state => ({}), { moveCharacter }) (Maptile);

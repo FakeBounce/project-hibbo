@@ -101,6 +101,10 @@ export default [
     "defaultMessage": "Tâches",
   },
   {
+    "id": "app.links.dungeon",
+    "defaultMessage": "Nouveau donjon",
+  },
+  {
     "id": "auth.email.emailLegend",
     "defaultMessage": "Votre email : ",
   },
