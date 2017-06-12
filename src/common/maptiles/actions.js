@@ -38,6 +38,9 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   var id15 = getUid();
   var id16 = getUid();
   var id17 = getUid();
+  var id18 = getUid();
+  var id19 = getUid();
+  var id20 = getUid();
   var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
   // firebase.update({
   //   [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
@@ -170,12 +173,31 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
               css: "objet6",
               title: "fiole6"
           },
-          7: {
-              get: false,
-              id: id17,
-              css: "objet7",
-              title: "fiole7"
-          }
+        7: {
+          get: false,
+          id: id17,
+          css: "objet7",
+          title: "fiole7"
+        },
+        8: {
+          get: false,
+          id: id18,
+          css: "objet7",
+          title: "fiole7"
+        },
+        9: {
+          get: false,
+          id: id19,
+          css: "objet7",
+          title: "fiole7"
+        },
+        10: {
+          get: false,
+          id: id20,
+          css: "objet7",
+          title: "fiole7"
+        },
+
       }
   });
 
