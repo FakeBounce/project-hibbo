@@ -13,7 +13,6 @@ type Props = {
 };
 
 const Character = ({ character,row,col, attackMonster }: Props) => {
-    console.log('character');
     const styles = {
         title: {
             cursor: 'pointer',

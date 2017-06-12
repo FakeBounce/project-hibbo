@@ -15,8 +15,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer }) => {
-    console.log('worldmap');
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
     return (
         <View>
           <div className="cadre-gauche"></div>
@@ -58,8 +57,10 @@ WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
     viewer: React.PropTypes.object.isRequired,
+    dungeonsOP: React.PropTypes.object,
 };
 
 export default connect(state => ({
     viewer: state.dungeons.viewer,
+    dungeonsOP: state.dungeons.dungeonsOP,
 }), {})(WorldMap);

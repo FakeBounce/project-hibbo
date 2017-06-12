@@ -53,7 +53,6 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
             dungeonActive = false;
         }
     }
-    console.log(dungeon.dungeon);
 
     return (
     <View>
