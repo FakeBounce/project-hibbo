@@ -16,7 +16,11 @@ type Props = {
 let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
     return (
         <View>
-          <div className="cadre-gauche"></div>
+          <div className="cadre-gauche">
+            <div className="personnage">
+
+            </div>
+          </div>
           <div className="cadre-droite">
             <div className="cadre">
               { Object.keys(worldmap.maptiles).map(function (keyRow) {
