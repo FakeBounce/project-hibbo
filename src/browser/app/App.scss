@@ -305,6 +305,15 @@ background-attachment:fixed;
 }
 
 
+//Tutorial
+
+.container_tuto{
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+
 
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css

@@ -3,16 +3,19 @@
  */
 import React from 'react';
 import Dungeons from './Dungeons';
+import Tutoriel from '../tutoriel/Tutoriel';
 import linksMessages from '../../common/app/linksMessages';
-import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
+import { Block, Title, View } from '../app/components';
 
 const DungeonsPage = () => (
     <View>
+        <Tutoriel/>
         <Title message={linksMessages.dungeon} />
         <Block>
             <Dungeons/>
         </Block>
     </View>
+
 );
 
 export default DungeonsPage;
