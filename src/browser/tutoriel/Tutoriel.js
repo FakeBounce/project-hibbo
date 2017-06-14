@@ -40,6 +40,6 @@ Tutoriel = firebase((database, props) => {
 })(Tutoriel);
 
 export default connect(state => ({
-    tutoriel: state.tutoriel,
+    tutoriel: state.dungeons,
     viewer: state.viewer
 }), { LoadTuto })(Tutoriel);

@@ -3,7 +3,7 @@
  */
 
 import * as actions from './actions';
-import Dungeon from './dungeon';
+import Tutoriel from './tutoriel.js';
 import { Map } from 'immutable';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
@@ -19,19 +19,9 @@ const State = Record({
 const tutorielReducer = (state = new State(), action) => {
 
     switch (action.type) {
-        case firebaseActions.FIREBASE_SAVE_USER_SUCCESS: {
-            let viewer = state.viewer;
-            if(!viewer)
-            {
-                return state.set('viewer', action.payload);
-            }
-            else
-            {
-                return state;
-            }
-        }
 
         case actions.LOAD_TUTO: {
+            console.log('test');
             console.log(action.payload);
             return state;
         }

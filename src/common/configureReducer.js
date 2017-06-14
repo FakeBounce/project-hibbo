@@ -9,6 +9,7 @@ import todos from './todos/reducer';
 import users from './users/reducer';
 import maptiles from './maptiles/reducer';
 import dungeons from './dungeons/reducer';
+import tutoriel from './tutoriel/reducer';
 import worldmap from './worldmap/reducer';
 
 import { FIREBASE_ON_AUTH } from '../common/lib/redux-firebase/actions';
@@ -48,6 +49,7 @@ const configureReducer = (initialState: Object) => {
     themes,
     todos,
     users,
+      tutoriel,
     worldmap,
   });
 

@@ -12,6 +12,7 @@ const stateToSave = [
   ['themes', 'currentTheme'],
   ['todos'],['maptiles'],
   ['dungeons'],
+    ['tutoriel'],
   ['users', 'viewer'],
 ];
 
