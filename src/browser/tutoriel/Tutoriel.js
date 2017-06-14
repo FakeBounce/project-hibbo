@@ -10,9 +10,15 @@ import { LoadTuto, CreateTuto } from '../../common/tutoriel/actions';
 
 
 let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
+    if(viewer && !tutoriel)
+    {
+        CreateTuto(viewer);
+    }
     if(!tutoriel)
     {
-        var load = LoadTuto(viewer);
+        var test = function () {
+            var load = LoadTuto(viewer.id);
+        }
     }
     //console.log("tit", tutoriel);
     //var tutorielStep = LoadTuto(viewer);
@@ -20,8 +26,6 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
     {
         CreateTuto(viewer);
     }*/
-    console.log("tit2", load);
-    console.log("tit3", tutoriel);
     return (
         <View>
             {tutoriel ?
@@ -29,7 +33,7 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
                     Bonjour
                     </Block>
                 :
-                <Block className="testmaxime">
+                <Block className="testmaxime" onClick={test}>
                     Bonsoir
                 </Block>
             }
