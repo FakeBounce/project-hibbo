@@ -4,6 +4,7 @@
 
 import { Range } from 'immutable';
 export const LOAD_TUTO = 'LOAD_TUTO';
+<<<<<<< HEAD
 export const LOAD_TUTO_SUCCESS = 'LOAD_TUTO_SUCCESS';
 export const CREATE_TUTO = 'CREATE_TUTO';
 
@@ -31,10 +32,50 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
         var Uid = getUid();
         let TutorielUser = {
             id: Uid,
+=======
+export const CREATE_TUTO = 'CREATE_TUTO';
+
+export const LoadTuto = (viewer) => ({firebase}) => {
+    console.log("viewer load tuto", viewer);
+    if(viewer) {
+        const getPromise = async() => {
+            try {
+                return await firebase.database.ref("Tutoriel")
+                    .orderByChild("user")
+                    .equalTo(viewer.id)
+                    .once("child_added")
+                    .then(function (snapshot) {
+                        let tutoriel = snapshot.val();
+                        return tutoriel;
+                    });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: LOAD_TUTO,
+            payload: getPromise()
+        }
+    }
+    console.log("pk");
+    return {
+        type: LOAD_TUTO,
+        payload: null,
+    };
+};
+
+export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
+    console.log("create load tuto", viewer);
+    if(viewer) {
+        var Uid = getUid();
+        let TutorielUser = {
+>>>>>>> 7c8f9f9db554b53befa470ce71586e9cf151226c
             user : viewer.id,
             step : 1,
             close : false,
         };
+<<<<<<< HEAD
         firebase.update({
             [`Tutoriel/${viewer.id}`]: TutorielUser,
         });
@@ -43,4 +84,30 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
             type: CREATE_TUTO,
             payload: TutorielUser,
         };
+=======
+        console.log("tutoID", Uid);
+        console.log("usertuto", TutorielUser);
+        const getPromise = async () => {
+            try {
+                return await firebase.update({
+                    [`Tutoriel/${Uid}`]: TutorielUser,
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+
+        if(getPromise()){
+            return {
+                type: CREATE_TUTO,
+                payload: getPromise(),
+            };
+        }
+    }
+    return {
+        type: CREATE_TUTO,
+        payload: null,
+    };
+>>>>>>> 7c8f9f9db554b53befa470ce71586e9cf151226c
 };
