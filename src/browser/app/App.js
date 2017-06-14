@@ -5,7 +5,6 @@ import Footer from './Footer';
 import Header from './Header';
 import Helmet from 'react-helmet';
 import React from 'react';
-import favicon from '../../common/app/favicon';
 import start from '../../common/app/start';
 import { ContainerApp } from '../app/components';
 import { Match, ThemeProvider } from '../../common/app/components';
