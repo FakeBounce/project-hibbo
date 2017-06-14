@@ -20,12 +20,6 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
             var load = LoadTuto(viewer.id);
         }
     }
-    //console.log("tit", tutoriel);
-    //var tutorielStep = LoadTuto(viewer);
-    /*if(tutorielStep.payload == null)
-    {
-        CreateTuto(viewer);
-    }*/
     return (
         <View>
             {tutoriel ?
