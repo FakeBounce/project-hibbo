@@ -41,6 +41,13 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.set('viewer', viewer);
         }
 
+        case actions.LOAD_WEAPONS: {
+          const weapons = action.payload;
+          let viewer = state.viewer;
+          viewer.weapons = weapons.weapons;
+          return state.set('viewer', viewer);
+        }
+
         case actions.LOAD_DUNGEONS: {
             const { dungeons } = action.payload;
             const list = Seq(dungeons)

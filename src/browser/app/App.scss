@@ -109,7 +109,7 @@ background-attachment:fixed;
 }
 
 .auth_form{
-  padding:2em 3em 3em 3em ;
+  padding:25px 3em 3em 3em ;
   max-width:none;
   width: 100%;
 }
@@ -125,10 +125,23 @@ background-attachment:fixed;
 
 .auth_form_email, .auth_form_password{
   display: inline-block;
+  height: 30px;
+
  }
 
 .auth_form_actions{
-  margin-top: 30px;
+  margin-top: 40px;
+}
+
+.form_auth_error{
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
+  margin-bottom: -25px;
+}
+
+.form_auth_error_empty{
+  height: 15px;
 }
 
 // map
@@ -157,30 +170,35 @@ background-attachment:fixed;
 
 }
 
-.cadre-objets{
+.cadre-objets {
   background-color: rgba(0, 0, 0, 0.3);
-  width:644px;
-  display: flex;
-  height:100px;
+  width: 644px;
+  display: block;
+  height: 200px;
   float: right;
-  border-top:1px solid #fff;
+  border-top: 1px solid #fff;
+  background: url(/assets/images/box-competence3.png) no-repeat;
+  background-size: contain;
+  opacity: 0.9;
 }
 
-.objets{
-  height:100px;
-  width:100%;
-  display: flex;
-  padding:2%;
+.objets {
+  height: 200px;
+  width: 560px;
+  display: block;
+  padding: 2%;
+  margin: 0 auto;
+  margin-top: 40px;
 }
 
 
-
-.objet{
-  width: 12%;
+.objet {
+  width: 50px;
+  height: 50px;
   display: block;
   float: left;
-  margin:0 0.5%;
-  border:1px solid #fff;
+  margin: 5px 8px;
+  border: 1px solid #fff;
 }
 
 .objet1{
@@ -230,6 +248,56 @@ background-attachment:fixed;
   background-size: cover;
   cursor: pointer;
 }
+
+.weapon0{
+  background: url("/assets/images/weapons/0.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon1{
+  background: url("/assets/images/weapons/1.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon2{
+  background: url("/assets/images/weapons/2.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon3{
+  background: url("/assets/images/weapons/3.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon4{
+  background: url("/assets/images/weapons/4.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon5{
+  background: url("/assets/images/weapons/5.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon6{
+  background: url("/assets/images/weapons/6.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.weapon7{
+  background: url("/assets/images/weapons/7.jpg") no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+
 
 .objetVide{
   background: url("/assets/images/objets/vide.jpg") no-repeat;

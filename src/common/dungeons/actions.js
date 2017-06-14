@@ -6,6 +6,7 @@ import { Range } from 'immutable';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
+export const LOAD_WEAPONS = 'LOAD_WEAPONS';
 export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
 export const PRELOAD_ACTIVE_DUNGEON_SUCCESS = 'PRELOAD_ACTIVE_DUNGEON_SUCCESS';
 export const ATTACK_MONSTER = 'ATTACK_MONSTER';
@@ -36,6 +37,14 @@ export const LoadSkills = (snap: Object) => {
     return {
         type: LOAD_SKILLS,
         payload: { skills },
+    };
+};
+
+export const LoadWeapons = (snap: Object) => {
+    const weapons = snap.val();
+    return {
+        type: LOAD_WEAPONS,
+        payload: { weapons },
     };
 };
 

@@ -15,7 +15,18 @@ const SignOut = ({ signOut }, { router }) => {
   };
   return (
     <View>
-      <Button onClick={onClick}>
+      <Button style={{
+        backgroundColor: 'transparent',
+        backgroundImage: 'url("/assets/images/login/logoutbutton.png")',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'scroll',
+        height: '53px',
+        width: '115px',
+        color: 'grey',
+        boxShadow: 'none',
+        float: 'right',
+        marginRight: '10px'
+      }} onClick={onClick}>
         <FormattedMessage {...buttonsMessages.signOut} />
       </Button>
     </View>
