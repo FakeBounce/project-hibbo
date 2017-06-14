@@ -4,7 +4,6 @@
 import { Record } from '../transit';
 
 const Tutoriel = Record({
-    "id": "",
     "user" : "",
     "step" : "",
     "close" : "",

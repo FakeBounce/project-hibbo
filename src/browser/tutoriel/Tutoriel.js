@@ -6,11 +6,22 @@ import React from 'react';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadTuto } from '../../common/tutoriel/actions';
+import { LoadTuto, CreateTuto } from '../../common/tutoriel/actions';
 
 
-let Tutoriel = ({ tutoriel }) => {
-    console.log("tit", tutoriel);
+let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
+    if(!tutoriel)
+    {
+        var load = LoadTuto(viewer);
+    }
+    //console.log("tit", tutoriel);
+    //var tutorielStep = LoadTuto(viewer);
+    /*if(tutorielStep.payload == null)
+    {
+        CreateTuto(viewer);
+    }*/
+    console.log("tit2", load);
+    console.log("tit3", tutoriel);
     return (
         <View>
             {tutoriel ?
@@ -26,20 +37,12 @@ let Tutoriel = ({ tutoriel }) => {
     );
 };
 
-
 Tutoriel.propTypes = {
     tutoriel: React.PropTypes.object,
     viewer: React.PropTypes.object,
 };
 
-Tutoriel = firebase((database, props) => {
-    const TutorialRef = database.child('Tutoriel');
-    return [
-        [TutorialRef, 'on', 'value', props.LoadTuto],
-    ];
-})(Tutoriel);
-
 export default connect(state => ({
-    tutoriel: state.dungeons,
-    viewer: state.viewer
-}), { LoadTuto })(Tutoriel);
+    tutoriel: state.tutoriel.tutoriel,
+    viewer: state.users.viewer
+}), { LoadTuto, CreateTuto })(Tutoriel);
