@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap } from '../../common/dungeons/actions';
+import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -18,7 +18,6 @@ Dungeon.propTypes = {
 };
 
 let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap, viewer }) => {
-
     const list = dungeonsOP
         .toList();
     if(dungeonsOP)
@@ -99,10 +98,12 @@ Dungeons.propTypes = {
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
     const SkillsRef = database.child('skills');
+    const WorldMapRef = database.child('activeDungeons');
     const WeaponsRef = database.child('weapons');
     return [
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
         [SkillsRef, 'on', 'value', props.LoadSkills],
+        [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
         [WeaponsRef, 'on', 'value', props.LoadWeapons],
     ];
 })(Dungeons);
@@ -112,4 +113,4 @@ export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
     viewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap })(Dungeons);
+}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap })(Dungeons);

@@ -15,7 +15,7 @@ type Props = {
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter,dungeonsOP }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -60,7 +60,10 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter }: Props) => {
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
-    moveCharacter: React.PropTypes.func.isRequired
+    moveCharacter: React.PropTypes.func.isRequired,
+    dungeonsOP: React.PropTypes.object,
 };
 
-export default connect(state => ({}), { moveCharacter }) (Maptile);
+export default connect(state => ({
+    dungeonsOP: state.dungeons.dungeonsOP,
+}), { moveCharacter }) (Maptile);

@@ -7,13 +7,15 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
+import { ReloadWorldMap } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
     dungeon: Object,
+    viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
     return (
         <View>
           <div className="cadre-gauche">
@@ -76,10 +78,10 @@ WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
     viewer: React.PropTypes.object.isRequired,
+    dungeonsOP: React.PropTypes.object,
 };
-
-
 
 export default connect(state => ({
     viewer: state.dungeons.viewer,
-}), { })(WorldMap);
+    dungeonsOP: state.dungeons.dungeonsOP,
+}), {})(WorldMap);
