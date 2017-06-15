@@ -68,7 +68,8 @@ WorldMap.propTypes = {
     dungeonsOP: React.PropTypes.object,
 };
 
-export default connect(state => ({
+export default
+connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
 }), {})(WorldMap);

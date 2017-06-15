@@ -6,7 +6,7 @@ import { Record } from '../transit';
 const Tutoriel = Record({
     "user" : "",
     "step" : "",
-    "close" : "",
+    "close" : ""
 }, 'tutoriel');
 
 export default Tutoriel;

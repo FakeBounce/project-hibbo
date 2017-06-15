@@ -35,12 +35,7 @@ const tutorielReducer = (state = new State(), action) => {
             return state.set('tutoriel', action.payload);
         }
 
-        case actions.LOAD_TUTO_SUCCESS: {
-            console.log("action paylord reducer", action.payload);
-            return state.set('tutoriel', action.payload);
-        }
-
-        case actions.CREATE_TUTO: {
+        case actions.CREATE_TUTO_SUCCESS: {
             return state.set('tutoriel', action.payload);
         }
 

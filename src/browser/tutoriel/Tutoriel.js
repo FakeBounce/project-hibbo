@@ -3,33 +3,47 @@
  */
 
 import React from 'react';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { View, Button} from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadTuto, CreateTuto } from '../../common/tutoriel/actions';
+import { LoadTuto, CreateTuto, LoadStep } from '../../common/tutoriel/actions';
 
-
-let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel }) => {
+let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep }) => {
+    var display = false;
     if(viewer && !tutoriel)
     {
-        CreateTuto(viewer);
-    }
-    if(!tutoriel)
-    {
-        var test = function () {
-            var load = LoadTuto(viewer.id);
+        var load = LoadTuto(viewer.id);
+        console.log("load", load);
+        if(!tutoriel)
+        {
+            CreateTuto(viewer, 1);
         }
     }
+
+    if(tutoriel)
+    {
+        console.log("tuto",tutoriel);
+        display = true;
+    }
+    else{
+        console.log("tuto null",tutoriel);
+    }
+
+    //Load step à chaque click
+    const nextStep = function(){
+        if(tutoriel){
+            LoadStep(tutoriel)
+        }
+    };
+
+
     return (
         <View>
-            {tutoriel ?
-                <Block className="testmaxime">
+            {display &&
+                <View className="testmaxime">
                     Bonjour
-                    </Block>
-                :
-                <Block className="testmaxime" onClick={test}>
-                    Bonsoir
-                </Block>
+                    <Button onClick={nextStep}> Next </Button>
+                </View>
             }
         </View>
     );
@@ -43,4 +57,4 @@ Tutoriel.propTypes = {
 export default connect(state => ({
     tutoriel: state.tutoriel.tutoriel,
     viewer: state.users.viewer
-}), { LoadTuto, CreateTuto })(Tutoriel);
+}), { LoadTuto, CreateTuto, LoadStep })(Tutoriel);

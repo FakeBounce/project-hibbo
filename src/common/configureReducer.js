@@ -11,6 +11,7 @@ import maptiles from './maptiles/reducer';
 import dungeons from './dungeons/reducer';
 import tutoriel from './tutoriel/reducer';
 import worldmap from './worldmap/reducer';
+import tutorielstep from './tutorielstep/reducer';
 
 import { FIREBASE_ON_AUTH } from '../common/lib/redux-firebase/actions';
 import { combineReducers } from 'redux';
@@ -49,8 +50,8 @@ const configureReducer = (initialState: Object) => {
     themes,
     todos,
     users,
-      tutoriel,
-    worldmap,
+    tutoriel,
+    worldmap
   });
 
   // The power of higher-order reducers, http://slides.com/omnidan/hor
