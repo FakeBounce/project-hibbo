@@ -107,10 +107,12 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.MOVE_CHARACTER: {
             let payload = action.payload;
-            let viewer = state.viewer;
-            viewer.row = payload.user.row;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
-                .set('viewer',viewer);
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+        }
+
+        case actions.MOVING_CHARACTER: {
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
         default:

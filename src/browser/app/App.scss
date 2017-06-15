@@ -41,6 +41,8 @@ background-attachment:fixed;
   height: 46px;
   width: 46px;
   margin-left: 1px;
+  cursor:pointer;
+  animation: mymove 5s infinite;
 }
 
 .map_tile {

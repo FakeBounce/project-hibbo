@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
@@ -88,6 +89,65 @@ export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
     }
 };
 
+
+
+export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
+    let canMove = false;
+    let message = '';
+    let direction = '';
+    let totalRow = dungeon.user.row - row;
+    let totalCol = dungeon.user.col - col;
+    if(totalRow < 0)
+    {
+        direction = 'down';
+    }
+    else if(totalRow > 0)
+    {
+        direction = 'up';
+    }
+    else if(totalCol < 0)
+    {
+        direction = 'right';
+    }
+    else if(totalCol > 0)
+    {
+        direction = 'left';
+    }
+    //Transform total difference to positive int
+    if(totalCol < 0)
+    {
+        totalCol = totalCol*-1;
+    }
+    //Transform total difference to positive int
+    if(totalRow < 0)
+    {
+        totalRow = totalRow*-1;
+    }
+    //Check if user can move to location
+    if(totalRow+totalCol > 1)
+    {
+        message = 'You are too far from this location.';
+        dungeon.error_message = message;
+        dungeon.user.is_moving = null;
+        firebase.update({
+            [`activeDungeons/${dungeon.user.id}`]: dungeon,
+        });
+    }
+    else
+    {
+        canMove = true;
+        dungeon.user.is_moving = direction;
+        dungeon.error_message = '';
+        firebase.update({
+            [`activeDungeons/${dungeon.user.id}`]: dungeon,
+        });
+    }
+    return {
+        type: MOVING_CHARACTER,
+        payload: dungeon,
+        component: { canMove: canMove,message: message,direction: direction}
+    }
+}
 export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
@@ -110,7 +170,7 @@ export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     {
         direction = 'left';
     }
-        //Transform total difference to positive int
+    //Transform total difference to positive int
     if(totalCol < 0)
     {
         totalCol = totalCol*-1;

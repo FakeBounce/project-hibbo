@@ -3,27 +3,37 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import { Image } from '../app/components';
+import { Image, Flex } from '../app/components';
 import { attackMonster } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
     row: Object,
-    col: Object
+    col: Object,
+    move: String
 };
 
-const Character = ({ character,row,col, attackMonster }: Props) => {
+const Character = ({ character,row,col,move, attackMonster }: Props) => {
     const styles = {
-        title: {
-            cursor: 'pointer',
-        }
+        margin: '0px 1px 0px 0px'
     };
-    const classes= "monster";
+    let classes= "monster";
+    if(move)
+    {
+        classes= "monster "+move;
+        var l = 200;
+        var u = 0;
+        var r = -50;
+        var d = 0;
+        styles.margin = u+'px '+l+'px '+d+'px '+r+'px';
+        console.log(styles.margin);
+
+    }
     const attack_a_monster = function(){
         attackMonster(character,row,col);
     };
     return (
-        <Image className="monster" onClick={attack_a_monster} src={character.image} style={styles.title}/>
+            <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
     );
 };
 
@@ -32,6 +42,8 @@ Character.propTypes = {
     attackMonster: React.PropTypes.func.isRequired
 };
 
-export default connect(state => ({}), { attackMonster }) (Character);
+export default connect(state => ({
+    dungeonsOP: state.dungeons.dungeonsOP,
+}), { attackMonster }) (Character);
 
 
