@@ -4,6 +4,7 @@
 
 import { Range } from 'immutable';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
 export const LOAD_WEAPONS = 'LOAD_WEAPONS';
@@ -75,6 +76,18 @@ export const attackMonster = (character,row,col) => {
     }
 };
 
+export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: null,
+        [`users/${dungeon.user.id}/active_dungeon`]: null,
+    });
+
+    return {
+        type: CANCEL_DUNGEON,
+        payload: dungeon
+    }
+};
+
 export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
@@ -131,6 +144,9 @@ export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
     else
     {
         dungeon.error_message = message;
+        firebase.update({
+            [`activeDungeons/${dungeon.user.id}`]: dungeon,
+        });
     }
     return {
         type: MOVE_CHARACTER,
@@ -160,8 +176,6 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                 {
                     firebase.update({
                         [`activeDungeons/${viewer.id}`]: dungeonActive,
-                    });
-                    firebase.update({
                         [`users/${viewer.id}/active_dungeon`]: Uid,
                     });
                 }

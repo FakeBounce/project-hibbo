@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { ReloadWorldMap } from '../../common/dungeons/actions';
+import { cancelDungeon } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -15,9 +15,33 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
+    var weapon_list = '';
+    var skills_list = '';
+    var error_msg = '';
+    if(viewer)
+    {
+        if(viewer.weapons)
+        {
+            weapon_list = viewer.weapons.map(weapon => {
+                var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
+                return (<div key={weapon.id} className={classObjet}></div>);
+            });
+        }
+        if(viewer.skills) {
+            skills_list = viewer.skills.map(skill => {
+                var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
+                return (<div key={skill.id} className={classObjet}></div>);
+            })
+        }
+    }
+    if(dungeon.error_message)
+    {
+        error_msg = dungeon.error_message;
+    }
     return (
         <View>
+            <Text>{error_msg}</Text>
           <div className="cadre-gauche">
             <div className="personnage">
               <progress className="progressHealth" max="100" value="75"></progress>
@@ -26,12 +50,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
             </div>
             <div className="cadreweapons">
               <div className="weapons">
-                {
-                  viewer.weapons.map(weapon => {
-                    var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
-                    return (<div key={weapon.id} className={classObjet}></div>);
-                  })
-                }
+                  {weapon_list}
               </div>
             </div>
           </div>
@@ -61,15 +80,11 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
             <div className="cadre-objets">
               <progress className="progressSkills" max="100" value="45"></progress>
               <div className="objets">
-                  {
-                      viewer.skills.map(skill => {
-                        var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
-                          return (<div key={skill.id} className={classObjet}></div>);
-                      })
-                  }
+                  {skills_list}
               </div>
             </div>
           </div>
+            <div onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
         </View>
     );
 };
@@ -77,11 +92,11 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP }) => {
 WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
 };
 
 export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
-}), {})(WorldMap);
+}), { cancelDungeon })(WorldMap);
