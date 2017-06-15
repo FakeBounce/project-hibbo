@@ -117,7 +117,7 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   var id94 = getUid();
   var id95 = getUid();
   var id96 = getUid();
-  var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7958`,name: `Practice`}
+  var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7960`,name: `Practice`}
   // firebase.update({
   //   [`maptile/${id}`]: { completed: false, id: id, title : `MapTile #123` },
 
@@ -128,8 +128,8 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
   //ADD FAKE MAP
   firebase.update({
-      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
-          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`, maptiles: {
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7960`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7960', name: `first`, maptiles: {
               0: {
                   0: {
                       completed: false,

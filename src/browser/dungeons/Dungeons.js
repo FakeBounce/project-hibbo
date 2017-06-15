@@ -82,7 +82,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
-        <SignOut/>
+      <SignOut/>
     </View>
     );
 };

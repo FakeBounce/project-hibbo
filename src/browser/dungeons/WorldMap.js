@@ -18,7 +18,19 @@ let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
         <View>
           <div className="cadre-gauche">
             <div className="personnage">
-
+              <progress className="progressHealth" max="100" value="75"></progress>
+              <progress className="progressDamage" max="15000" value="1991"></progress>
+              <progress className="progressMore" max="100" value="25"></progress>
+            </div>
+            <div className="cadreweapons">
+              <div className="weapons">
+                {
+                  viewer.weapons.map(weapon => {
+                    var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
+                    return (<div key={weapon.id} className={classObjet}></div>);
+                  })
+                }
+              </div>
             </div>
           </div>
           <div className="cadre-droite">
@@ -39,19 +51,19 @@ let WorldMap = ({ worldmap,dungeon,viewer }: Props) => {
 
               }
             </div>
+            <div className="cadre-boss">
+              <div className="progressBoss">
+                <progress className="progressBarBoss" max="100" value="45"></progress>
+              </div>
+            </div>
             <div className="cadre-objets">
+              <progress className="progressSkills" max="100" value="45"></progress>
               <div className="objets">
                   {
                       viewer.skills.map(skill => {
                         var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
                           return (<div key={skill.id} className={classObjet}></div>);
                       })
-                  },
-                  {
-                    viewer.weapons.map(weapon => {
-                      var classObjet = weapon.get ? 'objet ' + weapon.css : 'objet objetVide';
-                      return (<div key={weapon.id} className={classObjet}></div>);
-                    })
                   }
               </div>
             </div>

@@ -161,6 +161,61 @@ background-attachment:fixed;
   cursor: pointer;
   width: 100%;
   height: 165px;
+  background-color: #16120f;
+}
+
+progress {
+  display: block;
+
+  border: 0 none;
+  position: fixed;
+}
+progress::-moz-progress-bar {
+}
+
+.progressHealth{
+  margin: 47px 0 0 167px;
+  height: 18px;
+  width: 191px;
+}
+
+.progressDamage{
+  margin: 79px 0 0 169px;
+  height: 17px;
+  width: 156px;
+}
+
+.progressMore{
+  margin: 108px 0 0 168px;
+  height: 17px;
+  width: 156px;
+}
+
+.cadreweapons{
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  display: block;
+  height: 235px;
+  float: right;
+  border-top: 1px solid #fff;
+  background: url(/assets/images/cadreweapons2.png) no-repeat;
+  background-size: cover;
+  opacity: 0.9;
+}
+
+.weapons{
+  width: 75%;
+  margin: 0 auto;
+  margin-top: 80px;
+}
+
+.weapon{
+  width: 50px;
+  height: 50px;
+  display: block;
+  float: left;
+  margin: 5px 10px;
+  border: 1px solid #fff;
 }
 
 .cadre {
@@ -177,6 +232,27 @@ background-attachment:fixed;
 
 }
 
+.cadre-boss{
+  width: 644px;
+  display: block;
+  height: 115px;
+  background-color: rgba(0, 0, 0, 0.3);
+  float: right;
+}
+.progressBoss {
+  background: url(/assets/images/monsters/progressbar-boss.png) no-repeat;
+  background-size: contain;
+  width: 50%;
+  height: 115px;
+  background-color: #16120f;
+}
+
+.progressBarBoss{
+  margin: 45px 0 0 110px;
+  height: 18px;
+  width: 194px;
+}
+
 .cadre-objets {
   background-color: rgba(0, 0, 0, 0.3);
   width: 644px;
@@ -189,13 +265,19 @@ background-attachment:fixed;
   opacity: 0.9;
 }
 
+.progressSkills{
+  margin: 65px 0 0 63px;
+  height: 20px;
+  width: 514px;
+}
+
 .objets {
-  height: 200px;
+  height: 86px;
   width: 560px;
   display: block;
   padding: 2%;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 88px;
 }
 
 
