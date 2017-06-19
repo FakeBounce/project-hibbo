@@ -32,13 +32,12 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,dungeonsOP }: Props) =
         let isMoving = moveCharacter(dungeon,row,col);
         if(isMoving.component.canMove)
         {
-            error_message = '';
+            // error_message = '';
 
         }
         else
         {
-            error_message = isMoving.component.message;
-            alert(error_message);
+            // error_message = isMoving.component.message;
         }
     };
 

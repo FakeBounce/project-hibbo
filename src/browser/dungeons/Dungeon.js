@@ -24,7 +24,11 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
     };
 
     return (
-        <Block>
+        <div className="one-level">
+            <div className="level-lock"></div>
+            <div className="choose-level" onClick={() => loadWorldMap(dungeon,viewer)}>
+              <span>1</span>
+            </div>
             <Text style={styles.title}
                   onClick={() => loadWorldMap(dungeon,viewer)}>
                 Description : {dungeon.description}
@@ -32,7 +36,7 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
             {/*<WorldMap*/}
                 {/*worldmap={dungeon.worldmap}*/}
             {/*></WorldMap>*/}
-        </Block>
+        </div>
     );
 };
 

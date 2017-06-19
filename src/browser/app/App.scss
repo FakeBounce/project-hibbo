@@ -144,6 +144,38 @@ background-attachment:fixed;
   height: 15px;
 }
 
+
+// levels
+
+.one-level{
+  width:10%;
+  float: left;
+}
+
+.choose-level {
+  width:75px;
+  height:75px;
+  background: url(/assets/images/levels/level.png) no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.choose-level span{
+  margin-left: 30px;
+  margin-top: 23px;
+  display: inline-flex;
+  font-size: 25px;
+  color: #ffd370;
+  font-weight: bold;
+}
+
+.level-lock{
+  width:75px;
+  height:75px;
+  background: url(/assets/images/levels/level-lock.png) no-repeat;
+  background-size: contain;
+}
+
 // map
 
 .cadre-gauche{
