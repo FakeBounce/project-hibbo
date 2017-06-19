@@ -129,8 +129,10 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
             totalRow = totalRow*-1;
         }
         //Check if user can move to location
-        if(totalRow+totalCol > 1)
+        if(totalRow+totalCol > 1 || totalRow+totalCol == 0)
         {
+            message = 'You cannot walk there.';
+            if(totalRow+totalCol > 1)
             message = 'You are too far from this location.';
             dungeon.error_message = message;
             dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
@@ -143,15 +145,29 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         }
         else
         {
-            canMove = true;
-            dungeon.user.is_moving = direction;
-            dungeon.user.moving_row = row;
-            dungeon.user.moving_col = col;
-            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
-            dungeon.error_message = '';
-            firebase.update({
-                [`activeDungeons/${dungeon.user.id}`]: dungeon,
-            });
+            if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
+            {
+                canMove = true;
+                dungeon.user.is_moving = direction;
+                dungeon.user.moving_row = row;
+                dungeon.user.moving_col = col;
+                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+                dungeon.error_message = '';
+                firebase.update({
+                    [`activeDungeons/${dungeon.user.id}`]: dungeon,
+                });
+            }
+            else {
+                message = 'You cannot walk there.';
+                dungeon.error_message = message;
+                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+                dungeon.user.is_moving = null;
+                dungeon.user.moving_row = null;
+                dungeon.user.moving_col = null;
+                firebase.update({
+                    [`activeDungeons/${dungeon.user.id}`]: dungeon,
+                });
+            }
         }
     }
     else {
