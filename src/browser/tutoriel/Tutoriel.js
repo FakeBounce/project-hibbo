@@ -8,42 +8,60 @@ import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadTuto, CreateTuto, LoadStep } from '../../common/tutoriel/actions';
 
-let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep }) => {
+let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     var display = false;
-    if(viewer && !tutoriel)
+    var tuto = null;
+    var close = true;
+    if(tutoriel)
     {
-        var load = LoadTuto(viewer.id);
-        console.log("load", load);
-        if(!tutoriel)
+        tutoriel.map(t => {
+            if(t){
+                if(t.step != null)
+                {
+                    tuto = t;
+                }
+                if(t.close != null)
+                {
+                    close = t.close;
+                }
+            }
+
+        });
+
+        if(!tuto &&  viewer){
+            console.log(viewer);
+            var load = CreateTuto(viewer);
+        }
+
+        if(tuto && tuto.step && tuto.step.description && !close)
         {
-            CreateTuto(viewer, 1);
+            display = true;
+        }
+        else{
+            console.log("tuto step", tuto);
         }
     }
 
-    if(tutoriel)
-    {
-        console.log("tuto",tutoriel);
-        display = true;
-    }
-    else{
-        console.log("tuto null",tutoriel);
-    }
+
 
     //Load step à chaque click
     const nextStep = function(){
-        if(tutoriel){
-            LoadStep(tutoriel)
+        if(tuto){
+            console.log("next step",tuto);
+            LoadStep(tuto.step.next)
         }
     };
 
 
     return (
         <View>
-            {display &&
+            {display ?
                 <View className="testmaxime">
-                    Bonjour
+                    { tuto.step.description }
                     <Button onClick={nextStep}> Next </Button>
                 </View>
+                :
+                <div></div>
             }
         </View>
     );
@@ -51,10 +69,11 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep }) => {
 
 Tutoriel.propTypes = {
     tutoriel: React.PropTypes.object,
-    viewer: React.PropTypes.object,
+    viewer: React.PropTypes.object.isRequired,
+    LoadTuto: React.PropTypes.func.isRequired,
 };
 
 export default connect(state => ({
-    tutoriel: state.tutoriel.tutoriel,
-    viewer: state.users.viewer
+    tutoriel: state.tutoriel,
+    viewer: state.users.viewer,
 }), { LoadTuto, CreateTuto, LoadStep })(Tutoriel);

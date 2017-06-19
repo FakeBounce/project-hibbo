@@ -3,6 +3,7 @@
  */
 
 import * as actions from './actions';
+import * as appActions from '../app/actions';
 import Tutoriel from './tutoriel.js';
 import { Map } from 'immutable';
 import { Record } from '../transit';
@@ -11,7 +12,7 @@ import { firebaseActions } from '../lib/redux-firebase';
 import firebase  from '../lib/redux-firebase/firebase';
 
 const State = Record({
-    tutoriel: null,
+    tuto: null,
     loaded: false,
     viewer: false
 }, 'tutoriel');
@@ -19,6 +20,7 @@ const State = Record({
 const tutorielReducer = (state = new State(), action) => {
 
     switch (action.type) {
+
         case firebaseActions.FIREBASE_SAVE_USER_SUCCESS: {
             let viewer = state.viewer;
             if(!viewer)
@@ -32,11 +34,19 @@ const tutorielReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_TUTO_SUCCESS: {
-            return state.set('tutoriel', action.payload);
+            if(action.payload)
+            {
+                return state.set('tuto', action.payload);
+            }
+            return state;
         }
 
         case actions.CREATE_TUTO_SUCCESS: {
-            return state.set('tutoriel', action.payload);
+            return state.set('tuto', action.payload);
+        }
+
+        case actions.LOAD_STEP_SUCCESS: {
+            return state.set('loaded', action.payload);
         }
 
         default:

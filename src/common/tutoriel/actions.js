@@ -11,11 +11,9 @@ export const LOAD_STEP = 'LOAD_STEP';
 export const LOAD_STEP_SUCCESS = 'LOAD_STEP_SUCCESS';
 
 export const LoadTuto = (viewer) => ({firebase}) => {
-    console.log("load tuto snap viewer", viewer);
     const getPromise = async() => {
         try {
-            return await firebase.database.ref("Tutoriel/user")
-                .equalTo(viewer)
+            return await firebase.database.ref("Tutoriel/"+ viewer)
                 .once('value')
                 .then(function (snapshot) {
                     console.log("load tuto snap", snapshot.val());
@@ -49,6 +47,10 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
                         firebase.update({
                             [`Tutoriel/${viewer.id}`]: TutorielUser,
                         });
+
+                        firebase.update({
+                            [`users/${viewer.id}/tuto`]: "in_progress",
+                        });
                         return TutorielUser;
                     });
             } catch (error) {
@@ -63,12 +65,17 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
         };
 };
 
-export const LoadStep = (tutoriel) => ({firebase}) => {
+export const LoadStep = (tutoriel, viewer) => ({firebase}) => {
     var path = 'tutorielSteps/'+tutoriel.step.next;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let step = snapshot.val();
+                if(step){
+                    firebase.update({
+                        [`Tutoriel/${viewer.id}/step`]: step,
+                    });
+                }
                 return step;
             });
         } catch (error) {
