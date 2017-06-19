@@ -41,6 +41,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
     }
     return (
         <View>
+            <div onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
             <Text>{error_msg}</Text>
             <Text>{dungeon.description}</Text>
           <div className="cadre-gauche">
@@ -85,7 +86,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
               </div>
             </div>
           </div>
-            <div onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
         </View>
     );
 };
