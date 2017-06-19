@@ -5,6 +5,7 @@
 import { Range } from 'immutable';
 export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
@@ -22,6 +23,30 @@ export const LoadDungeons = (snap: Object) => {
         type: LOAD_DUNGEONS,
         payload: { dungeons },
     };
+};
+export const LoadViewer = (viewer) => ({ firebase }) => {
+    if(viewer)
+    {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
+                    var username = snapshot.val();
+                    return username;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: 'LOAD_VIEWER',
+            payload: getPromise(),
+        };
+    }
+    return {
+        type: 'LOAD_VIEWER',
+        payload: ''
+    }
 };
 
 export const ReloadWorldMap = (snap: Object) => {
