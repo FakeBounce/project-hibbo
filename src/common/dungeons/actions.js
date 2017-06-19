@@ -25,21 +25,28 @@ export const LoadDungeons = (snap: Object) => {
     };
 };
 export const LoadViewer = (viewer) => ({ firebase }) => {
-    const getPromise = async () => {
-        try {
-            return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
-                var username = snapshot.val();
-                return username;
-            });
-        } catch (error) {
-            console.log('An error occured. We could not load the dungeon. Try again later.');
-            throw error;
-        }
-    };
+    if(viewer)
+    {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
+                    var username = snapshot.val();
+                    return username;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: 'LOAD_VIEWER',
+            payload: getPromise(),
+        };
+    }
     return {
         type: 'LOAD_VIEWER',
-        payload: getPromise(),
-    };
+        payload: ''
+    }
 };
 
 export const ReloadWorldMap = (snap: Object) => {
