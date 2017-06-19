@@ -6,7 +6,7 @@ import React from 'react';
 import { View, Button} from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadTuto, CreateTuto, LoadStep } from '../../common/tutoriel/actions';
+import { LoadTuto, CreateTuto, LoadStep, LoadNothing } from '../../common/tutoriel/actions';
 
 let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     var display = false;
@@ -15,6 +15,7 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     if(tutoriel)
     {
         tutoriel.map(t => {
+            console.log("t", t);
             if(t){
                 if(t.step != null)
                 {
@@ -27,10 +28,12 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
             }
 
         });
-
-        if(!tuto &&  viewer){
+        console.log("tutoriel", tutoriel);
+        console.log("tuto", tuto);
+        if(tuto == null && viewer){
             console.log(viewer);
-            var load = CreateTuto(viewer);
+            console.log("tuto 2", tuto);
+                var load = CreateTuto(viewer);
         }
 
         if(tuto && tuto.step && tuto.step.description && !close)
@@ -47,8 +50,7 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     //Load step à chaque click
     const nextStep = function(){
         if(tuto){
-            console.log("next step",tuto);
-            LoadStep(tuto.step.next)
+            var step = LoadStep(tuto, viewer)
         }
     };
 
@@ -67,6 +69,14 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     );
 };
 
+Tutoriel = firebase((database, props) => {
+    const TutorielRef = database.child('Tutoriel');
+    return [
+        [TutorielRef, 'on', 'value', props.LoadNothing],
+    ];
+})(Tutoriel);
+
+
 Tutoriel.propTypes = {
     tutoriel: React.PropTypes.object,
     viewer: React.PropTypes.object.isRequired,
@@ -76,4 +86,4 @@ Tutoriel.propTypes = {
 export default connect(state => ({
     tutoriel: state.tutoriel,
     viewer: state.users.viewer,
-}), { LoadTuto, CreateTuto, LoadStep })(Tutoriel);
+}), { LoadTuto, CreateTuto, LoadStep, LoadNothing })(Tutoriel);

@@ -4,12 +4,20 @@
 
 import { Range } from 'immutable';
 export const LOAD_TUTO = 'LOAD_TUTO';
+export const LOAD_NOTHING = 'LOAD_NOTHING';
 export const LOAD_TUTO_SUCCESS = 'LOAD_TUTO_SUCCESS';
 export const CREATE_TUTO = 'CREATE_TUTO';
 export const CREATE_TUTO_SUCCESS = 'CREATE_TUTO_SUCCESS';
 export const LOAD_STEP = 'LOAD_STEP';
 export const LOAD_STEP_SUCCESS = 'LOAD_STEP_SUCCESS';
 
+export const LoadNothing = (snap : Object) => {
+    const tutoriel = snap.val();
+    return {
+        type: LOAD_NOTHING,
+        payload: {tutoriel},
+    }
+};
 export const LoadTuto = (viewer) => ({firebase}) => {
     const getPromise = async() => {
         try {
@@ -39,7 +47,6 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
                     .then(function (snapshot) {
                         var s = snapshot.val();
                         let TutorielUser = {
-                            id : Uid,
                             user : viewer.id,
                             step : s,
                             close : false,
@@ -65,12 +72,13 @@ export const CreateTuto = (viewer) => ({ getUid, firebase}) => {
         };
 };
 
-export const LoadStep = (tutoriel, viewer) => ({firebase}) => {
-    var path = 'tutorielSteps/'+tutoriel.step.next;
+export const LoadStep = (tuto, viewer) => ({firebase}) => {
+    var path = 'tutorialSteps/'+tuto.step.next;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let step = snapshot.val();
+                console.log("load step", step);
                 if(step){
                     firebase.update({
                         [`Tutoriel/${viewer.id}/step`]: step,

@@ -33,6 +33,14 @@ const tutorielReducer = (state = new State(), action) => {
             }
         }
 
+        case actions.LOAD_NOTHING: {
+            if(action.payload.tutoriel)
+            {
+                return state.set('tuto', action.payload.tutoriel);
+            }
+            return state;
+        }
+
         case actions.LOAD_TUTO_SUCCESS: {
             if(action.payload)
             {
@@ -46,7 +54,16 @@ const tutorielReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_STEP_SUCCESS: {
-            return state.set('loaded', action.payload);
+            console.log("payload",action.payload);
+
+            let tuto = state;
+            state.map(t => {
+                if(t.step != null)
+                {
+                    t.step = action.payload;
+                }
+            });
+            return state;
         }
 
         default:
