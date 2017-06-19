@@ -41,7 +41,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
     }
     return (
         <View>
-            <Text>{error_msg}</Text>
+            <Text>{dungeon.description}</Text>
           <div className="cadre-gauche">
             <div className="personnage">
               <progress className="progressHealth" max="100" value="75"></progress>

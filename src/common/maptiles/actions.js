@@ -128,18 +128,21 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
   //ADD FAKE MAP
   firebase.update({
-      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7960`]: {
-          id: '603414e3-d8fc-4b3f-ac56-376160eb7960', name: `first`, maptiles: {
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`, maptiles: {
               0: {
                   0: {
                       completed: false,
                       id: id1,
                       image: "casegrass",
                       title: "forest",
+                      type: "walkable",
                       character: {
                           image:"/assets/images/classes/gface.png",
                           damage:100,
-                          health:15000
+                          health:15000,
+                          name:"Warrior",
+                          type:"pj"
                       }
                   },
                   1: {
@@ -147,10 +150,13 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                       id: id2,
                       image: "casegrass",
                       title: "forest",
+                      type: "walkable",
                       character: {
                           image:"/assets/images/monsters/Warrior.png",
                           damage:250,
-                          health:400
+                          health:400,
+                          name:"Warrior",
+                          type:"pnj"
                       }
                   },
                   2: {
@@ -207,12 +213,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   completed: false,
                   id: id11,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 1: {
                   completed: false,
                   id: id12,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 2: {
@@ -269,12 +277,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   completed: false,
                   id: id21,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 1: {
                   completed: false,
                   id: id22,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 2: {
@@ -331,12 +341,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   completed: false,
                   id: id31,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 1: {
                   completed: false,
                   id: id32,
                   image: "casegrass",
+                    type: "walkable",
                   title: "forest"
                 },
                 2: {
@@ -393,12 +405,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 completed: false,
                 id: id41,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id42,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               2: {
@@ -455,12 +469,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 completed: false,
                 id: id51,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id52,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               2: {
@@ -517,12 +533,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 completed: false,
                 id: id61,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id62,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               2: {
@@ -579,12 +597,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 completed: false,
                 id: id71,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id72,
                 image: "casegrass",
+                  type: "walkable",
                 title: "forest"
               },
               2: {
@@ -641,111 +661,111 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
 
 
   //ADD FAKE SKILLS
-  firebase.update({
-    [`skills`]: {
-      0: {
-        get: true,
-        id: id81,
-        css: "objet0",
-        title: "fiole0"
-      },
-      1: {
-        get: true,
-        id: id82,
-        css: "objet1",
-        title: "fiole1"
-      },
-      2: {
-        get: true,
-        id: id83,
-        css: "objet2",
-        title: "fiole2"
-      },
-      3: {
-        get: true,
-        id: id84,
-        css: "objet3",
-        title: "fiole3"
-      },
-      4: {
-        get: true,
-        id: id85,
-        css: "objet4",
-        title: "fiole4"
-      },
-      5: {
-        get: true,
-        id: id86,
-        css: "objet5",
-        title: "fiole5"
-      },
-      6: {
-        get: true,
-        id: id87,
-        css: "objet6",
-        title: "fiole6"
-      },
-      7: {
-        get: false,
-        id: id88,
-        css: "objet7",
-        title: "fiole7"
-      },
-    }
-  });
+  // firebase.update({
+  //   [`skills`]: {
+  //     0: {
+  //       get: true,
+  //       id: id81,
+  //       css: "objet0",
+  //       title: "fiole0"
+  //     },
+  //     1: {
+  //       get: true,
+  //       id: id82,
+  //       css: "objet1",
+  //       title: "fiole1"
+  //     },
+  //     2: {
+  //       get: true,
+  //       id: id83,
+  //       css: "objet2",
+  //       title: "fiole2"
+  //     },
+  //     3: {
+  //       get: true,
+  //       id: id84,
+  //       css: "objet3",
+  //       title: "fiole3"
+  //     },
+  //     4: {
+  //       get: true,
+  //       id: id85,
+  //       css: "objet4",
+  //       title: "fiole4"
+  //     },
+  //     5: {
+  //       get: true,
+  //       id: id86,
+  //       css: "objet5",
+  //       title: "fiole5"
+  //     },
+  //     6: {
+  //       get: true,
+  //       id: id87,
+  //       css: "objet6",
+  //       title: "fiole6"
+  //     },
+  //     7: {
+  //       get: false,
+  //       id: id88,
+  //       css: "objet7",
+  //       title: "fiole7"
+  //     },
+  //   }
+  // });
 
   //ADD FAKE WEAPONS
-  firebase.update({
-    [`weapons`]: {
-      0: {
-        get: true,
-        id: id89,
-        css: "weapon0",
-        title: "weapon0"
-      },
-      1: {
-        get: true,
-        id: id90,
-        css: "weapon1",
-        title: "weapon1"
-      },
-      2: {
-        get: true,
-        id: id91,
-        css: "weapon2",
-        title: "weapon2"
-      },
-      3: {
-        get: true,
-        id: id92,
-        css: "weapon3",
-        title: "weapon3"
-      },
-      4: {
-        get: true,
-        id: id93,
-        css: "weapon4",
-        title: "weapon4"
-      },
-      5: {
-        get: true,
-        id: id94,
-        css: "weapon5",
-        title: "weapon5"
-      },
-      6: {
-        get: true,
-        id: id95,
-        css: "weapon6",
-        title: "weapon6"
-      },
-      7: {
-        get: false,
-        id: id96,
-        css: "weapon7",
-        title: "weapon7"
-      }
-    }});
+  // firebase.update({
+  //   [`weapons`]: {
+  //     0: {
+  //       get: true,
+  //       id: id89,
+  //       css: "weapon0",
+  //       title: "weapon0"
+  //     },
+  //     1: {
+  //       get: true,
+  //       id: id90,
+  //       css: "weapon1",
+  //       title: "weapon1"
+  //     },
+  //     2: {
+  //       get: true,
+  //       id: id91,
+  //       css: "weapon2",
+  //       title: "weapon2"
+  //     },
+  //     3: {
+  //       get: true,
+  //       id: id92,
+  //       css: "weapon3",
+  //       title: "weapon3"
+  //     },
+  //     4: {
+  //       get: true,
+  //       id: id93,
+  //       css: "weapon4",
+  //       title: "weapon4"
+  //     },
+  //     5: {
+  //       get: true,
+  //       id: id94,
+  //       css: "weapon5",
+  //       title: "weapon5"
+  //     },
+  //     6: {
+  //       get: true,
+  //       id: id95,
+  //       css: "weapon6",
+  //       title: "weapon6"
+  //     },
+  //     7: {
+  //       get: false,
+  //       id: id96,
+  //       css: "weapon7",
+  //       title: "weapon7"
+  //     }
+  //   }});
 
   return {
     type: MAPTILE_COMPLETED,

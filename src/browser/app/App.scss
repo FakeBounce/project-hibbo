@@ -41,6 +41,7 @@ background-attachment:fixed;
   height: 46px;
   width: 46px;
   margin-left: 1px;
+  cursor:pointer;
 }
 
 .map_tile {
@@ -87,7 +88,7 @@ background-attachment:fixed;
   right: 0;
   top: 0;
   width: 1024px;
-  height: 900px;
+  height: 496px;
   margin: auto;
   position: absolute;
 }
@@ -425,6 +426,93 @@ progress::-moz-progress-bar {
   background-size: cover;
 }
 
+.Warrior-down {
+  -webkit-animation: movedown 1s; /* Safari 4.0 - 8.0 */
+  animation: movedown 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.Warrior-up {
+  -webkit-animation: moveup 1s; /* Safari 4.0 - 8.0 */
+  animation: moveup 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.Warrior-left {
+  -webkit-animation: moveleft 1s; /* Safari 4.0 - 8.0 */
+  animation: moveleft 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.Warrior-right {
+  -webkit-animation: moveright 1s; /* Safari 4.0 - 8.0 */
+  animation: moveright 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes movedown {
+  0%   {top: 0px;}
+  100% {top: 50px;}
+}
+
+/* Standard syntax */
+@keyframes movedown {
+  0%   {top: 0px;}
+  100% {top: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes moveup {
+  0%   {bottom: 0px;}
+  100% {bottom: 50px;}
+}
+
+/* Standard syntax */
+@keyframes moveup {
+  0%   {bottom: 0px;}
+  100% {bottom: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes moveleft {
+  0%   {right: 0px;}
+  100% {right: 50px;}
+}
+
+/* Standard syntax */
+@keyframes moveleft {
+  0%   {right: 0px;}
+  100% {right: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes moveright {
+  0%   {left: 0px;}
+  100% {left: 50px;}
+}
+
+/* Standard syntax */
+@keyframes moveright {
+  0%   {left: 0px;}
+  100% {left: 50px;}
+}
 
 
 // Yes, we can still override inline style globally.
