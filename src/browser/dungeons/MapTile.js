@@ -67,7 +67,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         {
           character ?
             <Flex className={classImage}>
-                <Character move={move} row={row} col={col} character={maptile.character}/>
+                <Character dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
             <Flex className={classImage} onClick={tryMoveCharacter}></Flex>
