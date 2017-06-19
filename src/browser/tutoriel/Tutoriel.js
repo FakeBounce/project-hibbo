@@ -6,53 +6,44 @@ import React from 'react';
 import { View, Button} from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadTuto, CreateTuto, LoadStep, reloadTutos } from '../../common/tutoriel/actions';
+import { LoadTuto, CreateTuto, LoadStep, reloadTutos,LoadViewer } from '../../common/tutoriel/actions';
 
-let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
+let Tutoriel = ({ tutoriel,viewer,tviewer,CreateTuto, LoadTuto,LoadViewer,   LoadStep}) => {
     var display = false;
     var tuto = null;
     var close = true;
-    if(tutoriel)
+
+    if(!tviewer)
+    {
+        LoadViewer(viewer);
+    }
+    else
     {
         tutoriel.map(t => {
-            console.log("t", t);
-            if(t){
-                if(t.step != null)
-                {
+            if (t) {
+                if (t.step != null) {
                     tuto = t;
                 }
-                if(t.close != null)
-                {
+                if (t.close != null) {
                     close = t.close;
                 }
             }
 
         });
-        console.log("tutoriel", tutoriel);
-        console.log("tuto", tuto);
-        if(tuto == null && viewer){
-            console.log(viewer);
-            console.log("tuto 2", tuto);
-                var load = CreateTuto(viewer);
+        if (tuto == null && viewer) {
+            var load = CreateTuto(viewer);
         }
 
-        if(tuto && tuto.step && tuto.step.description && !close)
-        {
+        if (tuto && tuto.step && tuto.step.description && !close) {
             display = true;
         }
-        else{
-            console.log("tuto step", tuto);
-        }
     }
-
-
-
     //Load step à chaque click
     const nextStep = function(){
         if(tuto){
             var step = LoadStep(tuto, viewer)
         }
-    };
+    }
 
 
     return (
@@ -79,11 +70,15 @@ Tutoriel = firebase((database, props) => {
 
 Tutoriel.propTypes = {
     tutoriel: React.PropTypes.object,
-    viewer: React.PropTypes.object.isRequired,
+    viewer: React.PropTypes.object,
+    tviewer: React.PropTypes.object,
     LoadTuto: React.PropTypes.func.isRequired,
+    LoadViewer: React.PropTypes.func.isRequired,
+    reloadTutos: React.PropTypes.func.isRequired,
 };
 
 export default connect(state => ({
     tutoriel: state.tutoriel,
     viewer: state.users.viewer,
-}), { LoadTuto, CreateTuto, LoadStep, reloadTutos })(Tutoriel);
+    tviewer: state.tutoriel.viewer,
+}), { LoadTuto, CreateTuto, LoadStep, reloadTutos,LoadViewer })(Tutoriel);

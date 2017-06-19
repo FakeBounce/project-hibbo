@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const LOAD_VIEWER_TUTO_SUCCESS = 'LOAD_VIEWER_TUTO_SUCCESS';
 export const LOAD_TUTO = 'LOAD_TUTO';
 export const RELOAD_TUTOS = 'RELOAD_TUTOS';
 export const LOAD_TUTO_SUCCESS = 'LOAD_TUTO_SUCCESS';
@@ -18,6 +19,32 @@ export const reloadTutos = (snap : Object) => {
         payload: {tutoriel},
     }
 };
+
+export const LoadViewer = (viewer) => ({ firebase }) => {
+    if(viewer)
+    {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
+                    var username = snapshot.val();
+                    return username;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: 'LOAD_VIEWER_TUTO',
+            payload: getPromise(),
+        };
+    }
+    return {
+        type: 'LOAD_VIEWER_TUTO',
+        payload: '',
+    }
+};
+
 export const LoadTuto = (viewer) => ({firebase}) => {
     const getPromise = async() => {
         try {

@@ -20,18 +20,25 @@ const State = Record({
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
+
     switch (action.type) {
 
-        case firebaseActions.FIREBASE_SAVE_USER_SUCCESS: {
+        // case firebaseActions.FIREBASE_SAVE_USER_SUCCESS: {
+        //     let viewer = state.viewer;
+        //     if(!viewer)
+        //     {
+        //         return state.update('viewer', action.payload);
+        //     }
+        //     return state;
+        // }
+        case actions.LOAD_VIEWER_SUCCESS: {
+            console.log(action.payload);
             let viewer = state.viewer;
             if(!viewer)
             {
                 return state.set('viewer', action.payload);
             }
-            else
-            {
-                return state;
-            }
+            return state;
         }
 
         case actions.LOAD_SKILLS: {
@@ -91,7 +98,6 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.RELOAD_WORLD_MAP: {
             const dungeonsOP = action.payload.dungeons;
-            console.log('dungeon state: ',state);
             if(dungeonsOP)
             {
                 return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP[state.viewer.id]));

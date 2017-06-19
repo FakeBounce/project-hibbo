@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap } from '../../common/dungeons/actions';
+import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -17,45 +17,50 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap, viewer }) => {
+let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
 
-    if(dungeonsOP)
+    if(!dviewer)
     {
-        var rowsMap = [];
-        var colsMap = [];
-        var dungeon;
-        var rows = 0;
-        var cols = 0;
-        var dungeonActive = false;
-        var wdmap = [];
-        dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
-        // dungeonsOP.toList().map(dungeonOP => rows = dungeonOP.dungeon.maptiles.length);
-        // dungeonsOP.toList().map(dungeonOP => cols = dungeonOP.dungeon.maptiles[0].length);
-
-        if(dungeon)
+        LoadViewer(viewer);}
+        else  {
+        if(dungeonsOP)
         {
-            //Exemple
-            for (var i=0; i < dungeon.dungeon.maptiles.length; i++) {
-                colsMap = [];
-                for (var j=0; j < dungeon.dungeon.maptiles[i].length; j++) {
-                    colsMap.push(<Image key={dungeon.dungeon.maptiles[i][j].id} src={dungeon.dungeon.maptiles[i][j].image}></Image>);
-                }
-                rowsMap.push(<Block>{colsMap}</Block>);
-            }
-            //Fin exemple
-            dungeonActive = true;
+            var rowsMap = [];
+            var colsMap = [];
+            var dungeon;
+            var rows = 0;
+            var cols = 0;
+            var dungeonActive = false;
+            var wdmap = [];
+            dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
+            // dungeonsOP.toList().map(dungeonOP => rows = dungeonOP.dungeon.maptiles.length);
+            // dungeonsOP.toList().map(dungeonOP => cols = dungeonOP.dungeon.maptiles[0].length);
 
-            if(viewer)
+            if(dungeon)
             {
-                wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
+                //Exemple
+                for (var i=0; i < dungeon.dungeon.maptiles.length; i++) {
+                    colsMap = [];
+                    for (var j=0; j < dungeon.dungeon.maptiles[i].length; j++) {
+                        colsMap.push(<Image key={dungeon.dungeon.maptiles[i][j].id} src={dungeon.dungeon.maptiles[i][j].image}></Image>);
+                    }
+                    rowsMap.push(<Block>{colsMap}</Block>);
+                }
+                //Fin exemple
+                dungeonActive = true;
+
+                if(viewer)
+                {
+                    wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
+                }
             }
-        }
-        else {
-            if(viewer && viewer.active_dungeon != false)
-            {
-                preLoadActiveDungeon(viewer);
+            else {
+                if(viewer && viewer.active_dungeon != false)
+                {
+                    preLoadActiveDungeon(viewer);
+                }
+                dungeonActive = false;
             }
-            dungeonActive = false;
         }
     }
 
@@ -83,8 +88,10 @@ Dungeons.propTypes = {
     dungeons: React.PropTypes.object,
     loaded: React.PropTypes.bool.isRequired,
     loadWorldMap : React.PropTypes.func.isRequired,
+    LoadViewer : React.PropTypes.func.isRequired,
     preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
+    dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
 };
 
@@ -105,5 +112,6 @@ export default connect(state => ({
     dungeons: state.dungeons.dungeonLoaded,
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
-    viewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap })(Dungeons);
+    viewer: state.users.viewer,
+    dviewer: state.dungeons.viewer,
+}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
