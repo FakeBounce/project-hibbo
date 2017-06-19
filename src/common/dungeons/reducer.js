@@ -15,7 +15,7 @@ const State = Record({
     loaded: false,
     dungeonLoaded: null,
     worldmap: Map(),
-    viewer: false,
+    viewer: null,
     dungeonsOP: Map(),
 }, 'dungeon');
 
@@ -61,6 +61,15 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('dungeonLoaded', list);
         }
 
+        case actions.CANCEL_DUNGEON: {
+            const dungeonsOP = action.payload;
+            if(dungeonsOP)
+            {
+                return state.update('dungeonsOP', map => map.set(state.viewer.id,null));
+            }
+            return state;
+        }
+
         case actions.LOAD_WORLD_MAP_SUCCESS: {
             const dungeonsOP = action.payload;
             const list = Seq(dungeonsOP)
@@ -73,7 +82,11 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.PRELOAD_ACTIVE_DUNGEON_SUCCESS: {
             const dungeonsOP = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
+            if(dungeonsOP)
+            {
+                return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
+            }
+            return state;
         }
 
         case actions.RELOAD_WORLD_MAP: {
@@ -94,10 +107,12 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.MOVE_CHARACTER: {
             let payload = action.payload;
-            let viewer = state.viewer;
-            viewer.row = payload.user.row;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
-                .set('viewer',viewer);
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+        }
+
+        case actions.MOVING_CHARACTER: {
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
         default:

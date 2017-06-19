@@ -18,8 +18,7 @@ Dungeon.propTypes = {
 };
 
 let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap, viewer }) => {
-    const list = dungeonsOP
-        .toList();
+
     if(dungeonsOP)
     {
         var rowsMap = [];
@@ -28,6 +27,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
         var rows = 0;
         var cols = 0;
         var dungeonActive = false;
+        var wdmap = [];
         dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
         // dungeonsOP.toList().map(dungeonOP => rows = dungeonOP.dungeon.maptiles.length);
         // dungeonsOP.toList().map(dungeonOP => cols = dungeonOP.dungeon.maptiles[0].length);
@@ -44,6 +44,11 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
             }
             //Fin exemple
             dungeonActive = true;
+
+            if(viewer)
+            {
+                wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
+            }
         }
         else {
             if(viewer && viewer.active_dungeon != false)
@@ -60,19 +65,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
             <Loading />
             : viewer ?
                 dungeonActive?
-                    list.map(worldmap =>
-                        viewer.id == worldmap.user.id ?
-                            <Block key={worldmap.id}>
-                                <Text>{worldmap.description}</Text>
-                                <WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>
-                                {/*
-                                    Exemple d'affichage:
-                                    {rowsMap}
-                                */}
-                            </Block>
-                            :
-                            <Text></Text>
-                    )
+                    wdmap
                 :
                 dungeons ?
                     dungeons.map(dungeon =>
@@ -81,7 +74,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon, loadWorldMap
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
-        <SignOut/>
+      <SignOut/>
     </View>
     );
 };

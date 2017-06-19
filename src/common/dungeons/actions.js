@@ -3,7 +3,9 @@
  */
 
 import { Range } from 'immutable';
+export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
 export const LOAD_WEAPONS = 'LOAD_WEAPONS';
@@ -75,67 +77,185 @@ export const attackMonster = (character,row,col) => {
     }
 };
 
-export const moveCharacter = (dungeon,row,col) => ({ firebase }) => {
+export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: null,
+        [`users/${dungeon.user.id}/active_dungeon`]: null,
+    });
+
+    return {
+        type: CANCEL_DUNGEON,
+        payload: dungeon
+    }
+};
+
+
+
+export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    let totalRow = dungeon.user.row - row;
-    let totalCol = dungeon.user.col - col;
-    if(totalRow > 0)
+    if(!dungeon.user.is_moving)
     {
-        direction = 'down';
-    }
-    else if(totalRow<0)
-    {
-        direction = 'up';
-    }
-    else if(totalCol>0)
-    {
-        direction = 'right';
-    }
-    else if(totalCol<0)
-    {
-        direction = 'left';
-    }
+        let canMove = false;
+        let message = '';
+        let direction = '';
+        let totalRow = dungeon.user.row - row;
+        let totalCol = dungeon.user.col - col;
+        if(totalRow < 0)
+        {
+            direction = 'down';
+        }
+        else if(totalRow > 0)
+        {
+            direction = 'up';
+        }
+        else if(totalCol < 0)
+        {
+            direction = 'right';
+        }
+        else if(totalCol > 0)
+        {
+            direction = 'left';
+        }
         //Transform total difference to positive int
-    if(totalCol < 0)
-    {
-        totalCol = totalCol*-1;
+        if(totalCol < 0)
+        {
+            totalCol = totalCol*-1;
+        }
+        //Transform total difference to positive int
+        if(totalRow < 0)
+        {
+            totalRow = totalRow*-1;
+        }
+        //Check if user can move to location
+        if(totalRow+totalCol > 1 || totalRow+totalCol == 0)
+        {
+            message = 'You cannot walk there.';
+            if(totalRow+totalCol > 1)
+            message = 'You are too far from this location.';
+            dungeon.error_message = message;
+            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+            dungeon.user.is_moving = null;
+            dungeon.user.moving_row = null;
+            dungeon.user.moving_col = null;
+            firebase.update({
+                [`activeDungeons/${dungeon.user.id}`]: dungeon,
+            });
+        }
+        else
+        {
+            if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
+            {
+                canMove = true;
+                dungeon.user.is_moving = direction;
+                dungeon.user.moving_row = row;
+                dungeon.user.moving_col = col;
+                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+                dungeon.error_message = '';
+                firebase.update({
+                    [`activeDungeons/${dungeon.user.id}`]: dungeon,
+                });
+            }
+            else {
+                message = 'You cannot walk there.';
+                dungeon.error_message = message;
+                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+                dungeon.user.is_moving = null;
+                dungeon.user.moving_row = null;
+                dungeon.user.moving_col = null;
+                firebase.update({
+                    [`activeDungeons/${dungeon.user.id}`]: dungeon,
+                });
+            }
+        }
     }
-    //Transform total difference to positive int
-    if(totalRow < 0)
-    {
-        totalRow = totalRow*-1;
+    else {
+        let canMove = false;
+        let message = 'Please wait.';
+        let direction = '';
     }
-    //Check if user can move to location
-    if(totalRow+totalCol > 1)
-    {
-        message = 'You are too far from this location.';
+    return {
+        type: MOVING_CHARACTER,
+        payload: dungeon,
+        component: { canMove: canMove,message: message,direction: direction}
     }
-    else
-    {
-        canMove = true;
-    }
+}
+export const moveCharacter = (dungeon) => ({ firebase }) => {
 
-    if(canMove)
+    if(dungeon.user.is_moving)
     {
-        dungeon.dungeon.maptiles[row][col].character = dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
-        delete dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
-        dungeon.user.row = row;
-        dungeon.user.col = col;
-        dungeon.error_message = '';
-        firebase.update({
-            [`activeDungeons/${dungeon.user.id}`]: dungeon,
-        });
-    }
-    else
-    {
-        dungeon.error_message = message;
+        let canMove = false;
+        let message = '';
+        let direction = '';
+        let totalRow = dungeon.user.row - dungeon.user.moving_row;
+        let totalCol = dungeon.user.col - dungeon.user.moving_col;
+        if(totalRow < 0)
+        {
+            direction = 'down';
+        }
+        else if(totalRow > 0)
+        {
+            direction = 'up';
+        }
+        else if(totalCol < 0)
+        {
+            direction = 'right';
+        }
+        else if(totalCol > 0)
+        {
+            direction = 'left';
+        }
+        //Transform total difference to positive int
+        if(totalCol < 0)
+        {
+            totalCol = totalCol*-1;
+        }
+        //Transform total difference to positive int
+        if(totalRow < 0)
+        {
+            totalRow = totalRow*-1;
+        }
+        //Check if user can move to location
+        if(totalRow+totalCol > 1)
+        {
+            message = 'You are too far from this location.';
+        }
+        else
+        {
+            canMove = true;
+        }
+
+        if(canMove)
+        {
+            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[dungeon.user.moving_row][dungeon.user.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
+            delete dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
+            dungeon.user.row = dungeon.user.moving_row;
+            dungeon.user.col = dungeon.user.moving_col;
+            dungeon.user.moving_row = null;
+            dungeon.user.moving_col = null;
+            dungeon.user.is_moving = null;
+            dungeon.error_message = '';
+            firebase.update({
+                [`activeDungeons/${dungeon.user.id}`]: dungeon,
+            });
+        }
+        else
+        {
+            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+            dungeon.error_message = message;
+            dungeon.user.is_moving = null;
+            dungeon.user.moving_row = null;
+            dungeon.user.moving_col = null;
+            firebase.update({
+                [`activeDungeons/${dungeon.user.id}`]: dungeon,
+            });
+        }
     }
     return {
         type: MOVE_CHARACTER,
-        payload: dungeon,
-        component: { canMove: canMove,message: message,direction: direction}
+        payload: dungeon
     }
 };
 
@@ -160,8 +280,6 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                 {
                     firebase.update({
                         [`activeDungeons/${viewer.id}`]: dungeonActive,
-                    });
-                    firebase.update({
                         [`users/${viewer.id}/active_dungeon`]: Uid,
                     });
                 }
