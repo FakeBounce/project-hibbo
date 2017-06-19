@@ -91,6 +91,7 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.RELOAD_WORLD_MAP: {
             const dungeonsOP = action.payload.dungeons;
+            console.log('dungeon state: ',state);
             if(dungeonsOP)
             {
                 return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP[state.viewer.id]));

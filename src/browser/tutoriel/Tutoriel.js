@@ -6,7 +6,7 @@ import React from 'react';
 import { View, Button} from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadTuto, CreateTuto, LoadStep, LoadNothing } from '../../common/tutoriel/actions';
+import { LoadTuto, CreateTuto, LoadStep, reloadTutos } from '../../common/tutoriel/actions';
 
 let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
     var display = false;
@@ -72,7 +72,7 @@ let Tutoriel = ({ CreateTuto, LoadTuto, viewer, tutoriel, LoadStep}) => {
 Tutoriel = firebase((database, props) => {
     const TutorielRef = database.child('Tutoriel');
     return [
-        [TutorielRef, 'on', 'value', props.LoadNothing],
+        [TutorielRef, 'on', 'value', props.reloadTutos],
     ];
 })(Tutoriel);
 
@@ -86,4 +86,4 @@ Tutoriel.propTypes = {
 export default connect(state => ({
     tutoriel: state.tutoriel,
     viewer: state.users.viewer,
-}), { LoadTuto, CreateTuto, LoadStep, LoadNothing })(Tutoriel);
+}), { LoadTuto, CreateTuto, LoadStep, reloadTutos })(Tutoriel);

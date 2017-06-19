@@ -12,7 +12,7 @@ import { firebaseActions } from '../lib/redux-firebase';
 import firebase  from '../lib/redux-firebase/firebase';
 
 const State = Record({
-    tuto: null,
+    tuto: Map(),
     loaded: false,
     viewer: false
 }, 'tutoriel');
@@ -33,36 +33,37 @@ const tutorielReducer = (state = new State(), action) => {
             }
         }
 
-        case actions.LOAD_NOTHING: {
-            if(action.payload.tutoriel)
+        case actions.RELOAD_TUTOS: {
+            const tutoriel = action.payload.tutoriel;
+            if(tutoriel && state.viewer)
             {
-                return state.set('tuto', action.payload.tutoriel);
+                return state.update('tuto', map => map.set(state.viewer.id,tutoriel[state.viewer.id]));
             }
             return state;
         }
 
         case actions.LOAD_TUTO_SUCCESS: {
-            if(action.payload)
+            if(state.viewer && action.payload)
             {
-                return state.set('tuto', action.payload);
+                return state.update('tuto', map => map.set(state.viewer.id,action.payload));
             }
             return state;
         }
 
-        case actions.CREATE_TUTO_SUCCESS: {
-            return state.set('tuto', action.payload);
+        case actions.CREATE_TUTO_SUCCESS:
+        {
+            if(state.viewer)
+            {
+                return state.update('tuto', map => map.set(action.payload.user.id,action.payload));
+            }
+            return state;
         }
 
         case actions.LOAD_STEP_SUCCESS: {
-            console.log("payload",action.payload);
-
-            let tuto = state;
-            state.map(t => {
-                if(t.step != null)
-                {
-                    t.step = action.payload;
-                }
-            });
+            if(state.viewer)
+            {
+                return state.update('tuto', map => map.set(action.payload.user.id,action.payload));
+            }
             return state;
         }
 

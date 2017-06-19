@@ -4,17 +4,17 @@
 
 import { Range } from 'immutable';
 export const LOAD_TUTO = 'LOAD_TUTO';
-export const LOAD_NOTHING = 'LOAD_NOTHING';
+export const RELOAD_TUTOS = 'RELOAD_TUTOS';
 export const LOAD_TUTO_SUCCESS = 'LOAD_TUTO_SUCCESS';
 export const CREATE_TUTO = 'CREATE_TUTO';
 export const CREATE_TUTO_SUCCESS = 'CREATE_TUTO_SUCCESS';
 export const LOAD_STEP = 'LOAD_STEP';
 export const LOAD_STEP_SUCCESS = 'LOAD_STEP_SUCCESS';
 
-export const LoadNothing = (snap : Object) => {
+export const reloadTutos = (snap : Object) => {
     const tutoriel = snap.val();
     return {
-        type: LOAD_NOTHING,
+        type: RELOAD_TUTOS,
         payload: {tutoriel},
     }
 };
@@ -78,13 +78,13 @@ export const LoadStep = (tuto, viewer) => ({firebase}) => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let step = snapshot.val();
-                console.log("load step", step);
                 if(step){
                     firebase.update({
                         [`Tutoriel/${viewer.id}/step`]: step,
                     });
+                    tuto.step = step;
                 }
-                return step;
+                return tuto;
             });
         } catch (error) {
             console.log('An error occured. We could not load the dungeon. Try again later.');
