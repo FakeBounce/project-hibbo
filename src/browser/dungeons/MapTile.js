@@ -29,9 +29,9 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         character = true;
     }
     var move = false;
-    if(dungeon.user.is_moving && character)
+    if(dungeon.user.character.is_moving && character)
     {
-        move = dungeon.user.is_moving;
+        move = dungeon.user.character.is_moving;
     }
 
     const tryMoveCharacter = function(){

@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
 export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
@@ -94,11 +95,71 @@ export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
     }
 };
 
-export const attackMonster = (character,row,col) => {
-    console.log('action ok');
+export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
+    var pj = dungeon.user.character;
+    pj.is_attacking = false;
+    dungeon.error_message = '';
+    if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
+    {
+        var distance = comparePosition(pj.row,row,pj.col,col);
+        //Replace with pj.range
+        if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
+        {
+            if(pj.action >= pj.basicCost)
+            {
+                pj.is_attacking = true;
+                pj.direction = distance.direction;
+                pj.attacking_row = row;
+                pj.attacking_col = col;
+            }
+            else {
+                dungeon.error_message = 'Not enough action points';
+            }
+        }
+        else {
+            dungeon.error_message = "You're too far.";
+        }
+    }
+    dungeon.user.character = pj;
+    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: CAN_ATTACK_MONSTER,
+        payload: dungeon
+    }
+}
+
+export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
+    console.log('dungeon : ',dungeon);
+    let pnj = dungeon.dungeon.maptiles[row][col].character;
+    let pj = character;
+    if(pj.is_attacking)
+    {
+        if(pnj.health > 0)
+        {
+            pnj.health = pnj.health - pj.damage;
+            pj.action = pj.action - pj.basicCost;
+            if(pnj.health<=0)
+            {
+                pnj = null;
+            }
+            pj.is_attacking = false;
+            pj.direction = null;
+            pj.attacking_row = null;
+            pj.attacking_col = null;
+        }
+    }
+    dungeon.user.character = pj;
+    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    dungeon.dungeon.maptiles[row][col].character = pnj;
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
     return {
         type: ATTACK_MONSTER,
-        payload: character
+        payload: dungeon
     }
 };
 
@@ -121,13 +182,13 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    if(!dungeon.user.is_moving)
+    if(!dungeon.user.character.is_moving)
     {
         let canMove = false;
         let message = '';
         let direction = '';
-        let totalRow = dungeon.user.row - row;
-        let totalCol = dungeon.user.col - col;
+        let totalRow = dungeon.user.character.row - row;
+        let totalCol = dungeon.user.character.col - col;
         if(totalRow < 0)
         {
             direction = 'down';
@@ -161,10 +222,10 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
             if(totalRow+totalCol > 1)
             message = 'You are too far from this location.';
             dungeon.error_message = message;
-            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
-            dungeon.user.is_moving = null;
-            dungeon.user.moving_row = null;
-            dungeon.user.moving_col = null;
+            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+            dungeon.user.character.is_moving = null;
+            dungeon.user.character.moving_row = null;
+            dungeon.user.character.moving_col = null;
             firebase.update({
                 [`activeDungeons/${dungeon.user.id}`]: dungeon,
             });
@@ -174,10 +235,10 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
             if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
             {
                 canMove = true;
-                dungeon.user.is_moving = direction;
-                dungeon.user.moving_row = row;
-                dungeon.user.moving_col = col;
-                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+                dungeon.user.character.is_moving = direction;
+                dungeon.user.character.moving_row = row;
+                dungeon.user.character.moving_col = col;
+                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
                 dungeon.error_message = '';
                 firebase.update({
                     [`activeDungeons/${dungeon.user.id}`]: dungeon,
@@ -186,10 +247,10 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
             else {
                 message = 'You cannot walk there.';
                 dungeon.error_message = message;
-                dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
-                dungeon.user.is_moving = null;
-                dungeon.user.moving_row = null;
-                dungeon.user.moving_col = null;
+                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                dungeon.user.character.is_moving = null;
+                dungeon.user.character.moving_row = null;
+                dungeon.user.character.moving_col = null;
                 firebase.update({
                     [`activeDungeons/${dungeon.user.id}`]: dungeon,
                 });
@@ -209,14 +270,14 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
 }
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 
-    if(dungeon.user.is_moving)
+    if(dungeon.user.character.is_moving)
     {
 
         let canMove = false;
         let message = '';
         let direction = '';
-        let totalRow = dungeon.user.row - dungeon.user.moving_row;
-        let totalCol = dungeon.user.col - dungeon.user.moving_col;
+        let totalRow = dungeon.user.character.row - dungeon.user.character.moving_row;
+        let totalCol = dungeon.user.character.col - dungeon.user.character.moving_col;
         if(totalRow < 0)
         {
             direction = 'down';
@@ -255,14 +316,14 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
         if(canMove)
         {
-            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
-            dungeon.dungeon.maptiles[dungeon.user.moving_row][dungeon.user.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
-            delete dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character;
-            dungeon.user.row = dungeon.user.moving_row;
-            dungeon.user.col = dungeon.user.moving_col;
-            dungeon.user.moving_row = null;
-            dungeon.user.moving_col = null;
-            dungeon.user.is_moving = null;
+            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[dungeon.user.character.moving_row][dungeon.user.character.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
+            delete dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
+            dungeon.user.character.row = dungeon.user.character.moving_row;
+            dungeon.user.character.col = dungeon.user.character.moving_col;
+            dungeon.user.character.moving_row = null;
+            dungeon.user.character.moving_col = null;
+            dungeon.user.character.is_moving = null;
             dungeon.error_message = '';
             firebase.update({
                 [`activeDungeons/${dungeon.user.id}`]: dungeon,
@@ -270,11 +331,11 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
         }
         else
         {
-            dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.row][dungeon.user.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
             dungeon.error_message = message;
-            dungeon.user.is_moving = null;
-            dungeon.user.moving_row = null;
-            dungeon.user.moving_col = null;
+            dungeon.user.character.is_moving = null;
+            dungeon.user.character.moving_row = null;
+            dungeon.user.character.moving_col = null;
             firebase.update({
                 [`activeDungeons/${dungeon.user.id}`]: dungeon,
             });
@@ -299,7 +360,23 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     name: dungeon.name,
                     description: dungeon.description,
                     user :
-                        {id:viewer.id, displayName:viewer.displayName, row:0,col:0},
+                        {
+                            id:viewer.id,
+                            displayName:viewer.displayName,
+                            character :
+                                {
+                                    health:15000,
+                                    damage:100,
+                                    name:"Warrior",
+                                    type:"pj",
+                                    range:1,
+                                    move:1,
+                                    action:10,
+                                    basicCost:10,
+                                    row:0,
+                                    col:0,
+                                }
+                        },
                     dungeon:worldmap,
                     createdAt: now()
                 };
@@ -322,3 +399,38 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
         payload: getPromise(),
     }
 };
+
+function comparePosition(r1,c1,r2,c2){
+    let totalRow = r1 - r2;
+    let totalCol = c1 - c2;
+    let direction = "";
+    let totalDistance = 0;
+    if(totalRow < 0)
+    {
+        direction = 'down';
+    }
+    else if(totalRow > 0)
+    {
+        direction = 'up';
+    }
+    else if(totalCol < 0)
+    {
+        direction = 'right';
+    }
+    else if(totalCol > 0)
+    {
+        direction = 'left';
+    }
+    //Transform total difference to positive int
+    if(totalCol < 0)
+    {
+        totalCol = totalCol*-1;
+    }
+    //Transform total difference to positive int
+    if(totalRow < 0)
+    {
+        totalRow = totalRow*-1;
+    }
+    totalDistance = totalCol + totalRow;
+    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalDistance:totalDistance};
+}

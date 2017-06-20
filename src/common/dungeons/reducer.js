@@ -107,9 +107,8 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.ATTACK_MONSTER: {
-            console.log('reducer ok');
-            console.log(action.payload);
-            return state;
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
         case actions.MOVE_CHARACTER: {
@@ -118,6 +117,11 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.MOVING_CHARACTER: {
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+        }
+
+        case actions.CAN_ATTACK_MONSTER: {
             let payload = action.payload;
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }

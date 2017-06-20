@@ -66,6 +66,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
 
     return (
     <View>
+        <SignOut/>
         {!loaded ?
             <Loading />
             : viewer ?
@@ -79,7 +80,6 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
-      <SignOut/>
     </View>
     );
 };

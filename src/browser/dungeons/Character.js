@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Image, Flex } from '../app/components';
-import { attackMonster,moveCharacter } from '../../common/dungeons/actions';
+import { attackMonster,canAttackMonster,moveCharacter } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
@@ -14,11 +14,22 @@ type Props = {
     move: String
 };
 
-const Character = ({ character,dungeon,row,col,move, attackMonster,moveCharacter }: Props) => {
+const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMonster,moveCharacter }: Props) => {
     const styles = {
         margin: '0px 0px 0px 0px'
     };
     let classes= "monster";
+    if(character.is_attacking && character.type == "pj")
+    {
+        console.log('character : ',character);
+        var gif = character.name+'-'+character.direction;
+        classes= "monster a"+gif;
+        character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
+        setTimeout(function(){
+            character.image = "/assets/images/classes/"+character.name+"/"+character.direction+".png";
+            attackMonster(dungeon,character,character.attacking_row,character.attacking_col);
+        },1000);
+    }
     if(move && character.type == "pj")
     {
 
@@ -31,7 +42,10 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,moveCharacter
         },1000);
     }
     const attack_a_monster = function(){
-        attackMonster(character,row,col);
+        if(character.type == "pnj")
+        {
+            canAttackMonster(dungeon,character,row,col);
+        }
     };
     return (
             <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
@@ -46,6 +60,6 @@ Character.propTypes = {
 
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
-}), { attackMonster,moveCharacter }) (Character);
+}), { attackMonster,canAttackMonster,moveCharacter }) (Character);
 
 

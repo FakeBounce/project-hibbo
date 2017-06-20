@@ -466,6 +466,46 @@ progress::-moz-progress-bar {
   -webkit-animation-fill-mode: forwards;
 }
 
+.aWarrior-down {
+  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.aWarrior-up {
+  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.aWarrior-left {
+  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.aWarrior-right {
+  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes movedown {
   0%   {top: 0px;}
@@ -512,6 +552,60 @@ progress::-moz-progress-bar {
 @keyframes moveright {
   0%   {left: 0px;}
   100% {left: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes amovedown {
+  0%   {top: 0px;}
+  100% {top: 50px;}
+}
+
+/* Standard syntax */
+@keyframes amovedown {
+  0%   {top: 0px;}
+  100% {top: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes amoveup {
+  0%   {bottom: 0px;}
+  100% {bottom: 50px;}
+}
+
+/* Standard syntax */
+@keyframes amoveup {
+  0%   {bottom: 0px;}
+  100% {bottom: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes amoveleft {
+  0%   {right: 0px;}
+  100% {right: 50px;}
+}
+
+/* Standard syntax */
+@keyframes amoveleft {
+  0%   {right: 0px;}
+  100% {right: 50px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes amoveright {
+  0%   {left: 0px;}
+  25% {left: 15px;}
+  50% {left: 25px;}
+  75% {left: 15px;}
+  100% {left: 0px;}
+}
+
+/* Standard syntax */
+@keyframes amoveright {
+  0%   {left: 0px;}
+  25% {left: 15px;}
+  50% {left: 25px;}
+  75% {left: 15px;}
+  100% {left: 0px;}
 }
 
 
