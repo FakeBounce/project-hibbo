@@ -369,6 +369,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     dungeon_id: dungeon.id,
                     name: dungeon.name,
                     description: dungeon.description,
+                    lock: dungeon.lock,
                     user :
                         {
                             id:viewer.id,
