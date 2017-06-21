@@ -20,7 +20,14 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 
 export const EndTurn = (dungeon) => ({firebase}) => {
-    console.log('End turn : dungeon');
+    var pj = dungeon.user.character;
+    var default_pj = dungeon.user.default_character;
+    pj = jsonConcat(pj,default_pj);
+
+    dungeon.user.character = pj;
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
     return {
         type: END_TURN,
         payload: dungeon,
@@ -335,9 +342,6 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             dungeon.user.character.moving_col = null;
             dungeon.user.character.is_moving = null;
             dungeon.error_message = '';
-            firebase.update({
-                [`activeDungeons/${dungeon.user.id}`]: dungeon,
-            });
         }
         else
         {
@@ -346,11 +350,11 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             dungeon.user.character.is_moving = null;
             dungeon.user.character.moving_row = null;
             dungeon.user.character.moving_col = null;
-            firebase.update({
-                [`activeDungeons/${dungeon.user.id}`]: dungeon,
-            });
         }
     }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
     return {
         type: MOVE_CHARACTER,
         payload: dungeon
@@ -386,7 +390,12 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                     basicCost:10,
                                     row:0,
                                     col:0,
-                                }
+                                },
+                            default_character : {
+                                move:1,
+                                action:10,
+                                damage:100,
+                            },
                         },
                     dungeon:worldmap,
                     createdAt: now()
