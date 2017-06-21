@@ -20,11 +20,18 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 
 export const EndTurn = (dungeon) => ({firebase}) => {
-    var pj = dungeon.user.character;
-    var default_pj = dungeon.user.default_character;
-    pj = jsonConcat(pj,default_pj);
+    if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving)
+    {
+        dungeon.error_message = '';
+        var pj = dungeon.user.character;
+        var default_pj = dungeon.user.default_character;
+        pj = jsonConcat(pj,default_pj);
 
-    dungeon.user.character = pj;
+        dungeon.user.character = pj;
+    }
+    else {
+        dungeon.error_message = 'You can\'t end while doing an action';
+    }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
@@ -119,13 +126,13 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
     {
         var distance = comparePosition(pj.row,pj.col,row,col);
+        pj.direction = distance.direction;
         //Replace with pj.range
         if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
         {
             if(pj.action >= pj.basicCost)
             {
                 pj.is_attacking = true;
-                pj.direction = distance.direction;
                 pj.attacking_row = row;
                 pj.attacking_col = col;
             }
@@ -149,28 +156,35 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
 }
 
 export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
-    console.log('dungeon : ',dungeon);
-    let pnj = dungeon.dungeon.maptiles[row][col].character;
-    let pj = character;
-    if(pj.is_attacking)
+    console.log('attack dungeon : ',dungeon);
+    if(typeof dungeon.dungeon.maptiles[row][col].character !== 'undefined')
     {
-        if(pnj.health > 0)
+        dungeon.error_message = '';
+        let pnj = dungeon.dungeon.maptiles[row][col].character;
+        let pj = character;
+        if(pj.is_attacking)
         {
-            pnj.health = pnj.health - pj.damage;
-            pj.action = pj.action - pj.basicCost;
-            if(pnj.health<=0)
+            if(pnj.health > 0)
             {
-                pnj = null;
+                pnj.health = pnj.health - pj.damage;
+                pj.action = pj.action - pj.basicCost;
+                if(pnj.health<=0)
+                {
+                    pnj = null;
+                }
+                pj.is_attacking = false;
+                pj.direction = null;
+                pj.attacking_row = null;
+                pj.attacking_col = null;
             }
-            pj.is_attacking = false;
-            pj.direction = null;
-            pj.attacking_row = null;
-            pj.attacking_col = null;
         }
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+        dungeon.dungeon.maptiles[row][col].character = pnj;
     }
-    dungeon.user.character = pj;
-    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
-    dungeon.dungeon.maptiles[row][col].character = pnj;
+    else {
+        dungeon.error_message = 'The ennemy is dead';
+    }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });

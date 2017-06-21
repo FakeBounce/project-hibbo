@@ -39,6 +39,12 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
     {
         error_msg = dungeon.error_message;
     }
+    let doEndTurn = function(dungeon){
+        if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving)
+        {
+            EndTurn(dungeon);
+        }
+    };
     return (
         <View>
           <div className="fix-hauteur">
@@ -68,17 +74,16 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
                       />
                     );
                   })
-                  return (
-                    <Flex key={keyRow} >{col}</Flex>
-                  );
-                })
-                }
-              </div>
-              <div className="cadre-boss">
-                <button onClick={() => EndTurn(dungeon)}>End turn</button>
-                <div className="progressBoss">
-                  <progress className="progressBarBoss" max="100" value="45"></progress>
-                </div>
+                return (
+                  <Flex key={keyRow} >{col}</Flex>
+                );
+              })
+              }
+            </div>
+            <div className="cadre-boss">
+                <button onClick={() => doEndTurn(dungeon)}>End turn</button>
+              <div className="progressBoss">
+                <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
               <div className="cadre-objets">
                 <progress className="progressSkills" max="100" value="45"></progress>
@@ -88,7 +93,8 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
               </div>
             </div>
           </div>
-        </View>
+        </div>
+      </View>
     );
 };
 
