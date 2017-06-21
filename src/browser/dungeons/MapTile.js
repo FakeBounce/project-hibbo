@@ -24,14 +24,14 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     var character = false;
     var classImage = "case " + maptile.image;
     let error_message = '';
-    if(typeof maptile.character !== 'undefined')
+    var move = false;
+    if(typeof maptile.character !== 'undefined' && maptile.character != null)
     {
         character = true;
-    }
-    var move = false;
-    if(dungeon.user.character.is_moving && character)
-    {
-        move = dungeon.user.character.is_moving;
+        if(dungeon.user.character.is_moving)
+        {
+            move = dungeon.user.character.is_moving;
+        }
     }
 
     const tryMoveCharacter = function(){

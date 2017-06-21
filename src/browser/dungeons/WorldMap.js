@@ -39,6 +39,12 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
     {
         error_msg = dungeon.error_message;
     }
+    let doEndTurn = function(dungeon){
+        if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving)
+        {
+            EndTurn(dungeon);
+        }
+    };
     return (
         <View>
             <div className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
@@ -75,7 +81,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
               }
             </div>
             <div className="cadre-boss">
-                <button onClick={() => EndTurn(dungeon)}>End turn</button>
+                <button onClick={() => doEndTurn(dungeon)}>End turn</button>
               <div className="progressBoss">
                 <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
