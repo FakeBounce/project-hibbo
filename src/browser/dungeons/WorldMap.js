@@ -16,18 +16,10 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) => {
-    var weapon_list = '';
     var skills_list = '';
     var error_msg = '';
     if(viewer)
     {
-        if(viewer.weapons)
-        {
-            weapon_list = viewer.weapons.map(weapon => {
-                var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
-                return (<div key={weapon.id} className={classObjet}></div>);
-            });
-        }
         if(viewer.skills) {
             skills_list = viewer.skills.map(skill => {
                 var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
@@ -52,18 +44,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
             <Text>{error_msg}</Text>
 
             <Text>{dungeon.description}</Text>
-            <div className="cadre-gauche">
-              <div className="personnage">
-                <progress className="progressHealth" max="100" value="75"></progress>
-                <progress className="progressDamage" max="15000" value="1991"></progress>
-                <progress className="progressMore" max="100" value="25"></progress>
-              </div>
-              <div className="cadreweapons">
-                <div className="weapons">
-                  {weapon_list}
-                </div>
-              </div>
-            </div>
             <div className="cadre-droite">
               <div className="cadre">
                 { Object.keys(worldmap.maptiles).map(function (keyRow) {
@@ -85,13 +65,13 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
               <div className="progressBoss">
                 <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
-              <div className="cadre-objets">
-                <progress className="progressSkills" max="100" value="45"></progress>
-                <div className="objets">
-                  {skills_list}
-                </div>
-              </div>
             </div>
+                <div className="cadre-objets">
+                    <progress className="progressSkills" max="100" value="45"></progress>
+                    <div className="objets">
+                        {skills_list}
+                    </div>
+                </div>
           </div>
         </div>
       </View>

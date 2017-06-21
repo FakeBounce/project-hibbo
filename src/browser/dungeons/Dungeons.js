@@ -18,7 +18,15 @@ Dungeon.propTypes = {
 };
 
 let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
-
+    var weapon_list = '';
+    if(dviewer) {
+        if (dviewer.weapons) {
+            weapon_list = dviewer.weapons.map(weapon => {
+                var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
+                return (<div key={weapon.id} className={classObjet}></div>);
+            });
+        }
+    }
     if(!dviewer)
     {
         LoadViewer(viewer);}
@@ -66,6 +74,18 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
 
     return (
     <View>
+        <div className="cadre-gauche">
+            <div className="personnage">
+                <progress className="progressHealth" max="100" value="75"></progress>
+                <progress className="progressDamage" max="15000" value="1991"></progress>
+                <progress className="progressMore" max="100" value="25"></progress>
+            </div>
+            <div className="cadreweapons">
+                <div className="weapons">
+                    {weapon_list}
+                </div>
+            </div>
+        </div>
         <SignOut/>
         {!loaded ?
             <Loading />
@@ -101,10 +121,10 @@ Dungeons = firebase((database, props) => {
     const WorldMapRef = database.child('activeDungeons');
     const WeaponsRef = database.child('weapons');
     return [
-        [DungeonsRef, 'on', 'value', props.LoadDungeons],
-        [SkillsRef, 'on', 'value', props.LoadSkills],
-        [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
         [WeaponsRef, 'on', 'value', props.LoadWeapons],
+        [SkillsRef, 'on', 'value', props.LoadSkills],
+        [DungeonsRef, 'on', 'value', props.LoadDungeons],
+        [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
     ];
 })(Dungeons);
 
