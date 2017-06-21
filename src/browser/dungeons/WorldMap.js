@@ -15,7 +15,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) => {
     var weapon_list = '';
     var skills_list = '';
     var error_msg = '';
@@ -75,7 +75,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
               }
             </div>
             <div className="cadre-boss">
-                <button onClick={EndTurn}>End turn</button>
+                <button onClick={() => EndTurn(dungeon)}>End turn</button>
               <div className="progressBoss">
                 <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
