@@ -15,10 +15,13 @@ type Props = {
 
 const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
     const styles = {
-        title: {
-            cursor: 'pointer',
-        },
-        delete: {
+      title: {
+        cursor: 'pointer',
+      },
+      lock: {
+        cursor: 'default',
+      },
+      delete: {
             cursor: 'pointer',
         },
     };
@@ -26,7 +29,7 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
       return (
         <div className="one-level">
           <div className="level-lock"></div>
-          <Text style={styles.title}>
+          <Text style={styles.lock}>
             Description : {dungeon.description}
           </Text>
         </div>
@@ -35,7 +38,7 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
       return (
         <div className="one-level">
           <div className="choose-level" onClick={() => loadWorldMap(dungeon,viewer)}>
-            <span>1</span>
+            <span>{dungeon.numero}</span>
           </div>
           <Text style={styles.title}
                 onClick={() => loadWorldMap(dungeon,viewer)}>
