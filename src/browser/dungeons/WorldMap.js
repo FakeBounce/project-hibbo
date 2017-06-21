@@ -41,49 +41,50 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
     }
     return (
         <View>
+          <div className="fix-hauteur">
             <div className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
             <Text>{error_msg}</Text>
 
             <Text>{dungeon.description}</Text>
-          <div className="cadre-gauche">
-            <div className="personnage">
-              <progress className="progressHealth" max="100" value="75"></progress>
-              <progress className="progressDamage" max="15000" value="1991"></progress>
-              <progress className="progressMore" max="100" value="25"></progress>
-            </div>
-            <div className="cadreweapons">
-              <div className="weapons">
+            <div className="cadre-gauche">
+              <div className="personnage">
+                <progress className="progressHealth" max="100" value="75"></progress>
+                <progress className="progressDamage" max="15000" value="1991"></progress>
+                <progress className="progressMore" max="100" value="25"></progress>
+              </div>
+              <div className="cadreweapons">
+                <div className="weapons">
                   {weapon_list}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="cadre-droite">
-            <div className="cadre">
-              { Object.keys(worldmap.maptiles).map(function (keyRow) {
-                var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
-                  return(
-                    <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
-                             dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
-                    />
+            <div className="cadre-droite">
+              <div className="cadre">
+                { Object.keys(worldmap.maptiles).map(function (keyRow) {
+                  var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
+                    return(
+                      <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                               dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                      />
+                    );
+                  })
+                  return (
+                    <Flex key={keyRow} >{col}</Flex>
                   );
                 })
-                return (
-                  <Flex key={keyRow} >{col}</Flex>
-                );
-
-              })
-              }
-            </div>
-            <div className="cadre-boss">
-                <button onClick={() => EndTurn(dungeon)}>End turn</button>
-              <div className="progressBoss">
-                <progress className="progressBarBoss" max="100" value="45"></progress>
+                }
               </div>
-            </div>
-            <div className="cadre-objets">
-              <progress className="progressSkills" max="100" value="45"></progress>
-              <div className="objets">
+              <div className="cadre-boss">
+                <button onClick={() => EndTurn(dungeon)}>End turn</button>
+                <div className="progressBoss">
+                  <progress className="progressBarBoss" max="100" value="45"></progress>
+                </div>
+              </div>
+              <div className="cadre-objets">
+                <progress className="progressSkills" max="100" value="45"></progress>
+                <div className="objets">
                   {skills_list}
+                </div>
               </div>
             </div>
           </div>

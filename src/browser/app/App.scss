@@ -35,6 +35,10 @@ background-attachment:fixed;
   text-align: center;
 }
 
+.fix-hauteur{
+  margin-top:-173px;
+}
+
 .monster {
   position: absolute;
   z-index: 5;
@@ -88,7 +92,7 @@ background-attachment:fixed;
   right: 0;
   top: 0;
   width: 1024px;
-  height: 830px;
+  height: 496px;
   margin: auto;
   position: absolute;
 }
@@ -336,7 +340,7 @@ progress[value].progressMore::-webkit-progress-value {
 .cadre-boss{
   width: 644px;
   display: block;
-  height: 115px;
+  height: 136px;
   background-color: rgba(0, 0, 0, 0.3);
   float: right;
 }
