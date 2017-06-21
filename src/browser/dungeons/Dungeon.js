@@ -26,8 +26,7 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
       return (
         <div className="one-level">
           <div className="level-lock"></div>
-          <Text style={styles.title}
-                onClick={() => loadWorldMap(dungeon,viewer)}>
+          <Text style={styles.title}>
             Description : {dungeon.description}
           </Text>
         </div>
