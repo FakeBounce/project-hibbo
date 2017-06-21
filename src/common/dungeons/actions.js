@@ -101,7 +101,7 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     dungeon.error_message = '';
     if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
     {
-        var distance = comparePosition(pj.row,row,pj.col,col);
+        var distance = comparePosition(pj.row,pj.col,row,col);
         //Replace with pj.range
         if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
         {
