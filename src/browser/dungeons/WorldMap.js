@@ -41,7 +41,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
     }
     return (
         <View>
-            <div onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
+            <div className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
             <Text>{error_msg}</Text>
 
             <Text>{dungeon.description}</Text>

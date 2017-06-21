@@ -21,11 +21,13 @@ const SignOut = ({ signOut }, { router }) => {
         backgroundRepeat: 'no-repeat',
         backgroundAttachment: 'scroll',
         height: '53px',
-        width: '115px',
-        color: 'grey',
+        width: '195px',
+        color: '#fff',
         boxShadow: 'none',
         float: 'right',
-        marginRight: '10px'
+        marginRight: '10px',
+        textAlign: 'center',
+        fontSize: "16px"
       }} onClick={onClick}>
         <FormattedMessage {...buttonsMessages.signOut} />
       </Button>
