@@ -9,6 +9,7 @@ const Dungeon = Record({
     "worldmap" : "",
     "description" : "",
     "lock" : false,
+    "numero" : 0,
 }, 'dungeon');
 
 export default Dungeon;
