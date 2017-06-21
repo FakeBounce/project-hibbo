@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon } from '../../common/dungeons/actions';
+import { cancelDungeon,EndTurn } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -72,10 +72,10 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon }) => {
                 );
 
               })
-
               }
             </div>
             <div className="cadre-boss">
+                <button onClick={EndTurn}>End turn</button>
               <div className="progressBoss">
                 <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
@@ -101,4 +101,4 @@ WorldMap.propTypes = {
 export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
-}), { cancelDungeon })(WorldMap);
+}), { cancelDungeon,EndTurn })(WorldMap);

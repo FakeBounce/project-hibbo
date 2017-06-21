@@ -126,6 +126,11 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
+        case actions.END_TURN: {
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+        }
+
         default:
             return state;
     }

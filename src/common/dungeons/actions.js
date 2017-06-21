@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
 export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
@@ -18,6 +19,14 @@ export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 
+export const EndTurn = (dungeon) => ({firebase}) => {
+    console.log('End turn : dungeon');
+    return {
+        type: END_TURN,
+        payload: dungeon,
+    };
+};
+
 export const LoadDungeons = (snap: Object) => {
     const dungeons = snap.val();
     return {
@@ -25,6 +34,7 @@ export const LoadDungeons = (snap: Object) => {
         payload: { dungeons },
     };
 };
+
 export const LoadViewer = (viewer) => ({ firebase }) => {
     if(viewer)
     {
@@ -434,4 +444,11 @@ function comparePosition(r1,c1,r2,c2){
     }
     totalDistance = totalCol + totalRow;
     return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalDistance:totalDistance};
+}
+
+function jsonConcat(o1, o2) {
+    for (var key in o2) {
+        o1[key] = o2[key];
+    }
+    return o1;
 }
