@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon,EndTurn } from '../../common/dungeons/actions';
+import { cancelDungeon,EndTurn,MonsterTurn } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -15,7 +15,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) => {
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn }) => {
     var skills_list = '';
     var error_msg = '';
     if(viewer)
@@ -31,8 +31,15 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn }) =>
     {
         error_msg = dungeon.error_message;
     }
+    if(dungeon.end_turn)
+    {
+        if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn && dungeon.end_turn) {
+            console.log('wmp dung',dungeon);
+            MonsterTurn(dungeon);
+        }
+    }
     let doEndTurn = function(dungeon){
-        if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving)
+        if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.monster_turn)
         {
             EndTurn(dungeon);
         }
@@ -88,4 +95,4 @@ WorldMap.propTypes = {
 export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
-}), { cancelDungeon,EndTurn })(WorldMap);
+}), { cancelDungeon,EndTurn,MonsterTurn })(WorldMap);

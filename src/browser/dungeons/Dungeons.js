@@ -18,11 +18,17 @@ Dungeon.propTypes = {
 };
 
 let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
-    var weapon_list = '';
+    let weapon_list = '';
+    let health = 100;
+    let maxhealth = 100;
+    let energy = 100;
+    let maxenergy = 100;
+    let experience = 0;
+    let maxexperience = 1000;
     if(dviewer) {
         if (dviewer.weapons) {
             weapon_list = dviewer.weapons.map(weapon => {
-                var classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
+                let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
@@ -33,11 +39,11 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
         else  {
         if(dungeonsOP)
         {
-            var rowsMap = [];
-            var colsMap = [];
-            var dungeon;
-            var rows = 0;
-            var cols = 0;
+            let rowsMap = [];
+            let colsMap = [];
+            let dungeon;
+            let rows = 0;
+            let cols = 0;
             var dungeonActive = false;
             var wdmap = [];
             dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
@@ -46,6 +52,12 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
 
             if(dungeon)
             {
+                maxhealth = dungeon.user.default_character.maxhealth;
+                health = dungeon.user.character.health;
+                energy = dungeon.user.character.energy;
+                maxenergy = dungeon.user.default_character.maxenergy;
+                experience = dungeon.user.character.experience;
+                maxexperience = dungeon.user.default_character.maxexperience;
                 //Exemple
                 for (var i=0; i < dungeon.dungeon.maptiles.length; i++) {
                     colsMap = [];
@@ -76,9 +88,9 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
     <View>
         <div className="cadre-gauche">
             <div className="personnage">
-                <progress className="progressHealth" max="100" value="75"></progress>
-                <progress className="progressDamage" max="15000" value="1991"></progress>
-                <progress className="progressMore" max="100" value="25"></progress>
+                <progress className="progressHealth" max={maxhealth} value={health}></progress>
+                <progress className="progressDamage" max={maxenergy} value={energy}></progress>
+                <progress className="progressMore" max={maxexperience} value={experience}></progress>
             </div>
             <div className="cadreweapons">
                 <div className="weapons">

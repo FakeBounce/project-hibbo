@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const MONSTER_TURN = 'MONSTER_TURN';
 export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
 export const MOVING_CHARACTER = 'MOVING_CHARACTER';
@@ -20,16 +21,48 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 
 export const EndTurn = (dungeon) => ({firebase}) => {
-    if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving)
+    dungeon.error_message = '';
+    if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.end_turn)
     {
-        dungeon.error_message = '';
+        dungeon.end_turn = true;
+        dungeon.monster_turn = false;
+        dungeon.monster_moves = false;
         var pj = dungeon.user.character;
+        pj.is_attacked = false;
         var default_pj = dungeon.user.default_character;
         pj = jsonConcat(pj,default_pj);
 
         dungeon.user.character = pj;
+
+        let monsters = dungeon.dungeon.monsters;
+        let monster_moves = [];
+        monsters.map((monster,index) => {
+            let distance = comparePosition(monster.row,monster.col,pj.row,pj.col);
+            monster.can_attack = false;
+            monster.can_move_attack = false;
+            if(distance.totalDistance <= monster.range)
+            {
+                monster.can_attack = true;
+                monster.direction = distance.direction;
+                dungeon.monster_moves = true;
+                monster_moves.push(index);
+            }
+            else if(distance.totalDistance <= (monster.range+monster.move))
+            {
+                monster.can_move_attack = true;
+                monster.direction = distance.direction;
+                dungeon.monster_moves = true;
+                monster_moves.push(index);
+            }
+        });
+        dungeon.dungeon.monsters = monsters;
+        if(monster_moves.length > 0)
+        {
+            dungeon.monster_moves = monster_moves;
+        }
     }
     else {
+        dungeon.end_turn = false;
         dungeon.error_message = 'You can\'t end while doing an action';
     }
     firebase.update({
@@ -37,6 +70,57 @@ export const EndTurn = (dungeon) => ({firebase}) => {
     });
     return {
         type: END_TURN,
+        payload: dungeon,
+    };
+};
+
+export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
+    if(dungeon.end_turn)
+    {
+        dungeon.monster_turn = true;
+        if(attack)
+        {
+            dungeon.user.character.health -= dungeon.dungeon.monsters[dungeon.monster_moves[0]].damage;
+            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+            dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+            dungeon.monster_moves.splice(0,1);
+        }
+        if(dungeon.monster_moves.length > 0)
+        {
+            let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
+            if(monster.can_attack)
+            {
+                dungeon.user.character.is_attacked = true;
+                dungeon.user.character.attacked_direction = monster.direction;
+                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                monster.is_attacking = true;
+            }
+            if(monster.can_move_attack)
+            {
+                //Algo de déplacement
+                //Temporaire
+                dungeon.user.character.is_attacked = true;
+                dungeon.user.character.attacked_direction = monster.direction;
+                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                monster.is_attacking = true;
+
+            }
+            dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+            dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+        }
+        else {
+            dungeon.user.character.is_attacked = false;
+            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+            dungeon.monster_moves = false;
+            dungeon.end_turn = false;
+            dungeon.monster_turn = false;
+        }
+    }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: MONSTER_TURN,
         payload: dungeon,
     };
 };
@@ -388,6 +472,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     name: dungeon.name,
                     description: dungeon.description,
                     lock: dungeon.lock,
+                    end_turn: false,
                     user :
                         {
                             id:viewer.id,
@@ -395,8 +480,11 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                             character :
                                 {
                                     health:15000,
+                                    energy: 1000,
+                                    experience: 0,
                                     damage:100,
                                     name:"Warrior",
+                                    image: "/assets/images/classes/Warrior/down.png",
                                     type:"pj",
                                     range:1,
                                     move:1,
@@ -409,6 +497,9 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                 move:1,
                                 action:10,
                                 damage:100,
+                                maxhealth:15000,
+                                maxenergy: 1000,
+                                maxexperience: 1000,
                             },
                         },
                     dungeon:worldmap,

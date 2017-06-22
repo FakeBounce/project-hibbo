@@ -4,7 +4,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Image, Flex } from '../app/components';
-import { attackMonster,canAttackMonster,moveCharacter } from '../../common/dungeons/actions';
+import { attackMonster,canAttackMonster,moveCharacter,MonsterTurn } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
@@ -14,20 +14,26 @@ type Props = {
     move: String
 };
 
-const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMonster,moveCharacter }: Props) => {
+const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
     const styles = {
         margin: '0px 0px 0px 0px'
     };
     let classes= "monster";
     if(character.is_attacking && character.type == "pj")
     {
-        console.log('character : ',character);
         var gif = character.name+'-'+character.direction;
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
         setTimeout(function(){
             character.image = "/assets/images/classes/"+character.name+"/"+character.direction+".png";
             attackMonster(dungeon,character,character.attacking_row,character.attacking_col);
+        },1000);
+    }
+    if(character.is_attacking && character.type == "pnj" && dungeon.monster_turn && dungeon.end_turn)
+    {
+        classes= "monster monster_a"+character.direction;
+        setTimeout(function(){
+            MonsterTurn(dungeon,true);
         },1000);
     }
     if(move && character.type == "pj")
@@ -39,6 +45,31 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMons
         setTimeout(function(){
             character.image = "/assets/images/classes/"+character.name+"/"+move+".png";
             moveCharacter(dungeon,row,col);
+        },1000);
+    }
+    if(character.is_attacked && character.type == "pj")
+    {
+        var opposed_img = '';
+        if(character.attacked_direction == "left")
+        {
+            opposed_img = 'right';
+        }
+        if(character.attacked_direction == "right")
+        {
+            opposed_img = 'left';
+        }
+        if(character.attacked_direction == "up")
+        {
+            opposed_img = 'down';
+        }
+        if(character.attacked_direction == "down")
+        {
+            opposed_img = 'up';
+        }
+        classes= classes+" attacked_"+character.attacked_direction;
+        character.image = "/assets/images/classes/"+character.name+"/anime/"+opposed_img+".gif";
+        setTimeout(function(){
+            character.image = "/assets/images/classes/"+character.name+"/"+opposed_img+".png";
         },1000);
     }
     const attack_a_monster = function(){
@@ -60,6 +91,6 @@ Character.propTypes = {
 
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
-}), { attackMonster,canAttackMonster,moveCharacter }) (Character);
+}), { attackMonster,canAttackMonster,moveCharacter,MonsterTurn }) (Character);
 
 

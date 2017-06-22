@@ -605,6 +605,86 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
+.monster_adown {
+  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.monster_aup {
+  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.monster_aleft {
+  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.monster_aright {
+  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 1s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.attacked_down {
+  -webkit-animation: attacked_down 1s infinite; /* Safari 4.0 - 8.0 */
+  animation: attacked_down 1s infinite;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.attacked_up {
+  -webkit-animation: attacked_up 1s infinite; /* Safari 4.0 - 8.0 */
+  animation: attacked_up 1s infinite;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.attacked_left {
+  -webkit-animation: attacked_left 1s infinite; /* Safari 4.0 - 8.0 */
+  animation: attacked_left 1s infinite;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.attacked_right {
+  -webkit-animation: attacked_right 1s infinite; /* Safari 4.0 - 8.0 */
+  animation: attacked_right 1s infinite;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes movedown {
   0%   {top: 0px;}
@@ -722,6 +802,79 @@ progress[value].progressSkills::-webkit-progress-value {
   25% {left: 15px;}
   50% {left: 25px;}
   75% {left: 15px;}
+  100% {left: 0px;}
+}
+
+/* Standard syntax */
+@keyframes attacked_down {
+  0%   {top: 0px;}
+  25% {top: 5px;}
+  50% {top: 15px;}
+  75% {top: 5px;}
+  100% {top: 0px;}
+}
+
+/* Standard syntax */
+@-webkit-keyframes attacked_down {
+  0%   {top: 0px;}
+  25% {top: 5px;}
+  50% {top: 15px;}
+  75% {top: 5px;}
+  100% {top: 0px;}
+}
+
+/* Standard syntax */
+@keyframes attacked_up {
+  0%   {bottom: 0px;}
+  25% {bottom: 5px;}
+  50% {bottom: 15px;}
+  75% {bottom: 5px;}
+  100% {bottom: 0px;}
+}
+
+
+/* Standard syntax */
+@-webkit-keyframes attacked_up {
+  0%   {bottom: 0px;}
+  25% {bottom: 5px;}
+  50% {bottom: 15px;}
+  75% {bottom: 5px;}
+  100% {bottom: 0px;}
+}
+
+/* Standard syntax */
+@keyframes attacked_left {
+  0%   {right: 0px;}
+  25% {right: 5px;}
+  50% {right: 15px;}
+  75% {right: 5px;}
+  100% {right: 0px;}
+}
+
+/* Standard syntax */
+@-webkit-keyframes attacked_left {
+  0%   {right: 0px;}
+  25% {right: 5px;}
+  50% {right: 15px;}
+  75% {right: 5px;}
+  100% {right: 0px;}
+}
+
+/* Standard syntax */
+@-webkit-keyframes attacked_right {
+  0%   {left: 0px;}
+  25% {left: 5px;}
+  50% {left: 15px;}
+  75% {left: 5px;}
+  100% {left: 0px;}
+}
+
+/* Standard syntax */
+@keyframes attacked_right {
+  0%   {left: 0px;}
+  25% {left: 5px;}
+  50% {left: 15px;}
+  75% {left: 5px;}
   100% {left: 0px;}
 }
 

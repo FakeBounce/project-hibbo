@@ -129,7 +129,34 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   //ADD FAKE MAP
   firebase.update({
       [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
-          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`, maptiles: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
+          monsters : {
+              0: {
+                  image:"/assets/images/monsters/Warrior.png",
+                  damage:250,
+                  health:400,
+                  name:"Warrior",
+                  type:"pnj",
+                  row: 0,
+                  col: 1,
+                  move: 1,
+                  range: 1,
+                  is_attacking: false,
+                  is_moving: false,
+              },
+              1: {
+                  image:"/assets/images/monsters/Warrior.png",
+                  damage:250,
+                  health:400,
+                  name:"Warrior",
+                  type:"pnj",
+                  row: 3,
+                  col: 1,
+                  move: 1,
+                  range: 1,
+              }
+          },
+          maptiles: {
               0: {
                   0: {
                       completed: false,
@@ -156,7 +183,10 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                           damage:250,
                           health:400,
                           name:"Warrior",
-                          type:"pnj"
+                          type:"pnj",
+                          move: 1,
+                          range: 1,
+                          number:0
                       }
                   },
                   2: {
@@ -278,14 +308,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   id: id21,
                   image: "casegrass",
                     type: "walkable",
-                  title: "forest"
+                  title: "forest",
                 },
                 1: {
                   completed: false,
                   id: id22,
                   image: "casegrass",
                     type: "walkable",
-                  title: "forest"
+                  title: "forest",
                 },
                 2: {
                   completed: false,
@@ -349,7 +379,17 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   id: id32,
                   image: "casegrass",
                     type: "walkable",
-                  title: "forest"
+                  title: "forest",
+                  character: {
+                      image:"/assets/images/monsters/Warrior.png",
+                      damage:250,
+                      health:400,
+                      name:"Warrior",
+                      type:"pnj",
+                      move: 1,
+                      range: 1,
+                      number:1
+                  }
                 },
                 2: {
                   completed: false,
