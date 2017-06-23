@@ -34,7 +34,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     if(dungeon.end_turn)
     {
         if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn && dungeon.end_turn) {
-            console.log('wmp dung',dungeon);
             MonsterTurn(dungeon);
         }
     }
@@ -74,7 +73,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
               </div>
             </div>
                 <div className="cadre-objets">
-                    <progress className="progressSkills" max="100" value="45"></progress>
                     <div className="objets">
                         {skills_list}
                     </div>

@@ -44,9 +44,6 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
                 onClick={() => loadWorldMap(dungeon,viewer)}>
             Description : {dungeon.description}
           </Text>
-          {/*<WorldMap*/}
-          {/*worldmap={dungeon.worldmap}*/}
-          {/*></WorldMap>*/}
         </div>
       );
     }

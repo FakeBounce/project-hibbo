@@ -39,11 +39,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
         else  {
         if(dungeonsOP)
         {
-            let rowsMap = [];
-            let colsMap = [];
             let dungeon;
-            let rows = 0;
-            let cols = 0;
             var dungeonActive = false;
             var wdmap = [];
             dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
@@ -58,15 +54,6 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 maxenergy = dungeon.user.default_character.maxenergy;
                 experience = dungeon.user.character.experience;
                 maxexperience = dungeon.user.default_character.maxexperience;
-                //Exemple
-                for (var i=0; i < dungeon.dungeon.maptiles.length; i++) {
-                    colsMap = [];
-                    for (var j=0; j < dungeon.dungeon.maptiles[i].length; j++) {
-                        colsMap.push(<Image key={dungeon.dungeon.maptiles[i][j].id} src={dungeon.dungeon.maptiles[i][j].image}></Image>);
-                    }
-                    rowsMap.push(<Block>{colsMap}</Block>);
-                }
-                //Fin exemple
                 dungeonActive = true;
 
                 if(viewer)
@@ -75,7 +62,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 }
             }
             else {
-                if(viewer && viewer.active_dungeon != false)
+                if(viewer && !viewer.active_dungeon)
                 {
                     preLoadActiveDungeon(viewer);
                 }

@@ -20,6 +20,74 @@ export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 
+/************ Dungeon creation in firebase *****************/
+export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
+    var path = 'maps/'+dungeon.worldmap;
+    var Uid = getUid();
+    const getPromise = async () => {
+        try {
+            return await firebase.database.ref(path).once('value').then(function(snapshot){
+                let worldmap = snapshot.val();
+                let dungeonActive = {
+                    id: Uid,
+                    dungeon_id: dungeon.id,
+                    name: dungeon.name,
+                    description: dungeon.description,
+                    lock: dungeon.lock,
+                    end_turn: false,
+                    user :
+                        {
+                            id:viewer.id,
+                            displayName:viewer.displayName,
+                            character :
+                                {
+                                    health:15000,
+                                    energy: 1000,
+                                    experience: 0,
+                                    damage:100,
+                                    name:"Warrior",
+                                    image: "/assets/images/classes/Warrior/down.png",
+                                    type:"pj",
+                                    range:1,
+                                    move:1,
+                                    action:10,
+                                    basicCost:10,
+                                    row:0,
+                                    col:0,
+                                },
+                            default_character : {
+                                move:1,
+                                action:10,
+                                damage:100,
+                                maxhealth:15000,
+                                maxenergy: 1000,
+                                maxexperience: 1000,
+                            },
+                        },
+                    dungeon:worldmap,
+                    createdAt: now()
+                };
+                if(worldmap.id)
+                {
+                    firebase.update({
+                        [`activeDungeons/${viewer.id}`]: dungeonActive,
+                        [`users/${viewer.id}/active_dungeon`]: Uid,
+                    });
+                }
+                return dungeonActive;
+            });
+        } catch (error) {
+            console.log('An error occured. We could not load the dungeon. Try again later.');
+            throw error;
+        }
+    };
+    return {
+        type: LOAD_WORLD_MAP,
+        payload: getPromise(),
+    }
+};
+
+/************ Turns *****************/
 export const EndTurn = (dungeon) => ({firebase}) => {
     dungeon.error_message = '';
     if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.end_turn)
@@ -125,173 +193,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
     };
 };
 
-export const LoadDungeons = (snap: Object) => {
-    const dungeons = snap.val();
-    return {
-        type: LOAD_DUNGEONS,
-        payload: { dungeons },
-    };
-};
-
-export const LoadViewer = (viewer) => ({ firebase }) => {
-    if(viewer)
-    {
-        const getPromise = async () => {
-            try {
-                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
-                    var username = snapshot.val();
-                    return username;
-                });
-            } catch (error) {
-                console.log('An error occured. We could not load the dungeon. Try again later.');
-                throw error;
-            }
-        };
-        return {
-            type: 'LOAD_VIEWER',
-            payload: getPromise(),
-        };
-    }
-    return {
-        type: 'LOAD_VIEWER',
-        payload: ''
-    }
-};
-
-export const ReloadWorldMap = (snap: Object) => {
-    const dungeons = snap.val();
-    return {
-        type: RELOAD_WORLD_MAP,
-        payload: { dungeons },
-    };
-};
-
-
-
-export const LoadSkills = (snap: Object) => {
-    const skills = snap.val();
-    return {
-        type: LOAD_SKILLS,
-        payload: { skills },
-    };
-};
-
-export const LoadWeapons = (snap: Object) => {
-    const weapons = snap.val();
-    return {
-        type: LOAD_WEAPONS,
-        payload: { weapons },
-    };
-};
-
-export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
-    var path = 'activeDungeons/'+viewer.active_dungeon;
-    const getPromise = async () => {
-        try {
-            return await firebase.database.ref(path).once('value').then(function(snapshot){
-                let dungeonActive = snapshot.val();
-                return dungeonActive;
-            });
-        } catch (error) {
-            console.log('An error occured. We could not load the dungeon. Try again later.');
-            throw error;
-        }
-    };
-    return {
-        type: PRELOAD_ACTIVE_DUNGEON,
-        payload: getPromise(),
-    }
-};
-
-export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
-    var pj = dungeon.user.character;
-    pj.is_attacking = false;
-    dungeon.error_message = '';
-    if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
-    {
-        var distance = comparePosition(pj.row,pj.col,row,col);
-        pj.direction = distance.direction;
-        //Replace with pj.range
-        if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
-        {
-            if(pj.action >= pj.basicCost)
-            {
-                pj.is_attacking = true;
-                pj.attacking_row = row;
-                pj.attacking_col = col;
-            }
-            else {
-                dungeon.error_message = 'Not enough action points';
-            }
-        }
-        else {
-            dungeon.error_message = "You're too far.";
-        }
-    }
-    dungeon.user.character = pj;
-    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
-    firebase.update({
-        [`activeDungeons/${dungeon.user.id}`]: dungeon,
-    });
-    return {
-        type: CAN_ATTACK_MONSTER,
-        payload: dungeon
-    }
-}
-
-export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
-    console.log('attack dungeon : ',dungeon);
-    if(typeof dungeon.dungeon.maptiles[row][col].character !== 'undefined')
-    {
-        dungeon.error_message = '';
-        let pnj = dungeon.dungeon.maptiles[row][col].character;
-        let pj = character;
-        if(pj.is_attacking)
-        {
-            if(pnj.health > 0)
-            {
-                pnj.health = pnj.health - pj.damage;
-                pj.action = pj.action - pj.basicCost;
-                if(pnj.health<=0)
-                {
-                    pnj = null;
-                }
-                pj.is_attacking = false;
-                pj.direction = null;
-                pj.attacking_row = null;
-                pj.attacking_col = null;
-            }
-        }
-        dungeon.user.character = pj;
-        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
-        dungeon.dungeon.maptiles[row][col].character = pnj;
-    }
-    else {
-        dungeon.error_message = 'The ennemy is dead';
-    }
-    firebase.update({
-        [`activeDungeons/${dungeon.user.id}`]: dungeon,
-    });
-    return {
-        type: ATTACK_MONSTER,
-        payload: dungeon
-    }
-};
-
-export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
-    firebase.update({
-        [`activeDungeons/${dungeon.user.id}`]: null,
-        [`users/${dungeon.user.id}/active_dungeon`]: null,
-    });
-
-    return {
-        type: CANCEL_DUNGEON,
-        payload: dungeon
-    }
-};
-
-
-
+/************ Moves *****************/
 export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
 
     let canMove = false;
@@ -335,7 +237,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         {
             message = 'You cannot walk there.';
             if(totalRow+totalCol > 1)
-            message = 'You are too far from this location.';
+                message = 'You are too far from this location.';
             dungeon.error_message = message;
             dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
             dungeon.user.character.is_moving = null;
@@ -383,6 +285,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         component: { canMove: canMove,message: message,direction: direction}
     }
 }
+
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 
     if(dungeon.user.character.is_moving)
@@ -459,59 +362,103 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
     }
 };
 
-export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
-    var path = 'maps/'+dungeon.worldmap;
-    var Uid = getUid();
+/************ Attacks *****************/
+export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
+    var pj = dungeon.user.character;
+    pj.is_attacking = false;
+    dungeon.error_message = '';
+    if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
+    {
+        var distance = comparePosition(pj.row,pj.col,row,col);
+        pj.direction = distance.direction;
+        //Replace with pj.range
+        if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
+        {
+            if(pj.action >= pj.basicCost)
+            {
+                pj.is_attacking = true;
+                pj.attacking_row = row;
+                pj.attacking_col = col;
+                dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
+                dungeon.dungeon.maptiles[row][col].character.attacked_direction = distance.direction;
+            }
+            else {
+                dungeon.error_message = 'Not enough action points';
+            }
+        }
+        else {
+            dungeon.error_message = "You're too far.";
+        }
+    }
+    dungeon.user.character = pj;
+    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: CAN_ATTACK_MONSTER,
+        payload: dungeon
+    }
+}
+
+export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
+    dungeon.dungeon.maptiles[row][col].character.is_attacked = false;
+    if(typeof dungeon.dungeon.maptiles[row][col].character !== 'undefined')
+    {
+        dungeon.error_message = '';
+        let pnj = dungeon.dungeon.maptiles[row][col].character;
+        let pj = character;
+        if(pj.is_attacking)
+        {
+            if(pnj.health > 0)
+            {
+                pnj.health = pnj.health - pj.damage;
+                pj.action = pj.action - pj.basicCost;
+                if(pnj.health<=0)
+                {
+                    pnj = null;
+                }
+                pj.is_attacking = false;
+                pj.direction = null;
+                pj.attacking_row = null;
+                pj.attacking_col = null;
+            }
+        }
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+        dungeon.dungeon.maptiles[row][col].character = pnj;
+    }
+    else {
+        dungeon.error_message = 'The ennemy is dead';
+    }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: ATTACK_MONSTER,
+        payload: dungeon
+    }
+};
+
+/************ Others *****************/
+export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: null,
+        [`users/${dungeon.user.id}/active_dungeon`]: null,
+    });
+
+    return {
+        type: CANCEL_DUNGEON,
+        payload: dungeon
+    }
+};
+
+export const preLoadActiveDungeon = (viewer) => ({firebase}) => {
+    var path = 'activeDungeons/'+viewer.active_dungeon;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
-                let worldmap = snapshot.val();
-                let dungeonActive = {
-                    id: Uid,
-                    dungeon_id: dungeon.id,
-                    name: dungeon.name,
-                    description: dungeon.description,
-                    lock: dungeon.lock,
-                    end_turn: false,
-                    user :
-                        {
-                            id:viewer.id,
-                            displayName:viewer.displayName,
-                            character :
-                                {
-                                    health:15000,
-                                    energy: 1000,
-                                    experience: 0,
-                                    damage:100,
-                                    name:"Warrior",
-                                    image: "/assets/images/classes/Warrior/down.png",
-                                    type:"pj",
-                                    range:1,
-                                    move:1,
-                                    action:10,
-                                    basicCost:10,
-                                    row:0,
-                                    col:0,
-                                },
-                            default_character : {
-                                move:1,
-                                action:10,
-                                damage:100,
-                                maxhealth:15000,
-                                maxenergy: 1000,
-                                maxexperience: 1000,
-                            },
-                        },
-                    dungeon:worldmap,
-                    createdAt: now()
-                };
-                if(worldmap.id)
-                {
-                    firebase.update({
-                        [`activeDungeons/${viewer.id}`]: dungeonActive,
-                        [`users/${viewer.id}/active_dungeon`]: Uid,
-                    });
-                }
+                let dungeonActive = snapshot.val();
                 return dungeonActive;
             });
         } catch (error) {
@@ -520,10 +467,68 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
         }
     };
     return {
-        type: LOAD_WORLD_MAP,
+        type: PRELOAD_ACTIVE_DUNGEON,
         payload: getPromise(),
     }
 };
+
+export const ReloadWorldMap = (snap: Object) => {
+    const dungeons = snap.val();
+    return {
+        type: RELOAD_WORLD_MAP,
+        payload: { dungeons },
+    };
+};
+
+export const LoadSkills = (snap: Object) => {
+    const skills = snap.val();
+    return {
+        type: LOAD_SKILLS,
+        payload: { skills },
+    };
+};
+
+export const LoadWeapons = (snap: Object) => {
+    const weapons = snap.val();
+    return {
+        type: LOAD_WEAPONS,
+        payload: { weapons },
+    };
+};
+
+export const LoadDungeons = (snap: Object) => {
+    const dungeons = snap.val();
+    return {
+        type: LOAD_DUNGEONS,
+        payload: { dungeons },
+    };
+};
+
+export const LoadViewer = (viewer) => ({ firebase }) => {
+    if(viewer)
+    {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
+                    var username = snapshot.val();
+                    return username;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: 'LOAD_VIEWER',
+            payload: getPromise(),
+        };
+    }
+    return {
+        type: 'LOAD_VIEWER',
+        payload: ''
+    }
+};
+
 
 function comparePosition(r1,c1,r2,c2){
     let totalRow = r1 - r2;

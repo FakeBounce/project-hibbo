@@ -72,6 +72,10 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMons
             character.image = "/assets/images/classes/"+character.name+"/"+opposed_img+".png";
         },1000);
     }
+    if(character.is_attacked && character.type == "pnj")
+    {
+        classes= classes+" attacked_"+character.attacked_direction;
+    }
     const attack_a_monster = function(){
         if(character.type == "pnj")
         {

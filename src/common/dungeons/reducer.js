@@ -7,14 +7,10 @@ import Dungeon from './dungeon';
 import { Map } from 'immutable';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
-import { firebaseActions } from '../lib/redux-firebase';
-import firebase from '../lib/redux-firebase/firebase';
 
 const State = Record({
-    map: Map(),
     loaded: false,
     dungeonLoaded: null,
-    worldmap: Map(),
     viewer: null,
     dungeonsOP: Map(),
 }, 'dungeon');
@@ -24,7 +20,6 @@ const dungeonsReducer = (state = new State(), action) => {
     switch (action.type) {
 
         case actions.LOAD_VIEWER_SUCCESS: {
-            console.log(action.payload);
             let viewer = state.viewer;
             if(!viewer)
             {
@@ -54,9 +49,7 @@ const dungeonsReducer = (state = new State(), action) => {
 
                 .map(dungeonpPresence => new Dungeon(dungeonpPresence))
                 .toList();
-            const dungeonsp = action.payload.dungeons;
-            return state.update('map', map => map.merge(dungeonsp))
-                .set('loaded', true)
+            return state.set('loaded', true)
                 .set('dungeonLoaded', list);
         }
 
