@@ -97,6 +97,27 @@ background-attachment:fixed;
   position: absolute;
 }
 
+// menu fixe
+
+.menu-fixe{
+
+}
+
+.menu-fixe li{
+  padding: 10px;
+  background-color: #16120f;
+  width: 214px;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+}
+
+.menu-fixe li:hover{
+  background-color: #210009;
+}
+
+
 
 // login
 
@@ -152,16 +173,19 @@ background-attachment:fixed;
 
 // boutons
 
+.champs-btn-end{
+  width:100%;
+  display: flex;
+}
+
 .btn-retour{
   box-sizing: border-box;
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
-  line-height: 16px;
-  min-height: 32px;
   text-decoration: none;
   display: inline-block;
-  margin: 0 10px 0 0;
+  margin: 10px auto;
   padding: 8px 16px;
   cursor: pointer;
   border: 0;
@@ -174,9 +198,7 @@ background-attachment:fixed;
   height: 53px;
   width: 195px;
   box-shadow: none;
-  float: right;
   text-align: center;
-  padding-top:17px;
 }
 
 // levels
@@ -326,7 +348,7 @@ progress[value].progressMore::-webkit-progress-value {
 .cadre {
   background-color: rgba(0, 0, 0, 0.3);
   background-size: cover;
-  padding: 5%;
+  padding: 1% 5%;
   margin: 0 auto;
   width: 644px;
   float: right;

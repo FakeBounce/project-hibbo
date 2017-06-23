@@ -85,7 +85,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 </div>
             </div>
         </div>
-        <SignOut/>
+
         {!loaded ?
             <Loading />
             : viewer ?

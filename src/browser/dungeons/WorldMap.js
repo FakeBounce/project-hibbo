@@ -46,8 +46,12 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     return (
         <View>
           <div className="fix-hauteur">
-            <div className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</div>
             <Text>{error_msg}</Text>
+            <ul className="menu-fixe">
+              <li>MAP</li>
+              <li onClick={() => cancelDungeon(dungeon)}>DONGEONS</li>
+              <li>MENU</li>
+            </ul>
 
             <Text>{dungeon.description}</Text>
             <div className="cadre-droite">
@@ -65,9 +69,11 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
                 );
               })
               }
+                <div className="champs-btn-end">
+                  <button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button>
+                </div>
             </div>
             <div className="cadre-boss">
-                <button onClick={() => doEndTurn(dungeon)}>End turn</button>
               <div className="progressBoss">
                 <progress className="progressBarBoss" max="100" value="45"></progress>
               </div>
