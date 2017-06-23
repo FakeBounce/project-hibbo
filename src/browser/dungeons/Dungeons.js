@@ -84,8 +84,8 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     {weapon_list}
                 </div>
             </div>
+            <SignOut/>
         </div>
-
         {!loaded ?
             <Loading />
             : viewer ?
