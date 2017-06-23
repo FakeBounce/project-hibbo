@@ -337,6 +337,11 @@ progress[value].progressMore::-webkit-progress-value {
 
 }
 
+.monster_head {
+  width: 60px;
+  margin-left: 20px;
+}
+
 .cadre-boss{
   width: 644px;
   display: block;
@@ -353,9 +358,21 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .progressBarBoss{
-  margin: 45px 0 0 110px;
+  margin: 14px 0 0 110px;
   height: 18px;
   width: 194px;
+}
+
+.monster_name {
+  padding-top: 13px;
+  padding-left: 110px;
+  margin: 0px;
+}
+
+.monster_name_hidden {
+  padding-top: 31px;
+  padding-left: 110px;
+  margin: 0px;
 }
 
 progress[value].progressBarBoss::-webkit-progress-value {
@@ -871,7 +888,7 @@ progress[value].progressSkills::-webkit-progress-value {
 
 /* Standard syntax */
 @keyframes attacked_right {
-  0%   {left: 0px;}
+  0%   {left: 0px;}f
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}

@@ -18,6 +18,10 @@ type Props = {
 let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn }) => {
     var skills_list = '';
     var error_msg = '';
+    var monster_image = '';
+    var monster_health = 100;
+    var monster_maxhealth = 100;
+    var monster_name = '';
     if(viewer)
     {
         if(viewer.skills) {
@@ -35,6 +39,17 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     {
         if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn && dungeon.end_turn) {
             MonsterTurn(dungeon);
+        }
+    }
+    if(dungeon.monster_info_row != null && dungeon.monster_info_col != null)
+    {
+        if(dungeon.dungeon.maptiles[dungeon.monster_info_row][dungeon.monster_info_col].character)
+        {
+            var monster = dungeon.dungeon.maptiles[dungeon.monster_info_row][dungeon.monster_info_col].character;
+            monster_image = monster.image;
+            monster_health = monster.health;
+            monster_maxhealth = monster.maxhealth;
+            monster_name = monster.name;
         }
     }
     let doEndTurn = function(dungeon){
@@ -69,7 +84,13 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
             <div className="cadre-boss">
                 <button onClick={() => doEndTurn(dungeon)}>End turn</button>
               <div className="progressBoss">
-                <progress className="progressBarBoss" max="100" value="45"></progress>
+                  {monster_name == '' ?
+                      <p className="monster_name_hidden">{monster_name}</p>
+                      :
+                      <p className="monster_name">{monster_name}</p>
+                  }
+                <progress className="progressBarBoss" max={monster_maxhealth} value={monster_health}></progress>
+                  <Image className="monster_head" src={monster_image}/>
               </div>
             </div>
                 <div className="cadre-objets">

@@ -44,7 +44,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                     health:15000,
                                     energy: 1000,
                                     experience: 0,
-                                    damage:100,
+                                    damage:200,
                                     name:"Warrior",
                                     image: "/assets/images/classes/Warrior/down.png",
                                     type:"pj",
@@ -54,11 +54,13 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                     basicCost:10,
                                     row:0,
                                     col:0,
+                                    is_attacking:false,
+                                    is_moving:false,
                                 },
                             default_character : {
                                 move:1,
                                 action:10,
-                                damage:100,
+                                damage:200,
                                 maxhealth:15000,
                                 maxenergy: 1000,
                                 maxexperience: 1000,
@@ -105,20 +107,20 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         let monsters = dungeon.dungeon.monsters;
         let monster_moves = [];
         monsters.map((monster,index) => {
-            let distance = comparePosition(monster.row,monster.col,pj.row,pj.col);
+            let range = comparePosition(monster.row,monster.col,pj.row,pj.col);
             monster.can_attack = false;
             monster.can_move_attack = false;
-            if(distance.totalDistance <= monster.range)
+            if(range.totalRange <= monster.range)
             {
                 monster.can_attack = true;
-                monster.direction = distance.direction;
+                monster.direction = range.direction;
                 dungeon.monster_moves = true;
                 monster_moves.push(index);
             }
-            else if(distance.totalDistance <= (monster.range+monster.move))
+            else if(range.totalRange <= (monster.range+monster.move))
             {
                 monster.can_move_attack = true;
-                monster.direction = distance.direction;
+                monster.direction = range.direction;
                 dungeon.monster_moves = true;
                 monster_moves.push(index);
             }
@@ -158,6 +160,8 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
             if(monster.can_attack)
             {
+                dungeon.monster_info_row = monster.row;
+                dungeon.monster_info_col = monster.col;
                 dungeon.user.character.is_attacked = true;
                 dungeon.user.character.attacked_direction = monster.direction;
                 dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
@@ -167,6 +171,8 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
             {
                 //Algo de déplacement
                 //Temporaire
+                dungeon.monster_info_row = monster.row;
+                dungeon.monster_info_col = monster.col;
                 dungeon.user.character.is_attacked = true;
                 dungeon.user.character.attacked_direction = monster.direction;
                 dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
@@ -199,7 +205,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    if(!dungeon.user.character.is_moving)
+    if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking)
     {
         let canMove = false;
         let message = '';
@@ -240,7 +246,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 message = 'You are too far from this location.';
             dungeon.error_message = message;
             dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-            dungeon.user.character.is_moving = null;
+            dungeon.user.character.is_moving = false;
             dungeon.user.character.moving_row = null;
             dungeon.user.character.moving_col = null;
             firebase.update({
@@ -265,7 +271,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 message = 'You cannot walk there.';
                 dungeon.error_message = message;
                 dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-                dungeon.user.character.is_moving = null;
+                dungeon.user.character.is_moving = false;
                 dungeon.user.character.moving_row = null;
                 dungeon.user.character.moving_col = null;
                 firebase.update({
@@ -341,14 +347,14 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             dungeon.user.character.col = dungeon.user.character.moving_col;
             dungeon.user.character.moving_row = null;
             dungeon.user.character.moving_col = null;
-            dungeon.user.character.is_moving = null;
+            dungeon.user.character.is_moving = false;
             dungeon.error_message = '';
         }
         else
         {
             dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
             dungeon.error_message = message;
-            dungeon.user.character.is_moving = null;
+            dungeon.user.character.is_moving = false;
             dungeon.user.character.moving_row = null;
             dungeon.user.character.moving_col = null;
         }
@@ -367,12 +373,12 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
     pj.is_attacking = false;
     dungeon.error_message = '';
-    if((typeof pj.is_moving === 'undefined' || pj.is_moving == null))
+    if(!pj.is_moving)
     {
-        var distance = comparePosition(pj.row,pj.col,row,col);
-        pj.direction = distance.direction;
+        var range = comparePosition(pj.row,pj.col,row,col);
+        pj.direction = range.direction;
         //Replace with pj.range
-        if(pj.range >= distance.totalDistance && distance.totalDistance > 0)
+        if(pj.range >= range.totalRange && range.totalRange > 0)
         {
             if(pj.action >= pj.basicCost)
             {
@@ -380,7 +386,9 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
                 pj.attacking_row = row;
                 pj.attacking_col = col;
                 dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
-                dungeon.dungeon.maptiles[row][col].character.attacked_direction = distance.direction;
+                dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
+                dungeon.monster_info_row = row;
+                dungeon.monster_info_col = col;
             }
             else {
                 dungeon.error_message = 'Not enough action points';
@@ -402,9 +410,9 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
 }
 
 export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
-    dungeon.dungeon.maptiles[row][col].character.is_attacked = false;
-    if(typeof dungeon.dungeon.maptiles[row][col].character !== 'undefined')
+    if(dungeon.dungeon.maptiles[row][col].character && dungeon.dungeon.maptiles[row][col].character != null)
     {
+        dungeon.dungeon.maptiles[row][col].character.is_attacked = false;
         dungeon.error_message = '';
         let pnj = dungeon.dungeon.maptiles[row][col].character;
         let pj = character;
@@ -417,6 +425,8 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
                 if(pnj.health<=0)
                 {
                     pnj = null;
+                    dungeon.monster_info_row = null;
+                    dungeon.monster_info_col = null;
                 }
                 pj.is_attacking = false;
                 pj.direction = null;
@@ -426,6 +436,13 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
         }
         dungeon.user.character = pj;
         dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+        if(pnj != null && typeof pnj !== 'undefined' && dungeon.dungeon.maptiles[row][col].character)
+        {
+            dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number],pnj);
+        }
+        else {
+            delete dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number];
+        }
         dungeon.dungeon.maptiles[row][col].character = pnj;
     }
     else {
@@ -534,7 +551,7 @@ function comparePosition(r1,c1,r2,c2){
     let totalRow = r1 - r2;
     let totalCol = c1 - c2;
     let direction = "";
-    let totalDistance = 0;
+    let totalRange = 0;
     if(totalRow < 0)
     {
         direction = 'down';
@@ -561,8 +578,8 @@ function comparePosition(r1,c1,r2,c2){
     {
         totalRow = totalRow*-1;
     }
-    totalDistance = totalCol + totalRow;
-    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalDistance:totalDistance};
+    totalRange = totalCol + totalRow;
+    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalRange:totalRange};
 }
 
 function jsonConcat(o1, o2) {
