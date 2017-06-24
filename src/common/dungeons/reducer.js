@@ -12,6 +12,7 @@ const State = Record({
     loaded: false,
     dungeonLoaded: null,
     viewer: null,
+    tutoriel: null,
     dungeonsOP: Map(),
 }, 'dungeon');
 
@@ -21,11 +22,58 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.LOAD_VIEWER_SUCCESS: {
             let viewer = state.viewer;
-            if(!viewer)
+            if(viewer == null)
             {
-                return state.set('viewer', action.payload);
+                return state.set('viewer', action.payload.username);
+            }
+            else {
+                viewer = jsonConcat(viewer,action.payload.username);
             }
             return state;
+        }
+
+        case actions.LOAD_VIEWER_REF: {
+            if(action.payload.viewer)
+            {
+
+                let viewer = state.viewer;
+                if(viewer != null)
+                {
+                    viewer = jsonConcat(viewer,action.payload.viewer);
+                }
+                else {
+                    viewer = action.payload.viewer;
+                }
+                console.log('MAJ viewer',viewer);
+                return state.set('viewer', viewer);
+            }
+            return state;
+        }
+
+        case actions.LOAD_TUTO_REF: {
+            if(action.payload.tutoriel)
+            {
+
+                let tutoriel = state.tutoriel;
+                if(tutoriel != null)
+                {
+                    tutoriel = jsonConcat(tutoriel,action.payload.tutoriel);
+                }
+                else {
+                    tutoriel = action.payload.tutoriel;
+                }
+                console.log('MAJ tutoriel',tutoriel);
+                return state.set('tutoriel', tutoriel);
+            }
+            return state;
+        }
+
+        case actions.LOAD_NEXT_STEP_SUCCESS: {
+            return state.set('tutoriel',action.payload.tutoriel);
+        }
+
+        case actions.LOAD_STEP_SUCCESS: {
+            return state.set('tutoriel',action.payload.tutoriel);
         }
 
         case actions.LOAD_SKILLS: {
@@ -127,3 +175,10 @@ const dungeonsReducer = (state = new State(), action) => {
 };
 
 export default dungeonsReducer;
+
+function jsonConcat(o1, o2) {
+    for (var key in o2) {
+        o1[key] = o2[key];
+    }
+    return o1;
+}

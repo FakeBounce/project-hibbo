@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadTutoRef,LoadViewerRef,LoadStep,LoadNextStep, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -17,7 +17,7 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
+let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer,LoadTutoRef, loadWorldMap,LoadStep,LoadNextStep, viewer,dviewer }) => {
     let weapon_list = '';
     let health = 100;
     let maxhealth = 100;
@@ -25,19 +25,31 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
-    if(dviewer) {
+    var steps = null;
+console.log('Coucou',tutoriel);
+    if(!dviewer)
+    {
+        LoadViewer(viewer);
+    }
+    else
+    {
         if (dviewer.weapons) {
             weapon_list = dviewer.weapons.map(weapon => {
                 let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
-    }
-    if(!dviewer)
-    {
-        LoadViewer(viewer);}
-        else  {
-        if(dungeonsOP)
+       if(dviewer.tuto)
+       {
+           if(typeof tutoriel === 'undefined' || tutoriel == null)
+           {
+               LoadStep(dviewer);
+           }
+           else {
+                   steps = tutoriel;
+           }
+       }
+        else if(dungeonsOP)
         {
             let dungeon;
             var dungeonActive = false;
@@ -86,6 +98,9 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
             </div>
             <SignOut/>
         </div>
+        {dviewer && tutoriel!=null &&
+            <div onClick={() => LoadNextStep(dviewer,tutoriel.next)}>{tutoriel.description}</div>
+        }
         {!loaded ?
             <Loading />
             : viewer ?
@@ -108,8 +123,11 @@ Dungeons.propTypes = {
     loaded: React.PropTypes.bool.isRequired,
     loadWorldMap : React.PropTypes.func.isRequired,
     LoadViewer : React.PropTypes.func.isRequired,
+    LoadNextStep : React.PropTypes.func.isRequired,
+    LoadStep : React.PropTypes.func.isRequired,
     preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
+    tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
 };
@@ -117,13 +135,17 @@ Dungeons.propTypes = {
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
     const SkillsRef = database.child('skills');
-    const WorldMapRef = database.child('activeDungeons');
+    const WorldMapRef = database.child('activeDungeons/'+props.viewer.id);
     const WeaponsRef = database.child('weapons');
+    const ViewerRef = database.child('users/'+props.viewer.id);
+    const TutoRef = database.child('tutoriel/'+props.viewer.id);
     return [
         [WeaponsRef, 'on', 'value', props.LoadWeapons],
         [SkillsRef, 'on', 'value', props.LoadSkills],
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
         [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
+        [ViewerRef, 'on', 'value', props.LoadViewerRef],
+        [TutoRef, 'on', 'value', props.LoadTutoRef],
     ];
 })(Dungeons);
 
@@ -131,6 +153,7 @@ export default connect(state => ({
     dungeons: state.dungeons.dungeonLoaded,
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
+    tutoriel: state.dungeons.tutoriel,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+}), { LoadDungeons,LoadSkills, LoadWeapons,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);

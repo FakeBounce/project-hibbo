@@ -3,11 +3,20 @@
  */
 
 import { Range } from 'immutable';
+export const LOAD_TUTO_REF = 'LOAD_TUTO_REF';
+export const LOAD_VIEWER_REF = 'LOAD_VIEWER_REF';
+export const LOAD_STEP = 'LOAD_STEP';
+export const LOAD_STEP_ERROR = 'LOAD_STEP_ERROR';
+export const LOAD_STEP_START = 'LOAD_STEP_START';
+export const LOAD_STEP_SUCCESS = 'LOAD_STEP_SUCCESS';
+export const LOAD_NEXT_STEP = 'LOAD_NEXT_STEP';
+export const LOAD_NEXT_STEP_SUCCESS = 'LOAD_NEXT_STEP_SUCCESS';
 export const MONSTER_TURN = 'MONSTER_TURN';
 export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
 export const MOVING_CHARACTER = 'MOVING_CHARACTER';
 export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
+export const LOAD_VIEWER = 'LOAD_VIEWER';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
@@ -86,6 +95,64 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     return {
         type: LOAD_WORLD_MAP,
         payload: getPromise(),
+    }
+};
+
+export const LoadStep = (viewer) =>  ({ firebase }) => {
+    if(viewer.tuto) {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('tutorialSteps/'+viewer.tuto).once('value').then(function(snapshot){
+                    let tutoriel = snapshot.val();
+                    firebase.update({
+                        [`users/${viewer.id}/tuto_loaded`]: true,
+                        [`tutoriel/${viewer.id}`]: tutoriel,
+                    });
+                    return {tutoriel};
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the tutorial. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: LOAD_STEP,
+            payload: getPromise(),
+        }
+    }
+    return {
+        type: LOAD_STEP,
+        payload: viewer,
+
+    }
+};
+
+export const LoadNextStep = (viewer,next) =>  ({ firebase }) => {
+    if(viewer.tuto) {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('tutorialSteps/'+next).once('value').then(function(snapshot){
+                    let tutoriel = snapshot.val();
+
+                    firebase.update({
+                        [`users/${viewer.id}/tuto`]: next,
+                        [`tutoriel/${viewer.id}`]: tutoriel,
+                    });
+                    return {tutoriel};
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the tutorial. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: LOAD_NEXT_STEP,
+            payload: getPromise(),
+        }
+    }
+    return {
+        type: LOAD_NEXT_STEP,
+        payload: viewer,
     }
 };
 
@@ -521,6 +588,22 @@ export const LoadDungeons = (snap: Object) => {
     };
 };
 
+export const LoadViewerRef = (snap: Object) => {
+    const viewer = snap.val();
+    return {
+        type: LOAD_VIEWER_REF,
+        payload: { viewer },
+    };
+};
+
+export const LoadTutoRef = (snap: Object) => {
+    const tutoriel = snap.val();
+    return {
+        type: LOAD_TUTO_REF,
+        payload: { tutoriel },
+    };
+};
+
 export const LoadViewer = (viewer) => ({ firebase }) => {
     if(viewer)
     {
@@ -528,7 +611,7 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
             try {
                 return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
                     var username = snapshot.val();
-                    return username;
+                    return {username};
                 });
             } catch (error) {
                 console.log('An error occured. We could not load the dungeon. Try again later.');
@@ -536,12 +619,12 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
             }
         };
         return {
-            type: 'LOAD_VIEWER',
+            type: LOAD_VIEWER,
             payload: getPromise(),
         };
     }
     return {
-        type: 'LOAD_VIEWER',
+        type: LOAD_VIEWER,
         payload: ''
     }
 };
