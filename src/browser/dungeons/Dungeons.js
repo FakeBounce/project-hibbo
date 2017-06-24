@@ -25,7 +25,6 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
-    var steps = null;
 console.log('Coucou',tutoriel);
     if(!dviewer)
     {
@@ -44,9 +43,6 @@ console.log('Coucou',tutoriel);
            if(typeof tutoriel === 'undefined' || tutoriel == null)
            {
                LoadStep(dviewer);
-           }
-           else {
-                   steps = tutoriel;
            }
        }
         else if(dungeonsOP)
