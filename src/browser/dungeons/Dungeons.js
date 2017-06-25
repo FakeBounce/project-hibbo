@@ -75,7 +75,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
     <View>
       <ul className="menu-fixe">
         <li>MAP</li>
-        <li>DONGEONS</li>
+        <li>OBJECTIFS</li>
         <li>MENU</li>
       </ul>
       <ul className="leMenu">
