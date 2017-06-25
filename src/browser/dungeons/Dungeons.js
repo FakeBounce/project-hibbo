@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -73,6 +73,15 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
 
     return (
     <View>
+      <ul className="menu-fixe">
+        <li>MAP</li>
+        <li>DONGEONS</li>
+        <li>MENU</li>
+      </ul>
+      <ul className="leMenu">
+        <li onClick={() => cancelDungeon(dungeon)}><div className="btn-dungeon"><span>Les dongeons</span></div></li>
+        <li><SignOut/></li>
+      </ul>
         <div className="cadre-gauche">
             <div className="personnage">
                 <progress className="progressHealth" max={maxhealth} value={health}></progress>
@@ -84,7 +93,6 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     {weapon_list}
                 </div>
             </div>
-            <SignOut/>
         </div>
         {!loaded ?
             <Loading />
