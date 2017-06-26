@@ -17,7 +17,7 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
+let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
     let weapon_list = '';
     let health = 100;
     let maxhealth = 100;
@@ -25,6 +25,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
+    let dungeon;
     if(dviewer) {
         if (dviewer.weapons) {
             weapon_list = dviewer.weapons.map(weapon => {
@@ -39,7 +40,6 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
         else  {
         if(dungeonsOP)
         {
-            let dungeon;
             var dungeonActive = false;
             var wdmap = [];
             dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
@@ -141,4 +141,4 @@ export default connect(state => ({
     loaded: state.dungeons.loaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
