@@ -30,6 +30,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     if(dungeon.end_turn)
     {
         if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn && dungeon.end_turn) {
+            console.log('demarrage');
             MonsterTurn(dungeon);
         }
     }

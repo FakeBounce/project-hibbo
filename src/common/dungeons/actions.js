@@ -203,23 +203,30 @@ export const EndTurn = (dungeon) => ({firebase}) => {
     };
 };
 
-export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
+export const MonsterTurn = (dungeon,attack = false,move = false) => ({firebase}) => {
     if(dungeon.end_turn)
     {
         dungeon.monster_turn = true;
-        var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
         if(attack)
         {
             dungeon.user.character.health -= dungeon.dungeon.monsters[dungeon.monster_moves[0]].damage;
             dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
             dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
+            dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
+            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
             dungeon.monster_moves.splice(0,1);
         }
         if(dungeon.monster_moves.length > 0)
         {
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
+            let pj = dungeon.user.character;
+            var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
             if(monster.can_attack)
             {
+                monster.is_moving = false;
+                monster.can_move_attack = false;
+                monster.direction = range.direction;
                 dungeon.monster_info_row = monster.row;
                 dungeon.monster_info_col = monster.col;
                 dungeon.user.character.is_attacked = true;
@@ -229,9 +236,11 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
             }
             if(monster.can_move_attack)
             {
+                monster.is_moving = false;
                 //Algo de déplacement
                 //Temporaire
                 var maptiles = dungeon.dungeon.maptiles;
+                var moves = [];
                 var minrow = monster.row-monster.move;
                 var maxrow = monster.row+monster.move;
                 var mincol = monster.col-monster.move;
@@ -249,27 +258,94 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                 //     }
                 //     current_row++;
                 // }
-                
-
-                if ( range.totalCol > 0)
+                if(move)
                 {
-                    if (maptiles[monster.row][monster.col - 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col - 1] === "undefined" || maptiles[monster.row][monster.col - 1] == null))
-                    {
-                        maptiles[monster.row][monster.col-1].character = monster;
-                        maptiles[monster.row][monster.col].character = null;
-                        monster.col = monster.col - 1;
-                        monster.direction = "left";
-                    }
+
+                    monster.direction = range.direction;
+                    maptiles[monster.moves[0].row][monster.moves[0].col].character = monster;
+                    maptiles[monster.row][monster.col].character = null;
+                    monster.row = monster.moves[0].row;
+                    monster.col = monster.moves[0].col;
+                    monster.can_move_attack = false;
+                    dungeon.monster_info_row = monster.row;
+                    dungeon.monster_info_col = monster.col;
+                    dungeon.user.character.is_attacked = true;
+                    dungeon.user.character.attacked_direction = monster.direction;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                    monster.is_attacking = true;
+                    monster.can_attack = true;
                 }
-
-
-                dungeon.monster_info_row = monster.row;
-                dungeon.monster_info_col = monster.col;
-                dungeon.user.character.is_attacked = true;
-                dungeon.user.character.attacked_direction = monster.direction;
-                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
-                monster.is_attacking = true;
-
+                else {
+                    if ( range.totalColU > 0)
+                    {
+                        if (maptiles[monster.row][monster.col - 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col - 1].character === "undefined" || maptiles[monster.row][monster.col - 1].character == null))
+                        {
+                            // maptiles[monster.row][monster.col-1].character = monster;
+                            // maptiles[monster.row][monster.col].character = null;
+                            // monster.col = monster.col - 1;
+                            monster.direction = "left";
+                            monster.is_moving = true;
+                            moves.push(
+                                {
+                                        "row":monster.row,
+                                        "col":monster.col-1,
+                                }
+                            );
+                        }
+                    }
+                    else if ( range.totalColU < 0)
+                    {
+                        if (maptiles[monster.row][monster.col + 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col + 1].character === "undefined" || maptiles[monster.row][monster.col + 1].character == null))
+                        {
+                            // maptiles[monster.row][monster.col+1].character = monster;
+                            // maptiles[monster.row][monster.col].character = null;
+                            // monster.col = monster.col + 1;
+                            monster.direction = "right";
+                            monster.is_moving = true;
+                            moves.push(
+                                {
+                                        "row":monster.row,
+                                        "col":monster.col+1,
+                                }
+                            );
+                        }
+                    }
+                    else if ( range.totalRowU > 0)
+                    {
+                        if (maptiles[monster.row - 1][monster.col].type =="walkable" && (typeof  maptiles[monster.row - 1][monster.col].character === "undefined" || maptiles[monster.row - 1][monster.col].character == null))
+                        {
+                            // maptiles[monster.row - 1][monster.col].character = monster;
+                            // maptiles[monster.row][monster.col].character = null;
+                            // monster.row = monster.row - 1;
+                            monster.direction = "up";
+                            monster.is_moving = true;
+                            moves.push(
+                                {
+                                        "row":monster.row-1,
+                                        "col":monster.col,
+                                }
+                            );
+                        }
+                    }
+                    else if ( range.totalRowU < 0)
+                    {
+                        if (maptiles[monster.row + 1][monster.col].type =="walkable" && (typeof  maptiles[monster.row + 1][monster.col].character === "undefined" || maptiles[monster.row + 1][monster.col].character == null))
+                        {
+                            // maptiles[monster.row + 1][monster.col].character = monster;
+                            // maptiles[monster.row][monster.col].character = null;
+                            // monster.row = monster.row + 1;
+                            monster.direction = "down";
+                            monster.is_moving = true;
+                            moves.push(
+                                {
+                                        "row":monster.row+1,
+                                        "col":monster.col,
+                                }
+                            );
+                        }
+                    }
+                    monster.moves = moves;
+                }
             }
             dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
             dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -288,6 +364,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
     return {
         type: MONSTER_TURN,
         payload: dungeon,
+        component: {direction:"left"}
     };
 };
 
@@ -687,7 +764,9 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
 
 
 function comparePosition(r1,c1,r2,c2){
+    let totalRowU = r1 - r2;
     let totalRow = r1 - r2;
+    let totalColU = c1 - c2;
     let totalCol = c1 - c2;
     let direction = "";
     let totalRange = 0;
@@ -718,7 +797,7 @@ function comparePosition(r1,c1,r2,c2){
         totalRow = totalRow*-1;
     }
     totalRange = totalCol + totalRow;
-    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalRange:totalRange};
+    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalRange:totalRange,totalRowU:totalRowU,totalColU:totalColU};
 }
 
 function jsonConcat(o1, o2) {

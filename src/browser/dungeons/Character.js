@@ -19,6 +19,24 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMons
         margin: '0px 0px 0px 0px'
     };
     let classes= "monster";
+    const getPromise = async () => {
+        try {
+            return await MonsterTurn(dungeon,true);
+        }
+        catch (error) {
+            console.log('An error occured. We could not load the dungeon. Try again later.');
+            throw error;
+        }
+    };
+    const getPromiseMove = async () => {
+        try {
+            return await MonsterTurn(dungeon,false,true);
+        }
+        catch (error) {
+            console.log('An error occured. We could not load the dungeon. Try again later.');
+            throw error;
+        }
+    };
     if(character.is_attacking && character.type == "pj")
     {
         var gif = character.name+'-'+character.direction;
@@ -33,7 +51,20 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,canAttackMons
     {
         classes= "monster monster_a"+character.direction;
         setTimeout(function(){
-            MonsterTurn(dungeon,true);
+                getPromise().then(
+                    response => console.log('response',response.component.direction),
+                    error => console.log('error:',error)
+                );
+        },1000);
+    }
+    if(character.is_moving && character.type == "pnj")
+    {
+        classes= "monster Warrior-"+character.direction;
+        setTimeout(function(){
+            getPromiseMove().then(
+                response => console.log('response',response.component.direction),
+                error => console.log('error:',error)
+            );
         },1000);
     }
     if(move && character.type == "pj")
