@@ -118,6 +118,7 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   var id95 = getUid();
   var id96 = getUid();
   var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7960`,name: `Practice`}
+<<<<<<< HEAD
   firebase.update({
       [`classes/Warrior`]:{
             name:"warrior",
@@ -154,12 +155,18 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
           },
     },
   });
+=======
+  // firebase.update({
+  //   [`maptiles/${id}`]: { completed: false, id: id, title : `Grass Left Door`,image:"/assets/images/grass_left_door.png" },
+  // });
+>>>>>>> Began monster move
 
   // ADD FAKE DUNGEON
   //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
   // [`typeDungeons/${id}`]: { id: id, name : `Practice`,description : `Training dungeon`, idMap1: `603414e3-d8fc-4b3f-ac56-376160eb7958`},
   //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
+<<<<<<< HEAD
     firebase.update({
         [`monsters/${id}`]: {
                 id:id,
@@ -175,6 +182,10 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   //ADD FAKE MAP
 
   /*firebase.update({
+=======
+  // ADD FAKE MAP
+  firebase.update({
+>>>>>>> Began monster move
       [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
           id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
           monsters : {
@@ -204,6 +215,8 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   col: 1,
                   move: 1,
                   range: 1,
+                  is_attacking: false,
+                  is_moving: false,
                   number:1,
               }
           },
@@ -220,7 +233,7 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                           damage:100,
                           health:15000,
                           name:"Warrior",
-                          type:"pj"
+                          type:"pj",
                       }
                   },
                   1: {

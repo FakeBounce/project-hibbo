@@ -207,6 +207,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
     if(dungeon.end_turn)
     {
         dungeon.monster_turn = true;
+        var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
         if(attack)
         {
             dungeon.user.character.health -= dungeon.dungeon.monsters[dungeon.monster_moves[0]].damage;
@@ -230,6 +231,38 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
             {
                 //Algo de déplacement
                 //Temporaire
+                var maptiles = dungeon.dungeon.maptiles;
+                var minrow = monster.row-monster.move;
+                var maxrow = monster.row+monster.move;
+                var mincol = monster.col-monster.move;
+                var maxcol = monster.col+monster.move;
+
+                // var current_row = monster.row-monster.move;
+                // while(current_row < maxrow)
+                // {
+                //     var current_col = monster.col-monster.move;
+                //     while(current_row < maxcol)
+                //     {
+                //
+                //         maptiles[]
+                //         current_coll++;
+                //     }
+                //     current_row++;
+                // }
+                
+
+                if ( range.totalCol > 0)
+                {
+                    if (maptiles[monster.row][monster.col - 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col - 1] === "undefined" || maptiles[monster.row][monster.col - 1] == null))
+                    {
+                        maptiles[monster.row][monster.col-1].character = monster;
+                        maptiles[monster.row][monster.col].character = null;
+                        monster.col = monster.col - 1;
+                        monster.direction = "left";
+                    }
+                }
+
+
                 dungeon.monster_info_row = monster.row;
                 dungeon.monster_info_col = monster.col;
                 dungeon.user.character.is_attacked = true;
