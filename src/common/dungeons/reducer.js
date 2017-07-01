@@ -13,6 +13,7 @@ const State = Record({
     dungeonLoaded: null,
     viewer: null,
     dungeonsOP: Map(),
+    classes: null,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -26,6 +27,21 @@ const dungeonsReducer = (state = new State(), action) => {
                 return state.set('viewer', action.payload);
             }
             return state;
+        }
+
+        case actions.LOAD_VIEWER_CHANGES: {
+            let {viewer }= action.payload;
+            return state.set('viewer', viewer);
+        }
+
+        case actions.LOAD_CLASSES: {
+            const { classes } = action.payload;
+            return state.set('classes', classes);
+        }
+
+        case actions.SET_CLASSE: {
+            const { viewer } = action.payload;
+            return state.set('viewer', viewer);
         }
 
         case actions.LOAD_SKILLS: {

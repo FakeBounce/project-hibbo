@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const LOAD_VIEWER_CHANGES = 'LOAD_VIEWER_CHANGES';
 export const MONSTER_TURN = 'MONSTER_TURN';
 export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
@@ -11,6 +12,8 @@ export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
+export const LOAD_CLASSES = 'LOAD_CLASSES';
+export const SET_CLASSE = 'SET_CLASSE';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
 export const LOAD_WEAPONS = 'LOAD_WEAPONS';
 export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
@@ -56,6 +59,16 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                     col:0,
                                     is_attacking:false,
                                     is_moving:false,
+                                    // equipped_spells:{
+                                    //     "4f222498-7e78-4ff7-994a-220fc5aadd07":true,
+                                    //     "abe505ea-893b-46ae-8678-ebbab633e82c":true,
+                                    //     "12924ca7-edcb-4994-ad40-9f85ea59f9c8":true,
+                                    //     "83284a5c-b5cd-43a2-8152-f34810047257":true,
+                                    //     "e99cf9d7-1db4-4050-9e46-31e5d04507c1":true,
+                                    //     "fd6bab28-458c-4a32-835b-32993ad36b26":true,
+                                    //     "c5556b4a-6b21-450d-87f9-cec1fda21b74":true,
+                                    //     "10cf6ed9-b077-42a7-b670-61e3538f4b00":true,
+                                    // },
                                 },
                             default_character : {
                                 move:1,
@@ -510,6 +523,35 @@ export const LoadWeapons = (snap: Object) => {
     return {
         type: LOAD_WEAPONS,
         payload: { weapons },
+    };
+};
+
+export const LoadViewerChanges = (snap: Object) => {
+    const viewer = snap.val();
+    return {
+        type: LOAD_VIEWER_CHANGES,
+        payload: { viewer },
+    };
+};
+
+export const LoadClasses = (snap: Object) => {
+    const classes = snap.val();
+    return {
+        type: LOAD_CLASSES,
+        payload: { classes },
+    };
+};
+
+export const setClass = (classe,viewer) => ({getUid,firebase}) => {
+    viewer.characters = [];
+    viewer.characters.push(classe);
+
+    firebase.update({
+        [`users/${viewer.id}/characters`]: viewer.characters,
+    });
+    return {
+        type: SET_CLASSE,
+        payload: { viewer },
     };
 };
 
