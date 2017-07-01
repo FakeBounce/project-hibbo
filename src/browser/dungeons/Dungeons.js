@@ -25,6 +25,7 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
+    let dungeon;
     if(!dviewer)
     {
         LoadViewer(viewer);
