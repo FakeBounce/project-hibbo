@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadTutoRef,LoadViewerRef,LoadStep,LoadNextStep, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -17,7 +17,7 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer,LoadTutoRef, loadWorldMap,LoadStep,LoadNextStep, viewer,dviewer }) => {
+let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
     let health = 100;
     let maxhealth = 100;
@@ -46,7 +46,6 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
        }
         else if(dungeonsOP)
         {
-            let dungeon;
             var dungeonActive = false;
             var wdmap = [];
             dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
@@ -111,7 +110,6 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
                         {weapon_list}
                     </div>
                 </div>
-                <SignOut/>
             </div>
             <div className="cadre-droite">
                 {!loaded ?
@@ -172,4 +170,4 @@ export default connect(state => ({
     tutoriel: state.dungeons.tutoriel,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);

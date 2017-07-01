@@ -100,24 +100,55 @@ background-attachment:fixed;
 // menu fixe
 
 .menu-fixe{
-
+  padding: 0;
+  width: 100%;
 }
 
 .menu-fixe li{
   padding: 10px;
   background-color: #16120f;
-  width: 214px;
+  width: 33.33%;
   float: left;
   text-align: center;
   list-style: none;
   cursor: pointer;
+
 }
 
 .menu-fixe li:hover{
   background-color: #210009;
 }
 
+.leMenu{
+  padding:0;
+  width:100%;
+  margin:0;
+}
 
+.leMenu li{
+  display: flex;
+  width: 100%;
+  background-color: black;
+  padding: 18px;
+  text-align: center;
+}
+
+
+.titre-error{
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.titre-map{
+  margin: 0;
+  text-align: center;
+  padding: 5px 0;
+  color: #fff;
+}
+
+.error-map{
+  margin:0;
+  text-align: center;
+}
 
 // login
 
@@ -192,13 +223,41 @@ background-attachment:fixed;
   color: #fff;
   background-color: transparent;
   border-radius: 2px;
-  background-image: url(/assets/images/login/logoutbutton.png);
+  background-image: url(/assets/images/login/actionbutton.png);
   background-repeat: no-repeat;
   background-attachment: scroll;
   height: 53px;
   width: 195px;
   box-shadow: none;
   text-align: center;
+}
+
+
+.btn-dungeon{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px auto;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 0;
+  color: #fff;
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/dungeonbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+}
+
+.btn-dungeon span{
+  line-height: 30px;
 }
 
 // levels

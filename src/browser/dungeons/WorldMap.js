@@ -60,15 +60,9 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     };
     return (
         <View>
-          <div className="fix-hauteur">
-            <Text>{error_msg}</Text>
-            <ul className="menu-fixe">
-              <li>MAP</li>
-              <li onClick={() => cancelDungeon(dungeon)}>DONGEONS</li>
-              <li>MENU</li>
-            </ul>
-
-            <Text>{dungeon.description}</Text>
+          <div className="titre-error">
+            <h2 className="titre-map">{dungeon.description}</h2>
+            <h4 className="error-map">{error_msg}</h4>
             <div className="cadre-droite">
               <div className="cadre">
                 { Object.keys(worldmap.maptiles).map(function (keyRow) {
