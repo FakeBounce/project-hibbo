@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+import { LoadDungeons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -19,6 +19,7 @@ Dungeon.propTypes = {
 
 let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
     let weapon_list = '';
+    var skills_list = '';
     let health = 100;
     let maxhealth = 100;
     let energy = 100;
@@ -31,6 +32,13 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
+        }
+
+        if(dviewer.skills) {
+            skills_list = dviewer.skills.map(skill => {
+                var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
+                return (<div key={skill.id} className={classObjet}></div>);
+            })
         }
     }
     if(!dviewer)
@@ -56,15 +64,15 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 maxexperience = dungeon.user.default_character.maxexperience;
                 dungeonActive = true;
 
-                if(viewer)
+                if(dviewer)
                 {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
             else {
-                if(viewer && !viewer.active_dungeon)
+                if(dviewer && !viewer.active_dungeon)
                 {
-                    preLoadActiveDungeon(viewer);
+                    preLoadActiveDungeon(dviewer);
                 }
                 dungeonActive = false;
             }
@@ -84,6 +92,12 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     {weapon_list}
                 </div>
             </div>
+
+            <div className="cadre-objets">
+                <div className="objets">
+                    {skills_list}
+                </div>
+            </div>
             <SignOut/>
         </div>
         {!loaded ?
@@ -94,7 +108,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 :
                 dungeons ?
                     dungeons.map(dungeon =>
-                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={dviewer} loadWorldMap={loadWorldMap}/>
                     )
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
@@ -116,12 +130,8 @@ Dungeons.propTypes = {
 
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
-    const SkillsRef = database.child('skills');
     const WorldMapRef = database.child('activeDungeons');
-    const WeaponsRef = database.child('weapons');
     return [
-        [WeaponsRef, 'on', 'value', props.LoadWeapons],
-        [SkillsRef, 'on', 'value', props.LoadSkills],
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
         [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
     ];
@@ -133,4 +143,4 @@ export default connect(state => ({
     loaded: state.dungeons.loaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+}), { LoadDungeons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);

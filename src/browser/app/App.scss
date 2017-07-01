@@ -267,6 +267,14 @@ progress::-moz-progress-bar {
   width: 191px;
 }
 
+.radial-progress {
+  border-radius: 50%;
+  background-color: white;
+  .circle .fill {
+    border-radius: 50%;
+  }
+}
+
 .progressDamage{
   margin: 79px 0 0 169px;
   height: 17px;
@@ -287,7 +295,7 @@ progress[value].progressHealth::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #09c, #09c);
+    -webkit-linear-gradient(left, #FF0000, #FF0000);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
@@ -300,7 +308,7 @@ progress[value].progressDamage::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #ED7F10, #ED7F10);
+    -webkit-linear-gradient(left, #09c, #09c);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
@@ -312,28 +320,26 @@ progress[value].progressMore::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #370028, #370028);
+    -webkit-linear-gradient(left, #ED7F10, #ED7F10);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
 
-.cadreweapons{
-  background-color: rgba(0, 0, 0, 0.3);
+.cadreweapons {
   width: 100%;
   display: block;
-  height: 235px;
+  height: 208px;
   float: right;
-  border-top: 1px solid #fff;
-  background: url(/assets/images/cadreweapons.png) no-repeat;
-  background-size: cover;
   opacity: 0.9;
+  border-top: 1px solid rgb(255, 255, 255);
+  background: url(/assets/images/cadreweapons.png) 0% 0% / cover no-repeat;
 }
 
-.weapons{
+.weapons {
   width: 75%;
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
 .weapon{
@@ -405,21 +411,19 @@ progress[value].progressBarBoss::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #09c, #09c);
+    -webkit-linear-gradient(left, #FF0000, #FF0000);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
 .cadre-objets {
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 644px;
+  width: 375px;
   display: block;
-  height: 200px;
+  height: 180px;
   float: right;
-  border-top: 1px solid #fff;
-  background: url(/assets/images/box-competence3.png) no-repeat;
-  background-size: contain;
   opacity: 0.9;
+  border-top: 1px solid rgb(255, 255, 255);
+  background: url(/assets/images/box-competence3.png) 0% 0% / contain no-repeat;
 }
 
 .progressSkills{
@@ -444,11 +448,11 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .objets {
   height: 86px;
-  width: 560px;
+  width: 280px;
   display: block;
   padding: 2%;
   margin: 0 auto;
-  margin-top: 88px;
+  margin-top: 22px;
 }
 
 

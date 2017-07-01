@@ -9,7 +9,7 @@ import linksMessages from '../../common/app/linksMessages';
 import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadClasses,LoadViewer,LoadViewerChanges } from '../../common/dungeons/actions';
+import { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons } from '../../common/dungeons/actions';
 
 
 let DungeonsPage = ({viewer,dviewer,classes,LoadViewer}) => {
@@ -57,9 +57,13 @@ DungeonsPage.propTypes = {
 DungeonsPage = firebase((database, props) => {
     const ClassesRef = database.child('classes');
     const UserRef = database.child('users/'+props.viewer.id);
+    const SkillsRef = database.child('skills');
+    const WeaponsRef = database.child('weapons');
     return [
         [ClassesRef, 'on', 'value', props.LoadClasses],
         [UserRef, 'on', 'value', props.LoadViewerChanges],
+        [WeaponsRef, 'on', 'value', props.LoadWeapons],
+        [SkillsRef, 'on', 'value', props.LoadSkills],
     ];
 })(DungeonsPage);
 
@@ -67,4 +71,4 @@ export default connect(state => ({
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
     classes: state.dungeons.classes,
-}), { LoadClasses,LoadViewer,LoadViewerChanges })(DungeonsPage);
+}), { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons })(DungeonsPage);

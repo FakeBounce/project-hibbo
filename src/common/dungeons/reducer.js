@@ -30,8 +30,14 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_VIEWER_CHANGES: {
-            let {viewer }= action.payload;
-            return state.set('viewer', viewer);
+            let  viewer = action.payload;
+            console.log('v:',   viewer);
+            let vviewer = viewer.viewer;
+            if(viewer.skills)
+            vviewer.skills = viewer.skills;
+            if(viewer.weapons)
+            vviewer.weapons = viewer.weapons;
+            return state.set('viewer', vviewer);
         }
 
         case actions.LOAD_CLASSES: {

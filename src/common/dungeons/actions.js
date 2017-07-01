@@ -27,6 +27,12 @@ export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
+    console.log(viewer);
+    var character = viewer.characters[viewer.active];
+character.row = 0;
+character.col = 0;
+character.is_attacking = false;
+character.is_moving = false;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -42,40 +48,13 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                         {
                             id:viewer.id,
                             displayName:viewer.displayName,
-                            character :
-                                {
-                                    health:15000,
-                                    energy: 1000,
-                                    experience: 0,
-                                    damage:200,
-                                    name:"Warrior",
-                                    image: "/assets/images/classes/Warrior/down.png",
-                                    type:"pj",
-                                    range:1,
-                                    move:1,
-                                    action:10,
-                                    basicCost:10,
-                                    row:0,
-                                    col:0,
-                                    is_attacking:false,
-                                    is_moving:false,
-                                    // equipped_spells:{
-                                    //     "4f222498-7e78-4ff7-994a-220fc5aadd07":true,
-                                    //     "abe505ea-893b-46ae-8678-ebbab633e82c":true,
-                                    //     "12924ca7-edcb-4994-ad40-9f85ea59f9c8":true,
-                                    //     "83284a5c-b5cd-43a2-8152-f34810047257":true,
-                                    //     "e99cf9d7-1db4-4050-9e46-31e5d04507c1":true,
-                                    //     "fd6bab28-458c-4a32-835b-32993ad36b26":true,
-                                    //     "c5556b4a-6b21-450d-87f9-cec1fda21b74":true,
-                                    //     "10cf6ed9-b077-42a7-b670-61e3538f4b00":true,
-                                    // },
-                                },
+                            character :character,
                             default_character : {
-                                move:1,
-                                action:10,
-                                damage:200,
-                                maxhealth:15000,
-                                maxenergy: 1000,
+                                movevement:character.movement,
+                                action:character.action,
+                                damage:character.damage,
+                                maxhealth:character.health,
+                                maxenergy: character.energy,
                                 maxexperience: 1000,
                             },
                         },
@@ -130,7 +109,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                 dungeon.monster_moves = true;
                 monster_moves.push(index);
             }
-            else if(range.totalRange <= (monster.range+monster.move))
+            else if(range.totalRange <= (monster.range+monster.movement))
             {
                 monster.can_move_attack = true;
                 monster.direction = range.direction;
@@ -545,9 +524,11 @@ export const LoadClasses = (snap: Object) => {
 export const setClass = (classe,viewer) => ({getUid,firebase}) => {
     viewer.characters = [];
     viewer.characters.push(classe);
+    viewer.active = 0;
 
     firebase.update({
         [`users/${viewer.id}/characters`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
     });
     return {
         type: SET_CLASSE,
