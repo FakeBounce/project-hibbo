@@ -37,7 +37,7 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
-       if(dviewer.tuto)
+       if(dviewer.tuto && dviewer.tuto < 5)
        {
            if(typeof tutoriel === 'undefined' || tutoriel == null)
            {
@@ -77,50 +77,58 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
             }
         }
     }
+
+    //tuto
     var classN = "";
+    var classStep = "";
     if(dviewer && tutoriel){
         classN = "overlay";
+        if(tutoriel.class){
+            classStep = tutoriel.class;
+        }
     }
     return (
-    <View>
+    <View className={classStep}>
         <div className={classN}>
          </div>
 
         <Block>{dviewer && tutoriel &&
         <div className="cadre-tutoriel">
-            <div>{tutoriel.description}</div>
-            <div onClick={() => LoadNextStep(dviewer,tutoriel.next)}>Next</div>
+            <div className="tuto-text">{tutoriel.description}</div>
+            <div onClick={() => LoadNextStep(dviewer,tutoriel.next)} className="tuto-next">Next</div>
         </div>
         }
         </Block>
         <View className="container_app">
-        <div className="cadre-gauche">
-            <div className="personnage">
-                <progress className="progressHealth" max={maxhealth} value={health}></progress>
-                <progress className="progressDamage" max={maxenergy} value={energy}></progress>
-                <progress className="progressMore" max={maxexperience} value={experience}></progress>
-            </div>
-            <div className="cadreweapons">
-                <div className="weapons">
-                    {weapon_list}
+            <div className="cadre-gauche">
+                <div className="personnage">
+                    <progress className="progressHealth" max={maxhealth} value={health}></progress>
+                    <progress className="progressDamage" max={maxenergy} value={energy}></progress>
+                    <progress className="progressMore" max={maxexperience} value={experience}></progress>
                 </div>
+                <div className="cadreweapons">
+                    <div className="weapons">
+                        {weapon_list}
+                    </div>
+                </div>
+                <SignOut/>
             </div>
-            <SignOut/>
-        </div>
-        {!loaded ?
-            <Loading />
-            : viewer ?
-                dungeonActive?
+            <div className="cadre-droite">
+                {!loaded ?
+                    <Loading />
+                    : viewer ?
+                        dungeonActive?
 
-                    wdmap
-                :
-                dungeons ?
-                    dungeons.map(dungeon =>
-                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
-                    )
-                    : <Text>Il n'y a pas encore de donjons.</Text>
-            : <Text>Veuillez vous connecter</Text>
-        }
+                            wdmap
+                        :
+                        dungeons ?
+                            dungeons.map(dungeon =>
+                                <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                            )
+                            : <Text>Il n'y a pas encore de donjons.</Text>
+                    : <Text>Veuillez vous connecter</Text>
+                }
+            </div>
         </View>
     </View>
     );

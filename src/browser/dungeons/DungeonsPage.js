@@ -8,6 +8,7 @@ import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
 
 const DungeonsPage = () => (
     <View>
+        <h1 className="title-hibbo">HIBBO</h1>
         <Dungeons/>
     </View>
 );

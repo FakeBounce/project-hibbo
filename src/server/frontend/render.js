@@ -88,7 +88,7 @@ const renderHtml = (state, bodyMarkupWithHelmet) => {
   const markup = renderToStaticMarkup(
     <Html
       appCssFilename={appCssFilename}
-      bodyHtml={`<h1 class="title-hibbo">HIBBO</h1><div id="app">${bodyMarkup}</div>${scriptsMarkup}`}
+      bodyHtml={`<div id="app">${bodyMarkup}</div>${scriptsMarkup}`}
       googleAnalyticsId={config.googleAnalyticsId}
       helmet={helmet}
       isProduction={config.isProduction}

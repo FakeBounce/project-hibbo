@@ -556,13 +556,99 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
   cursor: pointer;
 }
-
-.cadre-tutoriel{
+.cadre-tutoriel {
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
+  position: absolute;
+  height: 416px;
+  width: 300px;
+  z-index: 9999;
+}
+.tutoriel-start .cadre-tutoriel{
   background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
   position: absolute;
-  height: 246px;
-  width: 178px;
+  height: 416px;
+  width: 300px;
   z-index: 9999;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+.tuto-text{
+  color: black;
+}
+.tuto-next{
+  background: url("/assets/images/tutoriel/next.png") no-repeat ;
+  height: 35px;
+  width: 76px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+}
+.cadre-tutoriel .tuto-text{
+  margin: 75px 0 0 25px;
+}
+
+.cadre-tutoriel .tuto-next{
+   margin: 55px;
+ }
+
+//Step 2
+.tutoriel-personnage .personnage{
+  position: relative;
+  z-index: 3;
+}
+
+.tutoriel-personnage .cadre-tutoriel{
+  z-index: 3;
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-personnage .cadre-tutoriel {
+    left: 410px
+  }
+}
+
+.tutoriel-equipement .cadreweapons{
+  position: relative;
+  z-index: 3;
+}
+.tutoriel-equipement .cadre-tutoriel{
+  z-index: 3;
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+.tutoriel-map .cadre-tutoriel{
+  z-index: 3;
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 0;
+  right: 600px;
+}
+
+.tutoriel-map .cadre-droite{
+  position: relative;
+  z-index: 3;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-map .cadre-tutoriel {
+    left: 50px
+  }
 }
 
 .overlay{
@@ -571,11 +657,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background-color: rgba(0,0,0,0.7);
   position: fixed;
   z-index: 2;
-}
-
-.zindex{
-  position: relative;
-  z-index: 3;
+  top: 0;
 }
 
 .cadre-close{
