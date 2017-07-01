@@ -138,6 +138,7 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
+    "babel-core": "^6.25.0",
     "flow-bin": "^0.30.0",
     "gulp-ava": "^0.14.1",
     "redux-devtools": "^3.3.1",
