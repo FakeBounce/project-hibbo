@@ -557,7 +557,31 @@ progress[value].progressSkills::-webkit-progress-value {
   cursor: pointer;
 }
 
+.cadre-tutoriel{
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
+  position: absolute;
+  height: 246px;
+  width: 178px;
+  z-index: 9999;
+}
 
+.overlay{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  z-index: 2;
+}
+
+.zindex{
+  position: relative;
+  z-index: 3;
+}
+
+.cadre-close{
+  position: absolute;
+  background: url("/assets/images/tutoriel/closebutton.png") no-repeat;
+}
 
 .objetVide{
   background: url("/assets/images/objets/vide.jpg") no-repeat;

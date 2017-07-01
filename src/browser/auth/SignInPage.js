@@ -10,7 +10,7 @@ import { injectIntl, intlShape } from 'react-intl';
 import {
     Login,
     Div,
-    Loading
+    View
 } from '../app/components';
 
 let SignInPage = ({ disabled, intl, location, viewer }) => (
@@ -23,10 +23,12 @@ let SignInPage = ({ disabled, intl, location, viewer }) => (
       ) || '/game'}
     />
   :
-      <Login className="login_image" >
-          <Div className="login_title">Connexion</Div>
-          <Email />
-      </Login>
+      <View className="container_app">
+          <Login className="login_image" >
+              <Div className="login_title">Connexion</Div>
+              <Email />
+          </Login>
+      </View>
 );
 
 SignInPage.propTypes = {

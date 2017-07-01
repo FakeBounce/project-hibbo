@@ -25,7 +25,6 @@ let Dungeons = ({ tutoriel,loaded, dungeons,dungeonsOP,preLoadActiveDungeon,Load
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
-console.log('Coucou',tutoriel);
     if(!dviewer)
     {
         LoadViewer(viewer);
@@ -78,9 +77,23 @@ console.log('Coucou',tutoriel);
             }
         }
     }
-
+    var classN = "";
+    if(dviewer && tutoriel){
+        classN = "overlay";
+    }
     return (
     <View>
+        <div className={classN}>
+         </div>
+
+        <Block>{dviewer && tutoriel &&
+        <div className="cadre-tutoriel">
+            <div>{tutoriel.description}</div>
+            <div onClick={() => LoadNextStep(dviewer,tutoriel.next)}>Next</div>
+        </div>
+        }
+        </Block>
+        <View className="container_app">
         <div className="cadre-gauche">
             <div className="personnage">
                 <progress className="progressHealth" max={maxhealth} value={health}></progress>
@@ -94,13 +107,11 @@ console.log('Coucou',tutoriel);
             </div>
             <SignOut/>
         </div>
-        {dviewer && tutoriel!=null &&
-            <div onClick={() => LoadNextStep(dviewer,tutoriel.next)}>{tutoriel.description}</div>
-        }
         {!loaded ?
             <Loading />
             : viewer ?
                 dungeonActive?
+
                     wdmap
                 :
                 dungeons ?
@@ -110,6 +121,7 @@ console.log('Coucou',tutoriel);
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
+        </View>
     </View>
     );
 };

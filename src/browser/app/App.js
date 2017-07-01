@@ -43,7 +43,7 @@ let App = ({ currentLocale, currentTheme }) => (
     key={currentTheme} // github.com/yahoo/react-intl/issues/234#issuecomment-163366518
     theme={themes[currentTheme] || themes.initial}
   >
-    <ContainerApp className="container_app">
+    <ContainerApp>
       <Match exactly pattern="/" component={SignIn} />
       <Match authorized pattern="/game" component={Dungeons} />
       <Match pattern="/map" component={Map} />

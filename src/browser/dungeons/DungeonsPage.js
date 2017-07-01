@@ -8,10 +8,7 @@ import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
 
 const DungeonsPage = () => (
     <View>
-        <Title message={linksMessages.dungeon} />
-        <Block>
-            <Dungeons/>
-        </Block>
+        <Dungeons/>
     </View>
 );
 
