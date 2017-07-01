@@ -20,9 +20,12 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         title: {
             cursor: 'pointer',
         },
+        bg: {
+            backgroundImage: "url("+maptile.image+")",
+        }
     };
     var character = false;
-    var classImage = "case " + maptile.image;
+    var classImage = "case ";
     let error_message = '';
     var move = false;
     if(typeof maptile.character !== 'undefined' && maptile.character != null)
@@ -67,11 +70,12 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     <Flex>
         {
           character ?
-            <Flex className={classImage}>
+            <Flex className={classImage} style={styles.bg}>
                 <Character dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} onClick={tryMoveCharacter}></Flex>
+            <Flex className={classImage} style={styles.bg} onClick={tryMoveCharacter}>
+            </Flex>
         }
     </Flex>
     );

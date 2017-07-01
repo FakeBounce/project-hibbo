@@ -16,21 +16,13 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn }) => {
-    var skills_list = '';
+
     var error_msg = '';
     var monster_image = '';
     var monster_health = 100;
     var monster_maxhealth = 100;
     var monster_name = '';
-    if(viewer)
-    {
-        if(viewer.skills) {
-            skills_list = viewer.skills.map(skill => {
-                var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
-                return (<div key={skill.id} className={classObjet}></div>);
-            })
-        }
-    }
+
     if(dungeon.error_message)
     {
         error_msg = dungeon.error_message;
@@ -99,11 +91,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
                   <Image className="monster_head" src={monster_image}/>
               </div>
             </div>
-                <div className="cadre-objets">
-                    <div className="objets">
-                        {skills_list}
-                    </div>
-                </div>
           </div>
         </div>
       </View>
