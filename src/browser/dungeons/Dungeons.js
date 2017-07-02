@@ -86,6 +86,8 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
         }
     }
 
+    var displayDiv = "dungeons";
+
     //tuto
     var classN = "";
     var classStep = "";
@@ -122,6 +124,42 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 </div>
             </div>
             <div className="cadre-droite-max">
+                <div className="cadre-menu">
+                    <div className="cadre-menu-div">
+                        <ul className="menu-fixe">
+                            <li><a href="#dungeons">Dungeons</a></li>
+                            <li><a href="#personnage">Personnage</a></li>
+                            <li><a href="#skill">Compétences</a></li>
+                            <li><a href="#option">Options</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="cadre-droite-bas">
+                    <div className="cmenu cadre-dungeons">
+                        <a name="dungeons" id="dungeons"></a>
+                        {!loaded ?
+                            <Loading />
+                            : viewer ?
+                            dungeonActive ?
+
+                                wdmap
+                                :
+                                dungeons ?
+                                    dungeons.map(dungeon =>
+                                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={dviewer}
+                                                 loadWorldMap={loadWorldMap}/>
+                                    )
+                                    : <Text>Il n'y a pas encore de donjons.</Text>
+                            : <Text>Veuillez vous connecter</Text>
+                        }
+                    </div>
+                    <div className="cmenu cadre-perso">
+                        <a name="personnage" id="personnage"></a>
+                        Perso
+                    </div>
+                    <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
+                    <div className="cmenu cadre-option"><a name="option" id="option"></a>Options</div>
+                </div>
             </div>
             <div className="cadre-bas-max">
                 <div>
@@ -156,41 +194,6 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
 
                 </div>
             </div>
-            {/*<div className="cadre-gauche">*/}
-            {/**/}
-            {/*<progress className="progressHealth" max={maxhealth} value={health}></progress>*/}
-            {/*<progress className="progressDamage" max={maxenergy} value={energy}></progress>*/}
-            {/*<progress className="progressMore" max={maxexperience} value={experience}></progress>*/}
-            {/*</div>*/}
-            {/*<div className="btn-dungeon" onClick={() => cancelDungeon(dungeon)}><span>Les dongeons</span></div>*/}
-            {/*<SignOut/>*/}
-            {/*<div className="cadreweapons">*/}
-            {/*<div className="weapons">*/}
-            {/*{weapon_list}*/}
-            {/*</div>*/}
-            {/*</div>*/}
-            {/*<div className="cadre-objets">*/}
-            {/*<div className="objets">*/}
-            {/*{skills_list}*/}
-            {/*</div>*/}
-            {/*</div>*/}
-            {/*</div>
-             <div className="cadre-droite">
-             {!loaded ?
-             <Loading />
-             : viewer ?
-             dungeonActive?
-
-             wdmap
-             :
-             dungeons ?
-             dungeons.map(dungeon =>
-             <Dungeon key={dungeon.id} dungeon={dungeon} viewer={dviewer} loadWorldMap={loadWorldMap}/>
-             )
-             : <Text>Il n'y a pas encore de donjons.</Text>
-             : <Text>Veuillez vous connecter</Text>
-             }
-             </div>*/}
         </View>
     </View>
     );

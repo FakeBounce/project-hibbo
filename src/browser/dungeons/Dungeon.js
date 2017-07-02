@@ -25,29 +25,28 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
             cursor: 'pointer',
         },
     };
-    // if(dungeon.lock === true){
-    //   return (
-    //     <div className="one-level">
-    //       <div className="level-lock"></div>
-    //       <Text style={styles.lock}>
-    //         Description : {dungeon.description}
-    //       </Text>
-    //     </div>
-    //   );
-    // } else {
-    //   return (
-    //     <div className="one-level">
-    //       <div className="choose-level" onClick={() => loadWorldMap(dungeon,viewer)}>
-    //         <span>{dungeon.numero}</span>
-    //       </div>
-    //       <Text style={styles.title}
-    //             onClick={() => loadWorldMap(dungeon,viewer)}>
-    //         Description : {dungeon.description}
-    //       </Text>
-    //     </div>
-    //   );
-    // }
-    return null;
+    if(dungeon.lock === true){
+      return (
+        <div className="one-level">
+          <div className="level-lock"></div>
+          <Text style={styles.lock}>
+            Description : {dungeon.description}
+          </Text>
+        </div>
+      );
+    } else {
+      return (
+        <div className="one-level">
+          <div className="choose-level" onClick={() => loadWorldMap(dungeon,viewer)}>
+            <span>{dungeon.numero}</span>
+          </div>
+          <Text style={styles.title}
+                onClick={() => loadWorldMap(dungeon,viewer)}>
+            Description : {dungeon.description}
+          </Text>
+        </div>
+      );
+    }
 };
 
 Dungeon.propTypes = {

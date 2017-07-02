@@ -52,41 +52,40 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     };
     return (
         <View>
-          {/*<div className="titre-error">*/}
-            {/*<h2 className="titre-map">{dungeon.description}</h2>*/}
-            {/*<h4 className="error-map">{error_msg}</h4>*/}
-            {/*<div className="cadre-droite">*/}
-              {/*<div className="cadre">*/}
-                {/*{ Object.keys(worldmap.maptiles).map(function (keyRow) {*/}
-                  {/*var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {*/}
-                    {/*return(*/}
-                      {/*<MapTile key={worldmap.maptiles[keyRow][keyCol].id}*/}
-                               {/*dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}*/}
-                      {/*/>*/}
-                    {/*);*/}
-                  {/*})*/}
-                {/*return (*/}
-                  {/*<Flex key={keyRow} >{col}</Flex>*/}
-                {/*);*/}
-              {/*})*/}
-              {/*}*/}
-                {/*<div className="champs-btn-end">*/}
-                  {/*<button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button>*/}
-                {/*</div>*/}
-            {/*</div>*/}
-            {/*<div className="cadre-boss">*/}
-                {/*<div className="progressBoss">*/}
-                  {/*{monster_name == '' ?*/}
-                      {/*<p className="monster_name_hidden">{monster_name}</p>*/}
-                      {/*:*/}
-                      {/*<p className="monster_name">{monster_name}</p>*/}
-                  {/*}*/}
-                {/*<progress className="progressBarBoss" max={monster_maxhealth} value={monster_health}></progress>*/}
-                  {/*<Image className="monster_head" src={monster_image}/>*/}
-              {/*</div>*/}
-            {/*</div>*/}
-            {/*</div>*/}
-        {/*</div>*/}
+
+            <div className="cadre-droite">
+              <div className="cadre">
+                { Object.keys(worldmap.maptiles).map(function (keyRow) {
+                  var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
+                    return(
+                      <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                               dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                      />
+                    );
+                  });
+                return (
+                  <Flex key={keyRow} >{col}</Flex>
+                );
+              })
+              }
+              </div>
+                <div className="cadre-map-info">
+                    {/*<div className="cadre-boss">*/}
+                        {/*<div className="progressBoss">*/}
+                            {/*{monster_name == '' ?*/}
+                                {/*<p className="monster_name_hidden">{monster_name}</p>*/}
+                                {/*:*/}
+                                {/*<p className="monster_name">{monster_name}</p>*/}
+                            {/*}*/}
+                            {/*<progress className="progressBarBoss" max={monster_maxhealth} value={monster_health}></progress>*/}
+                            {/*<Image className="monster_head" src={monster_image}/>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
+                    <span className="titre-map">{dungeon.description}</span>
+                    <span className="error-map">{error_msg}</span>
+                    <button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button>
+                </div>
+            </div>
       </View>
     );
 };

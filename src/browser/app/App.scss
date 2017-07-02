@@ -57,8 +57,8 @@ background-attachment:fixed;
 }
 
 .case{
-  width:50px;
-  height:50px;
+  width:32px;
+  height:32px;
 }
 
 .caseforest{
@@ -106,46 +106,25 @@ background-attachment:fixed;
   height: 646px;
   margin: auto;
   position: absolute;
-  background: url("/assets/images/cadreall.png") no-repeat;
-  z-index: 5000;
+  background: url("/assets/images/cadreall-1.png") no-repeat;
+  z-index: 2;
 }
 
 // menu fixe
 
 .menu-fixe{
-  padding: 0;
-  width: 100%;
+  -webkit-margin-before: 8px;
+  -webkit-padding-start: 0px;
 }
 
 .menu-fixe li{
-  padding: 10px;
-  background-color: #16120f;
-  width: 33.33%;
+  width: 25%;
   float: left;
   text-align: center;
   list-style: none;
   cursor: pointer;
 
 }
-
-.menu-fixe li:hover{
-  background-color: #210009;
-}
-
-.leMenu{
-  padding:0;
-  width:100%;
-  margin:0;
-}
-
-.leMenu li{
-  display: flex;
-  width: 100%;
-  background-color: black;
-  padding: 18px;
-  text-align: center;
-}
-
 
 .titre-error{
   background-color: rgba(0, 0, 0, 0.3);
@@ -214,35 +193,26 @@ background-attachment:fixed;
   height: 15px;
 }
 
+.cadre-map-info{
 
+}
 // boutons
 
-.champs-btn-end{
-  width:100%;
-  display: flex;
-}
-
 .btn-retour{
-  box-sizing: border-box;
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
-  text-decoration: none;
-  display: inline-block;
-  margin: 10px auto;
-  padding: 8px 16px;
-  cursor: pointer;
   border: 0;
   color: #fff;
-  background-color: transparent;
-  border-radius: 2px;
   background-image: url(/assets/images/login/actionbutton.png);
   background-repeat: no-repeat;
-  background-attachment: scroll;
-  height: 53px;
-  width: 195px;
+  background-color: transparent;
+  background-size: contain;
+  height: 39px;
+  width: 140px;
   box-shadow: none;
-  text-align: center;
+  //margin-left: -180px;
+  //margin-top: 260px;
 }
 
 
@@ -446,11 +416,8 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-size: cover;
-  padding: 1% 5%;
-  margin: 0 auto;
-  width: 644px;
+  width: 780px;
+  height: 260px;
   float: right;
 }
 
@@ -698,11 +665,11 @@ progress[value].progressSkills::-webkit-progress-value {
 //Step 2
 .tutoriel-personnage .personnage{
   position: relative;
-  z-index: 3;
+  z-index: 7000;
 }
 
 .tutoriel-personnage .cadre-tutoriel{
-  z-index: 3;
+  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -718,10 +685,10 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .tutoriel-equipement .cadreweapons{
   position: relative;
-  z-index: 3;
+  z-index: 7000;
 }
 .tutoriel-equipement .cadre-tutoriel{
-  z-index: 3;
+  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -730,7 +697,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .tutoriel-map .cadre-tutoriel{
-  z-index: 3;
+  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -740,7 +707,7 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .tutoriel-map .cadre-droite{
   position: relative;
-  z-index: 3;
+  z-index: 7000;
 }
 
 @media screen and (max-width: 1050px) {
@@ -1136,6 +1103,7 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 800px;
   height: 446px;
   margin-left: 224px;
+  padding-top: 10px
 }
 
 .cadre-bas-max{
@@ -1175,7 +1143,43 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 5999;
 }
 
-.infobar-mana-div, .infobar-life-div,{
+.cadre-menu{
+  background: url("/assets/images/planche-1.png");
+  width: 800px;
+  height: 73px;
+  z-index: 10;
+  position: relative;
+}
+
+.cadre-menu-div{
+  padding-left: 60px;
+  padding-right: 70px;
+  padding-top: 25px;
+}
+
+.cadre-droite-bas{
+  width: 800px;
+  height: 360px;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.cmenu {
+  width: 800px;
+  height: 360px;
+}
+
+.cadre-gauche-bas{
+  border: solid #493026 5px;
+  width: 230px;
+  height: 240px;
+  border-radius: 6px;
+  margin-top: 200px;
+  margin-left: 20px;
+}
+
+.infobar-mana-div, .infobar-life-div{
    border-radius: 50%;
    z-index: 10;
  }
