@@ -1,6 +1,3 @@
-/**
- * Created by Fakebounce on 13/11/2016.
- */
 import React from 'react';
 import Editor from './Editor';
 import linksMessages from '../../common/app/linksMessages';

@@ -138,7 +138,6 @@ Dungeons.propTypes = {
     viewer: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
-    host: React.PropTypes.String,
 };
 
 Dungeons = firebase((database, props) => {

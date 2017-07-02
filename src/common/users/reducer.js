@@ -4,6 +4,7 @@ import User from './user';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
 import { firebaseActions } from '../lib/redux-firebase';
+import { Map } from 'immutable';
 
 const State = Record({
   online: null,
@@ -34,7 +35,15 @@ const usersReducer = (state = new State(), action) => {
         .set('online', online)
         .set('onlineLoaded', true);
     }
+    case actions.LOAD_VIEWER_SUCCESS: {
+        let viewer = state.viewer;
 
+        if(!viewer)
+        {
+            return state.set('viewer', action.payload);
+        }
+        return state;
+    }
     default:
       return state;
 
