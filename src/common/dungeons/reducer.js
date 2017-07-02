@@ -14,6 +14,7 @@ const State = Record({
     viewer: null,
     tutoriel: null,
     dungeonsOP: Map(),
+    classes: null,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -50,6 +51,27 @@ const dungeonsReducer = (state = new State(), action) => {
             return state;
         }
 
+        case actions.LOAD_VIEWER_CHANGES: {
+            let  viewer = action.payload;
+            console.log('v:',   viewer);
+            let vviewer = viewer.viewer;
+            if(viewer.skills)
+            vviewer.skills = viewer.skills;
+            if(viewer.weapons)
+            vviewer.weapons = viewer.weapons;
+            return state.set('viewer', vviewer);
+        }
+
+        case actions.LOAD_CLASSES: {
+            const { classes } = action.payload;
+            return state.set('classes', classes);
+        }
+
+        case actions.SET_CLASSE: {
+            const { viewer } = action.payload;
+            return state.set('viewer', viewer);
+        }
+
         case actions.LOAD_TUTO_REF: {
             if(action.payload.tutoriel)
             {
@@ -79,14 +101,18 @@ const dungeonsReducer = (state = new State(), action) => {
         case actions.LOAD_SKILLS: {
             const skills = action.payload;
             let viewer = state.viewer;
-            viewer.skills = skills.skills;
+            if(viewer) {
+                viewer.skills = skills.skills;
+            }
             return state.set('viewer', viewer);
         }
 
         case actions.LOAD_WEAPONS: {
           const weapons = action.payload;
           let viewer = state.viewer;
-          viewer.weapons = weapons.weapons;
+            if(viewer) {
+                viewer.weapons = weapons.weapons;
+            }
           return state.set('viewer', viewer);
         }
 

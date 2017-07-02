@@ -92,9 +92,22 @@ background-attachment:fixed;
   right: 0;
   top: 0;
   width: 1024px;
-  height: 496px;
+  height: 596px;
   margin: auto;
   position: absolute;
+}
+
+.container_app-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/cadreall.png") no-repeat;
+  z-index: 5000;
 }
 
 // menu fixe
@@ -303,12 +316,28 @@ background-attachment:fixed;
 }
 
 .personnage{
-  background: url(/assets/images/characters/perso1.png) no-repeat;
+  background: url("/assets/images/infobar/picture.png") no-repeat;
   background-size: contain;
-  cursor: pointer;
-  width: 100%;
-  height: 165px;
-  background-color: #16120f;
+  height: 112px;
+  float: left;
+  width: 50%;
+  z-index: 6000;
+  position: relative;
+}
+
+.personnage-info{
+  margin-top: 35px;
+  float: left;
+  width: 50%;
+}
+
+.personnage-info-pseudo{
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.personnage-info-class{
+  margin-left: 10px;
 }
 
 progress {
@@ -324,6 +353,16 @@ progress::-moz-progress-bar {
   margin: 47px 0 0 167px;
   height: 18px;
   width: 191px;
+  -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+  transform: rotate(-90deg);
+}
+
+.radial-progress {
+  border-radius: 50%;
+  background-color: white;
+  .circle .fill {
+    border-radius: 50%;
+  }
 }
 
 .progressDamage{
@@ -333,9 +372,13 @@ progress::-moz-progress-bar {
 }
 
 .progressMore{
-  margin: 108px 0 0 168px;
-  height: 17px;
-  width: 156px;
+  position: relative;
+  display: inline;
+  margin-left: 30px;
+  padding-top: 0px;
+  height: 15px;
+  margin-top: 10px;
+  width: calc(100% - 175px);
 }
 
 progress[value].progressHealth::-webkit-progress-value {
@@ -346,7 +389,7 @@ progress[value].progressHealth::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #09c, #09c);
+    -webkit-linear-gradient(left, #FF0000, #FF0000);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
@@ -359,7 +402,7 @@ progress[value].progressDamage::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #ED7F10, #ED7F10);
+    -webkit-linear-gradient(left, #09c, #09c);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
@@ -371,28 +414,26 @@ progress[value].progressMore::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #370028, #370028);
+    -webkit-linear-gradient(left, #ED7F10, #ED7F10);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
 
-.cadreweapons{
-  background-color: rgba(0, 0, 0, 0.3);
+.cadreweapons {
   width: 100%;
   display: block;
-  height: 235px;
+  height: 208px;
   float: right;
-  border-top: 1px solid #fff;
-  background: url(/assets/images/cadreweapons.png) no-repeat;
-  background-size: cover;
   opacity: 0.9;
+  border-top: 1px solid rgb(255, 255, 255);
+  background: url(/assets/images/cadreweapons.png) 0% 0% / cover no-repeat;
 }
 
-.weapons{
+.weapons {
   width: 75%;
   margin: 0 auto;
-  margin-top: 80px;
+  margin-top: 60px;
 }
 
 .weapon{
@@ -464,21 +505,19 @@ progress[value].progressBarBoss::-webkit-progress-value {
     -webkit-linear-gradient(top,
       rgba(255, 255, 255, .25),
       rgba(0, 0, 0, .25)),
-    -webkit-linear-gradient(left, #09c, #09c);
+    -webkit-linear-gradient(left, #FF0000, #FF0000);
   border-radius: 2px;
   background-size: 35px 20px, 100% 100%, 100% 100%;
 }
 
 .cadre-objets {
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 644px;
+  width: 375px;
   display: block;
-  height: 200px;
+  height: 180px;
   float: right;
-  border-top: 1px solid #fff;
-  background: url(/assets/images/box-competence3.png) no-repeat;
-  background-size: contain;
   opacity: 0.9;
+  border-top: 1px solid rgb(255, 255, 255);
+  background: url(/assets/images/box-competence3.png) 0% 0% / contain no-repeat;
 }
 
 .progressSkills{
@@ -503,11 +542,11 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .objets {
   height: 86px;
-  width: 560px;
+  width: 280px;
   display: block;
   padding: 2%;
   margin: 0 auto;
-  margin-top: 88px;
+  margin-top: 22px;
 }
 
 
@@ -1075,7 +1114,7 @@ progress[value].progressSkills::-webkit-progress-value {
 
 /* Standard syntax */
 @keyframes attacked_right {
-  0%   {left: 0px;}f
+  0%   {left: 0px;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
@@ -1085,3 +1124,157 @@ progress[value].progressSkills::-webkit-progress-value {
 
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css
+.cadre-gauche-max{
+  background-color: #16120F;
+  width: 224px;
+  float: left;
+  height: 446px;
+}
+
+.cadre-droite-max{
+  background-color: #16120F;
+  width: 800px;
+  height: 446px;
+  margin-left: 224px;
+}
+
+.cadre-bas-max{
+  background-color: #16120F;
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+.cadre-bas-max .infobar{
+  background: url("/assets/images/infobar/xpandspell.png") no-repeat;
+  position: absolute;
+  height: 138px;
+  width: 893px;
+  right: 0;
+  bottom: 0;
+  padding-left: 70px;
+}
+
+.cadre-bas-max .infobar-mana{
+  background: url("/assets/images/infobar/manabar.png") no-repeat;
+  position: absolute;
+  height: 91px;
+  width: 91px;
+  left: 0;
+  bottom: 0;
+  z-index: 6000;
+}
+
+.cadre-bas-max .infobar-life{
+  background: url("/assets/images/infobar/lifebar.png") no-repeat;
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  left: 70px;
+  bottom: 0;
+  z-index: 5999;
+}
+
+.infobar-mana-div, .infobar-life-div,{
+   border-radius: 50%;
+   z-index: 10;
+ }
+
+
+.progress {
+  height: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+.vertical {
+  box-shadow: inset 0px 4px 6px #ccc;
+}
+
+.vertical-mana {
+  display: inline-block;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  margin-left: 5.5px;
+  margin-top: 5.5px;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background-color: rgba(0,0,0,0);
+}
+
+.vertical-life {
+  display: inline-block;
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+  margin-left: 6.5px;
+  margin-top: 6.5px;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background-color: rgba(0,0,0,0);
+}
+
+.progress-bar {
+  float: left;
+  width: 0;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #337ab7;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  -webkit-transition: width .6s ease;
+  -o-transition: width .6s ease;
+  transition: width .6s ease;
+}
+
+.progress-bar-mana{
+  background-color: blue;
+}
+
+.progress-bar-life{
+  background-color: red;
+}
+
+.progress-bar {
+  box-shadow: inset -18px 0px 20px 0px rgba(255,255,255, 0.5);
+}
+
+.infobar-experience {
+  color: #c2aa97;
+  font-size: 14px;
+  width: 110px;
+  padding-left: 5px;
+  padding-top: 2px;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  float: left;
+}
+
+.infobar-spell-number {
+  position: absolute;
+  margin-left: 10px;
+  margin-top: 25px;
+}
+
+.infobar-spell-number div {
+  width: 100px;
+  float: left;
+  text-align: center;
+}
+
+.infobar-spell-number div span {
+  background-size: contain;
+  background: url("/assets/images/infobar/spellkey.png") no-repeat;
+  color: #c2aa97;
+  padding: 4px 10px 8px 10px;
+}
+

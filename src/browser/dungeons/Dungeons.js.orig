@@ -9,7 +9,11 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+<<<<<<< HEAD
+import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
+=======
+import { LoadDungeons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+>>>>>>> master
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -17,14 +21,16 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef,LoadStep,LoadNextStep }) => {
+let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
+    var skills_list = '';
     let health = 100;
     let maxhealth = 100;
     let energy = 100;
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
+    let dungeon;
     if(!dviewer)
     {
         LoadViewer(viewer);
@@ -37,6 +43,7 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
+<<<<<<< HEAD
        if(dviewer.tuto && dviewer.tuto < 5)
        {
            if(typeof tutoriel === 'undefined' || tutoriel == null)
@@ -45,6 +52,21 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
            }
        }
         else if(dungeonsOP)
+=======
+
+        if(dviewer.skills) {
+            skills_list = dviewer.skills.map(skill => {
+                var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
+                return (<div key={skill.id} className={classObjet}></div>);
+            })
+        }
+    }
+    if(!dviewer)
+    {
+        LoadViewer(viewer);}
+        else  {
+        if(dungeonsOP)
+>>>>>>> master
         {
             var dungeonActive = false;
             var wdmap = [];
@@ -62,15 +84,15 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 maxexperience = dungeon.user.default_character.maxexperience;
                 dungeonActive = true;
 
-                if(viewer)
+                if(dviewer)
                 {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
             else {
-                if(viewer && !viewer.active_dungeon)
+                if(dviewer && !viewer.active_dungeon)
                 {
-                    preLoadActiveDungeon(viewer);
+                    preLoadActiveDungeon(dviewer);
                 }
                 dungeonActive = false;
             }
@@ -87,6 +109,7 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
         }
     }
     return (
+<<<<<<< HEAD
     <View className={classStep}>
         <div className={classN}>
          </div>
@@ -96,6 +119,40 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
             <div className="tuto-text">{tutoriel.description}</div>
             <div onClick={() => LoadNextStep(dviewer,tutoriel.next)} className="tuto-next">Next</div>
         </div>
+=======
+    <View>
+        <div className="cadre-gauche">
+            <div className="personnage">
+                <progress className="progressHealth" max={maxhealth} value={health}></progress>
+                <progress className="progressDamage" max={maxenergy} value={energy}></progress>
+                <progress className="progressMore" max={maxexperience} value={experience}></progress>
+            </div>
+            <div className="cadreweapons">
+                <div className="weapons">
+                    {weapon_list}
+                </div>
+            </div>
+
+            <div className="cadre-objets">
+                <div className="objets">
+                    {skills_list}
+                </div>
+            </div>
+            <SignOut/>
+        </div>
+        {!loaded ?
+            <Loading />
+            : viewer ?
+                dungeonActive?
+                    wdmap
+                :
+                dungeons ?
+                    dungeons.map(dungeon =>
+                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={dviewer} loadWorldMap={loadWorldMap}/>
+                    )
+                    : <Text>Il n'y a pas encore de donjons.</Text>
+            : <Text>Veuillez vous connecter</Text>
+>>>>>>> master
         }
         </Block>
         <View className="container_app">
@@ -148,14 +205,16 @@ Dungeons.propTypes = {
 
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
+<<<<<<< HEAD
     const SkillsRef = database.child('skills');
     const WorldMapRef = database.child('activeDungeons/'+props.viewer.id);
     const WeaponsRef = database.child('weapons');
     const ViewerRef = database.child('users/'+props.viewer.id);
     const TutoRef = database.child('tutoriel/'+props.viewer.id);
+=======
+    const WorldMapRef = database.child('activeDungeons');
+>>>>>>> master
     return [
-        [WeaponsRef, 'on', 'value', props.LoadWeapons],
-        [SkillsRef, 'on', 'value', props.LoadSkills],
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
         [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
         [ViewerRef, 'on', 'value', props.LoadViewerRef],
@@ -170,4 +229,8 @@ export default connect(state => ({
     tutoriel: state.dungeons.tutoriel,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
+<<<<<<< HEAD
 }), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+=======
+}), { LoadDungeons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+>>>>>>> master
