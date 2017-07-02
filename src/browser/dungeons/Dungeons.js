@@ -92,9 +92,9 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             classStep = tutoriel.class;
         }
     }
-    var health_percent = (health / 100) * maxhealth;
+    var health_percent = health/maxhealth * 100;
     let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
-    var energy_percent = (energy / 100) * maxenergy;
+    var energy_percent = energy/maxenergy * 100;
     let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
 
 return (
