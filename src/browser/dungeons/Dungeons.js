@@ -6,7 +6,7 @@ import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { Block, View, Text, Flex ,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
@@ -21,12 +21,20 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let experience = 0;
     let maxexperience = 1000;
     let dungeon;
+    const styles = {
+        bg: {
+            backgroundImage: "",
+        }
+    };
     if(!dviewer)
     {
         LoadViewer(viewer);
     }
     else
     {
+        if(dviewer.characters){
+            styles.bg.backgroundImage = "url(assets/images/infobar/"+ dviewer.characters[0].name + "picture.png)";
+        }
         if (dviewer.weapons) {
             weapon_list = dviewer.weapons.map(weapon => {
                 let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
@@ -96,7 +104,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
     var energy_percent = energy/maxenergy * 100;
     let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
-
 return (
     <View className={classStep}>
 
@@ -113,7 +120,9 @@ return (
         <View className="container_app-img"></View>
         <View className="container_app">
             <div className="cadre-gauche-max">
-                <div className="personnage"></div>
+                <div className="personnage">
+                    <div className="personnage-picture" style={styles.bg}></div>
+                </div>
                 <div className="personnage-info">
                     <div className="personnage-info-pseudo">
                         Pseudo
