@@ -161,6 +161,7 @@ return (
                         <a name="option" id="option"></a>
                         Options
                         <SignOut/>
+                        <a href={window.location.origin + '/editor'}><li><span className="btn-menu">Editeur</span></li></a>
                     </div>
                 </div>
             </div>
