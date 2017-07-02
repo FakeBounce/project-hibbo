@@ -128,9 +128,11 @@ background-attachment:fixed;
   height: 46px;
   line-height: 46px;
   padding-right: 20px;
+  z-index: 7000;
+  position: relative;
 }
 
-.menu-fixe li a{
+.menu-fixe a{
   color: #fab186;
   text-decoration: none;
 }
@@ -646,7 +648,6 @@ progress[value].progressSkills::-webkit-progress-value {
   position: absolute;
   height: 416px;
   width: 300px;
-  z-index: 9999;
   top: 0;
   bottom: 0;
   right: 0;
@@ -682,7 +683,6 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .tutoriel-personnage .cadre-tutoriel{
-  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -701,7 +701,6 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 7000;
 }
 .tutoriel-equipement .cadre-tutoriel{
-  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -710,7 +709,6 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .tutoriel-map .cadre-tutoriel{
-  z-index: 8000;
   margin: auto;
   top: 0;
   bottom: 125px;
@@ -734,7 +732,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 100%;
   background-color: rgba(0,0,0,0.7);
   position: fixed;
-  z-index: 2;
+  z-index: 7999;
   top: 0;
 }
 
@@ -1162,8 +1160,6 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url("/assets/images/planche-1.png");
   width: 800px;
   height: 73px;
-  z-index: 10;
-  position: relative;
 }
 
 .cadre-menu-div{

@@ -92,11 +92,16 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             classStep = tutoriel.class;
         }
     }
-    return (
+    var health_percent = health/maxhealth * 100;
+    let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
+    var energy_percent = energy/maxenergy * 100;
+    let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
+
+return (
     <View className={classStep}>
 
         <div className={classN}>
-         </div>
+        </div>
 
         <Block>{dviewer && tutoriel &&
         <div className="cadre-tutoriel">
@@ -122,10 +127,10 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 <div className="cadre-menu">
                     <div className="cadre-menu-div">
                         <ul className="menu-fixe">
-                            <li><a href="#dungeons"><span className="btn-menu">Dungeons</span></a></li>
-                            <li><a href="#personnage"><span className="btn-menu">Personnage</span></a></li>
-                            <li><a href="#skill"><span className="btn-menu">Compétences</span></a></li>
-                            <li><a href="#option"><span className="btn-menu">Options</span></a></li>
+                            <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
+                            <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
+                            <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
+                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
                         </ul>
                     </div>
                 </div>
@@ -162,18 +167,18 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             <div className="cadre-bas-max">
                 <div>
                     <div className="infobar-mana">
-                        <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='90' aria-valuemin='0' aria-valuemax='100' style='width:60%;'></div></div>"  }}>
+                        <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
                         </div>
                     </div>
                     <div className="infobar-life">
-                        <div className="infobar-life-div " dangerouslySetInnerHTML={{__html: "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='90' aria-valuemin='0' aria-valuemax='100' style='width:60%;'></div></div>"  }}>
+                        <div className="infobar-life-div " dangerouslySetInnerHTML={{__html: healthbar }}>
                         </div>
                     </div>
                 </div>
                 <div className="infobar">
                     <div>
                         <div className="infobar-experience">
-                            <span> XP : 500 / 1000</span>
+                            <span> XP : {experience} / {maxexperience}</span>
                         </div>
                         <div className="infobar-experience-progress">
                             <progress className="progressMore" max={maxexperience} value={experience}></progress>
@@ -194,7 +199,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             </div>
         </View>
     </View>
-    );
+);
 };
 
 Dungeons.propTypes = {
