@@ -38,8 +38,8 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                     name: worldmap.name,
                     user :
                         {
-                            id:viewer.username.id,
-                            displayName:viewer.username.displayName
+                            id:viewer.id,
+                            displayName:viewer.displayName
                         },
                     worldmap:worldmap,
                     viewonmonster:false,

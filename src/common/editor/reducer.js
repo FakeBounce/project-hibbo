@@ -31,7 +31,7 @@ const editorReducer = (state = new State(), action) => {
 
             if(!viewer)
             {
-                return state.set('viewer', action.payload);
+                return state.set('viewer', action.payload.username);
             }
             return state;
         }
