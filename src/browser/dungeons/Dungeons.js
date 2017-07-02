@@ -17,7 +17,7 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
     var skills_list = '';
     let health = 100;
@@ -76,10 +76,8 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
-
-            else
-            {
-                if(viewer && !viewer.active_dungeon)
+            else {
+                if(dviewer && !dviewer.active_dungeon)
                 {
                     preLoadActiveDungeon(dviewer);
                 }
@@ -140,20 +138,19 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 <div className="cadre-droite-bas">
                     <div className="cmenu cadre-dungeons">
                         <a name="dungeons" id="dungeons"></a>
+
                         {!loaded ?
                             <Loading />
                             : viewer ?
-                            dungeonActive ?
-
-                                wdmap
-                                :
-                                dungeons ?
-                                    dungeons.map(dungeon =>
-                                        <Dungeon key={dungeon.id} dungeon={dungeon} viewer={dviewer}
-                                                 loadWorldMap={loadWorldMap}/>
-                                    )
-                                    : <Text>Il n'y a pas encore de donjons.</Text>
-                            : <Text>Veuillez vous connecter</Text>
+                                dungeonActive?
+                                    verifloaded && wdmap
+                                    :
+                                    dungeons ?
+                                        dungeons.map(dungeon =>
+                                            <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                                        )
+                                        : <Text>Il n'y a pas encore de donjons.</Text>
+                                : <Text>Veuillez vous connecter</Text>
                         }
                     </div>
                     <div className="cmenu cadre-perso">
@@ -219,13 +216,18 @@ Dungeons.propTypes = {
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
     host: React.PropTypes.String,
+    verifloaded: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
     const DungeonsRef = database.child('dungeons');
-    const WorldMapRef = database.child('activeDungeons/'+props.viewer.id);
     const ViewerRef = database.child('users/'+props.viewer.id);
     const TutoRef = database.child('tutoriel/'+props.viewer.id);
+    let WorldMapRef = database.child('activeDungeons');
+    if(props.viewer.id)
+    {
+        WorldMapRef = database.child('activeDungeons/'+props.viewer.id);
+    }
     return [
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
         [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
@@ -239,6 +241,7 @@ export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     loaded: state.dungeons.loaded,
     tutoriel: state.dungeons.tutoriel,
+    verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
 }), { LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);

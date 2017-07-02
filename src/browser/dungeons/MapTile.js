@@ -91,4 +91,5 @@ Maptile.propTypes = {
 
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
+    verifloaded: state.dungeons.verifloaded,
 }), { moveCharacter,movingCharacter }) (Maptile);

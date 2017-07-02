@@ -736,8 +736,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-down {
-  -webkit-animation: movedown 1s; /* Safari 4.0 - 8.0 */
-  animation: movedown 1s;
+  -webkit-animation: movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: movedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -746,8 +746,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-up {
-  -webkit-animation: moveup 1s; /* Safari 4.0 - 8.0 */
-  animation: moveup 1s;
+  -webkit-animation: moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -756,8 +756,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-left {
-  -webkit-animation: moveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: moveleft 1s;
+  -webkit-animation: moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -766,8 +766,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-right {
-  -webkit-animation: moveright 1s; /* Safari 4.0 - 8.0 */
-  animation: moveright 1s;
+  -webkit-animation: moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -776,8 +776,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-down {
-  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
-  animation: amovedown 1s;
+  -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -786,8 +786,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-up {
-  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveup 1s;
+  -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -796,8 +796,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-left {
-  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveleft 1s;
+  -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -806,8 +806,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-right {
-  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveright 1s;
+  -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -816,8 +816,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_adown {
-  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
-  animation: amovedown 1s;
+  -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -826,8 +826,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aup {
-  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveup 1s;
+  -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -836,8 +836,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aleft {
-  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveleft 1s;
+  -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -846,8 +846,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aright {
-  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveright 1s;
+  -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -856,8 +856,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_down {
-  -webkit-animation: attacked_down 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_down 1s infinite;
+  -webkit-animation: attacked_down 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_down 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -866,8 +866,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_up {
-  -webkit-animation: attacked_up 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_up 1s infinite;
+  -webkit-animation: attacked_up 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_up 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -876,8 +876,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_left {
-  -webkit-animation: attacked_left 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_left 1s infinite;
+  -webkit-animation: attacked_left 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_left 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -886,8 +886,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_right {
-  -webkit-animation: attacked_right 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_right 1s infinite;
+  -webkit-animation: attacked_right 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_right 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;

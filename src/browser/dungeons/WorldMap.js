@@ -29,9 +29,11 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     }
     if(dungeon.end_turn)
     {
-        if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn && dungeon.end_turn) {
-            console.log('demarrage');
-            MonsterTurn(dungeon);
+        if(typeof dungeon.monster_moves !== "undefined")
+        {
+            if(dungeon.monster_moves.length > 0 && !dungeon.monster_turn) {
+                MonsterTurn(dungeon);
+            }
         }
     }
     if(dungeon.monster_info_row != null && dungeon.monster_info_col != null)
@@ -101,4 +103,5 @@ WorldMap.propTypes = {
 export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
+    verifloaded: state.dungeons.verifloaded,
 }), { cancelDungeon,EndTurn,MonsterTurn })(WorldMap);

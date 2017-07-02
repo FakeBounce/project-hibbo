@@ -10,6 +10,7 @@ import { Seq } from 'immutable';
 
 const State = Record({
     loaded: false,
+    verifloaded: 1,
     dungeonLoaded: null,
     viewer: null,
     tutoriel: null,
@@ -158,42 +159,81 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.RELOAD_WORLD_MAP: {
             const dungeonsOP = action.payload.dungeons;
-            if(dungeonsOP)
+            if(dungeonsOP != null && !dungeonsOP.stop_turn)
             {
-                return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP[state.viewer.id]));
+                return state.update('dungeonsOP', map => map.set(state.viewer.id,dungeonsOP));
             }
             return state;
+        }
 
+        case actions.END_MONSTER_TURN: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         case actions.ATTACK_MONSTER: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         case actions.MOVE_CHARACTER: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         case actions.MOVING_CHARACTER: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         case actions.CAN_ATTACK_MONSTER: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         case actions.END_TURN: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let test = state.dungeonsOP;
+            test.set(state.viewer.id,payload);
+            // test.map(t => {
+            //
+            // });
+            // test.map => map.set(state.viewer.id,payload)
+            let vl = state.verifloaded;
+            vl++;
+            return state.set('dungeonsOP',test)
+                .set('verifloaded',vl);
         }
 
         case actions.MONSTER_TURN: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id, payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.MONSTER_MOVE: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         default:

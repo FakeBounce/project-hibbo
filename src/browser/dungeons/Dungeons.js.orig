@@ -46,16 +46,7 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 return (<div key={skill.id} className={classObjet}></div>);
             })
         }
-<<<<<<< HEAD
-       if(dviewer.tuto && dviewer.tuto < 5)
-       {
-           if(typeof tutoriel === 'undefined' || tutoriel == null)
-           {
-               LoadStep(dviewer);
-           }
-       }
-        else if(dungeonsOP)
-=======
+
     }
     if(!dviewer)
     {
@@ -63,7 +54,6 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
     }
     else  {
         if(dungeonsOP)
->>>>>>> master
         {
             var dungeonActive = false;
             var wdmap = [];
@@ -207,9 +197,6 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
 
                 </div>
             </div>
-<<<<<<< HEAD
-        </View>
-=======
             <SignOut/>
         </div>
         {!loaded ?
@@ -233,7 +220,6 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                 <a href={window.location.origin + "/editor"}>EDITOR</a>
             </Text>
         </div>
->>>>>>> master
     </View>
     );
 };
