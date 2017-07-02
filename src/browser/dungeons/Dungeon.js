@@ -4,16 +4,17 @@
 
 
 import React from 'react';
+import { connect } from 'react-redux';
 import { Block, Text } from '../app/components';
+import { loadWorldMap } from '../../common/dungeons/actions';
+
 
 
 type Props = {
     dungeon: Object,
-    loadWorldMap: () => void,
-    viewer: Object,
 };
 
-const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
+const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
     const styles = {
       title: {
         cursor: 'pointer',
@@ -24,6 +25,11 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
       delete: {
             cursor: 'pointer',
         },
+    };
+    var test = function()
+    {
+        console.log('v : ',viewer);
+        loadWorldMap(dungeon,viewer)
     };
     if(dungeon.lock === true){
       return (
@@ -37,11 +43,11 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
     } else {
       return (
         <div className="one-level">
-          <div className="choose-level" onClick={() => loadWorldMap(dungeon,viewer)}>
+          <div className="choose-level" onClick={() => test()}>
             <span>{dungeon.numero}</span>
           </div>
           <Text style={styles.title}
-                onClick={() => loadWorldMap(dungeon,viewer)}>
+                onClick={() => test()}>
             Description : {dungeon.description}
           </Text>
         </div>
@@ -52,7 +58,10 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }: Props) => {
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
     loadWorldMap: React.PropTypes.func.isRequired,
-    viewer: React.PropTypes.object,
+    viewer: React.PropTypes.object.isRequired,
 };
 
-export default Dungeon;
+export default connect(state => ({
+    viewer: state.dungeons.viewer,
+}), { loadWorldMap })(Dungeon);
+

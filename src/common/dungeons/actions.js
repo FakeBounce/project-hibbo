@@ -244,8 +244,6 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                 if(monster.can_move_attack)
                 {
                     monster.is_moving = false;
-                    //Algo de déplacement
-                    //Temporaire
                     var maptiles = dungeon.dungeon.maptiles;
                     var moves = [];
                     var minrow = monster.row-monster.move;
