@@ -3,6 +3,7 @@
  */
 
 import { Range } from 'immutable';
+export const LOAD_VIEWER_CHANGES = 'LOAD_VIEWER_CHANGES';
 export const MONSTER_TURN = 'MONSTER_TURN';
 export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
@@ -11,6 +12,8 @@ export const LOAD_DUNGEONS = 'LOAD_DUNGEONS';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const CANCEL_DUNGEON = 'CANCEL_DUNGEON';
 export const LOAD_SKILLS = 'LOAD_SKILLS';
+export const LOAD_CLASSES = 'LOAD_CLASSES';
+export const SET_CLASSE = 'SET_CLASSE';
 export const RELOAD_WORLD_MAP = 'RELOAD_WORLD_MAP';
 export const LOAD_WEAPONS = 'LOAD_WEAPONS';
 export const PRELOAD_ACTIVE_DUNGEON = 'PRELOAD_ACTIVE_DUNGEON';
@@ -24,6 +27,12 @@ export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
+    console.log(viewer);
+    var character = viewer.characters[viewer.active];
+character.row = 0;
+character.col = 0;
+character.is_attacking = false;
+character.is_moving = false;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -39,30 +48,13 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                         {
                             id:viewer.id,
                             displayName:viewer.displayName,
-                            character :
-                                {
-                                    health:15000,
-                                    energy: 1000,
-                                    experience: 0,
-                                    damage:200,
-                                    name:"Warrior",
-                                    image: "/assets/images/classes/Warrior/down.png",
-                                    type:"pj",
-                                    range:1,
-                                    move:1,
-                                    action:10,
-                                    basicCost:10,
-                                    row:0,
-                                    col:0,
-                                    is_attacking:false,
-                                    is_moving:false,
-                                },
+                            character :character,
                             default_character : {
-                                move:1,
-                                action:10,
-                                damage:200,
-                                maxhealth:15000,
-                                maxenergy: 1000,
+                                movevement:character.movement,
+                                action:character.action,
+                                damage:character.damage,
+                                maxhealth:character.health,
+                                maxenergy: character.energy,
                                 maxexperience: 1000,
                             },
                         },
@@ -117,7 +109,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                 dungeon.monster_moves = true;
                 monster_moves.push(index);
             }
-            else if(range.totalRange <= (monster.range+monster.move))
+            else if(range.totalRange <= (monster.range+monster.movement))
             {
                 monster.can_move_attack = true;
                 monster.direction = range.direction;
@@ -510,6 +502,37 @@ export const LoadWeapons = (snap: Object) => {
     return {
         type: LOAD_WEAPONS,
         payload: { weapons },
+    };
+};
+
+export const LoadViewerChanges = (snap: Object) => {
+    const viewer = snap.val();
+    return {
+        type: LOAD_VIEWER_CHANGES,
+        payload: { viewer },
+    };
+};
+
+export const LoadClasses = (snap: Object) => {
+    const classes = snap.val();
+    return {
+        type: LOAD_CLASSES,
+        payload: { classes },
+    };
+};
+
+export const setClass = (classe,viewer) => ({getUid,firebase}) => {
+    viewer.characters = [];
+    viewer.characters.push(classe);
+    viewer.active = 0;
+
+    firebase.update({
+        [`users/${viewer.id}/characters`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+    });
+    return {
+        type: SET_CLASSE,
+        payload: { viewer },
     };
 };
 
