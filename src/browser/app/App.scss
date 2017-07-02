@@ -465,6 +465,16 @@ progress[value].progressSkills::-webkit-progress-value {
   border: 1px solid #fff;
 }
 
+.skill{
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  display: block;
+  float: left;
+  margin: 5px 8px;
+  border: 1px solid #fff;
+}
+
 .objet1{
   background: url("/assets/images/objets/1.jpg") no-repeat;
   background-size: cover;
@@ -503,12 +513,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .objet7{
   background: url("/assets/images/objets/7.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet0{
-  background: url("/assets/images/objets/8.jpg") no-repeat;
   background-size: cover;
   cursor: pointer;
 }
@@ -919,6 +923,11 @@ progress[value].progressSkills::-webkit-progress-value {
   50% {left: 15px;}
   75% {left: 5px;}
   100% {left: 0px;}
+}
+
+.is_target{
+  background-color: #1b6d85;
+  opacity: 0.4;
 }
 
 

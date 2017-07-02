@@ -143,6 +143,11 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
         }
 
+        case actions.CAN_USE_SKILL: {
+            let payload = action.payload;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+        }
+
         default:
             return state;
     }

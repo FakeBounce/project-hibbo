@@ -28,6 +28,19 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     var classImage = "case ";
     let error_message = '';
     var move = false;
+    let maptileAction;
+    if(typeof maptile.is_target !== 'undefined')
+    {
+        classImage = classImage+ " is_target";
+        maptileAction = function(){
+            trySkill(dungeon,row,col);
+        };
+    }
+    else{
+        maptileAction = function(){
+            movingCharacter(dungeon,row,col);
+        };
+    }
     if(typeof maptile.character !== 'undefined' && maptile.character != null)
     {
         character = true;
@@ -37,44 +50,15 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         }
     }
 
-    const tryMoveCharacter = function(){
-        let isMoving = movingCharacter(dungeon,row,col);
-        if(isMoving.component.canMove)
-        {
-            move = isMoving;
-             switch(isMoving.component.direction)
-             {
-                 case 'left': {
-                     classImage+= ' moveleft';
-                 }
-                 case 'right': {
-                     classImage+= ' moveright';
-                 }
-                 case 'up': {
-                     classImage+= ' moveup';
-                 }
-                 case 'down': {
-                     classImage+= ' movedown';
-                 }
-            }
-            error_message = '';
-
-        }
-        else
-        {
-            // error_message = isMoving.component.message;
-        }
-    };
-
     return (
     <Flex>
         {
           character ?
-            <Flex className={classImage} style={styles.bg}>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
                 <Character dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={tryMoveCharacter}>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
             </Flex>
         }
     </Flex>

@@ -9,7 +9,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadDungeons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
+import { LoadDungeons, preLoadActiveDungeon, loadWorldMap,CanUseSkill, ReloadWorldMap,LoadViewer } from '../../common/dungeons/actions';
 
 Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
@@ -17,37 +17,23 @@ Dungeon.propTypes = {
     viewer: React.PropTypes.object,
 };
 
-let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer }) => {
+let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, loadWorldMap, viewer,dviewer,CanUseSkill }) => {
     let weapon_list = '';
     var skills_list = '';
+    let dungeon;
     let health = 100;
     let maxhealth = 100;
     let energy = 100;
     let maxenergy = 100;
     let experience = 0;
     let maxexperience = 1000;
-    if(dviewer) {
-        if (dviewer.weapons) {
-            weapon_list = dviewer.weapons.map(weapon => {
-                let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
-                return (<div key={weapon.id} className={classObjet}></div>);
-            });
-        }
-
-        if(dviewer.skills) {
-            skills_list = dviewer.skills.map(skill => {
-                var classObjet = skill.get ? 'objet ' + skill.css : 'objet objetVide';
-                return (<div key={skill.id} className={classObjet}></div>);
-            })
-        }
-    }
+    let skill_function = false;
     if(!dviewer)
     {
         LoadViewer(viewer);}
         else  {
         if(dungeonsOP)
         {
-            let dungeon;
             var dungeonActive = false;
             var wdmap = [];
             dungeonsOP.map(dungeonOP => dungeon = dungeonOP);
@@ -76,6 +62,32 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 }
                 dungeonActive = false;
             }
+        }
+    }
+
+    if(dviewer) {
+        if (dviewer.weapons) {
+            weapon_list = dviewer.weapons.map(weapon => {
+                let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
+                return (<div key={weapon.id} className={classObjet}></div>);
+            });
+        }
+        if(dviewer.characters[dviewer.active].equipped_spells) {
+            skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
+                var classObjet = 'skill';
+                if(dungeonActive)
+                {
+                    skill_function = function(){
+                        CanUseSkill(dungeon,dviewer,skill);
+                    };
+                }
+                else {
+                    skill_function = function(){
+                        console.log('description');
+                    }
+                }
+                return (<Image key={skill.id} className={classObjet} onClick={skill_function} src={skill.image}></Image>);
+            })
         }
     }
 
@@ -143,4 +155,4 @@ export default connect(state => ({
     loaded: state.dungeons.loaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons, preLoadActiveDungeon, loadWorldMap,LoadViewer, ReloadWorldMap })(Dungeons);
+}), { LoadDungeons, preLoadActiveDungeon, loadWorldMap,LoadViewer,CanUseSkill, ReloadWorldMap })(Dungeons);
