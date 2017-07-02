@@ -35,15 +35,7 @@ const usersReducer = (state = new State(), action) => {
         .set('online', online)
         .set('onlineLoaded', true);
     }
-    case actions.LOAD_VIEWER_SUCCESS: {
-        let viewer = state.viewer;
 
-        if(!viewer)
-        {
-            return state.set('viewer', action.payload);
-        }
-        return state;
-    }
     default:
       return state;
 

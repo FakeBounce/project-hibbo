@@ -32,7 +32,7 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
     }
     return {
         type: 'LOAD_VIEWER',
-        payload: 'done'
+        payload: ''
     }
 };
 

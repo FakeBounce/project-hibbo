@@ -1,14 +1,10 @@
-/**
- * Created by Fakebounce on 13/11/2016.
- */
-
 import { Range } from 'immutable';
 export const LOAD_MAPS = 'LOAD_MAPS';
 export const LOAD_MAPTILES = 'LOAD_MAPTILES';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
+export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const LOAD_VIEWER = 'LOAD_VIEWER';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
-export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const LOAD_ACTIVE_MAP = 'LOAD_ACTIVE_MAP';
 export const CANCEL_WORLDMAP = 'CANCEL_WORLDMAP';
 export const PICK_TILE = 'PICK_TILE';
@@ -26,11 +22,14 @@ export const VIEW_MONSTER = 'VIEW_MONSTER';
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'maps/'+worldmap.id;
+    console.log("viewer",viewer);
+    console.log("worldmap",worldmap);
 
     var Uid = getUid();
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
+
                 let worldmap = snapshot.val();
 
                 let worldmapEdit = {
@@ -39,8 +38,8 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                     name: worldmap.name,
                     user :
                         {
-                            id:viewer.id,
-                            displayName:viewer.displayName
+                            id:viewer.username.id,
+                            displayName:viewer.username.displayName
                         },
                     worldmap:worldmap,
                     viewonmonster:false,
@@ -57,7 +56,7 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                 return worldmapEdit;
             });
         } catch (error) {
-            console.log('An error occured. We could not load the dungeon. Try again later.');
+            console.log('An error occured. We could not load the editor. Try again later.');
             throw error;
         }
     };

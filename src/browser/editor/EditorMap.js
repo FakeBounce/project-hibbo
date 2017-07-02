@@ -50,18 +50,21 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
         }
         else
         {
-            maptiles.map(list => {
-                if (activeTile) {
-                    if (list.id == activeTile.id) {
-                        listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile} active="active"/>);
-                    }
-                    else {
+            if(maptiles)
+            {
+                maptiles.map(list => {
+                    if (activeTile) {
+                        if (list.id == activeTile.id) {
+                            listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile} active="active"/>);
+                        }
+                        else {
+                            listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile}/>);
+                        }
+                    } else {
                         listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile}/>);
                     }
-                } else {
-                    listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile}/>);
-                }
-            });
+                });
+            }
         }
 
     }
