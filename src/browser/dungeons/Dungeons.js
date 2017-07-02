@@ -215,7 +215,6 @@ Dungeons.propTypes = {
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
-    verifloaded: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
