@@ -205,7 +205,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
     };
 };
 
-export const MonsterTurn = (dungeon,attack = false) => ({firebase,dispatch}) => {
+export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
     if(dungeon.end_turn)
     {
         dungeon.monster_turn = true;
@@ -347,7 +347,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase,dispatch}) => 
     };
 };
 
-export const MonsterMove = (dungeon) => ({firebase,dispatch}) => {
+export const MonsterMove = (dungeon) => ({firebase}) => {
 
     if(typeof dungeon.monster_moves !== "undefined") {
         if (dungeon.monster_moves.length > 0) {
@@ -436,7 +436,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking && !dungeon.end_turn)
+    if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking && !dungeon.end_turn && !dungeon.monster_turn)
     {
         if(dungeon.stop_turn)
         {
@@ -602,7 +602,7 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
     pj.is_attacking = false;
     dungeon.error_message = '';
-    if(!pj.is_moving  && !dungeon.end_turn)
+    if(!pj.is_moving  && !dungeon.end_turn && !dungeon.monster_turn)
     {
         if(dungeon.stop_turn)
         {
@@ -643,43 +643,48 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
 }
 
 export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
-    if(dungeon.dungeon.maptiles[row][col].character && dungeon.dungeon.maptiles[row][col].character != null)
+    if(row != null && col != null)
     {
-        dungeon.dungeon.maptiles[row][col].character.is_attacked = false;
-        dungeon.error_message = '';
-        let pnj = dungeon.dungeon.maptiles[row][col].character;
-        let pj = character;
-        if(pj.is_attacking)
+        if(typeof dungeon.dungeon.maptiles[row][col].character !== "undefined")
         {
-            if(pnj.health > 0)
+            if(dungeon.dungeon.maptiles[row][col].character != null)
             {
-                pnj.health = pnj.health - pj.damage;
-                pj.action = pj.action - pj.basicCost;
-                if(pnj.health<=0)
+                dungeon.dungeon.maptiles[row][col].character.is_attacked = false;
+                dungeon.error_message = '';
+                let pnj = dungeon.dungeon.maptiles[row][col].character;
+                let pj = character;
+                if(pj.is_attacking)
                 {
-                    pnj = null;
-                    dungeon.monster_info_row = null;
-                    dungeon.monster_info_col = null;
+                    if(pnj.health > 0)
+                    {
+                        pnj.health = pnj.health - pj.damage;
+                        pj.action = pj.action - pj.basicCost;
+                        if(pnj.health<=0)
+                        {
+                            pnj = null;
+                            dungeon.monster_info_row = null;
+                            dungeon.monster_info_col = null;
+                        }
+                        pj.is_attacking = false;
+                        pj.attacking_row = null;
+                        pj.attacking_col = null;
+                    }
                 }
-                pj.is_attacking = false;
-                pj.direction = null;
-                pj.attacking_row = null;
-                pj.attacking_col = null;
+                dungeon.user.character = pj;
+                dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+                if(pnj != null && typeof pnj !== 'undefined' && dungeon.dungeon.maptiles[row][col].character)
+                {
+                    dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number],pnj);
+                }
+                else {
+                    delete dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number];
+                }
+                dungeon.dungeon.maptiles[row][col].character = pnj;
+            }
+            else {
+                dungeon.error_message = 'The ennemy is dead';
             }
         }
-        dungeon.user.character = pj;
-        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
-        if(pnj != null && typeof pnj !== 'undefined' && dungeon.dungeon.maptiles[row][col].character)
-        {
-            dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number],pnj);
-        }
-        else {
-            delete dungeon.dungeon.monsters[dungeon.dungeon.maptiles[row][col].character.number];
-        }
-        dungeon.dungeon.maptiles[row][col].character = pnj;
-    }
-    else {
-        dungeon.error_message = 'The ennemy is dead';
     }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
