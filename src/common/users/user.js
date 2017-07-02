@@ -6,6 +6,7 @@ const User = Record({
   email: '',
   id: '',
   photoURL: '',
+  pseudo: '',
 }, 'user');
 
 export default User;

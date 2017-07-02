@@ -17,7 +17,7 @@ import Fields from '../fields/FieldsPage';
 import Users from '../users/UsersPage';
 import Home from '../home/HomePage';
 import Intl from '../intl/IntlPage';
-import Me from '../me/MePage';
+
 import NotFound from '../notfound/NotFoundPage';
 import Offline from '../offline/OfflinePage';
 import SignIn from '../auth/SignInPage';
@@ -25,7 +25,7 @@ import Todos from '../todos/TodosPage';
 import Map from '../map/MapPage';
 import Dungeons from '../dungeons/DungeonsPage';
 import Editor from '../editor/EditorPage';
-
+import Me from '../me/MePage';
 
 // v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
 const bootstrap4Metas: any = [
@@ -50,6 +50,7 @@ let App = ({ currentLocale, currentTheme }) => (
       <Match authorized pattern="/game" component={Dungeons} />
       <Match pattern="/map" component={Map} />
       <Match pattern="/editor" component={Editor} />
+      <Match pattern="/me" component={Me} />
       <Miss component={NotFound} />
     </ContainerApp>
   </ThemeProvider>

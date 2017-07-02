@@ -209,7 +209,6 @@ Dungeons.propTypes = {
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
-    host: React.PropTypes.String,
     verifloaded: React.PropTypes.object,
 };
 
