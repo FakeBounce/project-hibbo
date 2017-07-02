@@ -34,7 +34,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer}) => {
     }
     return (
         <View>
-            <Title message={linksMessages.dungeon} />
+        <h1 className="title-hibbo">HIBBO</h1>
             <Block>
                 {dung}
                 {classe_list}
