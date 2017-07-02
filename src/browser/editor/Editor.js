@@ -51,6 +51,9 @@ let Editor = ({worldmaps, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activ
         <View>
 
             <SignOut/>
+            <audio loop autoplay="autoplay" controls>
+                <source src="/assets/images/sounds/sample.mp3" />
+            </audio>
             {!loaded ?
                 <Loading />
                 : viewer ?
@@ -65,6 +68,7 @@ let Editor = ({worldmaps, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activ
                     : <Text>Il n'y a pas encore de map.</Text>
                 : <Text>Aucun utilisateur</Text>
             }
+
 
 
         </View>

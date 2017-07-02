@@ -107,7 +107,7 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                 <span>+</span>
             </div>
             <Text>
-                <a href="http://localhost:3000/editor">EDITOR</a>
+                <a href={window.location.origin + "/editor"}>EDITOR</a>
             </Text>
         </div>
     </View>
@@ -123,6 +123,7 @@ Dungeons.propTypes = {
     viewer: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
+    host: React.PropTypes.String,
 };
 
 Dungeons = firebase((database, props) => {
