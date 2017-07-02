@@ -122,10 +122,10 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 <div className="cadre-menu">
                     <div className="cadre-menu-div">
                         <ul className="menu-fixe">
-                            <li><a href="#dungeons">Dungeons</a></li>
-                            <li><a href="#personnage">Personnage</a></li>
-                            <li><a href="#skill">Compétences</a></li>
-                            <li><a href="#option">Options</a></li>
+                            <li><a href="#dungeons"><span className="btn-menu">Dungeons</span></a></li>
+                            <li><a href="#personnage"><span className="btn-menu">Personnage</span></a></li>
+                            <li><a href="#skill"><span className="btn-menu">Compétences</span></a></li>
+                            <li><a href="#option"><span className="btn-menu">Options</span></a></li>
                         </ul>
                     </div>
                 </div>
