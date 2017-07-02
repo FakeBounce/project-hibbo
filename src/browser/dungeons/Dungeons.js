@@ -127,10 +127,10 @@ return (
                 <div className="cadre-menu">
                     <div className="cadre-menu-div">
                         <ul className="menu-fixe">
-                            <li><a href="#dungeons">Dungeons</a></li>
-                            <li><a href="#personnage">Personnage</a></li>
-                            <li><a href="#skill">Compétences</a></li>
-                            <li><a href="#option">Options</a></li>
+                            <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
+                            <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
+                            <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
+                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
                         </ul>
                     </div>
                 </div>
