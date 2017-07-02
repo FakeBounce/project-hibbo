@@ -24,6 +24,8 @@ import SignIn from '../auth/SignInPage';
 import Todos from '../todos/TodosPage';
 import Map from '../map/MapPage';
 import Dungeons from '../dungeons/DungeonsPage';
+import Editor from '../editor/EditorPage';
+
 
 // v4-alpha.getbootstrap.com/getting-started/introduction/#starter-template
 const bootstrap4Metas: any = [
@@ -47,6 +49,7 @@ let App = ({ currentLocale, currentTheme }) => (
       <Match exactly pattern="/" component={SignIn} />
       <Match authorized pattern="/game" component={Dungeons} />
       <Match pattern="/map" component={Map} />
+      <Match pattern="/editor" component={Editor} />
       <Miss component={NotFound} />
     </ContainerApp>
   </ThemeProvider>

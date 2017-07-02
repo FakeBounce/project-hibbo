@@ -17,13 +17,13 @@ const Maptiles = ({ maptiles }) => {
     }
 
     const list = maptiles
-        .toList()
+        .toList();
 
     return (
         <Block>
             {list.map(maptile =>
                 <Flex key={maptile.id}>
-                    <Maptile
+                    <MapTile
                         maptile={maptile}
                     />
                 </Flex>
@@ -37,4 +37,4 @@ Maptiles.propTypes = {
 };
 export default connect(state => ({
     maptiles: state.maptiles.map,
-}), { })(Maptiles);
+}), { })(MapTiles);

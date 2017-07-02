@@ -35,8 +35,9 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
     }
     if(!dviewer)
     {
-        LoadViewer(viewer);}
-        else  {
+        LoadViewer(viewer);
+    }
+    else  {
         if(dungeonsOP)
         {
             let dungeon;
@@ -61,13 +62,15 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
-            else {
+            else
+            {
                 if(viewer && !viewer.active_dungeon)
                 {
                     preLoadActiveDungeon(viewer);
                 }
                 dungeonActive = false;
             }
+
         }
     }
 
@@ -99,6 +102,14 @@ let Dungeons = ({ loaded, dungeons,dungeonsOP,preLoadActiveDungeon,LoadViewer, l
                     : <Text>Il n'y a pas encore de donjons.</Text>
             : <Text>Veuillez vous connecter</Text>
         }
+        <div className="one-level">
+            <div className="choose-level" >
+                <span>+</span>
+            </div>
+            <Text>
+                <a href="http://localhost:3000/editor">EDITOR</a>
+            </Text>
+        </div>
     </View>
     );
 };

@@ -10,6 +10,8 @@ import users from './users/reducer';
 import maptiles from './maptiles/reducer';
 import dungeons from './dungeons/reducer';
 import worldmap from './worldmap/reducer';
+import editor from './editor/reducer';
+
 
 import { FIREBASE_ON_AUTH } from '../common/lib/redux-firebase/actions';
 import { combineReducers } from 'redux';
@@ -49,6 +51,7 @@ const configureReducer = (initialState: Object) => {
     todos,
     users,
     worldmap,
+    editor,
   });
 
   // The power of higher-order reducers, http://slides.com/omnidan/hor

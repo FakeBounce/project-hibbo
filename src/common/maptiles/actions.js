@@ -126,8 +126,20 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   // [`typeDungeons/${id}`]: { id: id, name : `Practice`,description : `Training dungeon`, idMap1: `603414e3-d8fc-4b3f-ac56-376160eb7958`},
   //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
+    firebase.update({
+        [`monsters/${id}`]: {
+                id:id,
+                image:"/assets/images/monsters/remove_monster_tile.png",
+                damage:0,
+                health:0,
+                maxhealth:0,
+                name:"Remove Monster",
+                type:"remove",
+                move: 0,
+                range: 0
+            },});
   //ADD FAKE MAP
-  firebase.update({
+  /*firebase.update({
       [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
           id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
           monsters : {
@@ -165,7 +177,7 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   0: {
                       completed: false,
                       id: id1,
-                      image: "casegrass",
+                      image: "/assets/images/grass.png",
                       title: "forest",
                       type: "walkable",
                       character: {
@@ -179,7 +191,7 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   1: {
                       completed: false,
                       id: id2,
-                      image: "casegrass",
+                      image: "/assets/images/grass.png",
                       title: "forest",
                       type: "walkable",
                       character: {
@@ -197,49 +209,49 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                   2: {
                       completed: false,
                       id: id3,
-                      image: "caseforest",
+                      image: "/assets/images/forest.png",
                       title: "forest"
                   },
                   3: {
                     completed: false,
                     id: id4,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   4: {
                     completed: false,
                     id: id5,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   5: {
                     completed: false,
                     id: id6,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   6: {
                     completed: false,
                     id: id7,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   7: {
                     completed: false,
                     id: id8,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   8: {
                     completed: false,
                     id: id9,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   },
                   9: {
                     completed: false,
                     id: id10,
-                    image: "caseforest",
+                    image: "/assets/images/forest.png",
                     title: "forest"
                   }
               },
@@ -247,63 +259,63 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 0: {
                   completed: false,
                   id: id11,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest"
                 },
                 1: {
                   completed: false,
                   id: id12,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest"
                 },
                 2: {
                   completed: false,
                   id: id13,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 3: {
                   completed: false,
                   id: id14,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 4: {
                   completed: false,
                   id: id15,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 5: {
                   completed: false,
                   id: id16,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 6: {
                   completed: false,
                   id: id17,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 7: {
                   completed: false,
                   id: id18,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 8: {
                   completed: false,
                   id: id19,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 9: {
                   completed: false,
                   id: id20,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 }
               },
@@ -311,63 +323,63 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 0: {
                   completed: false,
                   id: id21,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest",
                 },
                 1: {
                   completed: false,
                   id: id22,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest",
                 },
                 2: {
                   completed: false,
                   id: id23,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 3: {
                   completed: false,
                   id: id24,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 4: {
                   completed: false,
                   id: id25,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 5: {
                   completed: false,
                   id: id26,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 6: {
                   completed: false,
                   id: id27,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 7: {
                   completed: false,
                   id: id28,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 8: {
                   completed: false,
                   id: id29,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 9: {
                   completed: false,
                   id: id30,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 }
               },
@@ -375,14 +387,14 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 0: {
                   completed: false,
                   id: id31,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest"
                 },
                 1: {
                   completed: false,
                   id: id32,
-                  image: "casegrass",
+                  image: "/assets/images/grass.png",
                     type: "walkable",
                   title: "forest",
                   character: {
@@ -400,49 +412,49 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 2: {
                   completed: false,
                   id: id33,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 3: {
                   completed: false,
                   id: id34,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 4: {
                   completed: false,
                   id: id35,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 5: {
                   completed: false,
                   id: id36,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 6: {
                   completed: false,
                   id: id37,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 7: {
                   completed: false,
                   id: id38,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 8: {
                   completed: false,
                   id: id39,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 },
                 9: {
                   completed: false,
                   id: id40,
-                  image: "caseforest",
+                  image: "/assets/images/forest.png",
                   title: "forest"
                 }
               },
@@ -450,63 +462,63 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
               0: {
                 completed: false,
                 id: id41,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id42,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               2: {
                 completed: false,
                 id: id43,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               3: {
                 completed: false,
                 id: id44,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               4: {
                 completed: false,
                 id: id45,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               5: {
                 completed: false,
                 id: id46,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               6: {
                 completed: false,
                 id: id47,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               7: {
                 completed: false,
                 id: id48,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               8: {
                 completed: false,
                 id: id49,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               9: {
                 completed: false,
                 id: id50,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               }
             },
@@ -514,63 +526,63 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
               0: {
                 completed: false,
                 id: id51,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id52,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               2: {
                 completed: false,
                 id: id53,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               3: {
                 completed: false,
                 id: id54,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               4: {
                 completed: false,
                 id: id55,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               5: {
                 completed: false,
                 id: id56,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               6: {
                 completed: false,
                 id: id57,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               7: {
                 completed: false,
                 id: id58,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               8: {
                 completed: false,
                 id: id59,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               9: {
                 completed: false,
                 id: id60,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               }
             },
@@ -578,63 +590,63 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
               0: {
                 completed: false,
                 id: id61,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id62,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               2: {
                 completed: false,
                 id: id63,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               3: {
                 completed: false,
                 id: id64,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               4: {
                 completed: false,
                 id: id65,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               5: {
                 completed: false,
                 id: id66,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               6: {
                 completed: false,
                 id: id67,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               7: {
                 completed: false,
                 id: id68,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               8: {
                 completed: false,
                 id: id69,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               9: {
                 completed: false,
                 id: id70,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               }
             },
@@ -642,69 +654,69 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
               0: {
                 completed: false,
                 id: id71,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               1: {
                 completed: false,
                 id: id72,
-                image: "casegrass",
+                image: "/assets/images/grass.png",
                   type: "walkable",
                 title: "forest"
               },
               2: {
                 completed: false,
                 id: id73,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               3: {
                 completed: false,
                 id: id74,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               4: {
                 completed: false,
                 id: id75,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               5: {
                 completed: false,
                 id: id76,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               6: {
                 completed: false,
                 id: id77,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               7: {
                 completed: false,
                 id: id78,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               8: {
                 completed: false,
                 id: id79,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               },
               9: {
                 completed: false,
                 id: id80,
-                image: "caseforest",
+                image: "/assets/images/forest.png",
                 title: "forest"
               }
             }
           }
       }});
-
+*/
 
   //ADD FAKE SKILLS
   // firebase.update({
