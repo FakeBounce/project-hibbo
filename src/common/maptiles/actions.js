@@ -160,585 +160,598 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   // [`typeDungeons/${id}`]: { id: id, name : `Practice`,description : `Training dungeon`, idMap1: `603414e3-d8fc-4b3f-ac56-376160eb7958`},
   //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},
 
+    firebase.update({
+        [`monsters/${id}`]: {
+                id:id,
+                image:"/assets/images/monsters/remove_monster_tile.png",
+                damage:0,
+                health:0,
+                maxhealth:0,
+                name:"Remove Monster",
+                type:"remove",
+                move: 0,
+                range: 0
+            },});
   //ADD FAKE MAP
-  // firebase.update({
-  //     [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
-  //         id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
-  //         monsters : {
-  //             0: {
-  //                 image:"/assets/images/monsters/Warrior.png",
-  //                 damage:250,
-  //                 health:400,
-  //                 maxhealth:400,
-  //                 name:"Warrior",
-  //                 type:"pnj",
-  //                 row: 0,
-  //                 col: 1,
-  //                 move: 1,
-  //                 range: 1,
-  //                 is_attacking: false,
-  //                 is_moving: false,
-  //                 number:0,
-  //             },
-  //             1: {
-  //                 image:"/assets/images/monsters/Warrior.png",
-  //                 damage:250,
-  //                 health:400,
-  //                 maxhealth:400,
-  //                 name:"Warrior",
-  //                 type:"pnj",
-  //                 row: 3,
-  //                 col: 1,
-  //                 move: 1,
-  //                 range: 1,
-  //                 number:1,
-  //             }
-  //         },
-  //         maptiles: {
-  //             0: {
-  //                 0: {
-  //                     completed: false,
-  //                     id: id1,
-  //                     image: "casegrass",
-  //                     title: "forest",
-  //                     type: "walkable",
-  //                     character: {
-  //                         image:"/assets/images/classes/gface.png",
-  //                         damage:100,
-  //                         health:15000,
-  //                         name:"Warrior",
-  //                         type:"pj"
-  //                     }
-  //                 },
-  //                 1: {
-  //                     completed: false,
-  //                     id: id2,
-  //                     image: "casegrass",
-  //                     title: "forest",
-  //                     type: "walkable",
-  //                     character: {
-  //                         image:"/assets/images/monsters/Warrior.png",
-  //                         damage:250,
-  //                         health:400,
-  //                         maxhealth:400,
-  //                         name:"Warrior",
-  //                         type:"pnj",
-  //                         move: 1,
-  //                         range: 1,
-  //                         number:0
-  //                     }
-  //                 },
-  //                 2: {
-  //                     completed: false,
-  //                     id: id3,
-  //                     image: "caseforest",
-  //                     title: "forest"
-  //                 },
-  //                 3: {
-  //                   completed: false,
-  //                   id: id4,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 4: {
-  //                   completed: false,
-  //                   id: id5,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 5: {
-  //                   completed: false,
-  //                   id: id6,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 6: {
-  //                   completed: false,
-  //                   id: id7,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 7: {
-  //                   completed: false,
-  //                   id: id8,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 8: {
-  //                   completed: false,
-  //                   id: id9,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 },
-  //                 9: {
-  //                   completed: false,
-  //                   id: id10,
-  //                   image: "caseforest",
-  //                   title: "forest"
-  //                 }
-  //             },
-  //             1: {
-  //               0: {
-  //                 completed: false,
-  //                 id: id11,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest"
-  //               },
-  //               1: {
-  //                 completed: false,
-  //                 id: id12,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest"
-  //               },
-  //               2: {
-  //                 completed: false,
-  //                 id: id13,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               3: {
-  //                 completed: false,
-  //                 id: id14,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               4: {
-  //                 completed: false,
-  //                 id: id15,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               5: {
-  //                 completed: false,
-  //                 id: id16,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               6: {
-  //                 completed: false,
-  //                 id: id17,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               7: {
-  //                 completed: false,
-  //                 id: id18,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               8: {
-  //                 completed: false,
-  //                 id: id19,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               9: {
-  //                 completed: false,
-  //                 id: id20,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               }
-  //             },
-  //             2: {
-  //               0: {
-  //                 completed: false,
-  //                 id: id21,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest",
-  //               },
-  //               1: {
-  //                 completed: false,
-  //                 id: id22,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest",
-  //               },
-  //               2: {
-  //                 completed: false,
-  //                 id: id23,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               3: {
-  //                 completed: false,
-  //                 id: id24,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               4: {
-  //                 completed: false,
-  //                 id: id25,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               5: {
-  //                 completed: false,
-  //                 id: id26,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               6: {
-  //                 completed: false,
-  //                 id: id27,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               7: {
-  //                 completed: false,
-  //                 id: id28,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               8: {
-  //                 completed: false,
-  //                 id: id29,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               9: {
-  //                 completed: false,
-  //                 id: id30,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               }
-  //             },
-  //             3: {
-  //               0: {
-  //                 completed: false,
-  //                 id: id31,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest"
-  //               },
-  //               1: {
-  //                 completed: false,
-  //                 id: id32,
-  //                 image: "casegrass",
-  //                   type: "walkable",
-  //                 title: "forest",
-  //                 character: {
-  //                     image:"/assets/images/monsters/Warrior.png",
-  //                     damage:250,
-  //                     health:400,
-  //                     maxhealth:400,
-  //                     name:"Warrior",
-  //                     type:"pnj",
-  //                     move: 1,
-  //                     range: 1,
-  //                     number:1
-  //                 }
-  //               },
-  //               2: {
-  //                 completed: false,
-  //                 id: id33,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               3: {
-  //                 completed: false,
-  //                 id: id34,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               4: {
-  //                 completed: false,
-  //                 id: id35,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               5: {
-  //                 completed: false,
-  //                 id: id36,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               6: {
-  //                 completed: false,
-  //                 id: id37,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               7: {
-  //                 completed: false,
-  //                 id: id38,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               8: {
-  //                 completed: false,
-  //                 id: id39,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               },
-  //               9: {
-  //                 completed: false,
-  //                 id: id40,
-  //                 image: "caseforest",
-  //                 title: "forest"
-  //               }
-  //             },
-  //           4: {
-  //             0: {
-  //               completed: false,
-  //               id: id41,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             1: {
-  //               completed: false,
-  //               id: id42,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             2: {
-  //               completed: false,
-  //               id: id43,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             3: {
-  //               completed: false,
-  //               id: id44,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             4: {
-  //               completed: false,
-  //               id: id45,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             5: {
-  //               completed: false,
-  //               id: id46,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             6: {
-  //               completed: false,
-  //               id: id47,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             7: {
-  //               completed: false,
-  //               id: id48,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             8: {
-  //               completed: false,
-  //               id: id49,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             9: {
-  //               completed: false,
-  //               id: id50,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             }
-  //           },
-  //           5: {
-  //             0: {
-  //               completed: false,
-  //               id: id51,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             1: {
-  //               completed: false,
-  //               id: id52,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             2: {
-  //               completed: false,
-  //               id: id53,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             3: {
-  //               completed: false,
-  //               id: id54,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             4: {
-  //               completed: false,
-  //               id: id55,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             5: {
-  //               completed: false,
-  //               id: id56,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             6: {
-  //               completed: false,
-  //               id: id57,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             7: {
-  //               completed: false,
-  //               id: id58,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             8: {
-  //               completed: false,
-  //               id: id59,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             9: {
-  //               completed: false,
-  //               id: id60,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             }
-  //           },
-  //           6: {
-  //             0: {
-  //               completed: false,
-  //               id: id61,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             1: {
-  //               completed: false,
-  //               id: id62,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             2: {
-  //               completed: false,
-  //               id: id63,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             3: {
-  //               completed: false,
-  //               id: id64,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             4: {
-  //               completed: false,
-  //               id: id65,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             5: {
-  //               completed: false,
-  //               id: id66,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             6: {
-  //               completed: false,
-  //               id: id67,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             7: {
-  //               completed: false,
-  //               id: id68,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             8: {
-  //               completed: false,
-  //               id: id69,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             9: {
-  //               completed: false,
-  //               id: id70,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             }
-  //           },
-  //           7:{
-  //             0: {
-  //               completed: false,
-  //               id: id71,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             1: {
-  //               completed: false,
-  //               id: id72,
-  //               image: "casegrass",
-  //                 type: "walkable",
-  //               title: "forest"
-  //             },
-  //             2: {
-  //               completed: false,
-  //               id: id73,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             3: {
-  //               completed: false,
-  //               id: id74,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             4: {
-  //               completed: false,
-  //               id: id75,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             5: {
-  //               completed: false,
-  //               id: id76,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             6: {
-  //               completed: false,
-  //               id: id77,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             7: {
-  //               completed: false,
-  //               id: id78,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             8: {
-  //               completed: false,
-  //               id: id79,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             },
-  //             9: {
-  //               completed: false,
-  //               id: id80,
-  //               image: "caseforest",
-  //               title: "forest"
-  //             }
-  //           }
-  //         }
-  //     }});
 
+  /*firebase.update({
+      [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
+          id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,
+          monsters : {
+              0: {
+                  image:"/assets/images/monsters/Warrior.png",
+                  damage:250,
+                  health:400,
+                  maxhealth:400,
+                  name:"Warrior",
+                  type:"pnj",
+                  row: 0,
+                  col: 1,
+                  move: 1,
+                  range: 1,
+                  is_attacking: false,
+                  is_moving: false,
+                  number:0,
+              },
+              1: {
+                  image:"/assets/images/monsters/Warrior.png",
+                  damage:250,
+                  health:400,
+                  maxhealth:400,
+                  name:"Warrior",
+                  type:"pnj",
+                  row: 3,
+                  col: 1,
+                  move: 1,
+                  range: 1,
+                  number:1,
+              }
+          },
+          maptiles: {
+              0: {
+                  0: {
+                      completed: false,
+                      id: id1,
+                      image: "/assets/images/grass.png",
+                      title: "forest",
+                      type: "walkable",
+                      character: {
+                          image:"/assets/images/classes/gface.png",
+                          damage:100,
+                          health:15000,
+                          name:"Warrior",
+                          type:"pj"
+                      }
+                  },
+                  1: {
+                      completed: false,
+                      id: id2,
+                      image: "/assets/images/grass.png",
+                      title: "forest",
+                      type: "walkable",
+                      character: {
+                          image:"/assets/images/monsters/Warrior.png",
+                          damage:250,
+                          health:400,
+                          maxhealth:400,
+                          name:"Warrior",
+                          type:"pnj",
+                          move: 1,
+                          range: 1,
+                          number:0
+                      }
+                  },
+                  2: {
+                      completed: false,
+                      id: id3,
+                      image: "/assets/images/forest.png",
+                      title: "forest"
+                  },
+                  3: {
+                    completed: false,
+                    id: id4,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  4: {
+                    completed: false,
+                    id: id5,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  5: {
+                    completed: false,
+                    id: id6,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  6: {
+                    completed: false,
+                    id: id7,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  7: {
+                    completed: false,
+                    id: id8,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  8: {
+                    completed: false,
+                    id: id9,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  },
+                  9: {
+                    completed: false,
+                    id: id10,
+                    image: "/assets/images/forest.png",
+                    title: "forest"
+                  }
+              },
+              1: {
+                0: {
+                  completed: false,
+                  id: id11,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest"
+                },
+                1: {
+                  completed: false,
+                  id: id12,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest"
+                },
+                2: {
+                  completed: false,
+                  id: id13,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                3: {
+                  completed: false,
+                  id: id14,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                4: {
+                  completed: false,
+                  id: id15,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                5: {
+                  completed: false,
+                  id: id16,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                6: {
+                  completed: false,
+                  id: id17,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                7: {
+                  completed: false,
+                  id: id18,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                8: {
+                  completed: false,
+                  id: id19,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                9: {
+                  completed: false,
+                  id: id20,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                }
+              },
+              2: {
+                0: {
+                  completed: false,
+                  id: id21,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest",
+                },
+                1: {
+                  completed: false,
+                  id: id22,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest",
+                },
+                2: {
+                  completed: false,
+                  id: id23,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                3: {
+                  completed: false,
+                  id: id24,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                4: {
+                  completed: false,
+                  id: id25,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                5: {
+                  completed: false,
+                  id: id26,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                6: {
+                  completed: false,
+                  id: id27,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                7: {
+                  completed: false,
+                  id: id28,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                8: {
+                  completed: false,
+                  id: id29,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                9: {
+                  completed: false,
+                  id: id30,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                }
+              },
+              3: {
+                0: {
+                  completed: false,
+                  id: id31,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest"
+                },
+                1: {
+                  completed: false,
+                  id: id32,
+                  image: "/assets/images/grass.png",
+                    type: "walkable",
+                  title: "forest",
+                  character: {
+                      image:"/assets/images/monsters/Warrior.png",
+                      damage:250,
+                      health:400,
+                      maxhealth:400,
+                      name:"Warrior",
+                      type:"pnj",
+                      move: 1,
+                      range: 1,
+                      number:1
+                  }
+                },
+                2: {
+                  completed: false,
+                  id: id33,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                3: {
+                  completed: false,
+                  id: id34,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                4: {
+                  completed: false,
+                  id: id35,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                5: {
+                  completed: false,
+                  id: id36,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                6: {
+                  completed: false,
+                  id: id37,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                7: {
+                  completed: false,
+                  id: id38,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                8: {
+                  completed: false,
+                  id: id39,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                },
+                9: {
+                  completed: false,
+                  id: id40,
+                  image: "/assets/images/forest.png",
+                  title: "forest"
+                }
+              },
+            4: {
+              0: {
+                completed: false,
+                id: id41,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              1: {
+                completed: false,
+                id: id42,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              2: {
+                completed: false,
+                id: id43,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              3: {
+                completed: false,
+                id: id44,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              4: {
+                completed: false,
+                id: id45,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              5: {
+                completed: false,
+                id: id46,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              6: {
+                completed: false,
+                id: id47,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              7: {
+                completed: false,
+                id: id48,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              8: {
+                completed: false,
+                id: id49,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              9: {
+                completed: false,
+                id: id50,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              }
+            },
+            5: {
+              0: {
+                completed: false,
+                id: id51,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              1: {
+                completed: false,
+                id: id52,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              2: {
+                completed: false,
+                id: id53,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              3: {
+                completed: false,
+                id: id54,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              4: {
+                completed: false,
+                id: id55,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              5: {
+                completed: false,
+                id: id56,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              6: {
+                completed: false,
+                id: id57,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              7: {
+                completed: false,
+                id: id58,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              8: {
+                completed: false,
+                id: id59,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              9: {
+                completed: false,
+                id: id60,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              }
+            },
+            6: {
+              0: {
+                completed: false,
+                id: id61,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              1: {
+                completed: false,
+                id: id62,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              2: {
+                completed: false,
+                id: id63,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              3: {
+                completed: false,
+                id: id64,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              4: {
+                completed: false,
+                id: id65,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              5: {
+                completed: false,
+                id: id66,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              6: {
+                completed: false,
+                id: id67,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              7: {
+                completed: false,
+                id: id68,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              8: {
+                completed: false,
+                id: id69,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              9: {
+                completed: false,
+                id: id70,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              }
+            },
+            7:{
+              0: {
+                completed: false,
+                id: id71,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              1: {
+                completed: false,
+                id: id72,
+                image: "/assets/images/grass.png",
+                  type: "walkable",
+                title: "forest"
+              },
+              2: {
+                completed: false,
+                id: id73,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              3: {
+                completed: false,
+                id: id74,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              4: {
+                completed: false,
+                id: id75,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              5: {
+                completed: false,
+                id: id76,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              6: {
+                completed: false,
+                id: id77,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              7: {
+                completed: false,
+                id: id78,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              8: {
+                completed: false,
+                id: id79,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              },
+              9: {
+                completed: false,
+                id: id80,
+                image: "/assets/images/forest.png",
+                title: "forest"
+              }
+            }
+          }
+      }});
+*/
 
   //ADD FAKE SKILLS
   // firebase.update({

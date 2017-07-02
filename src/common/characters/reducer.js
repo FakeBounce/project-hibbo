@@ -45,7 +45,6 @@ const maptilesReducer = (state = new State(), action) => {
 
         case actions.FIREBASE_SAVE_MAPTILE: {
             const maptile = new MapTile(action.payload);
-            console.log(action.payload);
             return state;
         }
 

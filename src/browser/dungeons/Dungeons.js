@@ -76,13 +76,16 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
-            else {
-                if(dviewer && !viewer.active_dungeon)
+
+            else
+            {
+                if(viewer && !viewer.active_dungeon)
                 {
                     preLoadActiveDungeon(dviewer);
                 }
                 dungeonActive = false;
             }
+
         }
     }
 
@@ -211,6 +214,7 @@ Dungeons.propTypes = {
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
+    host: React.PropTypes.String,
 };
 
 Dungeons = firebase((database, props) => {

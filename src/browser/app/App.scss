@@ -1088,7 +1088,9 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 0px;}
 }
 
-
+.selected_tile {
+  border: 2px solid red;
+}
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css
 .cadre-gauche-max{

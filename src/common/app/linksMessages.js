@@ -54,6 +54,11 @@ const LinkMessages = defineMessages({
     defaultMessage: 'New dungeon',
     id: 'app.links.dungeon',
   },
+  editor: {
+      defaultMessage: 'Editor',
+      id: 'app.links.editor',
+  },
+
 });
 
 export default LinkMessages;

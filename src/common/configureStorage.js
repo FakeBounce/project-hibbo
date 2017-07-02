@@ -13,6 +13,8 @@ const stateToSave = [
   ['todos'],['maptiles'],
   ['dungeons'],
   ['users', 'viewer'],
+  ['editor'],
+
 ];
 
 const isReactNative =
