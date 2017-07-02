@@ -208,15 +208,9 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.END_TURN: {
             let payload = action.payload;
-            let test = state.dungeonsOP;
-            test.set(state.viewer.id,payload);
-            // test.map(t => {
-            //
-            // });
-            // test.map => map.set(state.viewer.id,payload)
             let vl = state.verifloaded;
             vl++;
-            return state.set('dungeonsOP',test)
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
                 .set('verifloaded',vl);
         }
 

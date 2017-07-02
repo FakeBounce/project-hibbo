@@ -87,6 +87,7 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
                     <span className="titre-map">{dungeon.description}</span>
                     <span className="error-map">{error_msg}</span>
                     <button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button>
+                    <button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Annuler le donjon</button>
                 </div>
             </div>
       </View>

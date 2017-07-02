@@ -11,12 +11,6 @@ import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
 
-Dungeon.propTypes = {
-    dungeon: React.PropTypes.object.isRequired,
-    loadWorldMap : React.PropTypes.func.isRequired,
-    viewer: React.PropTypes.object,
-};
-
 let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
     var skills_list = '';
@@ -24,7 +18,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let maxhealth = 100;
     let energy = 100;
     let maxenergy = 100;
-    let experience = 500;
+    let experience = 0;
     let maxexperience = 1000;
     let dungeon;
     if(!dviewer)
@@ -147,7 +141,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                     :
                                     dungeons ?
                                         dungeons.map(dungeon =>
-                                            <Dungeon key={dungeon.id} dungeon={dungeon} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                                            <Dungeon key={dungeon.id} dungeon={dungeon}/>
                                         )
                                         : <Text>Il n'y a pas encore de donjons.</Text>
                                 : <Text>Veuillez vous connecter</Text>
@@ -230,7 +224,7 @@ Dungeons = firebase((database, props) => {
     }
     return [
         [DungeonsRef, 'on', 'value', props.LoadDungeons],
-        [WorldMapRef, 'on', 'value', props.ReloadWorldMap],
+        [WorldMapRef, 'off', 'value', props.ReloadWorldMap],
         [ViewerRef, 'on', 'value', props.LoadViewerRef],
         [TutoRef, 'on', 'value', props.LoadTutoRef],
     ];
