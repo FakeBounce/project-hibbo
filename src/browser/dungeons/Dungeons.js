@@ -92,11 +92,16 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             classStep = tutoriel.class;
         }
     }
-    return (
+    var health_percent = (health / 100) * maxhealth;
+    let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
+    var energy_percent = (energy / 100) * maxenergy;
+    let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
+
+return (
     <View className={classStep}>
 
         <div className={classN}>
-         </div>
+        </div>
 
         <Block>{dviewer && tutoriel &&
         <div className="cadre-tutoriel">
@@ -162,18 +167,18 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             <div className="cadre-bas-max">
                 <div>
                     <div className="infobar-mana">
-                        <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='90' aria-valuemin='0' aria-valuemax='100' style='width:60%;'></div></div>"  }}>
+                        <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
                         </div>
                     </div>
                     <div className="infobar-life">
-                        <div className="infobar-life-div " dangerouslySetInnerHTML={{__html: "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='90' aria-valuemin='0' aria-valuemax='100' style='width:60%;'></div></div>"  }}>
+                        <div className="infobar-life-div " dangerouslySetInnerHTML={{__html: healthbar }}>
                         </div>
                     </div>
                 </div>
                 <div className="infobar">
                     <div>
                         <div className="infobar-experience">
-                            <span> XP : 500 / 1000</span>
+                            <span> XP : {experience} / {maxexperience}</span>
                         </div>
                         <div className="infobar-experience-progress">
                             <progress className="progressMore" max={maxexperience} value={experience}></progress>
@@ -194,7 +199,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             </div>
         </View>
     </View>
-    );
+);
 };
 
 Dungeons.propTypes = {
