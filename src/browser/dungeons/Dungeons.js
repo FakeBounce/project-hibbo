@@ -161,7 +161,11 @@ let Dungeons = ({ tutoriel, loaded, dungeons,dungeonsOP,preLoadActiveDungeon,can
                         Perso
                     </div>
                     <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
-                    <div className="cmenu cadre-option"><a name="option" id="option"></a>Options</div>
+                    <div className="cmenu cadre-option">
+                        <a name="option" id="option"></a>
+                        Options
+                        <SignOut/>
+                    </div>
                 </div>
             </div>
             <div className="cadre-bas-max">

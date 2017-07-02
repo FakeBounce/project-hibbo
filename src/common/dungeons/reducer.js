@@ -193,11 +193,7 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.MONSTER_TURN: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
-        }
-
-        case actions.CHANGE_DIV: {
-            return state.set("division", action.payload);
+            return state.update('dungeonsOP', map => map.set(state.viewer.id, payload));
         }
 
         default:

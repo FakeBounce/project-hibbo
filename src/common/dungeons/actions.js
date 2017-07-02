@@ -31,7 +31,6 @@ export const ATTACK_MONSTER = 'ATTACK_MONSTER';
 export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
-export const CHANGE_DIV = 'CHANGE_DIV';
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -696,10 +695,3 @@ function jsonConcat(o1, o2) {
     return o1;
 }
 
-export const clickMenu = (div) => {
-    console.log(div);
-    return {
-        type: CHANGE_DIV,
-        payload: div
-    }
-};
