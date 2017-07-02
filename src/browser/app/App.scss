@@ -310,6 +310,15 @@ background-attachment:fixed;
   position: relative;
 }
 
+.personnage-picture{
+  height: 102px;
+  width: 102px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-top: 6px;
+  margin-left: 5px;
+}
+
 .personnage-info{
   margin-top: 35px;
   float: left;
