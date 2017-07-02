@@ -115,6 +115,7 @@ background-attachment:fixed;
 .menu-fixe{
   -webkit-margin-before: 8px;
   -webkit-padding-start: 0px;
+  -webkit-margin-after: 0px;
 }
 
 .menu-fixe li{
@@ -123,11 +124,19 @@ background-attachment:fixed;
   text-align: center;
   list-style: none;
   cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+}
 
+.menu-fixe li a{
+  color: #fab186;
+  text-decoration: none;
 }
 
 .btn-menu{
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
+
 }
 
 .titre-error{
@@ -1160,7 +1169,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-menu-div{
   padding-left: 60px;
   padding-right: 70px;
-  padding-top: 25px;
+  padding-top: 5px;
 }
 
 .cadre-droite-bas{
