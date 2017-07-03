@@ -128,7 +128,7 @@ return (
                         Pseudo
                     </div>
                     <div className="personnage-info-class">
-                        Class
+                        {dviewer.characters[0].name}
                     </div>
                 </div>
             </div>
