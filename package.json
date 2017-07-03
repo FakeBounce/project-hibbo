@@ -97,7 +97,7 @@
       "react-history": "0.13.3",
       "react-intl": "^2.1.2",
       "react-native": "^0.33.0",
- +    "react-native-animatable": "^0.6.1",
+      "react-native-animatable": "^0.6.1",
       "react-native-fbsdk": "^0.3.0",
       "react-native-i18n": "^0.1.1",
       "react-native-side-menu": "^0.20.0",
