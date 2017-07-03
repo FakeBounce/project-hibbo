@@ -3,21 +3,6 @@
   "private": true,
   "//": "https://github.com/neosis91/project-hibbo",
   "scripts": {
-    "ava": "ava",
-    "ava:watch": "ava --watch",
-    "build": "gulp build",
-    "flow": "flow",
-    "install": "gulp native-fix",
-    "postinstall": "gulp native && gulp build --production",
-    "start": "gulp",
-    "test": "gulp test && ava"
-  },
-}
-{
-  "name": "Hibbo",
-  "private": true,
-  "//": "https://github.com/neosis91/project-hibbo",
-  "scripts": {
     "build": "gulp build --production",
     "flow": "flow",
     "heroku-postbuild": "gulp build --production",
