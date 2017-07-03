@@ -65,15 +65,18 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
 
             if(dungeon)
             {
-                maxhealth = dungeon.user.default_character.maxhealth;
-                health = dungeon.user.character.health;
-                energy = dungeon.user.character.energy;
-                maxenergy = dungeon.user.default_character.maxenergy;
-                experience = dungeon.user.character.experience;
-                maxexperience = dungeon.user.default_character.maxexperience;
+                if(dungeon.user.default_character)
+                {
+                    maxhealth = dungeon.user.default_character.maxhealth;
+                    health = dungeon.user.character.health;
+                    energy = dungeon.user.character.energy;
+                    maxenergy = dungeon.user.default_character.maxenergy;
+                    experience = dungeon.user.character.experience;
+                    maxexperience = dungeon.user.default_character.maxexperience;
+                }
                 dungeonActive = true;
 
-                if(dviewer)
+                if(dviewer && typeof dungeon.dungeon !== "undefined")
                 {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
@@ -221,6 +224,7 @@ Dungeons.propTypes = {
     LoadStep : React.PropTypes.func.isRequired,
     preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
+    verifloaded: React.PropTypes.number,
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,

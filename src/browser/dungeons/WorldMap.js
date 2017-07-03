@@ -98,6 +98,7 @@ WorldMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
     viewer: React.PropTypes.object,
+    verifloaded: React.PropTypes.number,
     dungeonsOP: React.PropTypes.object,
 };
 

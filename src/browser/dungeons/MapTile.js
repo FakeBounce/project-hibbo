@@ -84,6 +84,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
+    verifloaded: React.PropTypes.number,
     moveCharacter: React.PropTypes.func.isRequired,
     movingCharacter: React.PropTypes.func.isRequired,
     dungeonsOP: React.PropTypes.object,

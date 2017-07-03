@@ -96,6 +96,7 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,MonsterMove,c
 
 Character.propTypes = {
     character: React.PropTypes.object.isRequired,
+    verifloaded: React.PropTypes.number,
     attackMonster: React.PropTypes.func.isRequired,
     moveCharacter: React.PropTypes.func.isRequired
 };

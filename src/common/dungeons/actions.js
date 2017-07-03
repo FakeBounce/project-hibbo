@@ -191,6 +191,9 @@ export const EndTurn = (dungeon) => ({firebase}) => {
             dungeon.monster_moves = monster_moves;
             dungeon.stop_turn = false;
         }
+        else {
+            dungeon.end_turn = false;
+        }
     }
     else {
         dungeon.end_turn = false;
@@ -250,76 +253,106 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                     var maxrow = monster.row+monster.move;
                     var mincol = monster.col-monster.move;
                     var maxcol = monster.col+monster.move;
+                    var m_row = parseInt(monster.row);
+                    var m_col = parseInt(monster.col);
+                    var can_move = false;
 
-                    if ( range.totalColU > 0)
+                    if ( range.totalColU > 0 && !can_move)
                     {
-                        if (maptiles[monster.row][monster.col - 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col - 1].character === "undefined" || maptiles[monster.row][monster.col - 1].character == null))
+                        if(typeof  maptiles[m_row][m_col - 1] !== "undefined")
                         {
-                            // maptiles[monster.row][monster.col-1].character = monster;
-                            // maptiles[monster.row][monster.col].character = null;
-                            // monster.col = monster.col - 1;
-                            monster.direction = "left";
-                            monster.is_moving = true;
-                            moves.push(
+                            if ((typeof  maptiles[m_row][m_col - 1].character === "undefined" || maptiles[m_row][m_col - 1].character == null))
+                            {
+                                if(maptiles[m_row][m_col - 1].type =="walkable")
                                 {
-                                    "row":monster.row,
-                                    "col":monster.col-1,
+                                    // maptiles[m_row][m_col-1].character = monster;
+                                    // maptiles[m_row][m_col].character = null;
+                                    // m_col = m_col - 1;
+                                    monster.direction = "left";
+                                    monster.is_moving = true;
+                                    moves.push(
+                                        {
+                                            "row":m_row,
+                                            "col":m_col-1,
+                                        }
+                                    );
+                                    can_move = true;
                                 }
-                            );
+                            }
                         }
                     }
-                    else if ( range.totalColU < 0)
+                    if ( range.totalColU < 0&& !can_move)
                     {
-                        if (maptiles[monster.row][monster.col + 1].type =="walkable" && (typeof  maptiles[monster.row][monster.col + 1].character === "undefined" || maptiles[monster.row][monster.col + 1].character == null))
+                        if(typeof  maptiles[m_row][m_col + 1] !== "undefined")
                         {
-                            // maptiles[monster.row][monster.col+1].character = monster;
-                            // maptiles[monster.row][monster.col].character = null;
-                            // monster.col = monster.col + 1;
-                            monster.direction = "right";
-                            monster.is_moving = true;
-                            moves.push(
+                            if ((typeof  maptiles[m_row][m_col + 1].character === "undefined" || maptiles[m_row][m_col + 1].character == null))
+                            {
+                                if(maptiles[m_row][m_col + 1].type =="walkable")
                                 {
-                                    "row":monster.row,
-                                    "col":monster.col+1,
+                                    // maptiles[m_row][m_col+1].character = monster;
+                                    // maptiles[m_row][m_col].character = null;
+                                    // m_col = m_col + 1;
+                                    monster.direction = "right";
+                                    monster.is_moving = true;
+                                    moves.push(
+                                        {
+                                            "row":m_row,
+                                            "col":m_col+1,
+                                        }
+                                    );
+                                    can_move = true;
                                 }
-                            );
+                            }
                         }
                     }
-                    else if ( range.totalRowU > 0)
+                    if ( range.totalRowU > 0&& !can_move)
                     {
-                        if (maptiles[monster.row - 1][monster.col].type =="walkable" && (typeof  maptiles[monster.row - 1][monster.col].character === "undefined" || maptiles[monster.row - 1][monster.col].character == null))
-                        {
-                            // maptiles[monster.row - 1][monster.col].character = monster;
-                            // maptiles[monster.row][monster.col].character = null;
-                            // monster.row = monster.row - 1;
-                            monster.direction = "up";
-                            monster.is_moving = true;
-                            moves.push(
+                        if(typeof  maptiles[m_row - 1][m_col] !== "undefined") {
+                            if ((typeof  maptiles[m_row - 1][m_col].character === "undefined" || maptiles[m_row - 1][m_col].character == null)) {
+
+                                if(maptiles[m_row - 1][m_col].type =="walkable")
                                 {
-                                    "row":monster.row-1,
-                                    "col":monster.col,
+                                    // maptiles[m_row - 1][m_col].character = monster;
+                                    // maptiles[m_row][m_col].character = null;
+                                    // m_row = m_row - 1;
+                                    monster.direction = "up";
+                                    monster.is_moving = true;
+                                    moves.push(
+                                        {
+                                            "row": m_row - 1,
+                                            "col": m_col,
+                                        }
+                                    );
+                                    can_move = true;
                                 }
-                            );
+                            }
                         }
                     }
-                    else if ( range.totalRowU < 0)
+                    if ( range.totalRowU < 0&& !can_move)
                     {
-                        if (maptiles[monster.row + 1][monster.col].type =="walkable" && (typeof  maptiles[monster.row + 1][monster.col].character === "undefined" || maptiles[monster.row + 1][monster.col].character == null))
-                        {
-                            // maptiles[monster.row + 1][monster.col].character = monster;
-                            // maptiles[monster.row][monster.col].character = null;
-                            // monster.row = monster.row + 1;
-                            monster.direction = "down";
-                            monster.is_moving = true;
-                            moves.push(
-                                {
-                                    "row":monster.row+1,
-                                    "col":monster.col,
+                        if(typeof  maptiles[m_row + 1][m_col] !== "undefined") {
+                            if ((typeof  maptiles[m_row + 1][m_col].character === "undefined" || maptiles[m_row + 1][m_col].character == null) )
+                            {
+                                if(maptiles[m_row + 1][m_col].type =="walkable") {
+                                    // maptiles[m_row + 1][m_col].character = monster;
+                                    // maptiles[m_row][m_col].character = null;
+                                    // m_row = m_row + 1;
+                                    monster.direction = "down";
+                                    monster.is_moving = true;
+                                    moves.push(
+                                        {
+                                            "row": m_row + 1,
+                                            "col": m_col,
+                                        }
+                                    );
+                                    can_move = true;
                                 }
-                            );
+                            }
                         }
                     }
                     monster.moves = moves;
+                    console.log('moves : ',moves);
+
                 }
                 dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                 dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -366,13 +399,15 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                 dungeon.monster_info_row = monster.row;
                 dungeon.monster_info_col = monster.col;
                 dungeon.user.character.is_attacked = true;
-                dungeon.user.character.attacked_direction = monster.direction;
                 dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
                 monster.is_attacking = true;
                 monster.can_attack = true;
-
+                var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
+                monster.direction = rg.direction;
+                dungeon.user.character.attacked_direction = rg.direction;
                 dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                 dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+
             }
         }
         else {
@@ -638,7 +673,7 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
         type: CAN_ATTACK_MONSTER,
         payload: dungeon
     }
-}
+};
 
 export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
     if(row != null && col != null)

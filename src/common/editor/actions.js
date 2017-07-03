@@ -199,6 +199,7 @@ export const picktile = (maptile,viewer) =>  ({ firebase }) => {
                     id: maptile.id,
                     image: maptile.image,
                     title : maptile.title,
+                    type : maptile.type,
                 };
                 if(maptile.id)
                 {
@@ -234,7 +235,7 @@ export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
                     damage: monster.damage,
                     health: monster.health,
                     maxhealth: monster.maxhealth,
-                    move: monster.move,
+                    movement: monster.movement,
                     range: monster.range,
                     type: monster.type,
                 };
@@ -290,11 +291,44 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
         if(monster.type == "remove")
         {
+
+            if(typeof worldmap.worldmap.maptiles[row][col].character !== 'undefined' && worldmap.worldmap.monsters)
+            {
+                worldmap.worldmap.monsters.splice(worldmap.worldmap.maptiles[row][col].character.number,1);
+            }
             worldmap.worldmap.maptiles[row][col].character = null;
         }
         else {
-            worldmap.worldmap.maptiles[row][col].character = monster;
-        }
+            var mo = monster;
+            mo.row = row;
+            mo.col = col;
+            if(typeof  worldmap.worldmap.monsters === 'undefined')
+            {
+                worldmap.worldmap.monsters = [];
+            }
+            var is_here = false;
+                worldmap.worldmap.monsters.map(m => {
+               if(parseInt(m.row) == row && parseInt(m.col) == col)
+               {
+                   is_here = m;
+                   return true;
+               }
+            });
+                console.log('is here',is_here);
+                console.log('is too',worldmap.worldmap.maptiles[row][col].character);
+            if(is_here)
+            {
+                console.log('is not pushed',worldmap.worldmap.maptiles[row][col].character);
+                worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
+            }
+            else {
+                console.log('is pushed', worldmap.worldmap.maptiles[row][col].character);
+
+                var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
+                mo.number = testRowIndex;
+            }
+            worldmap.worldmap.maptiles[row][col].character = mo;
+    }
 
         firebase.update({
             [`activeMap/${viewer.id}`]: worldmap,
