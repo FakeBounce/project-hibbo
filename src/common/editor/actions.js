@@ -234,7 +234,7 @@ export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
                     damage: monster.damage,
                     health: monster.health,
                     maxhealth: monster.maxhealth,
-                    move: monster.move,
+                    movement: monster.movement,
                     range: monster.range,
                     type: monster.type,
                 };
@@ -316,6 +316,41 @@ export const ReloadActiveMap = (snap: Object) => {
     return {
         type: RELOAD_ACTIVE_MAP,
         payload: { worldmaps },
+    };
+};
+
+
+export const ActiveMapDungeon = (worldmap) =>  ({ getUid,firebase }) => {
+
+    if(worldmap)
+    {
+        let id = getUid();
+
+        firebase.update({
+            [`dungeons/${id}`]: {id : id,worldmap: worldmap.id, name:worldmap.name, description:""},
+            [`maps/${worldmap.id}/active_dungeon`]: id,
+        });
+
+    }
+
+    return {
+        type: ACTIVE_DUNGEONS,
+        payload: worldmap,
+    };
+};
+export const RemoveMapDungeon = (worldmap) =>  ({firebase }) => {
+
+    if(worldmap)
+    {
+        firebase.update({
+            [`dungeons/${worldmap.active_dungeon}`]: null,
+            [`maps/${worldmap.id}/active_dungeon`]: null,
+        });
+    }
+
+    return {
+        type: REMOVE_DUNGEONS,
+        payload: worldmap,
     };
 };
 

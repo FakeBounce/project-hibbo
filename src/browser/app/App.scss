@@ -97,6 +97,17 @@ background-attachment:fixed;
   position: absolute;
 }
 
+.container_app-editor{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1024px;
+  height: 596px;
+  margin: auto;
+  position: absolute;
+}
+
 .container_app-img{
   bottom: 0;
   left:0;
@@ -109,6 +120,18 @@ background-attachment:fixed;
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
   z-index: 2;
 }
+.container_editor_app-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadreall-2.png") no-repeat;
+  z-index: 2;
+}
 
 // menu fixe
 
@@ -119,6 +142,19 @@ background-attachment:fixed;
 }
 
 .menu-fixe li{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
+.menu-fixe-editor li{
   width: 25%;
   float: left;
   text-align: center;
@@ -1171,10 +1207,21 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 73px;
 }
 
+.cadre-menu-editor{
+  background: url("/assets/images/planche-1.png");
+  width: 1020px;
+  height: 135px;
+}
+
 .cadre-menu-div{
   padding-left: 60px;
   padding-right: 70px;
   padding-top: 5px;
+}
+.cadre-menu-div-editor{
+  padding-left: 310px;
+  padding-right: 30px;
+  padding-top: 25px;
 }
 
 .cadre-droite-bas{
@@ -1188,6 +1235,18 @@ progress[value].progressSkills::-webkit-progress-value {
 .cmenu {
   width: 800px;
   height: 360px;
+
+}
+.cmenu-editor {
+  left: -51px;
+  z-index: -1;
+}
+.cadre-editor{
+  width: 1025px;
+  height: 460px;
+  background-color: #16120F;
+  position: absolute;
+  z-index: 2;
 }
 
 .cadre-gauche-bas{
