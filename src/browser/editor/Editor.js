@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import WorldMap from './Worldmap';
+import WorldMap from './WorldMap';
 import EditorMap from './EditorMap';
 import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading } from '../app/components';
