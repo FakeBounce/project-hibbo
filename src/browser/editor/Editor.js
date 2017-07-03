@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import WorldMap from './Worldmap';
+import WorldMap from './WorldMap';
 import EditorMap from './EditorMap';
 import EditMonster from './EditMonster';
 import EditTile from './EditTile';

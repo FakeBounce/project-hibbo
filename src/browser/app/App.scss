@@ -1235,7 +1235,6 @@ progress[value].progressSkills::-webkit-progress-value {
 .cmenu {
   width: 800px;
   height: 360px;
-
 }
 .cmenu-editor {
   left: -51px;
@@ -1247,6 +1246,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background-color: #16120F;
   position: absolute;
   z-index: 2;
+  text-align: center;
 }
 
 .cadre-gauche-bas{
