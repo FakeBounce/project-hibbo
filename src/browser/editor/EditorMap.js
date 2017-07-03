@@ -129,9 +129,8 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
 
     return (
         <View>
-            <div className="fix-hauteur">
-                <ul className="menu-fixe">
-                    <li>MAP</li>
+            <div className="">
+                <ul className="">
                     <li onClick={() => cancelWorldmap(worldmap)}>EXIT</li>
                     <li onClick={() => saveWorldmap(worldmap)}>SAVE</li>
                 </ul>
@@ -147,9 +146,7 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
                 </div>
 
                 <div className="cadre-droite">
-                    <div className="cadre">
-                        { editor }
-                    </div>
+                    { editor }
                 </div>
             </div>
         </View>
