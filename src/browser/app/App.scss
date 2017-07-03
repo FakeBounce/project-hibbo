@@ -1302,3 +1302,32 @@ progress[value].progressSkills::-webkit-progress-value {
   padding: 4px 10px 8px 10px;
 }
 
+.container-classe{
+  width: 70%;
+  margin: auto;
+}
+
+.classe-choice{
+  width: 33%;
+  height: 500px;
+  cursor:pointer;
+  float:left;
+  text-align: center;
+}
+
+.classe-choice:nth-child(1){
+  height: 400px;
+}
+
+.classe-choice:nth-child(2){
+  height: 500px;
+}
+
+.classe-choice:nth-child(3){
+  height: 400px;
+}
+
+.classe-choice img{
+  height:100%;
+  width: auto;
+}

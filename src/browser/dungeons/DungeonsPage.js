@@ -37,7 +37,9 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer}) => {
         <h1 className="title-hibbo">HIBBO</h1>
             <Block>
                 {dung}
+                <div className="container-classe">
                 {classe_list}
+                </div>
             </Block>
             {classe_list &&
                 <SignOut/>
