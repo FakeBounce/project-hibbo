@@ -80,8 +80,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                             }
                         }
                         cpt++;
-                        console.log('skill_function : ',skill_function);
-                        return (<div><span>{cpt}</span><Image key={skill.id} className={classSkill} onClick={() => skill_function()} src={skill.image}></Image></div>);
+
+                        return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function()} src={skill.image}></Image></div>);
                     })
                 }
                 if(dviewer && typeof dungeon.dungeon !== "undefined")
@@ -205,38 +205,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
-                          <div className="oneSkill">
-                            <span>1</span>
-                            <div className="skills skill1"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>2</span>
-                            <div className="skills skill2"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>3</span>
-                            <div className="skills skill3"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>4</span>
-                            <div className="skills skill4"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>5</span>
-                            <div className="skills skill5"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>6</span>
-                            <div className="skills skill6"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>7</span>
-                            <div className="skills skill7"></div>
-                          </div>
-                          <div className="oneSkill">
-                            <span>8</span>
-                            <div className="skills skill8"></div>
-                          </div>
 
                         </div>
 
