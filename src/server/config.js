@@ -11,31 +11,7 @@ nconf.env('__');
 
 // Remember, never put secrets in the source code. Use environment variables for
 // production or src/common/config.json for development instead.
- if(process.env.NODE_ENV === 'production'){
-    nconf.defaults({
-  appName: require('../../package.json').name,
-  // Use appVersion defined in gulp env task or Heroku dyno metadata.
-  appVersion: process.env.appVersion || process.env.HEROKU_SLUG_COMMIT,
-  defaultLocale: 'en',
-  firebase: {
-    // To get the config, just click Add web app from the overview page.
-    apiKey: 'AIzaSyC2FR1Sd8Of2ecmDJYzAO7n-DdZrNgb5ps',
-    authDomain: 'hibbo-86853.firebaseapp.com',
-    databaseURL: 'https://hibbo-86853.firebaseio.com',
-    storageBucket: 'project-808488257248094054.appspot.com',
-  },
-  googleAnalyticsId: 'UA-XXXXXXX-X',
-  isProduction: process.env.NODE_ENV === 'production',
-  locales: ['en', 'fr'],
-  port: process.env.PORT || 3001,
-  // Enable hot reload on remote device. Note it prevents offline testing,
-  // because it depends on ip.address(), which doesn't work with disabled wifi.
-  // How do we access a website running on localhost from mobile browser?
-  // stackoverflow.com/questions/3132105
-  remoteHotReload: false,
-  sentryUrl: 'https://c994fabb4439485f9e3d49de18a2d459@sentry.io/106204',
-});
-  } else {
+ 
 nconf.defaults({
   appName: require('../../package.json').name,
   // Use appVersion defined in gulp env task or Heroku dyno metadata.
@@ -59,6 +35,5 @@ nconf.defaults({
   remoteHotReload: false,
   sentryUrl: 'https://c994fabb4439485f9e3d49de18a2d459@sentry.io/106204',
 });
-  }
 
 export default nconf.get();
