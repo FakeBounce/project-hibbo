@@ -14,7 +14,7 @@ const SignOut = ({ signOut }, { router }) => {
     setImmediate(signOut);
   };
   return (
-    <View>
+    <View style={{width: '100%'}}>
       <Button style={{
         backgroundColor: 'transparent',
         backgroundImage: 'url("/assets/images/login/logoutbutton.png")',
@@ -24,10 +24,9 @@ const SignOut = ({ signOut }, { router }) => {
         width: '195px',
         color: '#fff',
         boxShadow: 'none',
-        float: 'right',
-        marginRight: '10px',
         textAlign: 'center',
-        fontSize: "16px"
+        fontSize: '16px',
+        margin: '10px auto',
       }} onClick={onClick}>
         <FormattedMessage {...buttonsMessages.signOut} />
       </Button>

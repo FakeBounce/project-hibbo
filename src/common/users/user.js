@@ -5,7 +5,7 @@ const User = Record({
   displayName: '',
   email: '',
   id: '',
-  photoURL: '',
+  photoURL: ''
 }, 'user');
 
 export default User;

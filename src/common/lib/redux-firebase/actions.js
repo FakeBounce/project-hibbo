@@ -97,10 +97,24 @@ const saveUser = user => ({ firebase }) => {
         try {
             return await firebase.database.ref('/users/' + user.id).once('value').then(function(snapshot) {
                 var username = snapshot.val();
+                var tuto = null;
+                if(username){
+                    if(!username.tuto)
+                    {
+                        tuto = 1;
+                    }
+                    else
+                    {
+                        tuto = username.tuto;
+                    }
+                }
+
                 const promise = firebase.update({
                     [`users/${user.id}/displayName`]: json.displayName,
                     [`users/${user.id}/id`]: json.id,
                     [`users/${user.id}/photoURL`]: json.photoURL,
+                    [`users/${user.id}/tuto`]: tuto,
+                    [`users/${user.id}/tuto_loaded`]: false,
                     [`users-emails/${user.id}`]: { email },
                 });
                 return username;

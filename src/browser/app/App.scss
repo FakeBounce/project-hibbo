@@ -57,8 +57,8 @@ background-attachment:fixed;
 }
 
 .case{
-  width:50px;
-  height:50px;
+  width:40px;
+  height:40px;
 }
 
 .caseforest{
@@ -92,32 +92,106 @@ background-attachment:fixed;
   right: 0;
   top: 0;
   width: 1024px;
-  height: 496px;
+  height: 596px;
   margin: auto;
   position: absolute;
+}
+
+.container_app-editor{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1024px;
+  height: 596px;
+  margin: auto;
+  position: absolute;
+}
+
+.container_app-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadreall-1.png") no-repeat;
+  z-index: 2;
+}
+.container_editor_app-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadreall-2.png") no-repeat;
+  z-index: 2;
 }
 
 // menu fixe
 
 .menu-fixe{
-
+  -webkit-margin-before: 8px;
+  -webkit-padding-start: 0px;
+  -webkit-margin-after: 0px;
 }
 
 .menu-fixe li{
-  padding: 10px;
-  background-color: #16120f;
-  width: 214px;
+  width: 25%;
   float: left;
   text-align: center;
   list-style: none;
   cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
+.menu-fixe-editor li{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
 }
 
-.menu-fixe li:hover{
-  background-color: #210009;
+.menu-fixe a{
+  color: #fab186;
+  text-decoration: none;
 }
 
+.btn-menu{
 
+}
+
+.titre-error{
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.titre-map{
+  margin: 0;
+  text-align: center;
+  padding: 5px 0;
+  color: #fff;
+}
+
+.error-map{
+  margin:0;
+  text-align: center;
+}
 
 // login
 
@@ -170,15 +244,30 @@ background-attachment:fixed;
   height: 15px;
 }
 
+.cadre-map-info{
 
+}
 // boutons
 
-.champs-btn-end{
-  width:100%;
-  display: flex;
+.btn-retour{
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border: 0;
+  color: #fff;
+  background-image: url(/assets/images/login/actionbutton.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: contain;
+  height: 39px;
+  width: 140px;
+  box-shadow: none;
+  //margin-left: -180px;
+  //margin-top: 260px;
 }
 
-.btn-retour{
+
+.btn-dungeon{
   box-sizing: border-box;
   font-family: inherit;
   font-size: 16px;
@@ -192,13 +281,17 @@ background-attachment:fixed;
   color: #fff;
   background-color: transparent;
   border-radius: 2px;
-  background-image: url(/assets/images/login/logoutbutton.png);
+  background-image: url(/assets/images/login/dungeonbutton.png);
   background-repeat: no-repeat;
   background-attachment: scroll;
   height: 53px;
   width: 195px;
   box-shadow: none;
   text-align: center;
+}
+
+.btn-dungeon span{
+  line-height: 30px;
 }
 
 // levels
@@ -244,12 +337,37 @@ background-attachment:fixed;
 }
 
 .personnage{
-  background: url(/assets/images/characters/perso1.png) no-repeat;
+  background: url("/assets/images/infobar/picture.png") no-repeat;
   background-size: contain;
-  cursor: pointer;
-  width: 100%;
-  height: 165px;
-  background-color: #16120f;
+  height: 112px;
+  float: left;
+  width: 50%;
+  z-index: 6000;
+  position: relative;
+}
+
+.personnage-picture{
+  height: 102px;
+  width: 102px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-top: 6px;
+  margin-left: 5px;
+}
+
+.personnage-info{
+  margin-top: 35px;
+  float: left;
+  width: 50%;
+}
+
+.personnage-info-pseudo{
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.personnage-info-class{
+  margin-left: 10px;
 }
 
 progress {
@@ -265,6 +383,8 @@ progress::-moz-progress-bar {
   margin: 47px 0 0 167px;
   height: 18px;
   width: 191px;
+  -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+  transform: rotate(-90deg);
 }
 
 .radial-progress {
@@ -282,9 +402,13 @@ progress::-moz-progress-bar {
 }
 
 .progressMore{
-  margin: 108px 0 0 168px;
-  height: 17px;
-  width: 156px;
+  position: relative;
+  display: inline;
+  margin-left: 30px;
+  padding-top: 0px;
+  height: 15px;
+  margin-top: 10px;
+  width: calc(100% - 175px);
 }
 
 progress[value].progressHealth::-webkit-progress-value {
@@ -352,11 +476,8 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  background-color: rgba(0, 0, 0, 0.3);
-  background-size: cover;
-  padding: 1% 5%;
-  margin: 0 auto;
-  width: 644px;
+  width: 780px;
+  height: 260px;
   float: right;
 }
 
@@ -564,8 +685,110 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
   cursor: pointer;
 }
+.cadre-tutoriel {
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
+  position: absolute;
+  height: 416px;
+  width: 300px;
+  z-index: 9999;
+}
+.tutoriel-start .cadre-tutoriel{
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
+  position: absolute;
+  height: 416px;
+  width: 300px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+.tuto-text{
+  color: black;
+}
+.tuto-next{
+  background: url("/assets/images/tutoriel/next.png") no-repeat ;
+  height: 35px;
+  width: 76px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+}
+.cadre-tutoriel .tuto-text{
+  margin: 75px 0 0 25px;
+}
 
+.cadre-tutoriel .tuto-next{
+   margin: 55px;
+ }
 
+//Step 2
+.tutoriel-personnage .personnage{
+  position: relative;
+  z-index: 7000;
+}
+
+.tutoriel-personnage .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-personnage .cadre-tutoriel {
+    left: 410px
+  }
+}
+
+.tutoriel-equipement .cadreweapons{
+  position: relative;
+  z-index: 7000;
+}
+.tutoriel-equipement .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+.tutoriel-map .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 0;
+  right: 600px;
+}
+
+.tutoriel-map .cadre-droite{
+  position: relative;
+  z-index: 7000;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-map .cadre-tutoriel {
+    left: 50px
+  }
+}
+
+.overlay{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  position: fixed;
+  z-index: 7999;
+  top: 0;
+}
+
+.cadre-close{
+  position: absolute;
+  background: url("/assets/images/tutoriel/closebutton.png") no-repeat;
+}
 
 .objetVide{
   background: url("/assets/images/objets/vide.jpg") no-repeat;
@@ -573,8 +796,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-down {
-  -webkit-animation: movedown 1s; /* Safari 4.0 - 8.0 */
-  animation: movedown 1s;
+  -webkit-animation: movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: movedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -583,8 +806,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-up {
-  -webkit-animation: moveup 1s; /* Safari 4.0 - 8.0 */
-  animation: moveup 1s;
+  -webkit-animation: moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -593,8 +816,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-left {
-  -webkit-animation: moveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: moveleft 1s;
+  -webkit-animation: moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -603,8 +826,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .Warrior-right {
-  -webkit-animation: moveright 1s; /* Safari 4.0 - 8.0 */
-  animation: moveright 1s;
+  -webkit-animation: moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: moveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -613,8 +836,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-down {
-  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
-  animation: amovedown 1s;
+  -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -623,8 +846,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-up {
-  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveup 1s;
+  -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -633,8 +856,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-left {
-  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveleft 1s;
+  -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -643,8 +866,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .aWarrior-right {
-  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveright 1s;
+  -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -653,8 +876,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_adown {
-  -webkit-animation: amovedown 1s; /* Safari 4.0 - 8.0 */
-  animation: amovedown 1s;
+  -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -663,8 +886,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aup {
-  -webkit-animation: amoveup 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveup 1s;
+  -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -673,8 +896,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aleft {
-  -webkit-animation: amoveleft 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveleft 1s;
+  -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -683,8 +906,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .monster_aright {
-  -webkit-animation: amoveright 1s; /* Safari 4.0 - 8.0 */
-  animation: amoveright 1s;
+  -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -693,8 +916,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_down {
-  -webkit-animation: attacked_down 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_down 1s infinite;
+  -webkit-animation: attacked_down 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_down 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -703,8 +926,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_up {
-  -webkit-animation: attacked_up 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_up 1s infinite;
+  -webkit-animation: attacked_up 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_up 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -713,8 +936,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_left {
-  -webkit-animation: attacked_left 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_left 1s infinite;
+  -webkit-animation: attacked_left 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_left 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -723,8 +946,8 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .attacked_right {
-  -webkit-animation: attacked_right 1s infinite; /* Safari 4.0 - 8.0 */
-  animation: attacked_right 1s infinite;
+  -webkit-animation: attacked_right 0.5s; /* Safari 4.0 - 8.0 */
+  animation: attacked_right 0.5s ;
   -webkit-animation-timing-function: ease;
   animation-timing-function:ease;
   position:relative;
@@ -918,7 +1141,7 @@ progress[value].progressSkills::-webkit-progress-value {
 
 /* Standard syntax */
 @keyframes attacked_right {
-  0%   {left: 0px;}f
+  0%   {left: 0px;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
@@ -930,6 +1153,220 @@ progress[value].progressSkills::-webkit-progress-value {
   opacity: 0.4;
 }
 
-
+.selected_tile {
+  border: 2px solid red;
+}
 // Yes, we can still override inline style globally.
 // github.com/jxnblk/rebass#styling-with-css
+.cadre-gauche-max{
+  background-color: #16120F;
+  width: 224px;
+  float: left;
+  height: 446px;
+}
+
+.cadre-droite-max{
+  background-color: #16120F;
+  width: 800px;
+  height: 446px;
+  margin-left: 224px;
+  padding-top: 10px
+}
+
+.cadre-bas-max{
+  background-color: #16120F;
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+.cadre-bas-max .infobar{
+  background: url("/assets/images/infobar/xpandspell.png") no-repeat;
+  position: absolute;
+  height: 138px;
+  width: 893px;
+  right: 0;
+  bottom: 0;
+  padding-left: 70px;
+}
+
+.cadre-bas-max .infobar-mana{
+  background: url("/assets/images/infobar/manabar.png") no-repeat;
+  position: absolute;
+  height: 91px;
+  width: 91px;
+  left: 0;
+  bottom: 0;
+  z-index: 6000;
+}
+
+.cadre-bas-max .infobar-life{
+  background: url("/assets/images/infobar/lifebar.png") no-repeat;
+  position: absolute;
+  height: 120px;
+  width: 120px;
+  left: 70px;
+  bottom: 0;
+  z-index: 5999;
+}
+
+.cadre-menu{
+  background: url("/assets/images/planche-1.png");
+  width: 800px;
+  height: 73px;
+}
+
+.cadre-menu-editor{
+  background: url("/assets/images/planche-1.png");
+  width: 1020px;
+  height: 135px;
+}
+
+.cadre-menu-div{
+  padding-left: 60px;
+  padding-right: 70px;
+  padding-top: 5px;
+}
+.cadre-menu-div-editor{
+  padding-left: 310px;
+  padding-right: 30px;
+  padding-top: 25px;
+}
+
+.cadre-droite-bas{
+  width: 800px;
+  height: 360px;
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.cmenu {
+  width: 800px;
+  height: 360px;
+}
+.cmenu-editor {
+  left: -51px;
+  z-index: -1;
+}
+.cadre-editor{
+  width: 1025px;
+  height: 460px;
+  background-color: #16120F;
+  position: absolute;
+  z-index: 2;
+  text-align: center;
+}
+
+.cadre-gauche-bas{
+  border: solid #493026 5px;
+  width: 230px;
+  height: 240px;
+  border-radius: 6px;
+  margin-top: 200px;
+  margin-left: 20px;
+}
+
+.infobar-mana-div, .infobar-life-div{
+   border-radius: 50%;
+   z-index: 10;
+ }
+
+
+.progress {
+  height: 20px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+}
+
+.vertical {
+  box-shadow: inset 0px 4px 6px #ccc;
+}
+
+.vertical-mana {
+  display: inline-block;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  margin-left: 5.5px;
+  margin-top: 5.5px;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background-color: rgba(0,0,0,0);
+}
+
+.vertical-life {
+  display: inline-block;
+  border-radius: 50%;
+  width: 108px;
+  height: 108px;
+  margin-left: 6.5px;
+  margin-top: 6.5px;
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  background-color: rgba(0,0,0,0);
+}
+
+.progress-bar {
+  float: left;
+  width: 0;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #337ab7;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  -webkit-transition: width .6s ease;
+  -o-transition: width .6s ease;
+  transition: width .6s ease;
+}
+
+.progress-bar-mana{
+  background-color: blue;
+}
+
+.progress-bar-life{
+  background-color: red;
+}
+
+.progress-bar {
+  box-shadow: inset -18px 0px 20px 0px rgba(255,255,255, 0.5);
+}
+
+.infobar-experience {
+  color: #c2aa97;
+  font-size: 14px;
+  width: 110px;
+  padding-left: 5px;
+  padding-top: 2px;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+  float: left;
+}
+
+.infobar-spell-number {
+  position: absolute;
+  margin-left: 10px;
+  margin-top: 25px;
+}
+
+.infobar-spell-number div {
+  width: 100px;
+  float: left;
+  text-align: center;
+}
+
+.infobar-spell-number div span {
+  background-size: contain;
+  background: url("/assets/images/infobar/spellkey.png") no-repeat;
+  color: #c2aa97;
+  padding: 4px 10px 8px 10px;
+}
+

@@ -4,6 +4,7 @@ import User from './user';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
 import { firebaseActions } from '../lib/redux-firebase';
+import { Map } from 'immutable';
 
 const State = Record({
   online: null,
