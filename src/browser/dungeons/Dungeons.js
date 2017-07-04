@@ -22,6 +22,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let experience = 0;
     let maxexperience = 1000;
     let skill_function = false;
+
     if(!dviewer)
     {
         LoadViewer(viewer);
@@ -66,7 +67,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 if(dviewer.characters[dviewer.active].equipped_spells) {
                     var cpt = 0;
                     skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
-                        var classObjet = 'skill';
+                        var classSkill = 'skill';
                         if(dungeonActive)
                         {
                             skill_function = function(){
@@ -79,7 +80,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                             }
                         }
                         cpt++;
-                        return (<div><span>{cpt}</span><Image key={skill.id} className={classObjet} onClick={skill_function} src={skill.image}></Image></div>);
+                        console.log('skill_function : ',skill_function);
+                        return (<div><span>{cpt}</span><Image key={skill.id} className={classSkill} onClick={() => skill_function()} src={skill.image}></Image></div>);
                     })
                 }
                 if(dviewer && typeof dungeon.dungeon !== "undefined")

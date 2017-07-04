@@ -15,6 +15,7 @@ export const LOAD_NEXT_STEP_SUCCESS = 'LOAD_NEXT_STEP_SUCCESS';
 export const END_MONSTER_TURN = 'END_MONSTER_TURN';
 export const MONSTER_MOVE = 'MONSTER_MOVE';
 export const MONSTER_TURN = 'MONSTER_TURN';
+export const END_SKILL = 'END_SKILL';
 export const END_TURN = 'END_TURN';
 export const CAN_ATTACK_MONSTER = 'CAN_ATTACK_MONSTER';
 export const CAN_USE_SKILL = 'CAN_USE_SKILL';
@@ -660,16 +661,17 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
     var pj = dungeon.user.character;
     var map = dungeon.dungeon.maptiles;
     pj.is_using_skill = false;
+    pj.try_skill = false;
     dungeon.error_message = '';
-    if(!pj.is_moving && !pj.is_attacking) {
+    if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn) {
         pj.is_using_skill = true;
         pj.can_use_skill = false;
         pj.current_skill = false;
         if(skill.uses === -1 || skill.uses>0)
         {
-            if(pj.energy>skill.energy_cost)
+            if(pj.energy>=skill.energy_cost)
             {
-                if(pj.action>skill.action_cost)
+                if(pj.action>=skill.action_cost)
                 {
                     let result = setLinearAoeSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),true,skill.aoe_linear);
                     map = result.map;
@@ -700,7 +702,8 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
         type: CAN_USE_SKILL,
         payload: dungeon
     }
-}
+};
+
 export const trySkill = (dungeon,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
     var map = dungeon.dungeon.maptiles;
@@ -708,54 +711,74 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
     dungeon.error_message = '';
     if(!pj.is_moving && !pj.is_attacking && pj.is_using_skill) {
         pj.is_using_skill = false;
-        pj.try_skill = true;
         let skill = dungeon.user.character.equipped_spells[dungeon.user.character.current_skill];
         if(!skill.aoe_linear || !skill.aoe_diagonal || !skill.range_cone || !skill.aoe_front|| !skill.aoe_left|| !skill.aoe_right|| !skill.aoe_back)
         {
             if(typeof map[row][col].character !== 'undefined')
             {
-                
+                pj.try_skill = true;
+                dungeon.error_message = '';
+                var pnj = map[row][col].character;
+                var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
+                if(pnj.health > 0)
+                {
+                    pnj.health = pnj.health - skill.damage_instant;
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    if(skill.uses > 0)
+                    {
+                        skill.uses = skill.uses - 1;
+                    }
+                    if(pnj.health<=0)
+                    {
+                        pnj = null;
+                        dungeon.monster_info_row = null;
+                        dungeon.monster_info_col = null;
+                    }
+                    pj.can_use_skill = false;
+                    pj.is_attacking = false;
+                    pj.attacking_row = null;
+                    pj.attacking_col = null;
+                    pj.direction = positions.direction;
+                }
+                dungeon.user.character = pj;
+                map[pj.row][pj.col].character = pj;
+                if(pnj != null && typeof pnj !== 'undefined' && map[row][col].character)
+                {
+                    dungeon.dungeon.monsters[map[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[row][col].character.number],pnj);
+                }
+                else {
+                    delete dungeon.dungeon.monsters[map[row][col].character.number];
+                }
+                map[row][col].character = pnj;
+                map = unsetAoeSkills(map);
+                dungeon.dungeon.maptiles = map;
             }
         }
-    //     pj.is_using_skill = true;
-    //     pj.can_use_skill = false;
-    //     pj.current_skill = false;
-    //     if(skill.uses === -1 || skill.uses>0)
-    //     {
-    //         if(pj.energy>skill.energy_cost)
-    //         {
-    //             if(pj.action>skill.action_cost)
-    //             {
-    //                 let payload = setLinearAoeSkill(map,pj,(skill.range_linear*-1),0,true);
-    //                 map = payload.map;
-    //                 pj = payload.pj;
-    //                 let payload = setLinearAoeSkill(map,pj,0,skill.range_linear,true);
-    //                 map = payload.map;
-    //                 pj = payload.pj;
-    //                 let payload =  setLinearAoeSkill(map,pj,(skill.range_linear*-1),0,false);
-    //                 map = payload.map;
-    //                 pj = payload.pj;
-    //                 let payload = setLinearAoeSkill(map,pj,0,skill.range_linear,false);
-    //                 map = payload.map;
-    //                 pj = payload.pj;
-    //                 if(pj.can_use_skill)
-    //                 {
-    //                     pj.current_skill = skill.number;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     dungeon.user.character = pj;
-    //     dungeon.dungeon.maptiles = map;
-    //     firebase.update({
-    //         [`activeDungeons/${dungeon.user.id}`]: dungeon,
-    //     });
     }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
     return {
         type: TRY_SKILL,
         payload: dungeon
     }
-}
+};
+
+export const endSkill = (dungeon) => ({firebase}) => {
+
+    dungeon.user.character.try_skill = false;
+    dungeon.user.character.current_skill = false;
+    var pj = dungeon.user.character;
+    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: END_SKILL,
+        payload: dungeon
+    }
+};
 
 
 
@@ -1044,6 +1067,13 @@ function jsonConcat(o1, o2) {
     return o1;
 }
 
+function unsetAoeSkills(map) {
+    map.map(m1 => m1.map(m2 => {
+        m2.is_target = false;
+    }));
+    return map;
+}
+
 function setLinearAoeSkill(map,pj,neg,pos,hor,aoe){
 
     for(let j=neg;j<=pos;j++)
@@ -1077,11 +1107,14 @@ function setLinearAoeSkill(map,pj,neg,pos,hor,aoe){
                 {
                     if(map[parseInt(pj.row)+j][pj.col].type == "walkable")
                     {
-                        if((typeof map[parseInt(pj.row)+j][pj.col].character !== 'undefined' && map[parseInt(pj.row)+j][pj.col].character.type == "pnj") && aoe)
+                        if((typeof map[parseInt(pj.row)+j][pj.col].character !== 'undefined'))
                         {
-                            pj.can_use_skill = true;
-                            map[parseInt(pj.row)+j][pj.col].is_target = true;
-                            break;
+                            if(map[parseInt(pj.row)+j][pj.col].character.type == "pnj" && aoe)
+                            {
+                                pj.can_use_skill = true;
+                                map[parseInt(pj.row)+j][pj.col].is_target = true;
+                                break;
+                            }
                         }
                         pj.can_use_skill = true;
                         map[parseInt(pj.row)+j][pj.col].is_target = true;

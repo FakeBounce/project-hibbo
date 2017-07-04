@@ -232,7 +232,26 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.CAN_USE_SKILL: {
             let payload = action.payload;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload));
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.TRY_SKILL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.END_SKILL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
         }
 
         default:
