@@ -16,7 +16,7 @@ gulp.task('to-html', done => {
   args.production = true;
   process.env.IS_SERVERLESS = true;
   const fetch = url => new Promise((resolve, reject) => {
-    http.get({ host: 'localhost', path: url, port: 80 }, res => {
+    http.get({ host: 'localhost', path: url, port: 3001 }, res => {
       // Explicitly treat incoming data as utf8 (avoids issues with multi-byte).
       res.setEncoding('utf8');
       let body = '';
