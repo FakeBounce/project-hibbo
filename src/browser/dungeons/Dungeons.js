@@ -205,13 +205,39 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
-                            <div><span>2</span></div>
-                            <div><span>3</span></div>
-                            <div><span>4</span></div>
-                            <div><span>5</span></div>
-                            <div><span>6</span></div>
-                            <div><span>7</span></div>
-                            <div><span>8</span></div>
+                          <div className="oneSkill">
+                            <span>1</span>
+                            <div className="skills skill1"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>2</span>
+                            <div className="skills skill2"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>3</span>
+                            <div className="skills skill3"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>4</span>
+                            <div className="skills skill4"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>5</span>
+                            <div className="skills skill5"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>6</span>
+                            <div className="skills skill6"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>7</span>
+                            <div className="skills skill7"></div>
+                          </div>
+                          <div className="oneSkill">
+                            <span>8</span>
+                            <div className="skills skill8"></div>
+                          </div>
+
                         </div>
 
                     </div>
