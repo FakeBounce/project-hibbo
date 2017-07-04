@@ -294,7 +294,7 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
             if(typeof worldmap.worldmap.maptiles[row][col].character !== 'undefined' && worldmap.worldmap.monsters)
             {
-                worldmap.worldmap.monsters.splice(worldmap.worldmap.maptiles[row][col].character.number,1);
+                delete worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number];
             }
             worldmap.worldmap.maptiles[row][col].character = null;
         }
@@ -322,7 +322,6 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
                 worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
             }
             else {
-                console.log('is pushed', worldmap.worldmap.maptiles[row][col].character);
 
                 var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
                 mo.number = testRowIndex;
