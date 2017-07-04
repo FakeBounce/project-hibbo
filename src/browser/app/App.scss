@@ -586,6 +586,18 @@ progress[value].progressSkills::-webkit-progress-value {
   border: 1px solid #fff;
 }
 
+.skills{
+  width: 53px;
+  height: 53px;
+  display: block;
+  float: left;
+  margin: 0 23px;
+  border: 1px solid #fff;
+  cursor:pointer;
+}
+
+
+
 .objet1{
   background: url("/assets/images/objets/1.jpg") no-repeat;
   background-size: cover;
@@ -624,12 +636,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .objet7{
   background: url("/assets/images/objets/7.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet0{
-  background: url("/assets/images/objets/8.jpg") no-repeat;
   background-size: cover;
   cursor: pointer;
 }
@@ -1144,6 +1150,11 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 0px;}
 }
 
+.is_target{
+  background-color: #1b6d85;
+  opacity: 0.4;
+}
+
 .selected_tile {
   border: 2px solid red;
 }
@@ -1167,8 +1178,12 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-bas-max{
   background-color: #16120F;
   width: 100%;
-  height: 150px;
+  margin-top: 5px;
+  height: 140px;
+  border: 1px solid black;
   position: relative;
+  z-index: 3;
+  border-radius: 19px;
 }
 
 .cadre-bas-max .infobar{
@@ -1361,7 +1376,7 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top: 25px;
 }
 
-.infobar-spell-number div {
+.infobar-spell-number .oneSkill {
   width: 100px;
   float: left;
   text-align: center;
