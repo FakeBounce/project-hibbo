@@ -6,12 +6,12 @@ import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { cancelDungeon,LoadDungeons,LoadSkills, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep,pathname }) => {
     let weapon_list = '';
     var skills_list = '';
     let health = 100;
@@ -134,7 +134,7 @@ return (
                             <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
                             <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
                             <a href="#option"><li><span className="btn-menu">Options</span></li></a>
-                            <a href={window.location.origin + '/editor'}><li><span className="btn-menu">Editeur</span></li></a>
+                            <Link exactly to='/editor'>Editor</Link>
                         </ul>
                     </div>
                 </div>

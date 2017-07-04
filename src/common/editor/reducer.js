@@ -80,7 +80,7 @@ const editorReducer = (state = new State(), action) => {
                 .set('maptiles',list);
         }
 
-        case actions.LOAD_WORLD_MAP_SUCCESS: {
+        case actions.LOAD_EDIT_MAP_SUCCESS: {
 
             const worldmaps = action.payload;
 

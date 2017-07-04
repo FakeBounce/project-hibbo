@@ -1236,6 +1236,19 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 800px;
   height: 360px;
 }
+.Link{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
 .cmenu-editor {
   left: -51px;
   z-index: -1;

@@ -10,14 +10,14 @@ import EditMonster from './EditMonster';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster} from '../../common/editor/actions';
+import { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster}) => {
+let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -133,6 +133,9 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
                 <ul className="">
                     <li onClick={() => cancelWorldmap(worldmap)}>EXIT</li>
                     <li onClick={() => saveWorldmap(worldmap)}>SAVE</li>
+                    <li onClick={() => RemoveWorldmap(worldmap)}>DELETE</li>
+                    <li onClick={() => ActiveMapDungeon(worldmap,viewer)}>ACTIVEDUNGEON</li>
+                    <li onClick={() => RemoveMapDungeon(worldmap,viewer)}>REMOVEFROMDUNGEON</li>
                 </ul>
                 <div className="cadre-gauche">
                     {listmaptiles}
@@ -170,4 +173,4 @@ export default connect(state => ({
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
-}), { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
+}), { RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);

@@ -8,14 +8,14 @@ import EditorMap from './EditorMap';
 import EditMonster from './EditMonster';
 import EditTile from './EditTile';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters } from '../../common/editor/actions';
+import { LoadMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
 
 
 
-let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters }) => {
+let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
 
     const styles = {
         bg: {
@@ -98,8 +98,12 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
         }
 
     }
-
+    let taille;
+    if (typeof(window) !== 'undefined') {
+        taille = window.location.origin;
+    }
     console.log("listmaptiles",listmaptiles);
+
     return (
     <View className="">
         <View className="container_editor_app-img"></View>
@@ -109,12 +113,22 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
         <div className="cadre-menu-editor">
             <div className="cadre-menu-div-editor">
                 <ul className="menu-fixe-editor">
-                    <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
+                    <Link exactly to='/game'>Dungeons</Link>
                     <a href="#option"><li><span className="btn-menu">Options</span></li></a>
                  </ul>
             </div>
         </div>
         <div className="cadre-editor">
+
+            <div className="one-level">
+                <div className="choose-level" onClick={() => CreateNewWorldMap(viewer)}>
+                    <span>+</span>
+                </div>
+                <Text style={styles.title}
+                      onClick={() => CreateNewWorldMap(viewer)}>
+                    Description : New
+                </Text>
+            </div>
             <div className="cmenu-editor">
                     {!loaded ?
                         <Loading />
@@ -182,4 +196,4 @@ export default connect(state => ({
     activeMap: state.editor.activeMap,
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
-}), {LoadMaps, LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
+}), {LoadMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);

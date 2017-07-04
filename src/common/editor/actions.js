@@ -1,8 +1,8 @@
 import { Range } from 'immutable';
 export const LOAD_MAPS = 'LOAD_MAPS';
 export const LOAD_MAPTILES = 'LOAD_MAPTILES';
-export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
-export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
+export const LOAD_EDIT_MAP = 'LOAD_EDIT_MAP';
+export const LOAD_EDIT_MAP_SUCCESS = 'LOAD_EDIT_MAP_SUCCESS';
 export const LOAD_VIEWER = 'LOAD_VIEWER';
 export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
 export const LOAD_ACTIVE_MAP = 'LOAD_ACTIVE_MAP';
@@ -17,6 +17,10 @@ export const RELOAD_ACTIVE_MAP = 'RELOAD_ACTIVE_MAP';
 export const SAVE_WORLDMAP = 'SAVE_WORLDMAP';
 export const LOAD_MONSTERS = 'LOAD_MONSTERS';
 export const VIEW_MONSTER = 'VIEW_MONSTER';
+export const ADD_NEW_MAP = 'ADD_NEW_MAP';
+export const REMOVE_MAP = 'REMOVE_MAP';
+export const REMOVE_DUNGEONS = 'REMOVE_DUNGEONS';
+export const ACTIVE_DUNGEONS = 'ACTIVE_DUNGEONS';
 
 
 /************ Dungeon creation in firebase *****************/
@@ -24,6 +28,8 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
     var path = 'maps/'+worldmap.id;
     console.log("viewer",viewer);
     console.log("worldmap",worldmap);
+
+
 
     var Uid = getUid();
     const getPromise = async () => {
@@ -42,6 +48,7 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                             displayName:viewer.displayName
                         },
                     worldmap:worldmap,
+                    active_dungeon: worldmap.active_dungeon,
                     viewonmonster:false,
                     createdAt: now()
                 };
@@ -61,7 +68,7 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
         }
     };
     return {
-        type: LOAD_WORLD_MAP,
+        type: LOAD_EDIT_MAP,
         payload: getPromise(),
     }
 };
@@ -89,7 +96,6 @@ export const LoadMonsters = (snap: Object) => {
         payload: { monsters },
     };
 };
-
 
 export const LoadMapActive = (viewer) => ({firebase}) => {
     var path = 'activeMap/'+viewer.active_map;
@@ -164,7 +170,6 @@ export const saveWorldmap = (worldmap) =>  ({ firebase }) => {
     }
 };
 
-
 export const viewMonster = (worldmap) => ({ firebase}) => {
     if(worldmap.viewonmonster)
     {
@@ -184,8 +189,6 @@ export const viewMonster = (worldmap) => ({ firebase}) => {
         payload: worldmap
     }
 };
-
-
 
 export const picktile = (maptile,viewer) =>  ({ firebase }) => {
     var path = 'maptiles/'+maptile.id;
@@ -220,6 +223,7 @@ export const picktile = (maptile,viewer) =>  ({ firebase }) => {
         payload: getPromise(),
     };
 };
+
 export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
     var path = 'monsters/'+monster.id;
 
@@ -352,16 +356,24 @@ export const ReloadActiveMap = (snap: Object) => {
     };
 };
 
-
-export const ActiveMapDungeon = (worldmap) =>  ({ getUid,firebase }) => {
+export const ActiveMapDungeon = (worldmap,viewer) =>  ({ getUid,firebase }) => {
 
     if(worldmap)
     {
         let id = getUid();
 
         firebase.update({
-            [`dungeons/${id}`]: {id : id,worldmap: worldmap.id, name:worldmap.name, description:""},
-            [`maps/${worldmap.id}/active_dungeon`]: id,
+            [`dungeons/${id}`]:
+            {
+                id : id,
+                worldmap: worldmap.worldmap_id,
+                name: worldmap.name,
+                description:"",
+                lock : false,
+                from_editor : true,
+            },
+            [`maps/${worldmap.worldmap_id}/active_dungeon`]: id,
+            [`activeMap/${viewer.id}/active_dungeon`]: id,
         });
 
     }
@@ -371,13 +383,15 @@ export const ActiveMapDungeon = (worldmap) =>  ({ getUid,firebase }) => {
         payload: worldmap,
     };
 };
-export const RemoveMapDungeon = (worldmap) =>  ({firebase }) => {
+
+export const RemoveMapDungeon = (worldmap, viewer) =>  ({firebase }) => {
 
     if(worldmap)
     {
         firebase.update({
             [`dungeons/${worldmap.active_dungeon}`]: null,
-            [`maps/${worldmap.id}/active_dungeon`]: null,
+            [`maps/${worldmap.worldmap_id}/active_dungeon`]: "",
+            [`activeMap/${viewer.id}/active_dungeon`]: "",
         });
     }
 
@@ -386,6 +400,85 @@ export const RemoveMapDungeon = (worldmap) =>  ({firebase }) => {
         payload: worldmap,
     };
 };
+
+export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
+
+    var UidMap = getUid();
+    let map = {};
+    let maptiles = [];
+
+
+    for(var i = 0 ; i <16 ;i ++)
+    {
+        maptiles[i]=[];
+
+        for(var j = 0 ; j <16 ;j ++)
+        {
+            maptiles[i][j]=[];
+
+            if(j == 0 && i == 0)
+            {
+                maptiles[i][j] = {
+                    completed: false,
+                    id:  getUid(),
+                    image: "/assets/images/grass.png",
+                    title: "forest",
+                    type: "walkable",
+                    character: {
+                        image: "/assets/images/classes/gface.png",
+                        damage: 100,
+                        health: 15000,
+                        name: "Warrior",
+                        type: "pj",
+                    }
+                };
+            }
+            else
+            {
+                maptiles[i][j] =
+                {
+                    completed: false,
+                    id: getUid(),
+                    image: "/assets/images/grass.png",
+                    title: "forest",
+                    type: "walkable",
+                };
+            }
+        }
+    }
+
+    map = {id: UidMap, name: "newmap", maptiles : maptiles, active_dungeon:""};
+
+    if(viewer)
+    {
+        firebase.update({
+            [`maps/${UidMap}`]: map
+        });
+    }
+
+    return {
+        type: ADD_NEW_MAP,
+        payload: map,
+    };
+};
+
+export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
+
+    console.log("worldmapid",worldmap.id);
+    if(worldmap)
+    {
+        firebase.update({
+            [`maps/${worldmap.worldmap_id}`]: null,
+            [`activeMap/${worldmap.user.id}`]: null,
+        });
+    }
+
+    return {
+        type: REMOVE_MAP,
+        payload: worldmap,
+    };
+};
+
 
 function jsonConcat(o1, o2) {
     for (var key in o2) {
