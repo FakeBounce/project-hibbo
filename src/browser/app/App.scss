@@ -59,6 +59,7 @@ background-attachment:fixed;
 .case{
   width:40px;
   height:40px;
+  background-size: 40px;
 }
 
 .caseforest{
@@ -245,7 +246,18 @@ background-attachment:fixed;
 }
 
 .cadre-map-info{
+  width:45%;
+  float: left;
+}
 
+.btn-map{
+  width: 140px;
+  margin: 20px auto;
+}
+
+.info-joueur{
+  width:100%;
+  text-align: center;
 }
 // boutons
 
@@ -476,7 +488,7 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  width: 780px;
+  width: 55%;
   height: 260px;
   float: right;
 }
