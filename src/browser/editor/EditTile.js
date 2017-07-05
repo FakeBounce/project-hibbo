@@ -19,7 +19,7 @@ type Props = {
 const EditTile = ({ maptile,picktile,viewer,worldmap,row,col,active }: Props) => {
 
 
-    var classImage = "case " + maptile.image;
+    var classImage = "caseEditor " + maptile.image;
     var src = maptile.image;
     if(active == "active")
     {

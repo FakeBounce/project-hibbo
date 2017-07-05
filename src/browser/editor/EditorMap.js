@@ -141,11 +141,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
                     {listmaptiles}
                     {listmonsters}
                     {viewmonster?
-                        <Text onClick={() => viewMonster(worldmap)}>Change to Tile</Text>
+                      <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Change to Tile</span></Text>
                         :
-                        <Text onClick={() => viewMonster(worldmap)}>Change to Monster</Text>
+                      <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Change to Monster</span></Text>
                     }
-
                 </div>
 
                 <div className="cadre-droite">

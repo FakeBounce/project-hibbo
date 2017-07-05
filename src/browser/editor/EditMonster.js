@@ -16,7 +16,7 @@ type Props = {
 const EditMonster = ({ pickmonster,row,col,monster, viewer,worldmap,active }: Props) => {
 
     const styles = {
-        margin: '0px 0px 0px 0px'
+        margin: '0'
     };
 
 
