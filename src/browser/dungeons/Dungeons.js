@@ -149,7 +149,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                 <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
                                 <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
                                 <a href="#option"><li><span className="btn-menu">Options</span></li></a>
-                                <a href={window.location.origin + '/editor'}><li><span className="btn-menu">Editeur</span></li></a>
                             </ul>
                         </div>
                     </div>
@@ -178,7 +177,12 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
-                            Options
+                          <h2 style={{textAlign: 'center'}}>Options</h2>
+                            <div>
+                              <a className="btn-option-editeur" href={window.location.origin + '/editor'}>
+                                <span>Editeur</span>
+                              </a>
+                            </div>
                             <SignOut/>
                         </div>
                     </div>
