@@ -101,57 +101,62 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
     if (typeof(window) !== 'undefined') {
         taille = window.location.origin;
     }
-
     return (
-    <View className="">
-        <View className="container_editor_app-img"></View>
-        <View className="container_app-editor">
+        <View className="">
+            <View className="container_editor_app-img"></View>
+            <View className="container_app-editor">
 
 
-        <div className="cadre-menu-editor">
-            <div className="cadre-menu-div-editor">
-                <ul className="menu-fixe-editor">
-                    <Link exactly to='/game'>Dungeons</Link>
-                    <a href="#option"><li><span className="btn-menu">Options</span></li></a>
-                 </ul>
-            </div>
-        </div>
-        <div className="cadre-editor">
-
-            <div className="one-level">
-                <div className="choose-level" onClick={() => CreateNewWorldMap(viewer)}>
-                    <span>+</span>
+                <div className="cadre-menu-editor">
+                    <div className="cadre-menu-div-editor">
+                        <ul className="menu-fixe-editor">
+                            <Link exactly to='/game'>Dungeons</Link>
+                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                        </ul>
+                    </div>
                 </div>
-                <Text style={styles.title}
-                      onClick={() => CreateNewWorldMap(viewer)}>
-                    Description : New
-                </Text>
-            </div>
-            <div className="cmenu-editor">
-                    {!loaded ?
-                        <Loading />
-                        : viewer ?
-                            mapactive?
-                                wdmap
+                <div className="cadre-editor">
+                        {
+                            !mapactive?
+
+                                <div className="one-level">
+
+
+                                    <div className="choose-level" onClick={() => CreateNewWorldMap(viewer)}>
+                                        <span>+</span>
+                                    </div>
+                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(viewer)}>Description : New</Text>
+                                </div>
                                 :
-                                worldmaps ?
-                                    worldmaps.map(activeMap =>
-                                        <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                                <div></div>
+                        }
 
-                            )
+                    <div className="cmenu-editor">
+                        {!loaded ?
+                            <Loading />
+                            : viewer ?
+                                mapactive?
+                                    wdmap
+                                    :
+                                    worldmaps ?
+                                        worldmaps.map(activeMap =>
+                                            <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
 
-                            : <Text>Il n'y a pas encore de map.</Text>
-                        : <Text>Aucun utilisateur</Text>
-                    }
-            </div>
+                                        )
 
-        </div>
+                                        : <Text>Il n'y a pas encore de map.</Text>
+                                : <Text>Aucun utilisateur</Text>
+                        }
+                    </div>
 
+                </div>
+
+
+            </View>
 
         </View>
-
-    </View>
     );
+
 };
 
 Editor = firebase((database, props) => {

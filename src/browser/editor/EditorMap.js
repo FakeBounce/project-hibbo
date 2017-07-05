@@ -22,7 +22,7 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
     let listmaptiles = [];
     let listmonsters = [];
     let viewmonster = false;
-
+    let dungeon = false;
     let activeTile = false;
     let activeMonster = false;
     activeTiles.map(active => activeTile = active);
@@ -33,6 +33,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
 
 
         if (worldmap.viewonmonster && monsters) {
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
             monsters.map(listm => {
 
 
@@ -65,12 +69,17 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
                     }
                 });
             }
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
 
     }
 
     if(worldmap && worldmap.worldmap)
     {
+
         if(!worldmap.viewonmonster)
         {
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
@@ -97,6 +106,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
                     <Flex key={keyRow} >{col}</Flex>
                 );
             });
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
         else {
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
@@ -123,6 +136,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
                 );
             });
             viewmonster = true;
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
 
     }
@@ -134,8 +151,15 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
                     <li onClick={() => cancelWorldmap(worldmap)}>EXIT</li>
                     <li onClick={() => saveWorldmap(worldmap)}>SAVE</li>
                     <li onClick={() => RemoveWorldmap(worldmap)}>DELETE</li>
-                    <li onClick={() => ActiveMapDungeon(worldmap,viewer)}>ACTIVEDUNGEON</li>
-                    <li onClick={() => RemoveMapDungeon(worldmap,viewer)}>REMOVEFROMDUNGEON</li>
+
+                    {
+                        dungeon?
+                            <li onClick={() => RemoveMapDungeon(worldmap,viewer)}>REMOVEFROMDUNGEON</li>
+                            :
+                            <li onClick={() => ActiveMapDungeon(worldmap,viewer)}>ACTIVEDUNGEON</li>
+                    }
+
+
                 </ul>
                 <div className="cadre-gauche">
                     {listmaptiles}
