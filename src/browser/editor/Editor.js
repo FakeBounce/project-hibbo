@@ -11,7 +11,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
+import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
 
 
 
@@ -31,7 +31,6 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
 
 
     if (monsters) {
-        console.log('monster');
         monsters.map(listm => {
 
             if (activeMonster) {
@@ -102,7 +101,6 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
     if (typeof(window) !== 'undefined') {
         taille = window.location.origin;
     }
-    console.log("listmaptiles",listmaptiles);
 
     return (
     <View className="">
@@ -157,7 +155,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
 };
 
 Editor = firebase((database, props) => {
-    const EditorRef = database.child('maps');
+    const EditorRef = database.child('editormaps');
     const MapActiveRef = database.child('activeMap');
     let WorldMapRef = database.child('activeMap');
     let MonsterRef = database.child('monsters');
@@ -168,7 +166,7 @@ Editor = firebase((database, props) => {
     }
     const TileRef = database.child('maptiles');
     return [
-        [EditorRef, 'on', 'value', props.LoadMaps],
+        [EditorRef, 'on', 'value', props.LoadEditorMaps],
         [TileRef, 'on', 'value', props.LoadMapTiles],
         [MapActiveRef, 'on', 'value', props.LoadMapActive],
         [WorldMapRef, 'on', 'value', props.ReloadActiveMap],
@@ -196,4 +194,4 @@ export default connect(state => ({
     activeMap: state.editor.activeMap,
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
-}), {LoadMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
+}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
