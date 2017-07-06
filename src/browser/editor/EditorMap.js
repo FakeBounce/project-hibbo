@@ -7,17 +7,18 @@ import MapTile from './MapTile';
 import EditTile from './EditTile';
 import Monster from './Monster';
 import EditMonster from './EditMonster';
-import { Block, Flex, Text, View,Image } from '../app/components';
+import { Block, Flex, Text, View,Image,Form,Input } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
+import { fields } from '../../common/lib/redux-fields';
+import { addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
+let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -27,6 +28,13 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
     let activeMonster = false;
     activeTiles.map(active => activeTile = active);
     activeMonsters.map(active => activeMonster = active);
+
+    const onInputKeyDown = event => {
+        if (event.key !== 'Enter') return;
+        if (!fields.name.value.trim()) return;
+        addNameMap(fields.name.value,viewer,worldmap);
+        fields.$reset();
+    };
 
     if (!viewer) {
     } else {
@@ -179,7 +187,15 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
           <div className="cadre-droite-interact-gauche">{ editor }</div>
           <div className="cadre-droite-interact-droite">
             <div>
-              <input className="nameMap" type="text" placeholder="Name of map"/>
+                <Form small>
+                    <Input
+                        {...fields.name}
+                        label=""
+                        maxLength={100}
+                        onKeyDown={onInputKeyDown}
+                        placeholder={worldmap.name}
+                    />
+                </Form>
             </div>
             <div>
               <h2>Zoom</h2>
@@ -207,7 +223,14 @@ EditorMap.propTypes = {
     monsters: React.PropTypes.object,
     activeTiles: React.PropTypes.object,
     activeMonsters: React.PropTypes.object,
+    addNameMap: React.PropTypes.func.isRequired,
+    fields: React.PropTypes.object.isRequired,
 };
+
+EditorMap = fields(EditorMap, {
+    path: 'EditorMap',
+    fields: ['name'],
+});
 
 export default connect(state => ({
     viewer: state.editor.viewer,
@@ -215,4 +238,4 @@ export default connect(state => ({
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
-}), { RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
+}), { addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
