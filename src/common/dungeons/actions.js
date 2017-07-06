@@ -767,10 +767,19 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
 
 export const endSkill = (dungeon) => ({firebase}) => {
 
-    dungeon.user.character.try_skill = false;
-    dungeon.user.character.current_skill = false;
     var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
+    map = unsetAoeSkills(map);
+    pj.try_skill = false;
+    pj.is_using_skill = false;
+    pj.current_skill = false;
+    pj.can_use_skill = false;
+    pj.is_attacking = false;
+    pj.attacking_row = null;
+    pj.attacking_col = null;
     dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    dungeon.user.character = pj;
+    dungeon.dungeon.maptiles = map;
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
