@@ -72,7 +72,140 @@ background-attachment:fixed;
   color: rgb(255, 255, 255);
   background-color: transparent;
   border-radius: 2px;
+  background-image: url(/assets/images/login/buttonblue.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.actionsEditeur{
+  background: url(/assets/images/planche-1.png);
+  display: -webkit-box;
+}
+
+.actionsEditeur li{
+  list-style: none;
+}
+
+.btn-editeur-exit{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/actionbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-save{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/dungeonbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-delete{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
   background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-remove{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongrey.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+.btn-editeur-active{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongreen.png);
   background-repeat: no-repeat;
   background-attachment: scroll;
   height: 53px;
@@ -201,6 +334,11 @@ background-attachment:fixed;
   z-index: 7000;
   position: relative;
 }
+
+.menu-fixe-editor a{
+  color: #fab186 !important;
+}
+
 .menu-fixe-editor li{
   width: 25%;
   float: left;
@@ -220,8 +358,16 @@ background-attachment:fixed;
   text-decoration: none;
 }
 
-.btn-menu{
+.btn-haut-editeur{
+  width:50%;
+  float: left;
+}
 
+.listEditeur{
+  width: 100%;
+  display: flex;
+  background-color: #eee;
+  padding: 10px;
 }
 
 .titre-error{
@@ -418,6 +564,16 @@ background-attachment:fixed;
   width: 380px;
   height: 350px;
   border-right: 1px solid #fff;
+}
+
+.cadre-gauche-editeur{
+  float: left;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 380px;
+  height: 350px;
+  border-right: 1px solid #fff;
+  background: url(/assets/images/planche-1.png);
 }
 
 .personnage{

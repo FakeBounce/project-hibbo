@@ -145,41 +145,46 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
     }
 
     return (
-        <View>
-            <div className="">
-                <ul className="">
-                    <li onClick={() => cancelWorldmap(worldmap)}>EXIT</li>
-                    <li onClick={() => saveWorldmap(worldmap)}>SAVE</li>
-                    <li onClick={() => RemoveWorldmap(worldmap)}>DELETE</li>
-
-                    {
-                        dungeon?
-                            <li onClick={() => RemoveMapDungeon(worldmap,viewer)}>REMOVEFROMDUNGEON</li>
-                            :
-                            <li onClick={() => ActiveMapDungeon(worldmap,viewer)}>ACTIVEDUNGEON</li>
-                    }
-
-
-                </ul>
-                <div className="cadre-gauche">
-                    {listmaptiles}
-                    {listmonsters}
-                    {viewmonster?
-                      <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Change to Tile</span></Text>
-                        :
-                      <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Change to Monster</span></Text>
-                    }
-                </div>
-
-                <div className="cadre-droite">
-                    { editor }
-                </div>
+    <View>
+      <div>
+        {
+          dungeon?
+            <div onClick={() => RemoveMapDungeon(worldmap,viewer)} className="btn-editeur-remove">DISABLE DUNGEON</div>
+            :
+            <div onClick={() => ActiveMapDungeon(worldmap,viewer)} className="btn-editeur-active">ENABLE DUNGEON</div>
+        }
+      </div>
+      <div className="">
+        <div className="cadre-gauche-editeur">
+          {viewmonster ?
+            <div className="btn-haut-editeur">
+              <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Tiles</span></Text>
             </div>
-        </View>
+            :
+            <div className="btn-haut-editeur">
+              <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Monsters</span></Text>
+            </div>
+          }
+          <div className="btn-haut-editeur">
+            <Text><span className="changeSelection">Objects</span></Text>
+          </div>
+          <div className="listEditeur">
+            {listmaptiles}
+            {listmonsters}
+          </div>
+        </div>
+        <div className="cadre-droite">
+          { editor }
+        </div>
+        <ul className="actionsEditeur">
+          <li onClick={() => cancelWorldmap(worldmap)}><div className="btn-editeur-exit">EXIT</div></li>
+          <li onClick={() => RemoveWorldmap(worldmap)}><div className="btn-editeur-delete">DELETE</div></li>
+          <li onClick={() => saveWorldmap(worldmap)}><div className="btn-editeur-save">SAVE</div></li>
+        </ul>
+      </div>
+    </View>
     );
 };
-
-
 
 EditorMap.propTypes = {
     viewer: React.PropTypes.object,
