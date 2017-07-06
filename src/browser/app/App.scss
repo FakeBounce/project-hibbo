@@ -85,6 +85,7 @@ background-attachment:fixed;
 .actionsEditeur{
   background: url(/assets/images/planche-1.png);
   display: -webkit-box;
+  margin:0;
 }
 
 .actionsEditeur li{
@@ -100,7 +101,7 @@ background-attachment:fixed;
   min-height: 32px;
   text-decoration: none;
   display: block;
-  margin: 10px auto;
+  margin: 5px 15px;
   cursor: pointer;
   border: 0;
   color: rgb(255, 255, 255);
@@ -125,7 +126,7 @@ background-attachment:fixed;
   min-height: 32px;
   text-decoration: none;
   display: block;
-  margin: 10px auto;
+  margin: 5px auto;
   cursor: pointer;
   border: 0;
   color: rgb(255, 255, 255);
@@ -150,7 +151,7 @@ background-attachment:fixed;
   min-height: 32px;
   text-decoration: none;
   display: block;
-  margin: 10px auto;
+  margin: 5px 10px;
   cursor: pointer;
   border: 0;
   color: rgb(255, 255, 255);
@@ -365,12 +366,13 @@ background-attachment:fixed;
 
 .listEditeur{
   width: 100%;
+  margin:0;
 }
 
 .blockSelection{
   background: rgba(255, 255, 255, 0.1);
   margin: 10px;
-  height: 250px;
+  height: 275px;
   overflow-y: scroll;
   display: inline-block;
   width: 300px;
@@ -576,8 +578,8 @@ background-attachment:fixed;
   float: left;
   display: block;
   background-color: rgba(0, 0, 0, 0.3);
-  width: 380px;
-  height: 350px;
+  width: 40%;
+  height: 383px;
   border-right: 1px solid #fff;
   background: url(/assets/images/planche-1.png);
 }
@@ -728,8 +730,9 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 
-.cadre-droit{
-
+.cadre-droite-editeur{
+  width:60%;
+  float: right;
 }
 
 .monster_head {
