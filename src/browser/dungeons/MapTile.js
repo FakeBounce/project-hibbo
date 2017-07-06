@@ -6,7 +6,7 @@ import React from 'react';
 import Character from './Character';
 import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
-import { moveCharacter,movingCharacter,trySkill } from '../../common/dungeons/actions';
+import { moveCharacter,movingCharacter,trySkill,endSkill } from '../../common/dungeons/actions';
 
 type Props = {
     dungeon: Object,
@@ -15,7 +15,7 @@ type Props = {
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -56,6 +56,30 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             };
         }
     }
+    if(typeof maptile.is_target_aoe !== 'undefined')
+    {
+            if(maptile.is_target_aoe)
+            {
+                classImage = classImage+ " is_target_aoe";
+            }
+    }
+    if(dungeon.user.character.is_using_skill)
+    {
+        if(typeof maptile.is_target !== 'undefined') {
+            if (!maptile.is_target)
+            {
+                maptileAction = function() {
+                    endSkill(dungeon, dungeon.user.character);
+                }
+
+            }
+        }
+        else {
+            maptileAction = function() {
+                endSkill(dungeon, dungeon.dungeon.user);
+            }
+        }
+    }
     if(typeof maptile.character !== 'undefined' && maptile.character != null)
     {
         character = true;
@@ -92,4 +116,4 @@ Maptile.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { moveCharacter,movingCharacter,trySkill }) (Maptile);
+}), { moveCharacter,movingCharacter,trySkill,endSkill }) (Maptile);

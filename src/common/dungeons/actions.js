@@ -658,6 +658,7 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
 /************ Attacks *****************/
 export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
+    console.log('skill : ',skill);
     var pj = dungeon.user.character;
     var map = dungeon.dungeon.maptiles;
     pj.is_using_skill = false;
@@ -673,18 +674,66 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
             {
                 if(pj.action>=skill.action_cost)
                 {
-                    let result = setLinearAoeSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),true,skill.aoe_linear);
+                    //Linear Single Target
+                    let result = setLinearSTSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),true,skill.aoe_linear);
                     map = result.map;
                     pj = result.pj;
-                    result = setLinearAoeSkill(map,pj,skill.range_minimum,skill.range_linear,true,skill.aoe_linear);
+                    result = setLinearSTSkill(map,pj,skill.range_minimum,skill.range_linear,true,skill.aoe_linear);
                     map = result.map;
                     pj = result.pj;
-                    result =  setLinearAoeSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),false,skill.aoe_linear);
+                    result =  setLinearSTSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),false,skill.aoe_linear);
                     map = result.map;
                     pj = result.pj;
-                    result = setLinearAoeSkill(map,pj,skill.range_minimum,skill.range_linear,false,skill.aoe_linear);
+                    result = setLinearSTSkill(map,pj,skill.range_minimum,skill.range_linear,false,skill.aoe_linear);
+                    map = result.map;
+
+                    //Linear Aoe Target
+                    result = setLinearAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_linear);
                     map = result.map;
                     pj = result.pj;
+                    result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),true,(skill.range_minimum*-1));
+                    map = result.map;
+                    pj = result.pj;
+                    result = setLinearAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_linear);
+                    map = result.map;
+                    pj = result.pj;
+                    result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),false,(skill.range_minimum*-1));
+                    map = result.map;
+                    pj = result.pj;
+
+                    //Diagonal Single Target
+                    result = setDiagonalSTSkill(map,pj,(skill.range_diagonal*-1),(skill.range_minimum*-1),true,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+                    result = setDiagonalSTSkill(map,pj,skill.range_minimum,skill.range_diagonal,true,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+                    result =  setDiagonalSTSkill(map,pj,(skill.range_diagonal*-1),(skill.range_minimum*-1),false,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+                    result = setDiagonalSTSkill(map,pj,skill.range_minimum,skill.range_diagonal,false,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+
+                    //Diagonal Aoe Target
+                    result = setDiagonalAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+                    result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),true,(skill.range_minimum*-1));
+                    map = result.map;
+                    pj = result.pj;
+                    result = setDiagonalAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_diagonal);
+                    map = result.map;
+                    pj = result.pj;
+                    result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),false,(skill.range_minimum*-1));
+                    map = result.map;
+                    pj = result.pj;
+                    if(!skill.self)
+                    {
+                        map[pj.row][pj.col].is_target = false;
+                        map[pj.row][pj.col].is_target_aoe = false;
+                    }
+
                     if(pj.can_use_skill)
                     {
                         pj.current_skill = skill.number;
@@ -767,10 +816,19 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
 
 export const endSkill = (dungeon) => ({firebase}) => {
 
-    dungeon.user.character.try_skill = false;
-    dungeon.user.character.current_skill = false;
     var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
+    map = unsetAoeSkills(map);
+    pj.try_skill = false;
+    pj.is_using_skill = false;
+    pj.current_skill = false;
+    pj.can_use_skill = false;
+    pj.is_attacking = false;
+    pj.attacking_row = null;
+    pj.attacking_col = null;
     dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    dungeon.user.character = pj;
+    dungeon.dungeon.maptiles = map;
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
@@ -878,6 +936,277 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
         payload: dungeon
     }
 };
+
+
+function unsetAoeSkills(map) {
+    map.map(m1 => m1.map(m2 => {
+        m2.is_target = false;
+        m2.is_target_aoe = false;
+    }));
+    return map;
+}
+
+function setDiagonalAoeSkill(map,pj,min,hor,aoe) {
+    for(let j=min;j<=aoe;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)-j] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)-j].type == "walkable")
+                    {
+                        map[parseInt(pj.row)+j][parseInt(pj.col)-j].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
+function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe){
+    for(let j=neg;j<=pos;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[parseInt(pj.row) + j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        if(aoe)
+                        {
+                            map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target = true;
+                            pj.can_use_skill = true;
+                        }
+                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined'))
+                        {
+                            if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                                break;
+                            }
+                            pj.can_use_skill = true;
+                            map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target = true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+            }
+        }
+        else {
+            if (typeof map[parseInt(pj.row) + j] !== 'undefined') {
+                if (typeof map[parseInt(pj.row) + j][parseInt(pj.col) - j] !== 'undefined') {
+                    if (map[parseInt(pj.row) + j][parseInt(pj.col) - j].type == "walkable") {
+                        if (aoe) {
+                            map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
+                            pj.can_use_skill = true;
+                        }
+                        if ((typeof map[parseInt(pj.row) + j][parseInt(pj.col) - j].character !== 'undefined')) {
+                            if (map[parseInt(pj.row) + j][parseInt(pj.col) - j].character.type == "pnj" && !aoe) {
+                                map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
+                                pj.can_use_skill = true;
+                                break;
+                            }
+                            pj.can_use_skill = true;
+                            map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
+                        }
+                    }
+                    else {
+                        break;
+                    }
+
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
+function setLinearAoeSkill(map,pj,min,hor,aoe) {
+    for(let j=min;j<=aoe;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[pj.row] !== 'undefined')
+            {
+                if(typeof map[pj.row][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[pj.row][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        map[pj.row][parseInt(pj.col)+j].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][pj.col] !== 'undefined')
+                {
+                    console.log('a maptile : ',map[parseInt(pj.row)+j][pj.col]);
+                    if(map[parseInt(pj.row)+j][pj.col].type == "walkable")
+                    {
+                        map[parseInt(pj.row)+j][pj.col].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
+
+function setLinearSTSkill(map,pj,neg,pos,hor,aoe){
+
+    for(let j=neg;j<=pos;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[pj.row] !== 'undefined')
+            {
+                if(typeof map[pj.row][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[pj.row][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        if(aoe)
+                        {
+                            map[pj.row][parseInt(pj.col)+j].is_target = true;
+                            pj.can_use_skill = true;
+                        }
+                        if((typeof map[pj.row][parseInt(pj.col)+j].character !== 'undefined'))
+                        {
+                            if(map[pj.row][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                            {
+                                map[pj.row][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                                break;
+                            }
+                            pj.can_use_skill = true;
+                            map[pj.row][parseInt(pj.col)+j].is_target = true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][pj.col] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][pj.col].type == "walkable")
+                    {
+                        if(aoe)
+                        {
+                            map[parseInt(pj.row)+j][pj.col].is_target = true;
+                            pj.can_use_skill = true;
+                        }
+                        if((typeof map[parseInt(pj.row)+j][pj.col].character !== 'undefined'))
+                        {
+                            if(map[parseInt(pj.row)+j][pj.col].character.type == "pnj"&& !aoe){
+                                pj.can_use_skill = true;
+                                map[parseInt(pj.row)+j][pj.col].is_target = true;
+                                break;
+                            }
+                            pj.can_use_skill = true;
+                            map[parseInt(pj.row)+j][pj.col].is_target = true;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
+
+function comparePosition(r1,c1,r2,c2){
+    let totalRowU = r1 - r2;
+    let totalRow = r1 - r2;
+    let totalColU = c1 - c2;
+    let totalCol = c1 - c2;
+    let direction = "";
+    let totalRange = 0;
+    if(totalRow < 0)
+    {
+        direction = 'down';
+    }
+    else if(totalRow > 0)
+    {
+        direction = 'up';
+    }
+    else if(totalCol < 0)
+    {
+        direction = 'right';
+    }
+    else if(totalCol > 0)
+    {
+        direction = 'left';
+    }
+    //Transform total difference to positive int
+    if(totalCol < 0)
+    {
+        totalCol = totalCol*-1;
+    }
+    //Transform total difference to positive int
+    if(totalRow < 0)
+    {
+        totalRow = totalRow*-1;
+    }
+    totalRange = totalCol + totalRow;
+    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalRange:totalRange,totalRowU:totalRowU,totalColU:totalColU};
+}
+
+function jsonConcat(o1, o2) {
+    for (var key in o2) {
+        o1[key] = o2[key];
+    }
+    return o1;
+}
 
 /************ Others *****************/
 export const cancelDungeon = (dungeon) =>  ({ firebase }) => {
@@ -1021,109 +1350,3 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
         payload: ''
     }
 };
-
-
-function comparePosition(r1,c1,r2,c2){
-    let totalRowU = r1 - r2;
-    let totalRow = r1 - r2;
-    let totalColU = c1 - c2;
-    let totalCol = c1 - c2;
-    let direction = "";
-    let totalRange = 0;
-    if(totalRow < 0)
-    {
-        direction = 'down';
-    }
-    else if(totalRow > 0)
-    {
-        direction = 'up';
-    }
-    else if(totalCol < 0)
-    {
-        direction = 'right';
-    }
-    else if(totalCol > 0)
-    {
-        direction = 'left';
-    }
-    //Transform total difference to positive int
-    if(totalCol < 0)
-    {
-        totalCol = totalCol*-1;
-    }
-    //Transform total difference to positive int
-    if(totalRow < 0)
-    {
-        totalRow = totalRow*-1;
-    }
-    totalRange = totalCol + totalRow;
-    return {direction : direction, totalRow: totalRow, totalCol: totalCol,totalRange:totalRange,totalRowU:totalRowU,totalColU:totalColU};
-}
-
-function jsonConcat(o1, o2) {
-    for (var key in o2) {
-        o1[key] = o2[key];
-    }
-    return o1;
-}
-
-function unsetAoeSkills(map) {
-    map.map(m1 => m1.map(m2 => {
-        m2.is_target = false;
-    }));
-    return map;
-}
-
-function setLinearAoeSkill(map,pj,neg,pos,hor,aoe){
-
-    for(let j=neg;j<=pos;j++)
-    {
-        if(hor)
-        {
-            if(typeof map[pj.row] !== 'undefined')
-            {
-                if(typeof map[pj.row][parseInt(pj.col)+j] !== 'undefined')
-                {
-                    if(map[pj.row][parseInt(pj.col)+j].type == "walkable")
-                    {
-                        if((typeof map[pj.row][parseInt(pj.col)+j].character !== 'undefined' && map[pj.row][parseInt(pj.col)+j].character.type == "pnj") && aoe)
-                        {
-                            map[pj.row][parseInt(pj.col)+j].is_target = true;
-                            pj.can_use_skill = true;
-                            break;
-                        }
-                        pj.can_use_skill = true;
-                        map[pj.row][parseInt(pj.col)+j].is_target = true;
-                    }else {
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
-            {
-                if(typeof map[parseInt(pj.row)+j][pj.col] !== 'undefined')
-                {
-                    if(map[parseInt(pj.row)+j][pj.col].type == "walkable")
-                    {
-                        if((typeof map[parseInt(pj.row)+j][pj.col].character !== 'undefined'))
-                        {
-                            if(map[parseInt(pj.row)+j][pj.col].character.type == "pnj" && aoe)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)+j][pj.col].is_target = true;
-                                break;
-                            }
-                        }
-                        pj.can_use_skill = true;
-                        map[parseInt(pj.row)+j][pj.col].is_target = true;
-                    }else {
-                        break;
-                    }
-                }
-            }
-        }
-    }
-    return {map:map,pj:pj};
-}
