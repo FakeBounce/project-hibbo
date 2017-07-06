@@ -169,8 +169,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
             <Text><span className="changeSelection">Objects</span></Text>
           </div>
           <div className="listEditeur">
-            {listmaptiles}
-            {listmonsters}
+            <div className="blockSelection">
+              {listmaptiles}
+              {listmonsters}
+            </div>
           </div>
         </div>
         <div className="cadre-droite">

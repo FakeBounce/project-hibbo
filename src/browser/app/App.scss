@@ -365,9 +365,15 @@ background-attachment:fixed;
 
 .listEditeur{
   width: 100%;
-  display: flex;
-  background-color: #eee;
-  padding: 10px;
+}
+
+.blockSelection{
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px;
+  height: 250px;
+  overflow-y: scroll;
+  display: inline-block;
+  width: 300px;
 }
 
 .titre-error{
