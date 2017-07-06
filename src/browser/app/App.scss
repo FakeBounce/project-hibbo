@@ -84,13 +84,43 @@ background-attachment:fixed;
 
 .actionsEditeur{
   background: url(/assets/images/planche-1.png);
-  display: -webkit-box;
+  display: -webkit-inline-box;
   margin:0;
   padding:0;
 }
 
 .actionsEditeur li{
   list-style: none;
+}
+
+.nameMap{
+  padding: 10px;
+  font-size: 15px;
+}
+
+.zoom{
+  width:45%;
+  margin:0 auto;
+}
+
+.zoomPlus{
+  background: url(/assets/images/editor/zoomplus.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
+.zoomMoins{
+  background: url(/assets/images/editor/zoommoins.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
 }
 
 .btn-editeur-exit{
@@ -215,6 +245,15 @@ background-attachment:fixed;
   box-shadow: none;
   text-align: center;
   padding:16px;
+}
+
+.cadre-droite-interact-gauche{
+  float: left;
+}
+
+.cadre-droite-interact-droite {
+  float: right;
+  width:28%;
 }
 
 

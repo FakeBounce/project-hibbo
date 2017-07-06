@@ -176,7 +176,19 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,pickt
           </div>
         </div>
         <div className="cadre-droite">
-          { editor }
+          <div className="cadre-droite-interact-gauche">{ editor }</div>
+          <div className="cadre-droite-interact-droite">
+            <div>
+              <input className="nameMap" type="text" placeholder="Name of map"/>
+            </div>
+            <div>
+              <h2>Zoom</h2>
+              <div className="zoom">
+                <div className="zoomPlus"></div>
+                <div className="zoomMoins"></div>
+              </div>
+            </div>
+          </div>
         </div>
         <ul className="actionsEditeur">
           <li onClick={() => cancelWorldmap(worldmap)}><div className="btn-editeur-exit">EXIT</div></li>
