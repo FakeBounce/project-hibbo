@@ -47,6 +47,16 @@ const editorReducer = (state = new State(), action) => {
 
         }
 
+        case actions.LOAD_EDITOR_MAPS: {
+            const { editormaps } = action.payload;
+            const list = Seq(editormaps)
+                .map(maprefPresence => new Editor(maprefPresence))
+                .toList();
+            return state.set('loaded', true)
+                .set('worldmaps', list);
+
+        }
+
         case actions.LOAD_MAPTILES: {
             const { maptiles} = action.payload;
 
@@ -80,7 +90,7 @@ const editorReducer = (state = new State(), action) => {
                 .set('maptiles',list);
         }
 
-        case actions.LOAD_WORLD_MAP_SUCCESS: {
+        case actions.LOAD_EDIT_MAP_SUCCESS: {
 
             const worldmaps = action.payload;
 

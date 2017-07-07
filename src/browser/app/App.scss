@@ -51,6 +51,216 @@ background-attachment:fixed;
   display: block !important;
 }
 
+.monsterEditor {
+  position: absolute;
+  z-index: 5;
+  height: 20px;
+  width: 20px;
+  margin-left: 1px;
+  cursor:pointer;
+}
+
+.changeSelection{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttonblue.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.actionsEditeur{
+  background: url(/assets/images/planche-1.png);
+  display: -webkit-inline-box;
+  margin:0;
+  padding:0;
+}
+
+.actionsEditeur li{
+  list-style: none;
+}
+
+.nameMap{
+  padding: 10px;
+  font-size: 15px;
+}
+
+.zoom{
+  width:45%;
+  margin:0 auto;
+}
+
+.zoomPlus{
+  background: url(/assets/images/editor/zoomplus.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
+.zoomMoins{
+  background: url(/assets/images/editor/zoommoins.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
+.btn-editeur-exit{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/actionbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-save{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/dungeonbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-delete{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-remove{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongrey.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+.btn-editeur-active{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongreen.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.cadre-droite-interact-gauche{
+  float: left;
+}
+
+.cadre-droite-interact-droite {
+  float: right;
+  width:28%;
+}
+
+
+
 .map_tile {
   margin: 0 !important;
   padding: 0 !important;
@@ -62,6 +272,17 @@ background-attachment:fixed;
 .case{
   width:40px;
   height:40px;
+  background-size: 40px;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
+}
+
+.caseEditor{
+  width:20px;
+  height:20px;
+  background-size: 20px;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
 }
 
 .caseforest{
@@ -140,8 +361,8 @@ background-attachment:fixed;
 
 .menu-fixe{
   -webkit-margin-before: 8px;
-  -webkit-padding-start: 0px;
-  -webkit-margin-after: 0px;
+  -webkit-padding-start: 0;
+  -webkit-margin-after: 0;
 }
 
 .menu-fixe li{
@@ -157,6 +378,11 @@ background-attachment:fixed;
   z-index: 7000;
   position: relative;
 }
+
+.menu-fixe-editor a{
+  color: #fab186 !important;
+}
+
 .menu-fixe-editor li{
   width: 25%;
   float: left;
@@ -176,8 +402,23 @@ background-attachment:fixed;
   text-decoration: none;
 }
 
-.btn-menu{
+.btn-haut-editeur{
+  width:50%;
+  float: left;
+}
 
+.listEditeur{
+  width: 100%;
+  margin:0;
+}
+
+.blockSelection{
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px;
+  height: 275px;
+  overflow-y: scroll;
+  display: inline-block;
+  width: 300px;
 }
 
 .titre-error{
@@ -248,7 +489,43 @@ background-attachment:fixed;
 }
 
 .cadre-map-info{
+  width:45%;
+  float: left;
+}
 
+.btn-map{
+  width: 140px;
+  margin: 20px auto;
+}
+
+.btn-option-editeur{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.info-joueur{
+  width:100%;
+  text-align: center;
 }
 // boutons
 
@@ -310,10 +587,11 @@ background-attachment:fixed;
   background: url(/assets/images/levels/level.png) no-repeat;
   background-size: contain;
   cursor: pointer;
+  margin:0 auto;
 }
 
 .choose-level span{
-  margin-left: 30px;
+
   margin-top: 23px;
   display: inline-flex;
   font-size: 25px;
@@ -337,6 +615,16 @@ background-attachment:fixed;
   width: 380px;
   height: 350px;
   border-right: 1px solid #fff;
+}
+
+.cadre-gauche-editeur{
+  float: left;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 40%;
+  height: 383px;
+  border-right: 1px solid #fff;
+  background: url(/assets/images/planche-1.png);
 }
 
 .personnage{
@@ -408,7 +696,7 @@ progress::-moz-progress-bar {
   position: relative;
   display: inline;
   margin-left: 30px;
-  padding-top: 0px;
+  padding-top: 0;
   height: 15px;
   margin-top: 10px;
   width: calc(100% - 175px);
@@ -479,14 +767,15 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  width: 780px;
+  width: 55%;
   height: 260px;
   float: right;
 }
 
 
-.cadre-droit{
-
+.cadre-droite-editeur{
+  width:60%;
+  float: right;
 }
 
 .monster_head {
@@ -518,13 +807,13 @@ progress[value].progressMore::-webkit-progress-value {
 .monster_name {
   padding-top: 13px;
   padding-left: 110px;
-  margin: 0px;
+  margin: 0;
 }
 
 .monster_name_hidden {
   padding-top: 31px;
   padding-left: 110px;
-  margin: 0px;
+  margin: 0;
 }
 
 progress[value].progressBarBoss::-webkit-progress-value {
@@ -918,195 +1207,195 @@ progress[value].progressSkills::-webkit-progress-value {
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes movedown {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   100% {top: 50px;}
 }
 
 /* Standard syntax */
 @keyframes movedown {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   100% {top: 50px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveup {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   100% {bottom: 50px;}
 }
 
 /* Standard syntax */
 @keyframes moveup {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   100% {bottom: 50px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveleft {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   100% {right: 50px;}
 }
 
 /* Standard syntax */
 @keyframes moveleft {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   100% {right: 50px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveright {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   100% {left: 50px;}
 }
 
 /* Standard syntax */
 @keyframes moveright {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   100% {left: 50px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amovedown {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 15px;}
   50% {top: 25px;}
   75% {top: 15px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @keyframes amovedown {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 15px;}
   50% {top: 25px;}
   75% {top: 15px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveup {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 15px;}
   50% {bottom: 25px;}
   75% {bottom: 15px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveup {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 15px;}
   50% {bottom: 25px;}
   75% {bottom: 15px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveleft {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 15px;}
   50% {right: 25px;}
   75% {right: 15px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveleft {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 15px;}
   50% {right: 25px;}
   75% {right: 15px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveright {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 15px;}
   50% {left: 25px;}
   75% {left: 15px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveright {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 15px;}
   50% {left: 25px;}
   75% {left: 15px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_down {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 5px;}
   50% {top: 15px;}
   75% {top: 5px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_down {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 5px;}
   50% {top: 15px;}
   75% {top: 5px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_up {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 5px;}
   50% {bottom: 15px;}
   75% {bottom: 5px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 
 /* Standard syntax */
 @-webkit-keyframes attacked_up {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 5px;}
   50% {bottom: 15px;}
   75% {bottom: 5px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_left {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 5px;}
   50% {right: 15px;}
   75% {right: 5px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_left {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 5px;}
   50% {right: 15px;}
   75% {right: 5px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_right {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_right {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 
@@ -1221,6 +1510,19 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 800px;
   height: 360px;
 }
+.Link{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
 .cmenu-editor {
   left: -51px;
   z-index: -1;
@@ -1260,7 +1562,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .vertical {
-  box-shadow: inset 0px 4px 6px #ccc;
+  box-shadow: inset 0 4px 6px #ccc;
 }
 
 .vertical-mana {
@@ -1312,7 +1614,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .progress-bar {
-  box-shadow: inset -18px 0px 20px 0px rgba(255,255,255, 0.5);
+  box-shadow: inset -18px 0 20px 0 rgba(255,255,255, 0.5);
 }
 
 .infobar-experience {

@@ -10,19 +10,19 @@ import EditMonster from './EditMonster';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster} from '../../common/editor/actions';
+import { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster}) => {
+let EditorMap = ({ worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
     let viewmonster = false;
-
+    let dungeon = false;
     let activeTile = false;
     let activeMonster = false;
     activeTiles.map(active => activeTile = active);
@@ -33,6 +33,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
 
 
         if (worldmap.viewonmonster && monsters) {
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
             monsters.map(listm => {
 
 
@@ -65,12 +69,17 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
                     }
                 });
             }
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
 
     }
 
     if(worldmap && worldmap.worldmap)
     {
+
         if(!worldmap.viewonmonster)
         {
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
@@ -97,6 +106,10 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
                     <Flex key={keyRow} >{col}</Flex>
                 );
             });
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
         else {
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
@@ -123,37 +136,69 @@ let EditorMap = ({ worldmap,viewer,cancelWorldmap, maptiles,picktile,pickmaptile
                 );
             });
             viewmonster = true;
+            if(worldmap.active_dungeon != "")
+            {
+                dungeon = true;
+            }
         }
 
     }
 
     return (
-        <View>
-            <div className="">
-                <ul className="">
-                    <li onClick={() => cancelWorldmap(worldmap)}>EXIT</li>
-                    <li onClick={() => saveWorldmap(worldmap)}>SAVE</li>
-                </ul>
-                <div className="cadre-gauche">
-                    {listmaptiles}
-                    {listmonsters}
-                    {viewmonster?
-                        <Text onClick={() => viewMonster(worldmap)}>Change to Tile</Text>
-                        :
-                        <Text onClick={() => viewMonster(worldmap)}>Change to Monster</Text>
-                    }
-
-                </div>
-
-                <div className="cadre-droite">
-                    { editor }
-                </div>
+    <View>
+      <div>
+        {
+          dungeon?
+            <div onClick={() => RemoveMapDungeon(worldmap,viewer)} className="btn-editeur-remove">DISABLE DUNGEON</div>
+            :
+            <div onClick={() => ActiveMapDungeon(worldmap,viewer)} className="btn-editeur-active">ENABLE DUNGEON</div>
+        }
+      </div>
+      <div className="">
+        <div className="cadre-gauche-editeur">
+          {viewmonster ?
+            <div className="btn-haut-editeur">
+              <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Tiles</span></Text>
             </div>
-        </View>
+            :
+            <div className="btn-haut-editeur">
+              <Text onClick={() => viewMonster(worldmap)}><span className="changeSelection">Monsters</span></Text>
+            </div>
+          }
+          <div className="btn-haut-editeur">
+            <Text><span className="changeSelection">Objects</span></Text>
+          </div>
+          <div className="listEditeur">
+            <div className="blockSelection">
+              {listmaptiles}
+              {listmonsters}
+            </div>
+          </div>
+        </div>
+        <div className="cadre-droite">
+          <div className="cadre-droite-interact-gauche">{ editor }</div>
+          <div className="cadre-droite-interact-droite">
+            <div>
+              <input className="nameMap" type="text" placeholder="Name of map"/>
+            </div>
+            <div>
+              <h2>Zoom</h2>
+              <div className="zoom">
+                <div className="zoomPlus"></div>
+                <div className="zoomMoins"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ul className="actionsEditeur">
+          <li onClick={() => cancelWorldmap(worldmap)}><div className="btn-editeur-exit">EXIT</div></li>
+          <li onClick={() => RemoveWorldmap(worldmap)}><div className="btn-editeur-delete">DELETE</div></li>
+          <li onClick={() => saveWorldmap(worldmap)}><div className="btn-editeur-save">SAVE</div></li>
+        </ul>
+      </div>
+    </View>
     );
 };
-
-
 
 EditorMap.propTypes = {
     viewer: React.PropTypes.object,
@@ -170,4 +215,4 @@ export default connect(state => ({
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
-}), { cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
+}), { RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);

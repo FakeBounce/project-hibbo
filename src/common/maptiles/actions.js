@@ -963,7 +963,11 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   //   [`maptiles/${id}`]: { completed: false, id: id, title : `Grass Left Door`,image:"/assets/images/grass_left_door.png" },
   // });
 
-  // ADD FAKE DUNGEON
+     firebase.update({
+       [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
+     });
+
+                // ADD FAKE DUNGEON
   //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
   // [`typeDungeons/${id}`]: { id: id, name : `Practice`,description : `Training dungeon`, idMap1: `603414e3-d8fc-4b3f-ac56-376160eb7958`},
   //[`activeDungeons/${id}`]: { createdAt: firebaseDatabase.ServerValue.TIMESTAMP, dungeon: dungeon},

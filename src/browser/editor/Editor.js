@@ -8,14 +8,14 @@ import EditorMap from './EditorMap';
 import EditMonster from './EditMonster';
 import EditTile from './EditTile';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters } from '../../common/editor/actions';
+import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
 
 
 
-let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters }) => {
+let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
 
     const styles = {
         bg: {
@@ -31,7 +31,6 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
 
 
     if (monsters) {
-        console.log('monster');
         monsters.map(listm => {
 
             if (activeMonster) {
@@ -98,52 +97,70 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
         }
 
     }
-
-    console.log("listmaptiles",listmaptiles);
+    let taille;
+    if (typeof(window) !== 'undefined') {
+        taille = window.location.origin;
+    }
     return (
-    <View className="">
-        <View className="container_editor_app-img"></View>
-        <View className="container_app-editor">
+        <View className="">
+            <View className="container_editor_app-img"></View>
+            <View className="container_app-editor">
 
 
-        <div className="cadre-menu-editor">
-            <div className="cadre-menu-div-editor">
-                <ul className="menu-fixe-editor">
-                    <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
-                    <a href="#option"><li><span className="btn-menu">Options</span></li></a>
-                 </ul>
-            </div>
-        </div>
-        <div className="cadre-editor">
-            <div className="cmenu-editor">
-                    {!loaded ?
-                        <Loading />
-                        : viewer ?
-                            mapactive?
-                                wdmap
+                <div className="cadre-menu-editor">
+                    <div className="cadre-menu-div-editor">
+                        <ul className="menu-fixe-editor">
+                            <Link exactly to='/game'>Dungeons</Link>
+                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+                <div className="cadre-editor">
+                        {
+                            !mapactive?
+
+                                <div className="one-level">
+
+
+                                    <div className="choose-level" onClick={() => CreateNewWorldMap(viewer)}>
+                                        <span>+</span>
+                                    </div>
+                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(viewer)}>Description : New</Text>
+                                </div>
                                 :
-                                worldmaps ?
-                                    worldmaps.map(activeMap =>
-                                        <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
+                                <div></div>
+                        }
 
-                            )
+                    <div className="cmenu-editor">
+                        {!loaded ?
+                            <Loading />
+                            : viewer ?
+                                mapactive?
+                                    wdmap
+                                    :
+                                    worldmaps ?
+                                        worldmaps.map(activeMap =>
+                                            <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
 
-                            : <Text>Il n'y a pas encore de map.</Text>
-                        : <Text>Aucun utilisateur</Text>
-                    }
-            </div>
+                                        )
 
-        </div>
+                                        : <Text>Il n'y a pas encore de map.</Text>
+                                : <Text>Aucun utilisateur</Text>
+                        }
+                    </div>
 
+                </div>
+
+
+            </View>
 
         </View>
-
-    </View>
     );
+
 };
 
 Editor = firebase((database, props) => {
-    const EditorRef = database.child('maps');
+    const EditorRef = database.child('editormaps');
     const MapActiveRef = database.child('activeMap');
     let WorldMapRef = database.child('activeMap');
     let MonsterRef = database.child('monsters');
@@ -154,7 +171,7 @@ Editor = firebase((database, props) => {
     }
     const TileRef = database.child('maptiles');
     return [
-        [EditorRef, 'on', 'value', props.LoadMaps],
+        [EditorRef, 'on', 'value', props.LoadEditorMaps],
         [TileRef, 'on', 'value', props.LoadMapTiles],
         [MapActiveRef, 'on', 'value', props.LoadMapActive],
         [WorldMapRef, 'on', 'value', props.ReloadActiveMap],
@@ -182,4 +199,4 @@ export default connect(state => ({
     activeMap: state.editor.activeMap,
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
-}), {LoadMaps, LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
+}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);

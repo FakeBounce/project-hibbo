@@ -61,7 +61,7 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,a
     activemaptile.map(active => activepick = active);
     activemapmonster.map(active => activemonster = active);
 
-    var classImage = "case " + maptile.image;
+    var classImage = "caseEditor " + maptile.image;
 
     return (
         viewmonsters ?
