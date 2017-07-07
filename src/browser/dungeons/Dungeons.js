@@ -205,9 +205,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
-
                         </div>
-
                     </div>
                 </div>
             </View>
