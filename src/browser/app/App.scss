@@ -1441,7 +1441,6 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top: 5px;
   height: 140px;
   border: 1px solid black;
-  position: relative;
   z-index: 3;
   border-radius: 19px;
 }
@@ -1454,6 +1453,7 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 0;
   bottom: 0;
   padding-left: 70px;
+  z-index:10;
 }
 
 .cadre-bas-max .infobar-mana{
@@ -1504,6 +1504,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 360px;
   z-index: 10;
   overflow: hidden;
+  position: absolute;
 }
 
 .cmenu {
