@@ -55,7 +55,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     };
     return (
         <View>
-
             <div className="cadre-droite">
               <div className="cadre">
                 { Object.keys(worldmap.maptiles).map(function (keyRow) {

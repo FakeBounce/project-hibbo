@@ -76,9 +76,10 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         }
                         cpt++;
                         var skill_image = "assets/images/skills/"+skill.image;
-                        return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image></div>);
+                      return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image><div className="info"><h3>{skill.name}</h3><h4>Description: {skill.description}</h4><ul><li>Action cost: {skill.action_cost}</li><li>Energy cost: {skill.energy_cost}</li><li>Damage instant: {skill.damage_instant}</li><li></li></ul></div></div>);
                     })
                 }
+
                 if(dviewer && typeof dungeon.dungeon !== "undefined")
                 {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
@@ -200,9 +201,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
-
                         </div>
-
                     </div>
                 </div>
             </View>

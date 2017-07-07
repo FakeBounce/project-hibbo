@@ -89,6 +89,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         }
     }
 
+    classImage = classImage + ' correctifDisplay';
     return (
     <Flex>
         {
@@ -97,8 +98,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
                 <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
-            </Flex>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction}></Flex>
         }
     </Flex>
     );
