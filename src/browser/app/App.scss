@@ -545,7 +545,6 @@ background-attachment:fixed;
   cursor: pointer;
 }
 
-
 .btn-dungeon{
   box-sizing: border-box;
   font-family: inherit;
@@ -1652,6 +1651,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url(/assets/images/login/info.png);
   background-size: cover;
   height: 240px;
+  left:95px;
 }
 
 .infobar-spell-number .oneSkill:hover .info{
