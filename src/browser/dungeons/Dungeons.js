@@ -70,18 +70,13 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         var classSkill = 'skill';
                         if(dungeonActive)
                         {
-                            skill_function = function(){
-                                CanUseSkill(dungeon,dviewer,skill);
+                            skill_function = function(sk){
+                                CanUseSkill(dungeon,dviewer,sk);
                             };
                         }
-                        else {
-                            skill_function = function(){
-                                console.log('description');
-                            }
-                        }
                         cpt++;
-
-                        return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function()} src={skill.image}></Image></div>);
+                        var skill_image = "assets/images/skills/"+skill.image;
+                        return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image></div>);
                     })
                 }
                 if(dviewer && typeof dungeon.dungeon !== "undefined")

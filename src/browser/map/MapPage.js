@@ -4,6 +4,7 @@
 import React from 'react';
 import MapTiles from './MapTiles'
 import NewMapTile from './NewMapTile'
+import Reset from './Reset'
 import linksMessages from '../../common/app/linksMessages';
 import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
 
@@ -13,6 +14,7 @@ const MapPage = () => (
     <Block>
       <NewMapTile/>
       <MapTiles />
+      <Reset/>
     </Block>
   </View>
 );
