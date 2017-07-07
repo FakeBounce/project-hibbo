@@ -40,12 +40,15 @@ background-attachment:fixed;
 }
 
 .monster {
-  position: absolute;
   z-index: 5;
   height: 38px;
   width: 38px;
   margin-left: 1px;
   cursor:pointer;
+}
+
+.correctifDisplay{
+  display: block !important;
 }
 
 .map_tile {
@@ -1210,7 +1213,6 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-droite-bas{
   width: 800px;
   height: 360px;
-  position: relative;
   z-index: 10;
   overflow: hidden;
 }
@@ -1336,6 +1338,50 @@ progress[value].progressSkills::-webkit-progress-value {
   float: left;
   text-align: center;
 }
+
+.infobar-spell-number .oneSkill .info{
+  display: block;
+  position: absolute;
+  top: -303px;
+  background-color: aliceblue;
+  width: 550px;
+  margin: 0 auto;
+  z-index: 202530;
+  background: url(/assets/images/login/info.png);
+  background-size: cover;
+  height: 240px;
+}
+
+.infobar-spell-number .oneSkill:hover .info{
+  display: block;
+}
+
+.infobar-spell-number .oneSkill .info ul{
+  margin: 0 50px 0 auto;
+}
+
+.infobar-spell-number .oneSkill .info ul li{
+  list-style: none;
+  width: 33%;
+  float: left;
+  margin: 7px 0;
+  color: #333;
+}
+
+.infobar-spell-number .oneSkill .info h3{
+  float: right;
+  width: 90%;
+  margin: 40px 0 0 0;
+  color: #333;
+}
+
+.infobar-spell-number .oneSkill .info h4{
+  float: right;
+  width: 350px;
+  color: #333;
+  margin: 25px 50px 25px 0;
+}
+
 
 .infobar-spell-number div span {
   background-size: contain;
