@@ -753,7 +753,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
 }
 
-.Warrior-down {
+.pj-down {
   -webkit-animation: movedown 0.5s; /* Safari 4.0 - 8.0 */
   animation: movedown 0.5s;
   -webkit-animation-timing-function: ease;
@@ -763,7 +763,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-up {
+.pj-up {
   -webkit-animation: moveup 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveup 0.5s;
   -webkit-animation-timing-function: ease;
@@ -773,7 +773,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-left {
+.pj-left {
   -webkit-animation: moveleft 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveleft 0.5s;
   -webkit-animation-timing-function: ease;
@@ -783,7 +783,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-right {
+.pj-right {
   -webkit-animation: moveright 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveright 0.5s;
   -webkit-animation-timing-function: ease;
@@ -793,7 +793,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-down {
+.apj-down {
   -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
   animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
@@ -803,7 +803,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-up {
+.apj-up {
   -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
@@ -813,7 +813,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-left {
+.apj-left {
   -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
@@ -823,7 +823,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-right {
+.apj-right {
   -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
