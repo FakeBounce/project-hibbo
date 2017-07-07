@@ -22,7 +22,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     let classes= "monster";
     if(character.is_attacking && character.type == "pj")
     {
-        var gif = character.name+'-'+character.direction;
+        var gif = 'pj-'+character.direction;
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
         setTimeout(function(){
@@ -39,7 +39,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     }
     if(character.is_moving && character.type == "pnj")
     {
-        classes= "monster Warrior-"+character.direction;
+        classes= "monster pj-"+character.direction;
         setTimeout(function(){
             MonsterMove(dungeon);
         },500);
@@ -47,7 +47,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(move && character.type == "pj")
     {
 
-        var gif = character.name+'-'+move;
+        var gif = 'pj-'+move;
         classes= "monster "+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/"+move+".gif";
         setTimeout(function(){
@@ -58,7 +58,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(character.try_skill && character.type == "pj")
     {
 
-        var gif = character.name+'-'+character.direction;
+        var gif = 'pj-'+character.direction;
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
         setTimeout(function(){
