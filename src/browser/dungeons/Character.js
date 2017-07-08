@@ -20,9 +20,11 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
         margin: '0px 0px 0px 0px'
     };
     let classes= "monster";
+    var gif = '';
+    var opposed_img = '';
     if(character.is_attacking && character.type == "pj")
     {
-        var gif = character.name+'-'+character.direction;
+        gif = 'pj-'+character.direction;
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
         setTimeout(function(){
@@ -39,7 +41,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     }
     if(character.is_moving && character.type == "pnj")
     {
-        classes= "monster Warrior-"+character.direction;
+        classes= "monster pj-"+character.direction;
         setTimeout(function(){
             MonsterMove(dungeon);
         },500);
@@ -47,7 +49,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(move && character.type == "pj")
     {
 
-        var gif = character.name+'-'+move;
+        gif = 'pj-'+move;
         classes= "monster "+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/"+move+".gif";
         setTimeout(function(){
@@ -57,22 +59,23 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     }
     if(character.try_skill && character.type == "pj")
     {
-
-        var gif = character.name+'-'+character.direction;
-        classes= "monster a"+gif;
-        character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
-        setTimeout(function(){
-            character.image = "/assets/images/classes/"+character.name+"/"+character.direction+".png";
-            endSkill(dungeon,character);
-        },500);
-    }
-    if(character.is_using_skill && character.type == "pj")
-    {
-            endSkill(dungeon,character);
+        if(character.is_moving_instant)
+        {
+            gif = 'mv'+character.is_moving_instant+'-pj-'+character.direction;
+            classes= "monster "+gif;
+        }
+        else {
+            gif = 'pj-'+character.direction;
+            classes= "monster a"+gif;
+        }
+            character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
+            setTimeout(function(){
+                character.image = "/assets/images/classes/"+character.name+"/"+character.direction+".png";
+                endSkill(dungeon,character);
+            },500);
     }
     if(character.is_attacked && character.type == "pj")
     {
-        var opposed_img = '';
         if(character.attacked_direction == "left")
         {
             opposed_img = 'right';
