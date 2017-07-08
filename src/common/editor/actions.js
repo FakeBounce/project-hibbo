@@ -438,12 +438,15 @@ export const ActiveMapDungeon = (worldmap,viewer) =>  ({ getUid,firebase }) => {
                 id : id,
                 worldmap: worldmap.worldmap_id,
                 name: worldmap.name,
-                description:"",
+                description:worldmap.name,
                 lock : false,
                 from_editor : true,
             },
             [`editormaps/${worldmap.worldmap_id}/active_dungeon`]: id,
             [`activeMap/${viewer.id}/active_dungeon`]: id,
+            [`activeMap/${viewer.id}/worldmap/active_dungeon`]: id,
+            [`maps/${worldmap.worldmap_id}/active_dungeon`]: id,
+
         });
 
     }
@@ -548,6 +551,8 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
             [`editormaps/${worldmap.worldmap_id}`]: null,
             [`activeMap/${worldmap.user.id}`]: null,
             [`maps/${worldmap.worldmap_id}`]: null,
+            [`dungeons/${worldmap.active_dungeon}`]: null,
+
         });
     }
 
@@ -579,7 +584,6 @@ export const ZoomEditMap = (worldmap,camera) =>  ({firebase}) => {
         payload: newmap
     }
 };
-
 export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
 
     let newmap = camera;
@@ -613,7 +617,6 @@ export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
         payload: newmap
     }
 };
-
 export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
 
     let newmap = worldmap;
@@ -636,8 +639,6 @@ export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
         payload: newmap
     }
 };
-
-
 export const MoveUpEditMap = (worldmap,camera) =>  ({firebase}) => {
 
     let newmap = worldmap;
