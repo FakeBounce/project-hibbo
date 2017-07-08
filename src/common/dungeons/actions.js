@@ -1521,7 +1521,7 @@ function setSkillsTarget(map,pj,skill,direction = "all")
     let result;
     if(direction == "all" || direction == "left")
     {
-        if(skill.range_linear > 0)
+        if(skill.range_linear > 0 || self)
         {
             result = setLinearSTSkill(map,pj,(skill.range_linear*-1),(skill.range_minimum*-1),true,skill.aoe_linear,self);
             map = result.map;
@@ -1565,14 +1565,14 @@ function setSkillsTarget(map,pj,skill,direction = "all")
             pj = result.pj;
         }
 
-        if(skill.aoe_diagonal > 0)
+        if(skill.aoe_linear > 0)
         {
             result = setLinearAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_linear);
             map = result.map;
             pj = result.pj;
         }
 
-        if(skill.aoe_linear > 0)
+        if(skill.aoe_diagonal > 0)
         {
             result = setDiagonalAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_diagonal);
             map = result.map;
@@ -1595,14 +1595,14 @@ function setSkillsTarget(map,pj,skill,direction = "all")
             pj = result.pj;
         }
 
-        if(skill.aoe_diagonal > 0)
+        if(skill.aoe_linear > 0)
         {
             result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),false,(skill.range_minimum*-1));
             map = result.map;
             pj = result.pj;
         }
 
-        if(skill.aoe_linear > 0)
+        if(skill.aoe_diagonal > 0)
         {
             result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),false,(skill.range_minimum*-1));
             map = result.map;
@@ -1625,14 +1625,14 @@ function setSkillsTarget(map,pj,skill,direction = "all")
             pj = result.pj;
         }
 
-        if(skill.aoe_diagonal > 0)
+        if(skill.aoe_linear > 0)
         {
             result = setLinearAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_linear);
             map = result.map;
             pj = result.pj;
         }
 
-        if(skill.aoe_linear > 0)
+        if(skill.aoe_diagonal > 0)
         {
             result = setDiagonalAoeSkill(map, pj, skill.range_minimum, false, skill.aoe_diagonal);
             map = result.map;
