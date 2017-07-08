@@ -42,8 +42,8 @@ background-attachment:fixed;
 .monster {
   position: absolute;
   z-index: 5;
-  height: 46px;
-  width: 46px;
+  height: 38px;
+  width: 38px;
   margin-left: 1px;
   cursor:pointer;
 }
@@ -892,50 +892,6 @@ progress[value].progressSkills::-webkit-progress-value {
   cursor:pointer;
 }
 
-
-
-.objet1{
-  background: url("/assets/images/objets/1.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet2{
-  background: url("/assets/images/objets/2.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet3{
-  background: url("/assets/images/objets/3.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet4{
-  background: url("/assets/images/objets/4.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet5{
-  background: url("/assets/images/objets/5.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet6{
-  background: url("/assets/images/objets/6.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet7{
-  background: url("/assets/images/objets/7.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
 .weapon0{
   background: url("/assets/images/weapons/0.jpg") no-repeat;
   background-size: cover;
@@ -1450,9 +1406,21 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 0px;}
 }
 
+
+.is_target_aoe{
+  border: 1px solid #852009;
+}
+
+.is_target_aoe:hover {
+  border: 1px solid red;
+}
+
 .is_target{
-  background-color: #1b6d85;
-  opacity: 0.4;
+  border: 1px solid #1b6d85;
+}
+
+.is_target:hover {
+  border: 1px solid blue;
 }
 
 .selected_tile {

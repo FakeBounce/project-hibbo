@@ -66,6 +66,10 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
             endSkill(dungeon,character);
         },500);
     }
+    if(character.is_using_skill && character.type == "pj")
+    {
+            endSkill(dungeon,character);
+    }
     if(character.is_attacked && character.type == "pj")
     {
         var opposed_img = '';
