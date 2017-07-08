@@ -641,6 +641,16 @@ Input.input-map-editor{
   position: relative;
 }
 
+.personnage img{
+  width: 92%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+}
+
 .personnage-picture{
   height: 102px;
   width: 102px;
@@ -1663,19 +1673,25 @@ progress[value].progressSkills::-webkit-progress-value {
   padding:50px;
 }
 
-.container-classe-pseudo{
-  width: 30%;
+.container-classe-pseudo {
   text-align: center;
-  //background-size: contain;
-  //background: url("/assets/images/interface/scroll-classe.png") no-repeat;
-  float:left;
+  float: right;
   height: auto;
+  background: #2a2e31;
+  position: absolute;
+  border: solid 10px #4d5354;
+  top: 0;
+  bottom: 0;
+  max-height: 350px;
+  right: 30px;
+  margin: auto;
 }
+
 
 .center-scroll{
   width: 100%;
   padding:60px;
-  color:black;
+  color:white;
 }
 
 .center-scroll div{
@@ -1692,12 +1708,6 @@ progress[value].progressSkills::-webkit-progress-value {
   line-height:32px!important;
 }
 
-.container-classe-pseudo h2 {
-  height: 1em;
-  margin-top: 1.5em;
-  color: #c2aa97;
-}
-
 .classe_form{
   width: 100%;
   padding:50px;
@@ -1710,12 +1720,47 @@ progress[value].progressSkills::-webkit-progress-value {
   cursor:pointer;
   float:left;
   text-align: center;
+  position: relative;
 }
-
 .classe-choice img{
+  position: absolute;
   height:auto;
   width: 80%;
+  top:0;
 }
+
+.classe-choice img:nth-child(2){
+  display: none;
+}
+
+.classe-choice:hover img:nth-child(2){
+  display: block;
+}
+
+.classe-choice img:nth-child(3){
+  display: block;
+}
+
+.classe-choice:hover img:nth-child(3){
+  display: none;
+}
+
+.container-classe label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+.container-classe label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+}
+
+.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+    display: block;
+}
+
+.container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  display: none;
+}
+
 
 @media screen and (max-width: 1050px) {
 
@@ -1734,16 +1779,4 @@ progress[value].progressSkills::-webkit-progress-value {
     display: flex;
     height: 150px;
   }
-}
-
-.container-classe label > input{ /* HIDE RADIO */
-  visibility: hidden; /* Makes input not-clickable */
-  position: absolute; /* Remove input from document flow */
-}
-.container-classe label > input + img{ /* IMAGE STYLES */
-  cursor:pointer;
-  border:2px solid transparent;
-}
-.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
-  border:2px solid #f00;
 }

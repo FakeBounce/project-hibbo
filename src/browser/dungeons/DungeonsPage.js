@@ -9,14 +9,13 @@ import linksMessages from '../../common/app/linksMessages';
 import { Block, Input, View, Button, Form } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, SetPseudo, CreateCharacter } from '../../common/dungeons/actions';
+import { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter } from '../../common/dungeons/actions';
 import { fields } from '../../common/lib/redux-fields';
 
 
-let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter}) => {
+let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse}) => {
 
     const onSubmit = event => {
-        console.log("classe list",classes);
         if (!fields.class.value.trim()) return;
         if (!fields.pseudo.value.trim()) return;
 
@@ -29,23 +28,32 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter}
         CreateCharacter(dviewer,c,fields.pseudo.value)
     };
 
+    let classeSelect = "";
+    const setClass = function (name) {
 
-    const setClass = function() {
-        console.log("bonsoir");
+        // console.log("event",name);
+        // setClasse(name);
+        // console.log("event",name);
     };
 
     var dung = [];
     var classe_list = false;
     if(dviewer)
     {
-        if(!dviewer.characters)
+        if(!dviewer.characters && classes)
         {
-            classe_list = [];
-            for (var classe in classes) {
-                let src = "/assets/images/classes/"+classe.sprites_name+".png";
-                let div = '<label class="classe-choice"><input name="class" type="radio" value="' + classes[classe].name + '" /><img src="/assets/images/classes/'+classes[classe].sprites_name+'.png" /></label>';
-                classe_list.push(div);
-            }
+            console.log("classess",classes);
+            classe_list = Object.keys(classes).map(classe => {
+                console.log("class", classe);
+                let src = "/assets/images/classes/"+classes[classe].sprites_name+".png";
+                let srcf = "/assets/images/classes/"+classes[classe].sprites_name+"-f.png";
+                let checked = false;
+                if(fields.class.value == classes[classe].name)
+                {
+                    checked = true;
+                }
+                return (<label className="classe-choice"><input onClick={() => setClass(classes[classe].name)} {...fields.class} type="radio" value={classes[classe].name} checked={checked} /><img src={src} /><img src={srcf} /></label>);
+            });
         }
         else {
             dung.push(<Dungeons/>);
@@ -59,18 +67,18 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter}
             <h1 className="title-hibbo">HIBBO</h1>
             <Block>
                 {dung}
-                {!dviewer.characters && classe_list &&
+                {dviewer && !dviewer.characters && classe_list &&
                 <Form onSubmit={onSubmit} className="classe_form">
-                    <div className="container-classe" dangerouslySetInnerHTML={{__html: classe_list}}>
+                    <div className="container-classe" >
+                        {classe_list}
                     </div>
                     <div className="container-classe-pseudo">
-                        <h2>Créer votre personnages</h2>
                         <div className="center-scroll">
                             <div className="div-left">
                                 <span style={{
                                     fontWeight: "600"
                                 }}>Classe :</span>
-                                <span>{}</span>
+                                <span id="classSelect">{fields.class.value}</span>
                             </div>
                             <div className="div-left">
                                 <Input
@@ -145,4 +153,4 @@ export default connect(state => ({
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
     classes: state.dungeons.classes,
-}), { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, SetPseudo, CreateCharacter })(DungeonsPage);
+}), { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter })(DungeonsPage);

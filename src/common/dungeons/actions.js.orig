@@ -1285,15 +1285,32 @@ export const LoadClasses = (snap: Object) => {
     const classes = snap.val();
     return {
         type: LOAD_CLASSES,
-        payload: classes ,
+        payload: { classes },
     };
 };
 
-export const setClasse = (classe) => ({getUid,firebase}) => {
-    console.log(classe);
+export const setClass = (classe,viewer) => ({getUid,firebase}) => {
+<<<<<<< HEAD
+    // viewer.characters = [];
+    // viewer.characters.push(classe);
+    // viewer.active = 0;
+    //
+    // firebase.update({
+    //     [`users/${viewer.id}/characters`]: viewer.characters,
+    //     [`users/${viewer.id}/active`]: viewer.active,
+    // });
+=======
+    viewer.characters = [];
+    classe.row = 0;
+    classe.col = 0;
+    viewer.characters.push(classe);
+    viewer.active = 0;
+
     firebase.update({
-        [`users/${viewer.id}/characters_class_temp`]: classe,
+        [`users/${viewer.id}/characters`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
     });
+>>>>>>> 9b386ca8f46561aa75df4fa10ba11062fad72949
     return {
         type: SET_CLASSE,
         payload: { classe },
@@ -1325,18 +1342,17 @@ export const LoadTutoRef = (snap: Object) => {
 };
 
 export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
-    viewer.characters = [];
-    classe.pseudo = pseudo;
-    viewer.characters.push(classe);
-    viewer.active = 0;
-
-
-    firebase.update({
-        [`users/${viewer.id}/characters/`]: viewer.characters,
-        [`users/${viewer.id}/active`]: viewer.active,
-    });
-
-
+    console.log(viewer);
+    console.log(classe);
+    console.log(pseudo);
+    // viewer.characters = [];
+    // viewer.characters.push(classe);
+    // viewer.active = 0;
+    //
+    // firebase.update({
+    //     [`users/${viewer.id}/characters`]: viewer.characters,
+    //     [`users/${viewer.id}/active`]: viewer.active,
+    // });
 };
 
 export const LoadViewer = (viewer) => ({ firebase }) => {
