@@ -4,7 +4,7 @@
 
 import React from 'react';
 import MapTile from './MapTile';
-import { Block, Flex, Text, View,Image } from '../app/components';
+import { Block, Flex, Text, View,Image, KeySkills } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { cancelDungeon,EndTurn,MonsterTurn } from '../../common/dungeons/actions';
