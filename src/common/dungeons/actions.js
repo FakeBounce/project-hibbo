@@ -42,10 +42,10 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
     var character = viewer.characters[viewer.active];
-character.row = 0;
-character.col = 0;
-character.is_attacking = false;
-character.is_moving = false;
+    character.row = 0;
+    character.col = 0;
+    character.is_attacking = false;
+    character.is_moving = false;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
