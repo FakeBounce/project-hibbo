@@ -1206,120 +1206,120 @@ progress[value].progressSkills::-webkit-progress-value {
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes movedown {
   0%   {top: 0;}
-  100% {top: 50px;}
+  100% {top: 40px;}
 }
 
 /* Standard syntax */
 @keyframes movedown {
   0%   {top: 0;}
-  100% {top: 50px;}
+  100% {top: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveup {
   0%   {bottom: 0;}
-  100% {bottom: 50px;}
+  100% {bottom: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveup {
   0%   {bottom: 0;}
-  100% {bottom: 50px;}
+  100% {bottom: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveleft {
   0%   {right: 0;}
-  100% {right: 50px;}
+  100% {right: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveleft {
   0%   {right: 0;}
-  100% {right: 50px;}
+  100% {right: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveright {
   0%   {left: 0;}
-  100% {left: 50px;}
+  100% {left: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveright {
   0%   {left: 0;}
-  100% {left: 50px;}
+  100% {left: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amovedown {
   0%   {top: 0;}
-  25% {top: 15px;}
-  50% {top: 25px;}
-  75% {top: 15px;}
+  25% {top: 12px;}
+  50% {top: 22px;}
+  75% {top: 12px;}
   100% {top: 0;}
 }
 
 /* Standard syntax */
 @keyframes amovedown {
   0%   {top: 0;}
-  25% {top: 15px;}
-  50% {top: 25px;}
-  75% {top: 15px;}
+  25% {top: 12px;}
+  50% {top: 22px;}
+  75% {top: 12px;}
   100% {top: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveup {
   0%   {bottom: 0;}
-  25% {bottom: 15px;}
-  50% {bottom: 25px;}
-  75% {bottom: 15px;}
+  25% {bottom: 12px;}
+  50% {bottom: 22px;}
+  75% {bottom: 12px;}
   100% {bottom: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveup {
   0%   {bottom: 0;}
-  25% {bottom: 15px;}
-  50% {bottom: 25px;}
-  75% {bottom: 15px;}
+  25% {bottom: 12px;}
+  50% {bottom: 22px;}
+  75% {bottom: 12px;}
   100% {bottom: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveleft {
   0%   {right: 0;}
-  25% {right: 15px;}
-  50% {right: 25px;}
-  75% {right: 15px;}
+  25% {right: 12px;}
+  50% {right: 22px;}
+  75% {right: 12px;}
   100% {right: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveleft {
   0%   {right: 0;}
-  25% {right: 15px;}
-  50% {right: 25px;}
-  75% {right: 15px;}
+  25% {right: 12px;}
+  50% {right: 22px;}
+  75% {right: 12px;}
   100% {right: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveright {
   0%   {left: 0;}
-  25% {left: 15px;}
-  50% {left: 25px;}
-  75% {left: 15px;}
+  25% {left: 12px;}
+  50% {left: 22px;}
+  75% {left: 12px;}
   100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveright {
   0%   {left: 0;}
-  25% {left: 15px;}
-  50% {left: 25px;}
-  75% {left: 15px;}
+  25% {left: 12px;}
+  50% {left: 22px;}
+  75% {left: 12px;}
   100% {left: 0;}
 }
 
@@ -1690,5 +1690,367 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url("/assets/images/infobar/spellkey.png") no-repeat;
   color: #c2aa97;
   padding: 4px 10px 8px 10px;
+}
+
+
+
+.mv4-pj-down {
+  -webkit-animation: mv4movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-up {
+  -webkit-animation: mv4moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-left {
+  -webkit-animation: mv4moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-right {
+  -webkit-animation: mv4moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4movedown {
+  0%   {top: 0;}
+  100% {top: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4movedown {
+  0%   {top: 0;}
+  100% {top: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveleft {
+  0%   {right: 0;}
+  100% {right: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveleft {
+  0%   {right: 0;}
+  100% {right: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveright {
+  0%   {left: 0;}
+  100% {left: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveright {
+  0%   {left: 0;}
+  100% {left: 160px;}
+}
+
+
+
+.mv3-pj-down {
+  -webkit-animation: mv3movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-up {
+  -webkit-animation: mv3moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-left {
+  -webkit-animation: mv3moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-right {
+  -webkit-animation: mv3moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3movedown {
+  0%   {top: 0;}
+  100% {top: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3movedown {
+  0%   {top: 0;}
+  100% {top: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveleft {
+  0%   {right: 0;}
+  100% {right: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveleft {
+  0%   {right: 0;}
+  100% {right: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveright {
+  0%   {left: 0;}
+  100% {left: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveright {
+  0%   {left: 0;}
+  100% {left: 120px;}
+}
+
+
+
+
+.mv2-pj-down {
+  -webkit-animation: mv2movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-up {
+  -webkit-animation: mv2moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-left {
+  -webkit-animation: mv2moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-right {
+  -webkit-animation: mv2moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2movedown {
+  0%   {top: 0;}
+  100% {top: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2movedown {
+  0%   {top: 0;}
+  100% {top: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveleft {
+  0%   {right: 0;}
+  100% {right: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveleft {
+  0%   {right: 0;}
+  100% {right: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveright {
+  0%   {left: 0;}
+  100% {left: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveright {
+  0%   {left: 0;}
+  100% {left: 80px;}
+}
+
+
+
+
+.mv1-pj-down {
+  -webkit-animation: mv1movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-up {
+  -webkit-animation: mv1moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-left {
+  -webkit-animation: mv1moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-right {
+  -webkit-animation: mv1moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1movedown {
+  0%   {top: 0;}
+  100% {top: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1movedown {
+  0%   {top: 0;}
+  100% {top: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveleft {
+  0%   {right: 0;}
+  100% {right: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveleft {
+  0%   {right: 0;}
+  100% {right: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveright {
+  0%   {left: 0;}
+  100% {left: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveright {
+  0%   {left: 0;}
+  100% {left: 40px;}
 }
 

@@ -64,9 +64,10 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 }
                 dungeonActive = true;
 
-                if(dviewer.characters[dviewer.active].equipped_spells) {
+                if(dungeon.user.character.equipped_spells) {
                     var cpt = 0;
-                    skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
+                    var styles;
+                    skills_list = dungeon.user.character.equipped_spells.map(skill => {
                         var classSkill = 'skill';
                         if(dungeonActive)
                         {
@@ -76,7 +77,29 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         }
                         cpt++;
                         var skill_image = "assets/images/skills/"+skill.image;
-                      return (<div className="oneSkill"><span>{cpt}</span><Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image><div className="info"><h3>{skill.name}</h3><h4>Description: {skill.description}</h4><ul><li>Action cost: {skill.action_cost}</li><li>Energy cost: {skill.energy_cost}</li><li>Damage instant: {skill.damage_instant}</li><li></li></ul></div></div>);
+                        var cd_percent = parseFloat(1);
+                        if(skill.cooldown)
+                        {
+                            cd_percent  = 1 - (Math.round(parseInt(skill.cooldown) * 100.0 / parseInt(skill.rest)) / 100);
+                        }
+                        styles = {
+                            opacity: cd_percent
+                        };
+                      return (
+                          <div className="oneSkill">
+                              <span>{cpt}</span>
+                              <Image style={styles} key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image>
+                              <div className="info">
+                                  <h3>{skill.name}</h3>
+                                  <h4>Description: {skill.description}</h4>
+                                  <ul>
+                                      <li>Action cost: {skill.action_cost}</li>
+                                      <li>Energy cost: {skill.energy_cost}</li>
+                                      <li>Damage instant: {skill.damage_instant}</li>
+                                      <li></li>
+                                  </ul>
+                              </div>
+                          </div>);
                     })
                 }
 
