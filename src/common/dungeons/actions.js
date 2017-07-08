@@ -33,6 +33,8 @@ export const ATTACK_MONSTER = 'ATTACK_MONSTER';
 export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
+export const SET_PSEUDO = 'SET_PSEUDO';
+
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -773,17 +775,17 @@ export const LoadClasses = (snap: Object) => {
 };
 
 export const setClass = (classe,viewer) => ({getUid,firebase}) => {
-    viewer.characters = [];
-    viewer.characters.push(classe);
-    viewer.active = 0;
-
-    firebase.update({
-        [`users/${viewer.id}/characters`]: viewer.characters,
-        [`users/${viewer.id}/active`]: viewer.active,
-    });
+    // viewer.characters = [];
+    // viewer.characters.push(classe);
+    // viewer.active = 0;
+    //
+    // firebase.update({
+    //     [`users/${viewer.id}/characters`]: viewer.characters,
+    //     [`users/${viewer.id}/active`]: viewer.active,
+    // });
     return {
         type: SET_CLASSE,
-        payload: { viewer },
+        payload: { classe },
     };
 };
 
@@ -809,6 +811,20 @@ export const LoadTutoRef = (snap: Object) => {
         type: LOAD_TUTO_REF,
         payload: { tutoriel },
     };
+};
+
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    console.log(viewer);
+    console.log(classe);
+    console.log(pseudo);
+    // viewer.characters = [];
+    // viewer.characters.push(classe);
+    // viewer.active = 0;
+    //
+    // firebase.update({
+    //     [`users/${viewer.id}/characters`]: viewer.characters,
+    //     [`users/${viewer.id}/active`]: viewer.active,
+    // });
 };
 
 export const LoadViewer = (viewer) => ({ firebase }) => {

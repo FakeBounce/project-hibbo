@@ -14,10 +14,11 @@ type Props = {
 const Classe = ({ classe,viewer,setClass }: Props) => {
     var src = "/assets/images/classes/"+classe.sprites_name+".png";
     return (
-        <div className="classe-choice" onClick={() => setClass(classe,viewer)}>
-
-            <Image  src={src} />
+        <div className="classe-choice">
+            {/*<Image src={src} />*/}
             <h3>
+
+                <input type="radio" value={classe.name} name="class" />
                 {classe.name}
             </h3>
         </div>

@@ -16,7 +16,9 @@ const State = Record({
     tutoriel: null,
     dungeonsOP: Map(),
     classes: null,
-    division: null
+    division: null,
+    pseudo: null,
+    classe: null
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -70,8 +72,8 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.SET_CLASSE: {
-            const { viewer } = action.payload;
-            return state.set('viewer', viewer);
+            const { classe } = action.payload;
+            return state.set('classe', classe);
         }
 
         case actions.LOAD_TUTO_REF: {
@@ -228,6 +230,15 @@ const dungeonsReducer = (state = new State(), action) => {
             vl++;
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
                 .set('verifloaded',vl);
+        }
+
+        case actions.SET_PSEUDO: {
+            console.log(action.payload);
+            let payload = action.payload;
+            if(payload.length > 0){
+                return state.set("pseudo",payload);
+            }
+            return state;
         }
 
         default:

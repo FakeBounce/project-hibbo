@@ -1304,7 +1304,49 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .container-classe{
   width: 70%;
-  margin: auto;
+  float: left;
+  padding:50px;
+}
+
+.container-classe-pseudo{
+  width: 30%;
+  text-align: center;
+  //background-size: contain;
+  //background: url("/assets/images/interface/scroll-classe.png") no-repeat;
+  float:left;
+  height: auto;
+}
+
+.center-scroll{
+  width: 100%;
+  padding:60px;
+  color:black;
+}
+
+.center-scroll div{
+  height: 50px;
+
+}
+
+.center-scroll .div-left span, .center-scroll .div-left .Input *{
+  width: 50%!important;
+  float: left;
+}
+
+.center-scroll .div-left .Label{
+  line-height:32px!important;
+}
+
+.container-classe-pseudo h2 {
+  height: 1em;
+  margin-top: 1.5em;
+  color: #c2aa97;
+}
+
+.classe_form{
+  width: 100%;
+  padding:50px;
+  max-width: none!important;
 }
 
 .classe-choice{
@@ -1315,19 +1357,38 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
-.classe-choice:nth-child(1){
-  height: 400px;
-}
-
-.classe-choice:nth-child(2){
-  height: 500px;
-}
-
-.classe-choice:nth-child(3){
-  height: 400px;
-}
-
 .classe-choice img{
-  height:100%;
-  width: auto;
+  height:auto;
+  width: 80%;
+}
+
+@media screen and (max-width: 1050px) {
+
+  .container-classe{
+    width: 50%;
+    padding: 10px;
+  }
+  .classe-choice img{
+    height: inherit;
+    width: auto;
+  }
+
+  .classe-choice {
+    width: 100%;
+    float: none;
+    display: flex;
+    height: 150px;
+  }
+}
+
+.container-classe label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+.container-classe label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  border:2px solid #f00;
 }
