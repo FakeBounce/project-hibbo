@@ -6,7 +6,8 @@ import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
+import { Block, View, Text, Image, Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
@@ -23,6 +24,33 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let maxexperience = 1000;
     let skill_function = false;
 
+    onkeydown = (event: KeyboardEvent) => {
+      var skills_list = dungeon.user.character.equipped_spells;
+      if(event.key === "1" || event.key === "&"){
+        CanUseSkill(dungeon, dviewer, skills_list[0]);
+      }
+      if(event.key === "2" || event.key === "é"){
+        CanUseSkill(dungeon, dviewer, skills_list[1]);
+      }
+      if(event.key === "3" || event.key === '"'){
+        CanUseSkill(dungeon, dviewer, skills_list[2]);
+      }
+      if(event.key === "4" || event.key === "'"){
+        CanUseSkill(dungeon, dviewer, skills_list[3]);
+      }
+      if(event.key === "5" || event.key === "("){
+        CanUseSkill(dungeon, dviewer, skills_list[4]);
+      }
+      if(event.key === "6" || event.key === "-"){
+        CanUseSkill(dungeon, dviewer, skills_list[5]);
+      }
+      if(event.key === "7" || event.key === "è"){
+        CanUseSkill(dungeon, dviewer, skills_list[6]);
+      }
+      if(event.key === "8" || event.key === "_"){
+        CanUseSkill(dungeon, dviewer, skills_list[7]);
+      }
+    };
     if(!dviewer)
     {
         LoadViewer(viewer);
@@ -71,7 +99,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         var classSkill = 'skill';
                         if(dungeonActive)
                         {
-                            skill_function = function(sk){
+                            skill_function = function (sk) {
                                 CanUseSkill(dungeon,dviewer,sk);
                             };
                         }
@@ -136,10 +164,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
 
     return (
         <View className={classStep}>
-
-            <div className={classN}>
-            </div>
-
+            <div className={classN}></div>
             <Block>{dviewer && tutoriel &&
             <div className="cadre-tutoriel">
                 <div className="tuto-text">{tutoriel.description}</div>
@@ -174,7 +199,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     <div className="cadre-droite-bas">
                         <div className="cmenu cadre-dungeons">
                             <a name="dungeons" id="dungeons"></a>
-
                             {!loaded ?
                                 <Loading />
                                 : viewer ?
