@@ -23,50 +23,71 @@ export const REMOVE_MAP = 'REMOVE_MAP';
 export const REMOVE_DUNGEONS = 'REMOVE_DUNGEONS';
 export const ACTIVE_DUNGEONS = 'ACTIVE_DUNGEONS';
 export const SAVE_MAP_NAME = 'SAVE_MAP_NAME';
+export const FULL_BLOCK_RIGHT = 'FULL_BLOCK_RIGHT';
+export const FULL_BLOCK_TOP = 'FULL_BLOCK_TOP';
 
 export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'editormaps/'+worldmap.id;
+    console.log("v",viewer);
+    if(viewer) {
 
-    var Uid = getUid();
-    const getPromise = async () => {
-        try {
-            return await firebase.database.ref(path).once('value').then(function(snapshot){
+        var Uid = getUid();
 
-                let worldmap = snapshot.val();
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref(path).once('value').then(function (snapshot) {
 
-                let worldmapEdit = {
-                    id: Uid,
-                    worldmap_id: worldmap.id,
-                    name: worldmap.name,
-                    user :
-                        {
-                            id:viewer.id,
-                            displayName:viewer.displayName
+                    let worldmap = snapshot.val();
+
+                    let worldmapEdit = {
+                        id: Uid,
+                        worldmap_id: worldmap.id,
+                        name: worldmap.name,
+                        user: {
+                            id: viewer.id,
+                            displayName: viewer.displayName,
+                            character: worldmap.character,
+                            default_character: {
+                                movevement: worldmap.character.movement,
+                                action: worldmap.character.action,
+                                damage: worldmap.character.damage,
+                                maxhealth: worldmap.character.health,
+                                maxenergy: worldmap.character.energy,
+                                maxexperience: 1000,
+                            },
                         },
-                    worldmap:worldmap,
-                    active_dungeon: worldmap.active_dungeon,
-                    viewonmonster:false,
-                    createdAt: now()
-                };
-                if(worldmap.id)
-                {
-                    firebase.update({
-                        [`activeMap/${viewer.id}`]: worldmapEdit,
-                        [`users/${viewer.id}/active_map`]: Uid,
-                    });
-                }
+                        worldmap: worldmap,
+                        active_dungeon: worldmap.active_dungeon,
+                        viewonmonster: false,
+                        createdAt: now()
+                    };
+                    if (worldmap.id) {
+                        firebase.update({
+                            [`activeMap/${viewer.id}`]: worldmapEdit,
+                            [`users/${viewer.id}/active_map`]: Uid,
+                        });
+                    }
 
-                return worldmapEdit;
-            });
-        } catch (error) {
-            console.log('An error occured. We could not load the editor. Try again later.');
-            throw error;
+                    return worldmapEdit;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the editor. Try again later.');
+                throw error;
+            }
+        };
+
+        return {
+            type: LOAD_EDIT_MAP,
+            payload: getPromise(),
         }
-    };
+
+}else
+{
     return {
-        type: LOAD_EDIT_MAP,
-        payload: getPromise(),
+        type: 'LOAD_EDIT_MAP',
+        payload: 'failed'
     }
+}
 };
 
 export const LoadEditorMaps = (snap: Object) => {
@@ -155,7 +176,9 @@ export const cancelWorldmap = (worldmap) =>  ({ firebase }) => {
     }
 };
 
-export const saveWorldmap = (worldmap) =>  ({ firebase }) => {
+export const saveWorldmap = (worldmap,viewer) =>  ({ firebase }) => {
+
+    worldmap.worldmap.character = worldmap.user.character;
 
     firebase.update({
         [`editormaps/${worldmap.worldmap_id}`]: worldmap.worldmap,
@@ -171,8 +194,6 @@ export const saveWorldmap = (worldmap) =>  ({ firebase }) => {
 };
 export const addNameMap = (name,viewer,worldmap) =>  ({ firebase }) => {
 
-    console.log("word",worldmap);
-    console.log("word",worldmap.worldmap);
     if(worldmap && name && viewer)
     {
         firebase.update({
@@ -180,6 +201,7 @@ export const addNameMap = (name,viewer,worldmap) =>  ({ firebase }) => {
             [`activeMap/${worldmap.user.id}/worldmap/name`]: name,
         });
     }
+
 
     return {
         type: SAVE_MAP_NAME,
@@ -244,41 +266,60 @@ export const picktile = (maptile,viewer) =>  ({ firebase }) => {
 export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
     var path = 'monsters/'+monster.id;
 
-    const getPromise = async () => {
-        try {
-            return await firebase.database.ref(path).once('value').then(function(snapshot){
-                let monster = snapshot.val();
 
-                let monsterPick = {
-                    id: monster.id,
-                    image: monster.image,
-                    name : monster.name,
-                    damage: monster.damage,
-                    health: monster.health,
-                    maxhealth: monster.maxhealth,
-                    movement: monster.movement,
-                    range: monster.range,
-                    type: monster.type,
-                };
-                if(monster.id)
-                {
-                    firebase.update({
-                        [`activeMonster/${viewer.id}`]: monsterPick,
-                        [`users/${viewer.id}/active_pickmonster`]: monster.id,
-                    });
-                }
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref(path).once('value').then(function(snapshot){
+                    let monster = snapshot.val();
+                    let monsterPick;
+                    if(monster.type == "pj")
+                    {
+                        monsterPick = {
+                            id: monster.id,
+                            image: monster.image,
+                            name: monster.name,
+                            damage: monster.damage,
+                            health: monster.health,
+                            maxhealth: monster.maxhealth,
+                            type: monster.type,
+                            row:0,
+                            col:0,
+                        };
+                    }
 
-                return monsterPick;
-            });
-        } catch (error) {
-            console.log('An error occured. We could not load the monster. Try again later.');
-            throw error;
-        }
-    };
-    return {
-        type: PICK_MONSTER,
-        payload: getPromise(),
-    };
+                    else{
+                        monsterPick = {
+                            id: monster.id,
+                            image: monster.image,
+                            name: monster.name,
+                            damage: monster.damage,
+                            health: monster.health,
+                            maxhealth: monster.maxhealth,
+                            movement: monster.movement,
+                            range: monster.range,
+                            type: monster.type,
+                        };
+                    }
+                    if(monster.id)
+                    {
+                        firebase.update({
+                            [`activeMonster/${viewer.id}`]: monsterPick,
+                            [`users/${viewer.id}/active_pickmonster`]: monster.id,
+                        });
+                    }
+
+                    return monsterPick;
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the monster. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: PICK_MONSTER,
+            payload: getPromise(),
+        };
+
 };
 
 export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,firebase }) => {
@@ -306,6 +347,7 @@ export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,fireb
 
 export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,firebase }) => {
 
+
     if(monster)
     {
         var id = monster.id;
@@ -319,6 +361,19 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
                 delete worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number];
             }
             worldmap.worldmap.maptiles[row][col].character = null;
+        }
+        if(monster.type == "pj")
+        {
+            if(worldmap.worldmap.maptiles)
+            {
+                worldmap.worldmap.maptiles[worldmap.user.character.row][worldmap.user.character.col].character = null;
+
+                worldmap.worldmap.maptiles[row][col].character = monster;
+
+                worldmap.user.character.row = row;
+                worldmap.user.character.col = col;
+            }
+
         }
         else {
             var mo = monster;
@@ -361,6 +416,7 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
     };
 
 };
+
 
 export const ReloadActiveMap = (snap: Object) => {
     const worldmaps = snap.val();
@@ -420,8 +476,15 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
     var UidMap = getUid();
     let map = {};
     let maptiles = [];
+    let character=""
 
+    let activeUser = false;
 
+    if(viewer){
+        character = viewer.characters[viewer.active];
+
+        console.log('char',character);
+    }
     for(var i = 0 ; i <16 ;i ++)
     {
         maptiles[i]=[];
@@ -461,7 +524,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15};
+    map = {id: UidMap, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character};
 
     if(viewer)
     {
@@ -494,7 +557,7 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
     };
 };
 
-export const ZoomEditMap = (worldmap) =>  ({firebase }) => {
+export const ZoomEditMap = (worldmap,camera) =>  ({firebase}) => {
 
     let newmap = worldmap;
 
@@ -516,6 +579,187 @@ export const ZoomEditMap = (worldmap) =>  ({firebase }) => {
         payload: newmap
     }
 };
+
+export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
+
+    let newmap = camera;
+
+    if(worldmap)
+    {
+
+        if(worldmap.worldmap.size_map != newmap.size_map)
+        {
+            for(let i=0; i < worldmap.worldmap.size_map ; i++)
+            {
+
+                newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+            }
+        }
+
+
+        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        {
+            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+        }
+        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: ZOOM_PLUS_EDIT,
+        payload: newmap
+    }
+};
+
+export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
+
+    let newmap = worldmap;
+
+    if(worldmap)
+    {
+        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        {
+            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+        }
+        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: ZOOM_PLUS_EDIT,
+        payload: newmap
+    }
+};
+
+
+export const MoveUpEditMap = (worldmap,camera) =>  ({firebase}) => {
+
+    let newmap = worldmap;
+
+    if(worldmap)
+    {
+        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        {
+            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+        }
+        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: ZOOM_PLUS_EDIT,
+        payload: newmap
+    }
+};
+export const MoveDownEditMap = (worldmap,camera) =>  ({firebase}) => {
+
+    let newmap = worldmap;
+
+    if(worldmap)
+    {
+        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        {
+            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+        }
+        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: ZOOM_PLUS_EDIT,
+        payload: newmap
+    }
+};
+
+
+export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase }) => {
+
+    let newmap = worldmap;
+
+    if(row && worldmap && tile)
+    {
+
+        for(let i=0; i <= worldmap.worldmap.size_map ; i++)
+        {
+            if (!worldmap.worldmap.maptiles[row][i].character) {
+                tile.id = getUid();
+
+                newmap.worldmap.maptiles[row][i].image = tile.image;
+                newmap.worldmap.maptiles[row][i].title = tile.title;
+                newmap.worldmap.maptiles[row][i].type = tile.type;
+
+            }
+            else {
+                if (tile.type == "walkable") {
+                    tile.id = getUid();
+                    newmap.worldmap.maptiles[row][i] = tile;
+                }
+            }
+            tile.id = getUid();
+        }
+        tile.id = getUid();
+
+        console.log('row', newmap.worldmap.maptiles[row]);
+        firebase.update({
+            [`activeMap/${viewer.id}`]: newmap,
+        });
+
+    }
+
+    return {
+        type: FULL_BLOCK_RIGHT,
+        payload: tile,
+    };
+
+};
+export const FullBlockTop = (col,worldmap, viewer, tile) => ({ getUid,firebase }) => {
+
+    let newmap = worldmap;
+
+    if(col && worldmap && tile)
+        {
+
+            for(let i=0; i <= worldmap.worldmap.size_map ; i++)
+            {
+                if (!worldmap.worldmap.maptiles[i][col].character) {
+
+                    console.log("id col",newmap.worldmap.maptiles[i][col]);
+                    tile.id = getUid();
+                    newmap.worldmap.maptiles[i][col] = tile;
+                }
+                else {
+                    if (tile.type == "walkable") {
+                        tile.id = getUid();
+                        newmap.worldmap.maptiles[i][col] = tile;
+                    }
+                }
+            }
+            firebase.update({
+                [`activeMap/${viewer.id}`]: newmap,
+            });
+
+        }
+
+    return {
+        type: FULL_BLOCK_TOP,
+        payload: newmap,
+    };
+
+};
+
+
 
 function jsonConcat(o1, o2) {
     for (var key in o2) {

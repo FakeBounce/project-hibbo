@@ -11,14 +11,14 @@ import { Block, Flex, Text, View,Image,Form,Input } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
-import { addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
+import { FullBlockRight,FullBlockTop,addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
+let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -87,25 +87,65 @@ let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldm
 
     if(worldmap && worldmap.worldmap)
     {
+        let activeConstructMapTop = false;
+        let activeConstructMapRight = false;
+        let activeUserMapStart = false;
 
         if(!worldmap.viewonmonster)
         {
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.worldmap.maptiles[keyRow]).map(function (keyCol) {
+
                     if(worldmap.worldmap.maptiles[keyRow][keyCol].character && worldmap.worldmap.maptiles[keyRow][keyCol].character.type == "pj") {
 
+                        if(worldmap.worldmap.maptiles[keyRow][keyCol] == worldmap.worldmap.maptiles[worldmap.worldmap.size_map_min][worldmap.worldmap.size_map_min]   )
+                        {
+                            activeUserMapStart = true;
+                        }
                         return(
-                            <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
+                            <div>
+                                {
+                                    activeUserMapStart &&
+                                    <div><span className="top" onClick={() => FullBlockTop(keyCol,worldmap, viewer, activeTile)} >+</span></div>
+                                 }
+
+                                     <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
                                      worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]}
-                            />);
+                                    />
+                            </div>);
                     }
 
                     else
                     {
-                        return(
+                        activeConstructMapTop = false;
+                        activeConstructMapRight = false;
+
+                        if(worldmap.worldmap.maptiles[keyRow][keyCol] == worldmap.worldmap.maptiles[worldmap.worldmap.size_map_min][keyCol]   )
+                        {
+                            activeConstructMapTop = true;
+                        }
+
+                        if(worldmap.worldmap.maptiles[keyRow][keyCol]  == worldmap.worldmap.maptiles[keyRow][worldmap.worldmap.size_map])
+                        {
+                            activeConstructMapRight = true;
+                        }
+
+                            return(
+                            <div>
+                                {
+                                    activeConstructMapTop &&
+                                    <div><span className="top" onClick={() => FullBlockTop(keyCol,worldmap, viewer, activeTile)} >+</span></div>
+                                }
+                                {
+                                    activeConstructMapRight &&
+                                    <div><span className="bot" onClick={() => FullBlockRight(keyRow,worldmap, viewer, activeTile)} >+</span></div>
+                                }
+
+
                             <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
                                      worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]} pickmaptile={pickmaptile}
                             />
+                            </div>
                         );
                     }
 
@@ -123,21 +163,13 @@ let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldm
             editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.worldmap.maptiles[keyRow]).map(function (keyCol) {
 
-                    if(worldmap.worldmap.maptiles[keyRow][keyCol].character && worldmap.worldmap.maptiles[keyRow][keyCol].character.type == "pj") {
+                     return(
 
-                            return(
-                            <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
-                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]}
-                            />);
-                    }
-                    else
-                    {
-                        return(
-                        <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
-                                 worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]} pickmapmonster={pickmapmonster}
-                        />
-                         );
-                       }
+                    <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
+                             worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]}
+                    />);
+
+
                 });
                 return (
                     <Flex key={keyRow} >{col}</Flex>
@@ -149,19 +181,11 @@ let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldm
                 dungeon = true;
             }
         }
-
     }
 
     return (
     <View>
-      <div>
-        {
-          dungeon?
-            <div onClick={() => RemoveMapDungeon(worldmap,viewer)} className="btn-editeur-remove">DISABLE DUNGEON</div>
-            :
-            <div onClick={() => ActiveMapDungeon(worldmap,viewer)} className="btn-editeur-active">ENABLE DUNGEON</div>
-        }
-      </div>
+
       <div className="">
         <div className="cadre-gauche-editeur">
           {viewmonster ?
@@ -183,20 +207,29 @@ let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldm
             </div>
           </div>
         </div>
-        <div className="cadre-droite">
+        <div className="cadre-droite-ed">
           <div className="cadre-droite-interact-gauche">{ editor }</div>
           <div className="cadre-droite-interact-droite">
             <div>
                 <Form small>
                     <Input
                         {...fields.name}
-                        label=""
-                        maxLength={100}
+                        label="Nom de la carte"
+                        maxLength={10}
                         onKeyDown={onInputKeyDown}
                         placeholder={worldmap.name}
+                        className = "input-map-editor"
                     />
                 </Form>
             </div>
+              <div>
+                  {
+                      dungeon?
+                          <div onClick={() => RemoveMapDungeon(worldmap,viewer)} className="btn-editeur-remove">DISABLE DUNGEON</div>
+                          :
+                          <div onClick={() => ActiveMapDungeon(worldmap,viewer)} className="btn-editeur-active">ENABLE DUNGEON</div>
+                  }
+              </div>
             <div>
               <h2>Zoom</h2>
               <div className="zoom">
@@ -209,7 +242,7 @@ let EditorMap = ({ addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldm
         <ul className="actionsEditeur">
           <li onClick={() => cancelWorldmap(worldmap)}><div className="btn-editeur-exit">EXIT</div></li>
           <li onClick={() => RemoveWorldmap(worldmap)}><div className="btn-editeur-delete">DELETE</div></li>
-          <li onClick={() => saveWorldmap(worldmap)}><div className="btn-editeur-save">SAVE</div></li>
+          <li onClick={() => saveWorldmap(worldmap,viewer)}><div className="btn-editeur-save">SAVE</div></li>
         </ul>
       </div>
     </View>
@@ -238,4 +271,4 @@ export default connect(state => ({
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
-}), { addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
+}), { FullBlockRight,FullBlockTop,addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);

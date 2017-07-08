@@ -27,6 +27,7 @@ let WorldMap = ({ worldmap,viewer,loadWorldMap }) => {
             cursor: 'pointer',
         },
     };
+
     return (
         <View>
             <div className="one-level">

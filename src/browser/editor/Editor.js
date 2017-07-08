@@ -122,10 +122,10 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                                 <div className="one-level">
 
 
-                                    <div className="choose-level" onClick={() => CreateNewWorldMap(viewer)}>
+                                    <div className="choose-level" onClick={() => CreateNewWorldMap(dviewer)}>
                                         <span>+</span>
                                     </div>
-                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(viewer)}>Description : New</Text>
+                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Description : New</Text>
                                 </div>
                                 :
                                 <div></div>

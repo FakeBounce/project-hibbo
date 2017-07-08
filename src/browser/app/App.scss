@@ -83,9 +83,7 @@ background-attachment:fixed;
 }
 
 .actionsEditeur{
-  background: url(/assets/images/planche-1.png);
   display: -webkit-inline-box;
-  margin:0;
   padding:0;
 }
 
@@ -96,6 +94,15 @@ background-attachment:fixed;
 .nameMap{
   padding: 10px;
   font-size: 15px;
+}
+span.bot {
+  position: absolute;
+  right: 275px;
+}
+
+Input.input-map-editor{
+  margin:0 auto !important;
+  width: auto !important;
 }
 
 .zoom{
@@ -619,7 +626,7 @@ background-attachment:fixed;
   display: block;
   background-color: rgba(0, 0, 0, 0.3);
   width: 40%;
-  height: 383px;
+  height: 452px;
   border-right: 1px solid #fff;
   background: url(/assets/images/planche-1.png);
 }
@@ -1059,6 +1066,10 @@ progress[value].progressSkills::-webkit-progress-value {
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
+}
+
+.cadre-droite-ed{
+  padding-top: 30px;
 }
 
 @media screen and (max-width: 1050px) {

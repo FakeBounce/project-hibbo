@@ -960,6 +960,8 @@ export const LoadClasses = (snap: Object) => {
 
 export const setClass = (classe,viewer) => ({getUid,firebase}) => {
     viewer.characters = [];
+    classe.row = 0;
+    classe.col = 0;
     viewer.characters.push(classe);
     viewer.active = 0;
 
