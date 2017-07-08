@@ -48,7 +48,6 @@ const dungeonsReducer = (state = new State(), action) => {
                 else {
                     viewer = action.payload.viewer;
                 }
-                console.log('MAJ viewer',viewer);
                 return state.set('viewer', viewer);
             }
             return state;
@@ -56,7 +55,6 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.LOAD_VIEWER_CHANGES: {
             let  viewer = action.payload;
-            console.log('v:',   viewer);
             let vviewer = viewer.viewer;
             if(viewer.skills)
             vviewer.skills = viewer.skills;

@@ -28,7 +28,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
 
     let activeTile = false;
     let activeMonster = false;
-
+    let isPlayerMap = false;
 
     if (monsters) {
         monsters.map(listm => {
@@ -140,7 +140,9 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                                     :
                                     worldmaps ?
                                         worldmaps.map(activeMap =>
+
                                             <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
+
 
                                         )
 
