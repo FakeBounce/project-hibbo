@@ -11,6 +11,7 @@ nconf.env('__');
 
 // Remember, never put secrets in the source code. Use environment variables for
 // production or src/common/config.json for development instead.
+ 
 nconf.defaults({
   appName: require('../../package.json').name,
   // Use appVersion defined in gulp env task or Heroku dyno metadata.

@@ -6,7 +6,7 @@ import React from 'react';
 import Character from './Character';
 import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
-import { moveCharacter,movingCharacter } from '../../common/dungeons/actions';
+import { moveCharacter,movingCharacter,trySkill,endSkill } from '../../common/dungeons/actions';
 
 type Props = {
     dungeon: Object,
@@ -15,7 +15,7 @@ type Props = {
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -28,6 +28,58 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     var classImage = "case ";
     let error_message = '';
     var move = false;
+    let maptileAction;
+    var is_targeted = false;
+
+    maptileAction = function(){
+        if(typeof maptile.character !== 'undefined')
+        {
+            if(maptile.character != null)
+            {
+                if(maptile.character.type == "pj")
+                {
+                    return false;
+                }
+            }
+        }
+
+        return movingCharacter(dungeon,row,col);
+    };
+    if(typeof maptile.is_target !== 'undefined')
+    {
+        if(maptile.is_target)
+        {
+            classImage = classImage+ " is_target";
+            is_targeted = true;
+            maptileAction = function(){
+                trySkill(dungeon,row,col);
+            };
+        }
+    }
+    if(typeof maptile.is_target_aoe !== 'undefined')
+    {
+            if(maptile.is_target_aoe)
+            {
+                classImage = classImage+ " is_target_aoe";
+            }
+    }
+    if(dungeon.user.character.is_using_skill)
+    {
+        if(typeof maptile.is_target !== 'undefined') {
+            if (!maptile.is_target)
+            {
+                maptileAction = function() {
+                    endSkill(dungeon, dungeon.user.character);
+                }
+
+            }
+        }
+        else {
+            maptileAction = function() {
+                endSkill(dungeon, dungeon.dungeon.user);
+            }
+        }
+    }
     if(typeof maptile.character !== 'undefined' && maptile.character != null)
     {
         character = true;
@@ -37,44 +89,15 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         }
     }
 
-    const tryMoveCharacter = function(){
-        let isMoving = movingCharacter(dungeon,row,col);
-        if(isMoving.component.canMove)
-        {
-            move = isMoving;
-             switch(isMoving.component.direction)
-             {
-                 case 'left': {
-                     classImage+= ' moveleft';
-                 }
-                 case 'right': {
-                     classImage+= ' moveright';
-                 }
-                 case 'up': {
-                     classImage+= ' moveup';
-                 }
-                 case 'down': {
-                     classImage+= ' movedown';
-                 }
-            }
-            error_message = '';
-
-        }
-        else
-        {
-            // error_message = isMoving.component.message;
-        }
-    };
-
     return (
     <Flex>
         {
           character ?
-            <Flex className={classImage} style={styles.bg}>
-                <Character dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
+                <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={tryMoveCharacter}>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
             </Flex>
         }
     </Flex>
@@ -84,6 +107,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
+    verifloaded: React.PropTypes.number,
     moveCharacter: React.PropTypes.func.isRequired,
     movingCharacter: React.PropTypes.func.isRequired,
     dungeonsOP: React.PropTypes.object,
@@ -92,4 +116,4 @@ Maptile.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { moveCharacter,movingCharacter }) (Maptile);
+}), { moveCharacter,movingCharacter,trySkill,endSkill }) (Maptile);

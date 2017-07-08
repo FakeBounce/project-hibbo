@@ -31,7 +31,7 @@ const editorReducer = (state = new State(), action) => {
 
             if(!viewer)
             {
-                return state.set('viewer', action.payload);
+                return state.set('viewer', action.payload.username);
             }
             return state;
         }
@@ -40,6 +40,16 @@ const editorReducer = (state = new State(), action) => {
             const list = Seq(maps)
             // .map(dungeonpPresence => new Dungeon(dungeonpPresence))
 
+                .map(maprefPresence => new Editor(maprefPresence))
+                .toList();
+            return state.set('loaded', true)
+                .set('worldmaps', list);
+
+        }
+
+        case actions.LOAD_EDITOR_MAPS: {
+            const { editormaps } = action.payload;
+            const list = Seq(editormaps)
                 .map(maprefPresence => new Editor(maprefPresence))
                 .toList();
             return state.set('loaded', true)
@@ -80,7 +90,7 @@ const editorReducer = (state = new State(), action) => {
                 .set('maptiles',list);
         }
 
-        case actions.LOAD_WORLD_MAP_SUCCESS: {
+        case actions.LOAD_EDIT_MAP_SUCCESS: {
 
             const worldmaps = action.payload;
 

@@ -3,17 +3,68 @@
  */
 
 import React from 'react';
-import WorldMap from './Worldmap';
+import WorldMap from './WorldMap';
 import EditorMap from './EditorMap';
+import EditMonster from './EditMonster';
+import EditTile from './EditTile';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadMaps,LoadMapTiles,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters } from '../../common/editor/actions';
+import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
 
 
 
-let Editor = ({worldmaps, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters }) => {
+let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
+
+    const styles = {
+        bg: {
+            backgroundImage: "",
+        }
+    };
+    let listmaptiles = [];
+    let listmonsters = [];
+    let viewmonster = false;
+
+    let activeTile = false;
+    let activeMonster = false;
+
+
+    if (monsters) {
+        monsters.map(listm => {
+
+            if (activeMonster) {
+                if (listm.id == activeMonster.id) {
+                    listmonsters.push(<EditMonster key={listm.id} monster={listm} active="active"/>);
+                }
+                else {
+                    listmonsters.push(<EditMonster key={listm.id} monster={listm}/>);
+                }
+            } else {
+                listmonsters.push(<EditMonster key={listm.id} monster={listm} />);
+            }
+        });
+    }
+    else
+    {
+        if(maptiles)
+        {
+
+            console.log('maptiles');
+            maptiles.map(list => {
+                if (activeTile) {
+                    if (list.id == activeTile.id) {
+                        listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile} active="active"/>);
+                    }
+                    else {
+                        listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile}/>);
+                    }
+                } else {
+                    listmaptiles.push(<EditTile key={list.id} maptile={list} picktile={picktile}/>);
+                }
+            });
+        }
+    }
 
     if(!dviewer)
     {
@@ -32,7 +83,7 @@ let Editor = ({worldmaps, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activ
                 mapactive = true;
                 if(viewer)
                 {
-                    wdmap.push(<EditorMap key={mapViewer.id} worldmap={mapViewer} viewer={viewer} maptiles={maptiles} monsters={monsters}Ò/>);
+                    wdmap.push(<EditorMap key={mapViewer.id} worldmap={mapViewer} viewer={viewer} maptiles={maptiles} monsters={monsters}/>);
                 }
             }
         }
@@ -46,37 +97,70 @@ let Editor = ({worldmaps, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activ
         }
 
     }
-
+    let taille;
+    if (typeof(window) !== 'undefined') {
+        taille = window.location.origin;
+    }
     return (
-        <View>
-
-            <SignOut/>
-            <audio loop autoplay="autoplay" controls>
-                <source src="/assets/images/sounds/sample.mp3" />
-            </audio>
-            {!loaded ?
-                <Loading />
-                : viewer ?
-                    mapactive?
-                        wdmap
-                        :
-                        worldmaps ?
-                    worldmaps.map(activeMap =>
-                        <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
-                    )
-
-                    : <Text>Il n'y a pas encore de map.</Text>
-                : <Text>Aucun utilisateur</Text>
-            }
+        <View className="">
+            <View className="container_editor_app-img"></View>
+            <View className="container_app-editor">
 
 
+                <div className="cadre-menu-editor">
+                    <div className="cadre-menu-div-editor">
+                        <ul className="menu-fixe-editor">
+                            <Link exactly to='/game'>Dungeons</Link>
+                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                        </ul>
+                    </div>
+                </div>
+                <div className="cadre-editor">
+                        {
+                            !mapactive?
+
+                                <div className="one-level">
+
+
+                                    <div className="choose-level" onClick={() => CreateNewWorldMap(dviewer)}>
+                                        <span>+</span>
+                                    </div>
+                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Description : New</Text>
+                                </div>
+                                :
+                                <div></div>
+                        }
+
+                    <div className="cmenu-editor">
+                        {!loaded ?
+                            <Loading />
+                            : viewer ?
+                                mapactive?
+                                    wdmap
+                                    :
+                                    worldmaps ?
+                                        worldmaps.map(activeMap =>
+                                            <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
+
+                                        )
+
+                                        : <Text>Il n'y a pas encore de map.</Text>
+                                : <Text>Aucun utilisateur</Text>
+                        }
+                    </div>
+
+                </div>
+
+
+            </View>
 
         </View>
     );
+
 };
 
 Editor = firebase((database, props) => {
-    const EditorRef = database.child('maps');
+    const EditorRef = database.child('editormaps');
     const MapActiveRef = database.child('activeMap');
     let WorldMapRef = database.child('activeMap');
     let MonsterRef = database.child('monsters');
@@ -87,7 +171,7 @@ Editor = firebase((database, props) => {
     }
     const TileRef = database.child('maptiles');
     return [
-        [EditorRef, 'on', 'value', props.LoadMaps],
+        [EditorRef, 'on', 'value', props.LoadEditorMaps],
         [TileRef, 'on', 'value', props.LoadMapTiles],
         [MapActiveRef, 'on', 'value', props.LoadMapActive],
         [WorldMapRef, 'on', 'value', props.ReloadActiveMap],
@@ -115,4 +199,4 @@ export default connect(state => ({
     activeMap: state.editor.activeMap,
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
-}), {LoadMaps, LoadMapTiles,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
+}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);

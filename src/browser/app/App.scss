@@ -42,11 +42,228 @@ background-attachment:fixed;
 .monster {
   position: absolute;
   z-index: 5;
-  height: 46px;
-  width: 46px;
+  height: 38px;
+  width: 38px;
   margin-left: 1px;
   cursor:pointer;
 }
+
+.monsterEditor {
+  position: absolute;
+  z-index: 5;
+  height: 20px;
+  width: 20px;
+  margin-left: 1px;
+  cursor:pointer;
+}
+
+.changeSelection{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttonblue.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.actionsEditeur{
+  display: -webkit-inline-box;
+  padding:0;
+}
+
+.actionsEditeur li{
+  list-style: none;
+}
+
+.nameMap{
+  padding: 10px;
+  font-size: 15px;
+}
+span.bot {
+  position: absolute;
+  right: 275px;
+}
+
+Input.input-map-editor{
+  margin:0 auto !important;
+  width: auto !important;
+}
+
+.zoom{
+  width:45%;
+  margin:0 auto;
+}
+
+.zoomPlus{
+  background: url(/assets/images/editor/zoomplus.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
+.zoomMoins{
+  background: url(/assets/images/editor/zoommoins.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
+.btn-editeur-exit{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/actionbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-save{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/dungeonbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-delete{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 5px 5px;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+  float: right;
+}
+.btn-editeur-remove{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongrey.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+.btn-editeur-active{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/buttongreen.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.cadre-droite-interact-gauche{
+  float: left;
+}
+
+.cadre-droite-interact-droite {
+  float: right;
+  width:28%;
+}
+
+
 
 .map_tile {
   margin: 0 !important;
@@ -57,8 +274,19 @@ background-attachment:fixed;
 }
 
 .case{
-  width:45px;
-  height:45px;
+  width:40px;
+  height:40px;
+  background-size: 40px;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
+}
+
+.caseEditor{
+  width:20px;
+  height:20px;
+  background-size: 20px;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
 }
 
 .caseforest{
@@ -97,6 +325,17 @@ background-attachment:fixed;
   position: absolute;
 }
 
+.container_app-editor{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1024px;
+  height: 596px;
+  margin: auto;
+  position: absolute;
+}
+
 .container_app-img{
   bottom: 0;
   left:0;
@@ -107,6 +346,18 @@ background-attachment:fixed;
   margin: auto;
   position: absolute;
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
+  z-index: 2;
+}
+.container_editor_app-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadreall-2.png") no-repeat;
   z-index: 2;
 }
 
@@ -132,13 +383,46 @@ background-attachment:fixed;
   position: relative;
 }
 
+.menu-fixe-editor a{
+  color: #fab186 !important;
+}
+
+.menu-fixe-editor li{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
+
 .menu-fixe a{
   color: #fab186;
   text-decoration: none;
 }
 
-.btn-menu{
+.btn-haut-editeur{
+  width:50%;
+  float: left;
+}
 
+.listEditeur{
+  width: 100%;
+  margin:0;
+}
+
+.blockSelection{
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px;
+  height: 275px;
+  overflow-y: scroll;
+  display: inline-block;
+  width: 300px;
 }
 
 .titre-error{
@@ -209,7 +493,43 @@ background-attachment:fixed;
 }
 
 .cadre-map-info{
+  width:45%;
+  float: left;
+}
 
+.btn-map{
+  width: 140px;
+  margin: 20px auto;
+}
+
+.btn-option-editeur{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  cursor: pointer;
+  border: 0;
+  color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 195px;
+  box-shadow: none;
+  text-align: center;
+  padding:16px;
+}
+
+.info-joueur{
+  width:100%;
+  text-align: center;
 }
 // boutons
 
@@ -271,10 +591,11 @@ background-attachment:fixed;
   background: url(/assets/images/levels/level.png) no-repeat;
   background-size: contain;
   cursor: pointer;
+  margin:0 auto;
 }
 
 .choose-level span{
-  margin-left: 30px;
+
   margin-top: 23px;
   display: inline-flex;
   font-size: 25px;
@@ -298,6 +619,16 @@ background-attachment:fixed;
   width: 380px;
   height: 350px;
   border-right: 1px solid #fff;
+}
+
+.cadre-gauche-editeur{
+  float: left;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.3);
+  width: 40%;
+  height: 452px;
+  border-right: 1px solid #fff;
+  background: url(/assets/images/planche-1.png);
 }
 
 .personnage{
@@ -440,14 +771,15 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  width: 780px;
+  width: 55%;
   height: 260px;
   float: right;
 }
 
 
-.cadre-droit{
-
+.cadre-droite-editeur{
+  width:60%;
+  float: right;
 }
 
 .monster_head {
@@ -550,52 +882,14 @@ progress[value].progressSkills::-webkit-progress-value {
   border: 1px solid #fff;
 }
 
-.objet1{
-  background: url("/assets/images/objets/1.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet2{
-  background: url("/assets/images/objets/2.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet3{
-  background: url("/assets/images/objets/3.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet4{
-  background: url("/assets/images/objets/4.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet5{
-  background: url("/assets/images/objets/5.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet6{
-  background: url("/assets/images/objets/6.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet7{
-  background: url("/assets/images/objets/7.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
-}
-
-.objet0{
-  background: url("/assets/images/objets/8.jpg") no-repeat;
-  background-size: cover;
-  cursor: pointer;
+.skills{
+  width: 53px;
+  height: 53px;
+  display: block;
+  float: left;
+  margin: 0 23px;
+  border: 1px solid #fff;
+  cursor:pointer;
 }
 
 .weapon0{
@@ -728,6 +1022,10 @@ progress[value].progressSkills::-webkit-progress-value {
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
+}
+
+.cadre-droite-ed{
+  padding-top: 30px;
 }
 
 @media screen and (max-width: 1050px) {
@@ -1108,6 +1406,23 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 0px;}
 }
 
+
+.is_target_aoe{
+  border: 1px solid #852009;
+}
+
+.is_target_aoe:hover {
+  border: 1px solid red;
+}
+
+.is_target{
+  border: 1px solid #1b6d85;
+}
+
+.is_target:hover {
+  border: 1px solid blue;
+}
+
 .selected_tile {
   border: 2px solid red;
 }
@@ -1131,8 +1446,12 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-bas-max{
   background-color: #16120F;
   width: 100%;
-  height: 150px;
+  margin-top: 5px;
+  height: 140px;
+  border: 1px solid black;
   position: relative;
+  z-index: 3;
+  border-radius: 19px;
 }
 
 .cadre-bas-max .infobar{
@@ -1171,10 +1490,21 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 73px;
 }
 
+.cadre-menu-editor{
+  background: url("/assets/images/planche-1.png");
+  width: 1020px;
+  height: 135px;
+}
+
 .cadre-menu-div{
   padding-left: 60px;
   padding-right: 70px;
   padding-top: 5px;
+}
+.cadre-menu-div-editor{
+  padding-left: 310px;
+  padding-right: 30px;
+  padding-top: 25px;
 }
 
 .cadre-droite-bas{
@@ -1188,6 +1518,31 @@ progress[value].progressSkills::-webkit-progress-value {
 .cmenu {
   width: 800px;
   height: 360px;
+}
+.Link{
+  width: 25%;
+  float: left;
+  text-align: center;
+  list-style: none;
+  cursor: pointer;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
+  z-index: 7000;
+  position: relative;
+}
+.cmenu-editor {
+  left: -51px;
+  z-index: -1;
+}
+.cadre-editor{
+  width: 1025px;
+  height: 460px;
+  background-color: #16120F;
+  position: absolute;
+  z-index: 2;
+  text-align: center;
 }
 
 .cadre-gauche-bas{
@@ -1289,7 +1644,7 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top: 25px;
 }
 
-.infobar-spell-number div {
+.infobar-spell-number .oneSkill {
   width: 100px;
   float: left;
   text-align: center;

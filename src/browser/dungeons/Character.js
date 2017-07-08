@@ -4,17 +4,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Image, Flex } from '../app/components';
-import { attackMonster,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove } from '../../common/dungeons/actions';
+import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
     dungeon: Object,
     row: Object,
     col: Object,
-    move: String
+    move: String,
+    is_targeted: Boolean,
 };
 
-const Character = ({ character,dungeon,row,col,move, attackMonster,MonsterMove,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
+const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attackMonster,MonsterMove,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
     const styles = {
         margin: '0px 0px 0px 0px'
     };
@@ -54,6 +55,21 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,MonsterMove,c
             moveCharacter(dungeon,row,col);
         },500);
     }
+    if(character.try_skill && character.type == "pj")
+    {
+
+        var gif = character.name+'-'+character.direction;
+        classes= "monster a"+gif;
+        character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
+        setTimeout(function(){
+            character.image = "/assets/images/classes/"+character.name+"/"+character.direction+".png";
+            endSkill(dungeon,character);
+        },500);
+    }
+    if(character.is_using_skill && character.type == "pj")
+    {
+            endSkill(dungeon,character);
+    }
     if(character.is_attacked && character.type == "pj")
     {
         var opposed_img = '';
@@ -84,7 +100,7 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,MonsterMove,c
         classes= classes+" attacked_"+character.attacked_direction;
     }
     const attack_a_monster = function(){
-        if(character.type == "pnj")
+        if(character.type == "pnj" && !is_targeted)
         {
             canAttackMonster(dungeon,character,row,col);
         }
@@ -96,6 +112,7 @@ const Character = ({ character,dungeon,row,col,move, attackMonster,MonsterMove,c
 
 Character.propTypes = {
     character: React.PropTypes.object.isRequired,
+    verifloaded: React.PropTypes.number,
     attackMonster: React.PropTypes.func.isRequired,
     moveCharacter: React.PropTypes.func.isRequired
 };
@@ -103,6 +120,6 @@ Character.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { attackMonster,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove }) (Character);
+}), { attackMonster,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove,endSkill }) (Character);
 
 

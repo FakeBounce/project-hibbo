@@ -16,16 +16,31 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap,viewer,loadWorldMap }) => {
+    const styles = {
+        title: {
+            cursor: 'pointer',
+        },
+        lock: {
+            cursor: 'default',
+        },
+        delete: {
+            cursor: 'pointer',
+        },
+    };
+
     return (
         <View>
             <div className="one-level">
                 <div className="choose-level" onClick={() => loadWorldMap(worldmap,viewer)}>
                     <span>!</span>
                 </div>
-                <Text>
-                    Map : {worldmap.name}
+                <Text style={styles.title}
+                      onClick={() => loadWorldMap(worldmap,viewer)}>
+                    Description : {worldmap.name}
                 </Text>
             </div>
+
+
 
         </View>
     );

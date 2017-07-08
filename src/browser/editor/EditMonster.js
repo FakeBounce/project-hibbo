@@ -16,20 +16,18 @@ type Props = {
 const EditMonster = ({ pickmonster,row,col,monster, viewer,worldmap,active }: Props) => {
 
     const styles = {
-        margin: '0px 0px 0px 0px'
+        margin: '0'
     };
 
 
-    var classImage = "case " + monster.image;
+    var classImage = "case ";
 
     if(active == "active")
     {
         classImage = classImage+" selected_tile";
     }
 
-
     return (
-
         <Image className={classImage} src={monster.image} style={styles} onClick={() => pickmonster(monster,viewer,worldmap,row,col)}/>
     );
 };

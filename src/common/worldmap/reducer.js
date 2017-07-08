@@ -12,8 +12,6 @@ const worldMapReducer = (state = new State(), action) => {
     switch (action.type) {
 
         case actions.LOAD_WORLD_MAP: {
-            console.log('OK');
-            console.log(action.payload);
             return state;
         }
         default:

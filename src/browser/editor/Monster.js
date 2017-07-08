@@ -14,12 +14,12 @@ type Props = {
 const Monster = ({ row,col,monster, viewer,worldmap }: Props) => {
 
     const styles = {
-        margin: '0px 0px 0px 0px'
+        margin: '0'
     };
 
     return (
 
-            <Image className="monster" src={monster.image} style={styles}/>
+            <Image className="monsterEditor" src={monster.image} style={styles}/>
     );
 };
 

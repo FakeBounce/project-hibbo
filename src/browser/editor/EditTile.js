@@ -18,8 +18,11 @@ type Props = {
 
 const EditTile = ({ maptile,picktile,viewer,worldmap,row,col,active }: Props) => {
 
+  const styles = {
+    margin: '0'
+  };
 
-    var classImage = "case " + maptile.image;
+    var classImage = "case ";
     var src = maptile.image;
     if(active == "active")
     {
@@ -27,11 +30,7 @@ const EditTile = ({ maptile,picktile,viewer,worldmap,row,col,active }: Props) =>
     }
 
     return (
-        <div onClick={() => picktile(maptile,viewer,worldmap,row,col)}>
-            <Flex className={classImage}>
-                <Image src={src}/>
-            </Flex>
-        </div>
+      <Image className={classImage} src={src} style={styles} onClick={() => picktile(maptile,viewer,worldmap,row,col)}/>
     );
 };
 
