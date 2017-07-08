@@ -30,7 +30,6 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
     activeMonsters.map(active => activeMonster = active);
 
     const onInputKeyDown = event => {
-        if (event.key !== 'Enter') return;
         if (!fields.name.value.trim()) return;
         addNameMap(fields.name.value,viewer,worldmap);
         fields.$reset();
@@ -216,7 +215,7 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
                         {...fields.name}
                         label="Nom de la carte"
                         maxLength={10}
-                        onKeyDown={onInputKeyDown}
+                        onBlur={onInputKeyDown}
                         placeholder={worldmap.name}
                         className = "input-map-editor"
                     />
