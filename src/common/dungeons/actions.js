@@ -1401,7 +1401,7 @@ export const LoadClasses = (snap: Object) => {
     const classes = snap.val();
     return {
         type: LOAD_CLASSES,
-        payload: { classes },
+        payload: classes ,
     };
 };
 
@@ -1442,6 +1442,21 @@ export const LoadTutoRef = (snap: Object) => {
         type: LOAD_TUTO_REF,
         payload: { tutoriel },
     };
+};
+
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    viewer.characters = [];
+    classe.pseudo = pseudo;
+    viewer.characters.push(classe);
+    viewer.active = 0;
+
+
+    firebase.update({
+        [`users/${viewer.id}/characters/`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+    });
+
+
 };
 
 export const LoadViewer = (viewer) => ({ firebase }) => {

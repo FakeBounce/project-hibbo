@@ -28,14 +28,6 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
         CreateCharacter(dviewer,c,fields.pseudo.value)
     };
 
-    let classeSelect = "";
-    const setClass = function (name) {
-
-        // console.log("event",name);
-        // setClasse(name);
-        // console.log("event",name);
-    };
-
     var dung = [];
     var classe_list = false;
     if(dviewer)
@@ -45,14 +37,18 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
             console.log("classess",classes);
             classe_list = Object.keys(classes).map(classe => {
                 console.log("class", classe);
-                let src = "/assets/images/classes/"+classes[classe].sprites_name+".png";
-                let srcf = "/assets/images/classes/"+classes[classe].sprites_name+"-f.png";
-                let checked = false;
-                if(fields.class.value == classes[classe].name)
-                {
-                    checked = true;
+                if(classes[classe].name) {
+                    let src = "/assets/images/classes/" + classes[classe].sprites_name + ".png";
+                    let srcf = "/assets/images/classes/" + classes[classe].sprites_name + "-f.png";
+                    let checked = false;
+                    if (fields.class.value == classes[classe].name) {
+                        checked = true;
+                    }
+                    return (<label className="classe-choice"><input
+                        onClick={() => setClass(classes[classe].name)} {...fields.class} type="radio"
+                        value={classes[classe].name} checked={checked}/><img src={src}/><img src={srcf}/></label>);
                 }
-                return (<label className="classe-choice"><input onClick={() => setClass(classes[classe].name)} {...fields.class} type="radio" value={classes[classe].name} checked={checked} /><img src={src} /><img src={srcf} /></label>);
+                return ("");
             });
         }
         else {
