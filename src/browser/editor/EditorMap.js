@@ -11,14 +11,14 @@ import { Block, Flex, Text, View,Image,Form,Input } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
-import { FullBlockRight,FullBlockTop,addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
+import { ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
+let EditorMap = ({ ZoomMinorEditMap,ZoomEditMap,camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -94,45 +94,39 @@ let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap
 
         let activeConstructMapTop = false;
         let activeConstructMapRight = false;
-        let activeUserMapStart = false;
 
-        if(!worldmap.viewonmonster)
+        if(!worldmap.viewonmonster && worldmap.camera)
         {
             editor = Object.keys(worldmap.camera.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.camera.maptiles[keyRow]).map(function (keyCol) {
 
-                    if(worldmap.camera.maptiles[keyRow][keyCol].character && worldmap.camera.maptiles[keyRow][keyCol].character.type == "pj") {
 
-                        if(worldmap.camera.maptiles[keyRow][keyCol] == worldmap.camera.maptiles[worldmap.camera.size_map_min][worldmap.camera.size_map_min]   )
-                        {
-                            activeUserMapStart = true;
-                        }
-                        return(
-                            <div>
-                                {
-                                    activeUserMapStart &&
-                                    <div><span className="top" onClick={() => FullBlockTop(keyCol,worldmap, viewer, activeTile)} >+</span></div>
-                                 }
-
-                                     <MapTile key={worldmap.camera.maptiles[keyRow][keyCol].id} viewer={viewer}
-                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.camera.maptiles[keyRow][keyCol]}
-                                    />
-                            </div>);
-                    }
-
-                    else
-                    {
                         activeConstructMapTop = false;
                         activeConstructMapRight = false;
-
-                        if(worldmap.camera.maptiles[keyRow][keyCol] == worldmap.camera.maptiles[worldmap.camera.size_map_min][keyCol]   )
+                        if(worldmap.worldmap.size_map == worldmap.camera.size_map)
                         {
-                            activeConstructMapTop = true;
+                            if(worldmap.worldmap.size_map_min == keyRow)
+                            {
+                                activeConstructMapTop = true;
+                            }
+
+                            if(worldmap.worldmap.size_map  == keyCol)
+                            {
+                                activeConstructMapRight = true;
+                            }
                         }
-
-                        if(worldmap.camera.maptiles[keyRow][keyCol]  == worldmap.camera.maptiles[keyRow][worldmap.camera.size_map])
+                        else
                         {
-                            activeConstructMapRight = true;
+
+                            if(worldmap.camera.row_start == keyRow )
+                            {
+                                activeConstructMapTop = true;
+                            }
+
+                            if(worldmap.camera.col_end == keyCol )
+                            {
+                                activeConstructMapRight = true;
+                            }
                         }
 
                             return(
@@ -152,7 +146,7 @@ let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap
                             />
                             </div>
                         );
-                    }
+
 
                 });
                 return (
@@ -238,8 +232,10 @@ let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap
             <div>
               <h2>Zoom</h2>
               <div className="zoom">
-                <div className="zoomPlus"></div>
-                <div className="zoomMoins"></div>
+
+                {/*<div className="zoomPlus" onClick={() => ZoomEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map)}></div>*/}
+                {/*<div className="zoomMoins" onClick={() => ZoomMinorEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map,worldmap)}></div>*/}
+
               </div>
             </div>
           </div>
@@ -278,4 +274,4 @@ export default connect(state => ({
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
-}), { FullBlockRight,FullBlockTop,addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
+}), { ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,pickmonster,pickmapmonster})(EditorMap);
