@@ -2182,10 +2182,16 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 8000;
   position: relative
 }
-.tutoriel-menu .cadre-tutoriel{
+
+.tutoriel-menu-options .menu-option{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-infobar .cadre-tutoriel, .tutoriel-menu-donjon .cadre-tutoriel, .tutoriel-menu-perso .cadre-tutoriel, .tutoriel-menu-spell .cadre-tutoriel, .tutoriel-menu-options .cadre-tutoriel{
   margin: auto;
   top: 0px;
-  bottom: 0px;
+  bottom: 75px;
   left: 100px;
   right: 0;
 }
@@ -2199,14 +2205,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .tutoriel-infobar .infobar{
   z-index: 7998;
-}
-
-.tutoriel-infobar .cadre-tutoriel {
-  margin: auto;
-  top: 0px;
-  bottom: 0px;
-  left: 100px;
-  right: 0;
 }
 
 @media screen and (max-width: 1050px) {

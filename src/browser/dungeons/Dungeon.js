@@ -28,7 +28,6 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
     };
     var test = function()
     {
-        console.log('v : ',viewer);
         loadWorldMap(dungeon,viewer)
     };
     if(dungeon.lock === true){
