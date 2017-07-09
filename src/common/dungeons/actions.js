@@ -719,8 +719,8 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         type: MOVING_CHARACTER,
         payload: dungeon,
         component: { canMove: canMove,message: message,direction: direction}
-    }
-}
+    };
+};
 
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 

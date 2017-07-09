@@ -7,8 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill } from '../../common/dungeons/actions';
-import { moveCharacter } from '../../common/characters/action';
+import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill, moveCharacter  } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -16,7 +15,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, moveCharacter, move, character }) => {
+let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, moveCharacter, movingCharacter, move, character }) => {
 
     var error_msg = '';
     var monster_image = '';
