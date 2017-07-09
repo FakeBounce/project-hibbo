@@ -8,6 +8,7 @@ import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill } from '../../common/dungeons/actions';
+import { moveCharacter } from '../../common/characters/action';
 
 type Props = {
     worldmap: Object,
@@ -15,7 +16,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill }) => {
+let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, moveCharacter, move, character }) => {
 
     var error_msg = '';
     var monster_image = '';
@@ -26,6 +27,8 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
   onkeydown = (event: KeyboardEvent) => {
     console.log(event: KeyboardEvent);
     var skills_list = dungeon.user.character.equipped_spells;
+    var gif = '';
+    let classes= "monster";
     if(event.key === "1" || event.key === "&"){
       CanUseSkill(dungeon, viewer, skills_list[0]);
     }
@@ -50,6 +53,47 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     if(event.key === "8" || event.key === "_"){
       CanUseSkill(dungeon, viewer, skills_list[7]);
     }
+    if(event.key === "ArrowUp") {
+      gif = 'pj-up';
+      classes= "monster "+gif;
+      dungeon.user.character.image = "/assets/images/classes/" + dungeon.user.character.name + "/anime/up.gif";
+      setTimeout(function() {
+        dungeon.user.character.image = '/assets/images/classes/' + dungeon.user.character.name + '/up.png';
+        console.log(dungeon);
+        console.log(dungeon.user.character.row);
+        console.log(dungeon.user.character.col);
+        moveCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col);
+      }, 500);
+
+    }
+    if(event.key === "ArrowDown"){
+      gif = 'pj-down';
+      classes= "monster "+gif;
+      dungeon.user.character.image = "/assets/images/classes/" + dungeon.user.character.name + "/anime/down.gif";
+      setTimeout(function() {
+        dungeon.user.character.image = '/assets/images/classes/' + dungeon.user.character.name + '/down.png';
+        moveCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col);
+      }, 500);
+    }
+    if(event.key === "ArrowLeft"){
+      gif = 'pj-left';
+      classes= "monster "+gif;
+      dungeon.user.character.image = "/assets/images/classes/" + dungeon.user.character.name + "/anime/left.gif";
+      setTimeout(function() {
+        dungeon.user.character.image = '/assets/images/classes/' + dungeon.user.character.name + '/left.png';
+        moveCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col);
+      }, 500);
+    }
+    if(event.key === "ArrowRight"){
+      gif = 'pj-right';
+      classes= "monster "+gif;
+      dungeon.user.character.image = "/assets/images/classes/" + dungeon.user.character.name + "/anime/right.gif";
+      setTimeout(function() {
+        dungeon.user.character.image = '/assets/images/classes/' + dungeon.user.character.name + '/right.png';
+        moveCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col);
+      }, 500);
+    }
+
   };
 
     if(dungeon.error_message)
@@ -134,4 +178,4 @@ export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill })(WorldMap);
+}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, moveCharacter })(WorldMap);
