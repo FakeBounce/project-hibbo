@@ -7,7 +7,7 @@ import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import SignOut from '../auth/SignOut';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
-import { Block, View, Text, Image, Loading } from '../app/components';
+import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
@@ -198,11 +198,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                           <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <div>
-                              <a className="btn-option-editeur" href={window.location.origin + '/editor'}>
-                                <span>Editeur</span>
-                              </a>
-                            </div>
+                            <Link exactly to='/editor'>Editeur</Link>
                             <SignOut/>
                         </div>
                     </div>
