@@ -37,7 +37,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
             console.log("classess",classes);
             classe_list = Object.keys(classes).map(classe => {
                 console.log("class", classe);
-                if(classes[classe].name) {
+                if(classes[classe] && classes[classe].name != 'undefined') {
                     let src = "/assets/images/classes/" + classes[classe].sprites_name + ".png";
                     let srcf = "/assets/images/classes/" + classes[classe].sprites_name + "-f.png";
                     let checked = false;
@@ -45,7 +45,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                         checked = true;
                     }
                     return (<label className="classe-choice"><input
-                        onClick={() => setClass(classes[classe].name)} {...fields.class} type="radio"
+                        {...fields.class} type="radio"
                         value={classes[classe].name} checked={checked}/><img src={src}/><img src={srcf}/></label>);
                 }
                 return ("");

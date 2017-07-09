@@ -37,6 +37,7 @@ export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const SET_PSEUDO = 'SET_PSEUDO';
+export const CREATE_PERSO = 'CREATE_PERSO';
 
 
 /************ Dungeon creation in firebase *****************/
@@ -1447,15 +1448,23 @@ export const LoadTutoRef = (snap: Object) => {
 export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
     viewer.characters = [];
     classe.pseudo = pseudo;
+    classe.row = 0;
+    classe.col = 0;
     viewer.characters.push(classe);
     viewer.active = 0;
+
 
 
     firebase.update({
         [`users/${viewer.id}/characters/`]: viewer.characters,
         [`users/${viewer.id}/active`]: viewer.active,
+        [`users/${viewer.id}/tuto`]: 1
     });
 
+    return {
+        type: CREATE_PERSO,
+        payload: { viewer },
+    };
 
 };
 

@@ -98,6 +98,7 @@ const saveUser = user => ({ firebase }) => {
             return await firebase.database.ref('/users/' + user.id).once('value').then(function(snapshot) {
                 var username = snapshot.val();
                 var tuto = null;
+                console.log("username", username);
                 if(username){
                     if(!username.tuto)
                     {
