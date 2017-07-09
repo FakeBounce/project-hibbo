@@ -38,7 +38,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             });
         }
         picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
-        if(dviewer.tuto && dviewer.tuto < 5)
+        console.log("dvddd",dviewer);
+        if(dviewer.tuto && dviewer.tuto < 8)
         {
             if(typeof tutoriel === 'undefined' || tutoriel == null)
             {
@@ -137,7 +138,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             <div className={classN}></div>
             <Block>{dviewer && tutoriel &&
             <div className="cadre-tutoriel">
-                <div className="tuto-text">{tutoriel.description}</div>
+                <div className="tuto-text" dangerouslySetInnerHTML={{__html: tutoriel.description }}></div>
                 <div onClick={() => LoadNextStep(dviewer,tutoriel.next)} className="tuto-next">Next</div>
             </div>
             }
@@ -165,10 +166,10 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     <div className="cadre-menu">
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
-                                <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
-                                <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
-                                <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
-                                <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                                <a href="#dungeons"><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
+                                <a href="#personnage"><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
+                                <a href="#skill"><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
+                                <a href="#option"><li className="menu-option"><span className="btn-menu">Options</span></li></a>
                             </ul>
                         </div>
                     </div>

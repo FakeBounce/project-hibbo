@@ -133,7 +133,7 @@ export const LoadStep = (viewer) =>  ({ firebase }) => {
 };
 
 export const LoadNextStep = (viewer,next) =>  ({ firebase }) => {
-    if(viewer.tuto) {
+    if(viewer.tuto && next) {
         const getPromise = async () => {
             try {
                 return await firebase.database.ref('tutorialSteps/'+next).once('value').then(function(snapshot){
@@ -1452,6 +1452,7 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
     classe.col = 0;
     viewer.characters.push(classe);
     viewer.active = 0;
+    viewer.tuto = 1;
 
 
 

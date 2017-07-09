@@ -2108,15 +2108,19 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-tutoriel {
   background: url("/assets/images/tutoriel/scroll.png") no-repeat;
   position: absolute;
-  height: 416px;
-  width: 300px;
+  height: 347px;
+  width: 250px;
   z-index: 9999;
+}
+.cadre-tutoriel .tuto-text div{
+  width: 100%;
+  margin-bottom: 20px;
 }
 .tutoriel-start .cadre-tutoriel{
   background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
   position: absolute;
-  height: 416px;
-  width: 300px;
+  height: 347px;
+  width: 250px;
   top: 0;
   bottom: 0;
   right: 0;
@@ -2138,7 +2142,7 @@ progress[value].progressSkills::-webkit-progress-value {
   cursor: pointer;
 }
 .cadre-tutoriel .tuto-text{
-  margin: 75px 0 0 25px;
+  margin: 75px 25px 0 25px;
 }
 
 .cadre-tutoriel .tuto-next{
@@ -2152,15 +2156,29 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .tutoriel-personnage .cadre-tutoriel{
-  margin: auto;
   top: 0;
-  bottom: 125px;
-  left: 100px;
+  bottom: 0;
   right: 0;
+  left: 0;
+  margin: auto;
 }
 
-//Step3
-.tutoriel-menu .cadre-menu-div{
+.tutoriel-menu-donjon .menu-dungeons{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-spell .menu-spell{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
   z-index: 8000;
   position: relative
 }
@@ -2171,7 +2189,6 @@ progress[value].progressSkills::-webkit-progress-value {
   left: 100px;
   right: 0;
 }
-//step4
 .tutoriel-infobar .infobar-mana{
   z-index: 8000;
 }
