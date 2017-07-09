@@ -10,7 +10,7 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
+import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
 let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
@@ -51,6 +51,9 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
         CanUseSkill(dungeon, dviewer, skills_list[7]);
       }
     };
+
+    let picture = false;
+
     if(!dviewer)
     {
         LoadViewer(viewer);
@@ -63,7 +66,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
-
+        picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
         if(dviewer.tuto && dviewer.tuto < 5)
         {
             if(typeof tutoriel === 'undefined' || tutoriel == null)
@@ -161,7 +164,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
     var energy_percent = energy/maxenergy * 100;
     let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
-
+    console.log("picureimg", picture);
     return (
         <View className={classStep}>
             <div className={classN}></div>
@@ -175,13 +178,17 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             <View className="container_app-img"></View>
             <View className="container_app">
                 <div className="cadre-gauche-max">
-                    <div className="personnage"></div>
+                    <div className="personnage">
+                        { picture &&
+                            <Image src={picture}/>
+                        }
+                    </div>
                     <div className="personnage-info">
                         <div className="personnage-info-pseudo">
-                            Pseudo
+                            {dviewer.characters[dviewer.active].pseudo}
                         </div>
                         <div className="personnage-info-class">
-                            Class
+                            {dviewer.characters[dviewer.active].name}
                         </div>
                     </div>
                 </div>

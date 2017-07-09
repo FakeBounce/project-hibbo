@@ -1672,7 +1672,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url(/assets/images/login/info.png);
   background-size: cover;
   height: 240px;
-  left:-200px;
+  left:95px;
 }
 
 .infobar-spell-number .oneSkill:hover .info{
@@ -1713,6 +1713,121 @@ progress[value].progressSkills::-webkit-progress-value {
   padding: 4px 10px 8px 10px;
 }
 
+<<<<<<< HEAD
+.container-classe{
+  width: 70%;
+  float: left;
+  padding:50px;
+}
+
+.container-classe-pseudo {
+  text-align: center;
+  float: right;
+  height: auto;
+  background: #2a2e31;
+  position: absolute;
+  border: solid 10px #4d5354;
+  top: 0;
+  bottom: 0;
+  max-height: 350px;
+  right: 30px;
+  margin: auto;
+}
+
+
+.center-scroll{
+  width: 100%;
+  padding:60px;
+  color:white;
+}
+
+.center-scroll div{
+  height: 50px;
+
+}
+
+.center-scroll .div-left span, .center-scroll .div-left .Input *{
+  width: 50%!important;
+  float: left;
+}
+
+.center-scroll .div-left .Label{
+  line-height:32px!important;
+}
+
+.classe_form{
+  width: 100%;
+  padding:50px;
+  max-width: none!important;
+}
+
+.classe-choice{
+  width: 33%;
+  height: 500px;
+  cursor:pointer;
+  float:left;
+  text-align: center;
+  position: relative;
+}
+.classe-choice img{
+  position: absolute;
+  height:auto;
+  width: 80%;
+  top:0;
+}
+
+.classe-choice img:nth-child(2){
+  display: none;
+}
+
+.classe-choice:hover img:nth-child(2){
+  display: block;
+}
+
+.classe-choice img:nth-child(3){
+  display: block;
+}
+
+.classe-choice:hover img:nth-child(3){
+  display: none;
+}
+
+.container-classe label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+.container-classe label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+}
+
+.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+    display: block;
+}
+
+.container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  display: none;
+}
+
+
+@media screen and (max-width: 1050px) {
+
+  .container-classe{
+    width: 50%;
+    padding: 10px;
+  }
+  .classe-choice img{
+    height: inherit;
+    width: auto;
+  }
+
+  .classe-choice {
+    width: 100%;
+    float: none;
+    display: flex;
+    height: 150px;
+  }
+}
+=======
 
 
 .mv4-pj-down {
@@ -2075,116 +2190,4 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 40px;}
 }
 
-.container-classe{
-  width: 70%;
-  float: left;
-  padding:50px;
-}
-
-.container-classe-pseudo {
-  text-align: center;
-  float: right;
-  height: auto;
-  background: #2a2e31;
-  position: absolute;
-  border: solid 10px #4d5354;
-  top: 0;
-  bottom: 0;
-  max-height: 350px;
-  right: 30px;
-  margin: auto;
-}
-
-
-.center-scroll{
-  width: 100%;
-  padding:60px;
-  color:white;
-}
-
-.center-scroll div{
-  height: 50px;
-
-}
-
-.center-scroll .div-left span, .center-scroll .div-left .Input *{
-  width: 50%!important;
-  float: left;
-}
-
-.center-scroll .div-left .Label{
-  line-height:32px!important;
-}
-
-.classe_form{
-  width: 100%;
-  padding:50px;
-  max-width: none!important;
-}
-
-.classe-choice{
-  width: 33%;
-  height: 500px;
-  cursor:pointer;
-  float:left;
-  text-align: center;
-  position: relative;
-}
-.classe-choice img{
-  position: absolute;
-  height:auto;
-  width: 80%;
-  top:0;
-}
-
-.classe-choice img:nth-child(2){
-  display: none;
-}
-
-.classe-choice:hover img:nth-child(2){
-  display: block;
-}
-
-.classe-choice img:nth-child(3){
-  display: block;
-}
-
-.classe-choice:hover img:nth-child(3){
-  display: none;
-}
-
-.container-classe label > input{ /* HIDE RADIO */
-  visibility: hidden; /* Makes input not-clickable */
-  position: absolute; /* Remove input from document flow */
-}
-.container-classe label > input + img{ /* IMAGE STYLES */
-  cursor:pointer;
-}
-
-.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
-    display: block;
-}
-
-.container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
-  display: none;
-}
-
-
-@media screen and (max-width: 1050px) {
-
-  .container-classe{
-    width: 50%;
-    padding: 10px;
-  }
-  .classe-choice img{
-    height: inherit;
-    width: auto;
-  }
-
-  .classe-choice {
-    width: 100%;
-    float: none;
-    display: flex;
-    height: 150px;
-  }
-}
+>>>>>>> origin
