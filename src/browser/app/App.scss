@@ -1577,6 +1577,59 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
+//info bulle personnages
+
+
+.infoBulle .infopersonnage .imageCharacter {
+  float: left;
+  width:20%;
+  text-align: center;
+}
+
+.infoBulle .infopersonnage .imageCharacter .headerInfoPerso{
+  margin-top: 40px;
+}
+
+.infoBulle .infopersonnage .headerInfoPerso h3 {
+  width:100%;
+  text-align: center;
+  margin-top:40px;
+}
+
+.infoBulle .infopersonnage {
+  display: none;
+  position: fixed;
+  top: 230px;
+  background-color: aliceblue;
+  width: 550px;
+  margin: 0 auto;
+  z-index: 28024;
+  background: url(/assets/images/login/infoCharacter.png);
+  background-size: cover;
+  height: 240px;
+  left: 380px;
+  color: #333;
+  text-align: center;
+}
+
+.infoBulle:hover .infopersonnage {
+  display: block;
+}
+
+.infoBulle .infopersonnage ul {
+  margin: 0;
+}
+
+.infoBulle .infopersonnage ul li {
+  list-style: none;
+  width: 50%;
+  float: left;
+  margin: 7px 0;
+  color: #333;
+}
+
+// info bulle compétences
+
 .infobar-spell-number .oneSkill .info{
   display: none;
   position: absolute;

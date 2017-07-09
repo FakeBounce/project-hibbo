@@ -64,6 +64,13 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     if(event.key === "ArrowRight"){
       return movingCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col + 1);
     }
+    if(event.keyCode === 32){
+      console.log('passe dans space');
+      if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.monster_turn)
+      {
+        EndTurn(dungeon);
+      }
+    }
 
   };
 
