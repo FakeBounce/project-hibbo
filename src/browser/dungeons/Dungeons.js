@@ -23,35 +23,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let experience = 0;
     let maxexperience = 1000;
     let skill_function = false;
-
-    onkeydown = (event: KeyboardEvent) => {
-      var skills_list = dungeon.user.character.equipped_spells;
-      if(event.key === "1" || event.key === "&"){
-        CanUseSkill(dungeon, dviewer, skills_list[0]);
-      }
-      if(event.key === "2" || event.key === "é"){
-        CanUseSkill(dungeon, dviewer, skills_list[1]);
-      }
-      if(event.key === "3" || event.key === '"'){
-        CanUseSkill(dungeon, dviewer, skills_list[2]);
-      }
-      if(event.key === "4" || event.key === "'"){
-        CanUseSkill(dungeon, dviewer, skills_list[3]);
-      }
-      if(event.key === "5" || event.key === "("){
-        CanUseSkill(dungeon, dviewer, skills_list[4]);
-      }
-      if(event.key === "6" || event.key === "-"){
-        CanUseSkill(dungeon, dviewer, skills_list[5]);
-      }
-      if(event.key === "7" || event.key === "è"){
-        CanUseSkill(dungeon, dviewer, skills_list[6]);
-      }
-      if(event.key === "8" || event.key === "_"){
-        CanUseSkill(dungeon, dviewer, skills_list[7]);
-      }
-    };
-
     let picture = false;
 
     if(!dviewer)
@@ -127,15 +98,13 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                       <li>Action cost: {skill.action_cost}</li>
                                       <li>Energy cost: {skill.energy_cost}</li>
                                       <li>Damage instant: {skill.damage_instant}</li>
-                                      <li></li>
                                   </ul>
                               </div>
                           </div>);
                     })
                 }
 
-                if(dviewer && typeof dungeon.dungeon !== "undefined")
-                {
+                if(dviewer && typeof dungeon.dungeon !== "undefined") {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
@@ -146,7 +115,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 }
                 dungeonActive = false;
             }
-
         }
     }
     var displayDiv = "dungeons";
