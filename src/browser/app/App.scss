@@ -40,12 +40,15 @@ background-attachment:fixed;
 }
 
 .monster {
-  position: absolute;
   z-index: 5;
   height: 38px;
   width: 38px;
   margin-left: 1px;
   cursor:pointer;
+}
+
+.correctifDisplay{
+  display: block !important;
 }
 
 .monsterEditor {
@@ -365,8 +368,8 @@ Input.input-map-editor{
 
 .menu-fixe{
   -webkit-margin-before: 8px;
-  -webkit-padding-start: 0px;
-  -webkit-margin-after: 0px;
+  -webkit-padding-start: 0;
+  -webkit-margin-after: 0;
 }
 
 .menu-fixe li{
@@ -546,10 +549,8 @@ Input.input-map-editor{
   height: 39px;
   width: 140px;
   box-shadow: none;
-  //margin-left: -180px;
-  //margin-top: 260px;
+  cursor: pointer;
 }
-
 
 .btn-dungeon{
   box-sizing: border-box;
@@ -641,6 +642,16 @@ Input.input-map-editor{
   position: relative;
 }
 
+.personnage img{
+  width: 92%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+}
+
 .personnage-picture{
   height: 102px;
   width: 102px;
@@ -700,7 +711,7 @@ progress::-moz-progress-bar {
   position: relative;
   display: inline;
   margin-left: 30px;
-  padding-top: 0px;
+  padding-top: 0;
   height: 15px;
   margin-top: 10px;
   width: calc(100% - 175px);
@@ -811,13 +822,13 @@ progress[value].progressMore::-webkit-progress-value {
 .monster_name {
   padding-top: 13px;
   padding-left: 110px;
-  margin: 0px;
+  margin: 0;
 }
 
 .monster_name_hidden {
   padding-top: 31px;
   padding-left: 110px;
-  margin: 0px;
+  margin: 0;
 }
 
 progress[value].progressBarBoss::-webkit-progress-value {
@@ -939,90 +950,6 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
   cursor: pointer;
 }
-.cadre-tutoriel {
-  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
-  position: absolute;
-  height: 416px;
-  width: 300px;
-  z-index: 9999;
-}
-.tutoriel-start .cadre-tutoriel{
-  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
-  position: absolute;
-  height: 416px;
-  width: 300px;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  margin: auto;
-}
-.tuto-text{
-  color: black;
-}
-.tuto-next{
-  background: url("/assets/images/tutoriel/next.png") no-repeat ;
-  height: 35px;
-  width: 76px;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  text-align: center;
-  line-height: 35px;
-  cursor: pointer;
-}
-.cadre-tutoriel .tuto-text{
-  margin: 75px 0 0 25px;
-}
-
-.cadre-tutoriel .tuto-next{
-   margin: 55px;
- }
-
-//Step 2
-.tutoriel-personnage .personnage{
-  position: relative;
-  z-index: 7000;
-}
-
-.tutoriel-personnage .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 100px;
-  right: 0;
-}
-
-@media screen and (max-width: 1050px) {
-  .tutoriel-personnage .cadre-tutoriel {
-    left: 410px
-  }
-}
-
-.tutoriel-equipement .cadreweapons{
-  position: relative;
-  z-index: 7000;
-}
-.tutoriel-equipement .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 100px;
-  right: 0;
-}
-
-.tutoriel-map .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 0;
-  right: 600px;
-}
-
-.tutoriel-map .cadre-droite{
-  position: relative;
-  z-index: 7000;
-}
 
 .cadre-droite-ed{
   padding-top: 30px;
@@ -1039,7 +966,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 100%;
   background-color: rgba(0,0,0,0.7);
   position: fixed;
-  z-index: 7999;
+  z-index: 7998;
   top: 0;
 }
 
@@ -1053,7 +980,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
 }
 
-.Warrior-down {
+.pj-down {
   -webkit-animation: movedown 0.5s; /* Safari 4.0 - 8.0 */
   animation: movedown 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1063,7 +990,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-up {
+.pj-up {
   -webkit-animation: moveup 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveup 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1073,7 +1000,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-left {
+.pj-left {
   -webkit-animation: moveleft 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveleft 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1083,7 +1010,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.Warrior-right {
+.pj-right {
   -webkit-animation: moveright 0.5s; /* Safari 4.0 - 8.0 */
   animation: moveright 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1093,7 +1020,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-down {
+.apj-down {
   -webkit-animation: amovedown 0.5s; /* Safari 4.0 - 8.0 */
   animation: amovedown 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1103,7 +1030,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-up {
+.apj-up {
   -webkit-animation: amoveup 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveup 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1113,7 +1040,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-left {
+.apj-left {
   -webkit-animation: amoveleft 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveleft 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1123,7 +1050,7 @@ progress[value].progressSkills::-webkit-progress-value {
   -webkit-animation-fill-mode: forwards;
 }
 
-.aWarrior-right {
+.apj-right {
   -webkit-animation: amoveright 0.5s; /* Safari 4.0 - 8.0 */
   animation: amoveright 0.5s;
   -webkit-animation-timing-function: ease;
@@ -1215,195 +1142,195 @@ progress[value].progressSkills::-webkit-progress-value {
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes movedown {
-  0%   {top: 0px;}
-  100% {top: 50px;}
+  0%   {top: 0;}
+  100% {top: 40px;}
 }
 
 /* Standard syntax */
 @keyframes movedown {
-  0%   {top: 0px;}
-  100% {top: 50px;}
+  0%   {top: 0;}
+  100% {top: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveup {
-  0%   {bottom: 0px;}
-  100% {bottom: 50px;}
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveup {
-  0%   {bottom: 0px;}
-  100% {bottom: 50px;}
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveleft {
-  0%   {right: 0px;}
-  100% {right: 50px;}
+  0%   {right: 0;}
+  100% {right: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveleft {
-  0%   {right: 0px;}
-  100% {right: 50px;}
+  0%   {right: 0;}
+  100% {right: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes moveright {
-  0%   {left: 0px;}
-  100% {left: 50px;}
+  0%   {left: 0;}
+  100% {left: 40px;}
 }
 
 /* Standard syntax */
 @keyframes moveright {
-  0%   {left: 0px;}
-  100% {left: 50px;}
+  0%   {left: 0;}
+  100% {left: 40px;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amovedown {
-  0%   {top: 0px;}
-  25% {top: 15px;}
-  50% {top: 25px;}
-  75% {top: 15px;}
-  100% {top: 0px;}
+  0%   {top: 0;}
+  25% {top: 12px;}
+  50% {top: 22px;}
+  75% {top: 12px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @keyframes amovedown {
-  0%   {top: 0px;}
-  25% {top: 15px;}
-  50% {top: 25px;}
-  75% {top: 15px;}
-  100% {top: 0px;}
+  0%   {top: 0;}
+  25% {top: 12px;}
+  50% {top: 22px;}
+  75% {top: 12px;}
+  100% {top: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveup {
-  0%   {bottom: 0px;}
-  25% {bottom: 15px;}
-  50% {bottom: 25px;}
-  75% {bottom: 15px;}
-  100% {bottom: 0px;}
+  0%   {bottom: 0;}
+  25% {bottom: 12px;}
+  50% {bottom: 22px;}
+  75% {bottom: 12px;}
+  100% {bottom: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveup {
-  0%   {bottom: 0px;}
-  25% {bottom: 15px;}
-  50% {bottom: 25px;}
-  75% {bottom: 15px;}
-  100% {bottom: 0px;}
+  0%   {bottom: 0;}
+  25% {bottom: 12px;}
+  50% {bottom: 22px;}
+  75% {bottom: 12px;}
+  100% {bottom: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveleft {
-  0%   {right: 0px;}
-  25% {right: 15px;}
-  50% {right: 25px;}
-  75% {right: 15px;}
-  100% {right: 0px;}
+  0%   {right: 0;}
+  25% {right: 12px;}
+  50% {right: 22px;}
+  75% {right: 12px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveleft {
-  0%   {right: 0px;}
-  25% {right: 15px;}
-  50% {right: 25px;}
-  75% {right: 15px;}
-  100% {right: 0px;}
+  0%   {right: 0;}
+  25% {right: 12px;}
+  50% {right: 22px;}
+  75% {right: 12px;}
+  100% {right: 0;}
 }
 
 /* Safari 4.0 - 8.0 */
 @-webkit-keyframes amoveright {
-  0%   {left: 0px;}
-  25% {left: 15px;}
-  50% {left: 25px;}
-  75% {left: 15px;}
-  100% {left: 0px;}
+  0%   {left: 0;}
+  25% {left: 12px;}
+  50% {left: 22px;}
+  75% {left: 12px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes amoveright {
-  0%   {left: 0px;}
-  25% {left: 15px;}
-  50% {left: 25px;}
-  75% {left: 15px;}
-  100% {left: 0px;}
+  0%   {left: 0;}
+  25% {left: 12px;}
+  50% {left: 22px;}
+  75% {left: 12px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_down {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 5px;}
   50% {top: 15px;}
   75% {top: 5px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_down {
-  0%   {top: 0px;}
+  0%   {top: 0;}
   25% {top: 5px;}
   50% {top: 15px;}
   75% {top: 5px;}
-  100% {top: 0px;}
+  100% {top: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_up {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 5px;}
   50% {bottom: 15px;}
   75% {bottom: 5px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 
 /* Standard syntax */
 @-webkit-keyframes attacked_up {
-  0%   {bottom: 0px;}
+  0%   {bottom: 0;}
   25% {bottom: 5px;}
   50% {bottom: 15px;}
   75% {bottom: 5px;}
-  100% {bottom: 0px;}
+  100% {bottom: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_left {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 5px;}
   50% {right: 15px;}
   75% {right: 5px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_left {
-  0%   {right: 0px;}
+  0%   {right: 0;}
   25% {right: 5px;}
   50% {right: 15px;}
   75% {right: 5px;}
-  100% {right: 0px;}
+  100% {right: 0;}
 }
 
 /* Standard syntax */
 @-webkit-keyframes attacked_right {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 /* Standard syntax */
 @keyframes attacked_right {
-  0%   {left: 0px;}
+  0%   {left: 0;}
   25% {left: 5px;}
   50% {left: 15px;}
   75% {left: 5px;}
-  100% {left: 0px;}
+  100% {left: 0;}
 }
 
 
@@ -1449,7 +1376,6 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top: 5px;
   height: 140px;
   border: 1px solid black;
-  position: relative;
   z-index: 3;
   border-radius: 19px;
 }
@@ -1462,6 +1388,7 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 0;
   bottom: 0;
   padding-left: 70px;
+  z-index:10;
 }
 
 .cadre-bas-max .infobar-mana{
@@ -1510,9 +1437,9 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-droite-bas{
   width: 800px;
   height: 360px;
-  position: relative;
   z-index: 10;
   overflow: hidden;
+  position: absolute;
 }
 
 .cmenu {
@@ -1571,7 +1498,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .vertical {
-  box-shadow: inset 0px 4px 6px #ccc;
+  box-shadow: inset 0 4px 6px #ccc;
 }
 
 .vertical-mana {
@@ -1623,7 +1550,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .progress-bar {
-  box-shadow: inset -18px 0px 20px 0px rgba(255,255,255, 0.5);
+  box-shadow: inset -18px 0 20px 0 rgba(255,255,255, 0.5);
 }
 
 .infobar-experience {
@@ -1650,6 +1577,51 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
+.infobar-spell-number .oneSkill .info{
+  display: none;
+  position: absolute;
+  top: -303px;
+  background-color: aliceblue;
+  width: 550px;
+  margin: 0 auto;
+  z-index: 202530;
+  background: url(/assets/images/login/info.png);
+  background-size: cover;
+  height: 240px;
+  left:-200px;
+}
+
+.infobar-spell-number .oneSkill:hover .info{
+  display: block;
+}
+
+.infobar-spell-number .oneSkill .info ul{
+  margin: 0 50px 0 auto;
+}
+
+.infobar-spell-number .oneSkill .info ul li{
+  list-style: none;
+  width: 33%;
+  float: left;
+  margin: 7px 0;
+  color: #333;
+}
+
+.infobar-spell-number .oneSkill .info h3{
+  float: right;
+  width: 90%;
+  margin: 40px 0 0 0;
+  color: #333;
+}
+
+.infobar-spell-number .oneSkill .info h4{
+  float: right;
+  width: 350px;
+  color: #333;
+  margin: 25px 50px 25px 0;
+}
+
+
 .infobar-spell-number div span {
   background-size: contain;
   background: url("/assets/images/infobar/spellkey.png") no-repeat;
@@ -1657,3 +1629,613 @@ progress[value].progressSkills::-webkit-progress-value {
   padding: 4px 10px 8px 10px;
 }
 
+
+
+.mv4-pj-down {
+  -webkit-animation: mv4movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-up {
+  -webkit-animation: mv4moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-left {
+  -webkit-animation: mv4moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv4-pj-right {
+  -webkit-animation: mv4moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv4moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4movedown {
+  0%   {top: 0;}
+  100% {top: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4movedown {
+  0%   {top: 0;}
+  100% {top: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveleft {
+  0%   {right: 0;}
+  100% {right: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveleft {
+  0%   {right: 0;}
+  100% {right: 160px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv4moveright {
+  0%   {left: 0;}
+  100% {left: 160px;}
+}
+
+/* Standard syntax */
+@keyframes mv4moveright {
+  0%   {left: 0;}
+  100% {left: 160px;}
+}
+
+
+
+.mv3-pj-down {
+  -webkit-animation: mv3movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-up {
+  -webkit-animation: mv3moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-left {
+  -webkit-animation: mv3moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv3-pj-right {
+  -webkit-animation: mv3moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv3moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3movedown {
+  0%   {top: 0;}
+  100% {top: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3movedown {
+  0%   {top: 0;}
+  100% {top: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveleft {
+  0%   {right: 0;}
+  100% {right: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveleft {
+  0%   {right: 0;}
+  100% {right: 120px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv3moveright {
+  0%   {left: 0;}
+  100% {left: 120px;}
+}
+
+/* Standard syntax */
+@keyframes mv3moveright {
+  0%   {left: 0;}
+  100% {left: 120px;}
+}
+
+
+
+
+.mv2-pj-down {
+  -webkit-animation: mv2movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-up {
+  -webkit-animation: mv2moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-left {
+  -webkit-animation: mv2moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv2-pj-right {
+  -webkit-animation: mv2moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv2moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2movedown {
+  0%   {top: 0;}
+  100% {top: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2movedown {
+  0%   {top: 0;}
+  100% {top: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveleft {
+  0%   {right: 0;}
+  100% {right: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveleft {
+  0%   {right: 0;}
+  100% {right: 80px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv2moveright {
+  0%   {left: 0;}
+  100% {left: 80px;}
+}
+
+/* Standard syntax */
+@keyframes mv2moveright {
+  0%   {left: 0;}
+  100% {left: 80px;}
+}
+
+
+
+
+.mv1-pj-down {
+  -webkit-animation: mv1movedown 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1movedown 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-up {
+  -webkit-animation: mv1moveup 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveup 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-left {
+  -webkit-animation: mv1moveleft 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveleft 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+.mv1-pj-right {
+  -webkit-animation: mv1moveright 0.5s; /* Safari 4.0 - 8.0 */
+  animation: mv1moveright 0.5s;
+  -webkit-animation-timing-function: ease;
+  animation-timing-function:ease;
+  position:relative;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1movedown {
+  0%   {top: 0;}
+  100% {top: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1movedown {
+  0%   {top: 0;}
+  100% {top: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveup {
+  0%   {bottom: 0;}
+  100% {bottom: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveleft {
+  0%   {right: 0;}
+  100% {right: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveleft {
+  0%   {right: 0;}
+  100% {right: 40px;}
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes mv1moveright {
+  0%   {left: 0;}
+  100% {left: 40px;}
+}
+
+/* Standard syntax */
+@keyframes mv1moveright {
+  0%   {left: 0;}
+  100% {left: 40px;}
+}
+
+.container-classe{
+  width: 70%;
+  float: left;
+  padding:50px;
+}
+
+.container-classe-pseudo {
+  text-align: center;
+  float: right;
+  height: auto;
+  background: #2a2e31;
+  position: absolute;
+  border: solid 10px #4d5354;
+  top: 0;
+  bottom: 0;
+  max-height: 350px;
+  right: 30px;
+  margin: auto;
+}
+
+
+.center-scroll{
+  width: 100%;
+  padding:60px;
+  color:white;
+}
+
+.center-scroll div{
+  height: 50px;
+
+}
+
+.center-scroll .div-left span, .center-scroll .div-left .Input *{
+  width: 50%!important;
+  float: left;
+}
+
+.center-scroll .div-left .Label{
+  line-height:32px!important;
+}
+
+.classe_form{
+  width: 100%;
+  padding:50px;
+  max-width: none!important;
+}
+
+.classe-choice{
+  width: 33%;
+  height: 500px;
+  cursor:pointer;
+  float:left;
+  text-align: center;
+  position: relative;
+}
+.classe-choice img{
+  position: absolute;
+  height:auto;
+  width: 80%;
+  top:0;
+}
+
+.classe-choice img:nth-child(2){
+  display: none;
+}
+
+.classe-choice:hover img:nth-child(2){
+  display: block;
+}
+
+.classe-choice img:nth-child(3){
+  display: block;
+}
+
+.classe-choice:hover img:nth-child(3){
+  display: none;
+}
+
+.container-classe label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+.container-classe label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+}
+
+.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+    display: block;
+}
+
+.container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  display: none;
+}
+
+
+@media screen and (max-width: 1050px) {
+
+  .container-classe{
+    width: 50%;
+    padding: 10px;
+  }
+  .classe-choice img{
+    height: inherit;
+    width: auto;
+  }
+
+  .classe-choice {
+    width: 100%;
+    float: none;
+    display: flex;
+    height: 150px;
+  }
+}
+
+.cadre-tutoriel {
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
+  position: absolute;
+  height: 347px;
+  width: 250px;
+  z-index: 9999;
+}
+.cadre-tutoriel .tuto-text div{
+  width: 100%;
+  margin-bottom: 20px;
+}
+.tutoriel-start .cadre-tutoriel{
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
+  position: absolute;
+  height: 347px;
+  width: 250px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+.tuto-text{
+  color: black;
+}
+.tuto-next{
+  background: url("/assets/images/tutoriel/next.png") no-repeat ;
+  height: 35px;
+  width: 76px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+}
+.cadre-tutoriel .tuto-text{
+  margin: 75px 25px 0 25px;
+}
+
+.cadre-tutoriel .tuto-next{
+  margin: 55px;
+}
+
+//Step 2
+.tutoriel-personnage .personnage-z{
+  position: relative;
+  z-index: 8000;
+}
+
+.tutoriel-personnage .cadre-tutoriel{
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.tutoriel-menu-donjon .menu-dungeons{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-spell .menu-spell{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
+  z-index: 8000;
+  position: relative
+}
+.tutoriel-menu .cadre-tutoriel{
+  margin: auto;
+  top: 0px;
+  bottom: 0px;
+  left: 100px;
+  right: 0;
+}
+.tutoriel-infobar .infobar-mana{
+  z-index: 8000;
+}
+
+.tutoriel-infobar .infobar-life{
+  z-index: 7999;
+}
+
+.tutoriel-infobar .infobar{
+  z-index: 7998;
+}
+
+.tutoriel-infobar .cadre-tutoriel {
+  margin: auto;
+  top: 0px;
+  bottom: 0px;
+  left: 100px;
+  right: 0;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-personnage .cadre-tutoriel {
+    left: 410px
+  }
+}
+
+.tutoriel-equipement .cadreweapons{
+  position: relative;
+  z-index: 7000;
+}
+.tutoriel-equipement .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+.tutoriel-map .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 0;
+  right: 600px;
+}
+
+.tutoriel-map .cadre-droite{
+  position: relative;
+  z-index: 7000;
+}

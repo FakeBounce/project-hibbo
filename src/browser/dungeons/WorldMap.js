@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon,EndTurn,MonsterTurn } from '../../common/dungeons/actions';
+import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -15,13 +15,42 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn }) => {
+let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill }) => {
 
     var error_msg = '';
     var monster_image = '';
     var monster_health = 100;
     var monster_maxhealth = 100;
     var monster_name = '';
+
+  onkeydown = (event: KeyboardEvent) => {
+    console.log(event: KeyboardEvent);
+    var skills_list = dungeon.user.character.equipped_spells;
+    if(event.key === "1" || event.key === "&"){
+      CanUseSkill(dungeon, viewer, skills_list[0]);
+    }
+    if(event.key === "2" || event.key === "é"){
+      CanUseSkill(dungeon, viewer, skills_list[1]);
+    }
+    if(event.key === "3" || event.key === '"'){
+      CanUseSkill(dungeon, viewer, skills_list[2]);
+    }
+    if(event.key === "4" || event.key === "'"){
+      CanUseSkill(dungeon, viewer, skills_list[3]);
+    }
+    if(event.key === "5" || event.key === "("){
+      CanUseSkill(dungeon, viewer, skills_list[4]);
+    }
+    if(event.key === "6" || event.key === "-"){
+      CanUseSkill(dungeon, viewer, skills_list[5]);
+    }
+    if(event.key === "7" || event.key === "è"){
+      CanUseSkill(dungeon, viewer, skills_list[6]);
+    }
+    if(event.key === "8" || event.key === "_"){
+      CanUseSkill(dungeon, viewer, skills_list[7]);
+    }
+  };
 
     if(dungeon.error_message)
     {
@@ -55,7 +84,6 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     };
     return (
         <View>
-
             <div className="cadre-droite">
               <div className="cadre-map-info">
                 {/*<div className="cadre-boss">*/}
@@ -106,4 +134,4 @@ export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { cancelDungeon,EndTurn,MonsterTurn })(WorldMap);
+}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill })(WorldMap);

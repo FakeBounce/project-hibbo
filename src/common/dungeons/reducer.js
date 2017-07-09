@@ -15,8 +15,9 @@ const State = Record({
     viewer: null,
     tutoriel: null,
     dungeonsOP: Map(),
-    classes: null,
-    division: null
+    classes: Map(),
+    division: null,
+    class: null,
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -47,7 +48,6 @@ const dungeonsReducer = (state = new State(), action) => {
                 else {
                     viewer = action.payload.viewer;
                 }
-                console.log('MAJ viewer',viewer);
                 return state.set('viewer', viewer);
             }
             return state;
@@ -55,7 +55,6 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.LOAD_VIEWER_CHANGES: {
             let  viewer = action.payload;
-            console.log('v:',   viewer);
             let vviewer = viewer.viewer;
             if(viewer.skills)
             vviewer.skills = viewer.skills;
@@ -65,13 +64,13 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_CLASSES: {
-            const { classes } = action.payload;
+            const classes = action.payload;
             return state.set('classes', classes);
         }
 
         case actions.SET_CLASSE: {
-            const { viewer } = action.payload;
-            return state.set('viewer', viewer);
+            const { classe } = action.payload;
+            return state.set('classe', classe);
         }
 
         case actions.LOAD_TUTO_REF: {
@@ -228,6 +227,19 @@ const dungeonsReducer = (state = new State(), action) => {
             vl++;
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
                 .set('verifloaded',vl);
+        }
+
+        case actions.SET_PSEUDO: {
+            console.log(action.payload);
+            let payload = action.payload;
+            if(payload.length > 0){
+                return state.set("pseudo",payload);
+            }
+            return state;
+        }
+
+        case actions.CREATE_PERSO: {
+            return state;
         }
 
         case actions.CAN_USE_SKILL: {
