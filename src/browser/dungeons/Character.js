@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
+import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Image, Flex } from '../app/components';
 import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove } from '../../common/dungeons/actions';
 
@@ -22,6 +23,13 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     let classes= "monster";
     var gif = '';
     var opposed_img = '';
+
+  onkeydown = (event: KeyboardEvent) => {
+    if(event.key === "ArrowUp"){
+      console.log('test');
+    }
+  };
+
     if(character.is_attacking && character.type == "pj")
     {
         gif = 'pj-'+character.direction;
@@ -46,6 +54,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(character.is_moving && character.type == "pnj")
     {
         classes= "monster pj-"+character.direction;
+        console.log(classes);
         setTimeout(function(){
             MonsterMove(dungeon);
         },500);

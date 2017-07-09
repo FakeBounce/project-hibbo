@@ -6,10 +6,11 @@ import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import SignOut from '../auth/SignOut';
-import { Block, View, Text, Image,Loading } from '../app/components';
+import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
+import { Block, View, Text, Image, Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep } from '../../common/dungeons/actions';
+import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
 let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
@@ -22,6 +23,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let experience = 0;
     let maxexperience = 1000;
     let skill_function = false;
+    let picture = false;
 
     if(!dviewer)
     {
@@ -35,8 +37,9 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 return (<div key={weapon.id} className={classObjet}></div>);
             });
         }
-
-        if(dviewer.tuto && dviewer.tuto < 5)
+        picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
+        console.log("dvddd",dviewer);
+        if(dviewer.tuto && dviewer.tuto < 8)
         {
             if(typeof tutoriel === 'undefined' || tutoriel == null)
             {
@@ -71,7 +74,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         var classSkill = 'skill';
                         if(dungeonActive)
                         {
-                            skill_function = function(sk){
+                            skill_function = function (sk) {
                                 CanUseSkill(dungeon,dviewer,sk);
                             };
                         }
@@ -96,15 +99,13 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                       <li>Action cost: {skill.action_cost}</li>
                                       <li>Energy cost: {skill.energy_cost}</li>
                                       <li>Damage instant: {skill.damage_instant}</li>
-                                      <li></li>
                                   </ul>
                               </div>
                           </div>);
                     })
                 }
 
-                if(dviewer && typeof dungeon.dungeon !== "undefined")
-                {
+                if(dviewer && typeof dungeon.dungeon !== "undefined") {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
                 }
             }
@@ -115,7 +116,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                 }
                 dungeonActive = false;
             }
-
         }
     }
     var displayDiv = "dungeons";
@@ -133,16 +133,12 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
     var energy_percent = energy/maxenergy * 100;
     let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
-
     return (
         <View className={classStep}>
-
-            <div className={classN}>
-            </div>
-
+            <div className={classN}></div>
             <Block>{dviewer && tutoriel &&
             <div className="cadre-tutoriel">
-                <div className="tuto-text">{tutoriel.description}</div>
+                <div className="tuto-text" dangerouslySetInnerHTML={{__html: tutoriel.description }}></div>
                 <div onClick={() => LoadNextStep(dviewer,tutoriel.next)} className="tuto-next">Next</div>
             </div>
             }
@@ -150,13 +146,19 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             <View className="container_app-img"></View>
             <View className="container_app">
                 <div className="cadre-gauche-max">
-                    <div className="personnage"></div>
-                    <div className="personnage-info">
-                        <div className="personnage-info-pseudo">
-                            Pseudo
+                    <div className="personnage-z">
+                        <div className="personnage">
+                            { picture &&
+                                <Image src={picture}/>
+                            }
                         </div>
-                        <div className="personnage-info-class">
-                            Class
+                        <div className="personnage-info">
+                            <div className="personnage-info-pseudo">
+                                {dviewer.characters[dviewer.active].pseudo}
+                            </div>
+                            <div className="personnage-info-class">
+                                {dviewer.characters[dviewer.active].name}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,17 +166,16 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     <div className="cadre-menu">
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
-                                <a href="#dungeons"><li><span className="btn-menu">Dungeons</span></li></a>
-                                <a href="#personnage"><li><span className="btn-menu">Personnage</span></li></a>
-                                <a href="#skill"><li><span className="btn-menu">Compétences</span></li></a>
-                                <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                                <a href="#dungeons"><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
+                                <a href="#personnage"><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
+                                <a href="#skill"><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
+                                <a href="#option"><li className="menu-option"><span className="btn-menu">Options</span></li></a>
                             </ul>
                         </div>
                     </div>
                     <div className="cadre-droite-bas">
                         <div className="cmenu cadre-dungeons">
                             <a name="dungeons" id="dungeons"></a>
-
                             {!loaded ?
                                 <Loading />
                                 : viewer ?

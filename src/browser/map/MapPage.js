@@ -5,6 +5,7 @@ import React from 'react';
 import MapTiles from './MapTiles'
 import NewMapTile from './NewMapTile'
 import Reset from './Reset'
+import AddDefault from './AddDefault'
 import linksMessages from '../../common/app/linksMessages';
 import { Block, Link, Space, PageHeader, Title, View } from '../app/components';
 
@@ -15,6 +16,7 @@ const MapPage = () => (
       <NewMapTile/>
       <MapTiles />
       <Reset/>
+      <AddDefault/>
     </Block>
   </View>
 );

@@ -57,6 +57,7 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                             },
                         },
                         worldmap: worldmap,
+                        camera:worldmap,
                         active_dungeon: worldmap.active_dungeon,
                         viewonmonster: false,
                         createdAt: now()
@@ -192,6 +193,7 @@ export const saveWorldmap = (worldmap,viewer) =>  ({ firebase }) => {
         payload: worldmap
     }
 };
+
 export const addNameMap = (name,viewer,worldmap) =>  ({ firebase }) => {
 
     if(worldmap && name && viewer)
@@ -417,7 +419,6 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
 };
 
-
 export const ReloadActiveMap = (snap: Object) => {
     const worldmaps = snap.val();
     return {
@@ -527,7 +528,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character};
+    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character};
 
     if(viewer)
     {
@@ -562,50 +563,18 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
     };
 };
 
-export const ZoomEditMap = (worldmap,camera) =>  ({firebase}) => {
-
-    let newmap = worldmap;
-
-    if(worldmap)
-    {
-        for(let i=0; i < worldmap.worldmap.size_map ; i++)
-        {
-            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
-        }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
-
-        firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
-        });
-    }
-
-    return {
-        type: ZOOM_PLUS_EDIT,
-        payload: newmap
-    }
-};
-export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
+export const ZoomEditMap = (camera) =>  ({firebase}) => {
 
     let newmap = camera;
 
-    if(worldmap)
+    if(camera)
     {
-
-        if(worldmap.worldmap.size_map != newmap.size_map)
+        for(let i=0; i < camera.size_map ; i++)
         {
-            for(let i=0; i < worldmap.worldmap.size_map ; i++)
-            {
-
-                newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
-            }
-        }
-
-
-        for(let i=0; i < worldmap.worldmap.size_map ; i++)
-        {
-            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+            newmap.worldmap.maptiles[i][camera.size_map] = null;
         }
         newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+
 
         firebase.update({
             [`activeMap/${worldmap.user.id}/camera`]: newmap,
@@ -619,15 +588,34 @@ export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
 };
 export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
 
-    let newmap = worldmap;
+    let newmap = camera;
 
-    if(worldmap)
+    // camera size_map size_map_min
+    // camera size_map_min
+    // camera maptiles
+    // camera row_start
+    // camera col_start
+    // camera row_end
+    // camera col_end
+
+    // test if col right presente
+    if(worldmap.maptiles[camera.row_end+1][camera.col_end+1])
     {
-        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        // delete colonne de gauche
+        for( let i = 0 ; i <= newmap.size_map ; i++)
         {
-            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+            newmap.maptiles[camera.row_start][i] = null;
         }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+        for( let i = 0 ; i <= newmap.size_map ; i++)
+        {
+            // ajoute colonne droite
+            newmap.maptiles[camera.row_end + 1][i] = worldmap.maptiles[camera.row_end + 1][i]
+        }
+
+        newmap.row_end += camera.row_end;
+        newmap.col_end += camera.col_end;
+        newmap.row_start -= row_start;
+        newmap.col_start -= col_start;
 
         firebase.update({
             [`activeMap/${worldmap.user.id}/camera`]: newmap,
@@ -635,21 +623,67 @@ export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
     }
 
     return {
-        type: ZOOM_PLUS_EDIT,
+        type: MOVE_RIGHT_EDIT,
+        payload: newmap
+    }
+};
+export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
+
+    let newmap = camera;
+
+
+    // test if col left presente
+    if(worldmap.maptiles[camera.row_start-1][camera.col_start-1])
+    {
+        // delete colonne de droite
+        for( let i = 0 ; i <= newmap.size_map ; i++)
+        {
+            newmap.maptiles[camera.row-end][i] = null;
+        }
+        for( let i = 0 ; i <= newmap.size_map ; i++)
+        {
+            // ajoute colonne gauche
+            newmap.maptiles[camera.row_start - 1][i] = worldmap.maptiles[camera.start - 1][i];
+        }
+
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: MOVE_LEFT_EDIT,
         payload: newmap
     }
 };
 export const MoveUpEditMap = (worldmap,camera) =>  ({firebase}) => {
 
-    let newmap = worldmap;
+    // camera size_map size_map_min
+    // camera size_map_min
+    // camera maptiles
+    // camera row_start
+    // camera col_start
+    // camera row_end
+    // camera col_end
 
-    if(worldmap)
+    // test if row up presente
+    if(worldmap.maptiles[camera.row_start-1][camera.col_start-1])
     {
-        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        // delete colonne de bas
+        for( let i = 0 ; i <= newmap.size_map ; i++)
         {
-            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+            newmap.maptiles[camera.row_end][i] = null;
         }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+        for( let i = 0 ; i <= newmap.size_map ; i++)
+        {
+            // ajoute colonne haute
+            newmap.maptiles[camera.row_start - 1][i] = worldmap.maptiles[camera.row_start - 1][i]
+        }
+
+        newmap.row_end += camera.row_end;
+        newmap.col_end += camera.col_end;
+        newmap.row_start -= row_start;
+        newmap.col_start -= col_start;
 
         firebase.update({
             [`activeMap/${worldmap.user.id}/camera`]: newmap,
@@ -657,21 +691,30 @@ export const MoveUpEditMap = (worldmap,camera) =>  ({firebase}) => {
     }
 
     return {
-        type: ZOOM_PLUS_EDIT,
+        type: MOVE_UP_EDIT,
         payload: newmap
     }
 };
 export const MoveDownEditMap = (worldmap,camera) =>  ({firebase}) => {
 
-    let newmap = worldmap;
-
-    if(worldmap)
+    // test if row up presente
+    if(worldmap.maptiles[camera.row_end-1][camera.col_end-1])
     {
-        for(let i=0; i < worldmap.worldmap.size_map ; i++)
+        // delete colonne du haut
+        for( let i = 0 ; i <= newmap.size_map ; i++)
         {
-            newmap.worldmap.maptiles[i][worldmap.worldmap.size_map] = null;
+            newmap.maptiles[camera.row_start][i] = null;
         }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+        for( let i = 0 ; i <= newmap.size_map ; i++)
+        {
+            // ajoute colonne bas
+            newmap.maptiles[camera.row_end - 1][i] = worldmap.maptiles[camera.row_end - 1][i]
+        }
+
+        newmap.row_end += camera.row_end;
+        newmap.col_end += camera.col_end;
+        newmap.row_start -= row_start;
+        newmap.col_start -= col_start;
 
         firebase.update({
             [`activeMap/${worldmap.user.id}/camera`]: newmap,
@@ -679,11 +722,10 @@ export const MoveDownEditMap = (worldmap,camera) =>  ({firebase}) => {
     }
 
     return {
-        type: ZOOM_PLUS_EDIT,
+        type: MOVE_DOWN_EDIT,
         payload: newmap
     }
 };
-
 
 export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase }) => {
 
@@ -759,7 +801,6 @@ export const FullBlockTop = (col,worldmap, viewer, tile) => ({ getUid,firebase }
     };
 
 };
-
 
 
 function jsonConcat(o1, o2) {

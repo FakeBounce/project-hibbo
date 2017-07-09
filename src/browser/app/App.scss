@@ -642,6 +642,16 @@ Input.input-map-editor{
   position: relative;
 }
 
+.personnage img{
+  width: 92%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+}
+
 .personnage-picture{
   height: 102px;
   width: 102px;
@@ -940,90 +950,6 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: cover;
   cursor: pointer;
 }
-.cadre-tutoriel {
-  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
-  position: absolute;
-  height: 416px;
-  width: 300px;
-  z-index: 9999;
-}
-.tutoriel-start .cadre-tutoriel{
-  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
-  position: absolute;
-  height: 416px;
-  width: 300px;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  margin: auto;
-}
-.tuto-text{
-  color: black;
-}
-.tuto-next{
-  background: url("/assets/images/tutoriel/next.png") no-repeat ;
-  height: 35px;
-  width: 76px;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  text-align: center;
-  line-height: 35px;
-  cursor: pointer;
-}
-.cadre-tutoriel .tuto-text{
-  margin: 75px 0 0 25px;
-}
-
-.cadre-tutoriel .tuto-next{
-   margin: 55px;
- }
-
-//Step 2
-.tutoriel-personnage .personnage{
-  position: relative;
-  z-index: 7000;
-}
-
-.tutoriel-personnage .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 100px;
-  right: 0;
-}
-
-@media screen and (max-width: 1050px) {
-  .tutoriel-personnage .cadre-tutoriel {
-    left: 410px
-  }
-}
-
-.tutoriel-equipement .cadreweapons{
-  position: relative;
-  z-index: 7000;
-}
-.tutoriel-equipement .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 100px;
-  right: 0;
-}
-
-.tutoriel-map .cadre-tutoriel{
-  margin: auto;
-  top: 0;
-  bottom: 125px;
-  left: 0;
-  right: 600px;
-}
-
-.tutoriel-map .cadre-droite{
-  position: relative;
-  z-index: 7000;
-}
 
 .cadre-droite-ed{
   padding-top: 30px;
@@ -1040,7 +966,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 100%;
   background-color: rgba(0,0,0,0.7);
   position: fixed;
-  z-index: 7999;
+  z-index: 7998;
   top: 0;
 }
 
@@ -1662,7 +1588,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url(/assets/images/login/info.png);
   background-size: cover;
   height: 240px;
-  left:95px;
+  left:-200px;
 }
 
 .infobar-spell-number .oneSkill:hover .info{
@@ -2065,20 +1991,249 @@ progress[value].progressSkills::-webkit-progress-value {
   100% {left: 40px;}
 }
 
-//.is_target .info{
-//  display: none;
-//  position: absolute;
-//  top: -303px;
-//  background-color: aliceblue;
-//  width: 550px;
-//  margin: 0 auto;
-//  z-index: 202530;
-//  background: url(/assets/images/login/info.png);
-//  background-size: cover;
-//  height: 240px;
-//  left:95px;
-//}
-//
-//.is_target:hover .info{
-//  display: block;
-//}
+.container-classe{
+  width: 70%;
+  float: left;
+  padding:50px;
+}
+
+.container-classe-pseudo {
+  text-align: center;
+  float: right;
+  height: auto;
+  background: #2a2e31;
+  position: absolute;
+  border: solid 10px #4d5354;
+  top: 0;
+  bottom: 0;
+  max-height: 350px;
+  right: 30px;
+  margin: auto;
+}
+
+
+.center-scroll{
+  width: 100%;
+  padding:60px;
+  color:white;
+}
+
+.center-scroll div{
+  height: 50px;
+
+}
+
+.center-scroll .div-left span, .center-scroll .div-left .Input *{
+  width: 50%!important;
+  float: left;
+}
+
+.center-scroll .div-left .Label{
+  line-height:32px!important;
+}
+
+.classe_form{
+  width: 100%;
+  padding:50px;
+  max-width: none!important;
+}
+
+.classe-choice{
+  width: 33%;
+  height: 500px;
+  cursor:pointer;
+  float:left;
+  text-align: center;
+  position: relative;
+}
+.classe-choice img{
+  position: absolute;
+  height:auto;
+  width: 80%;
+  top:0;
+}
+
+.classe-choice img:nth-child(2){
+  display: none;
+}
+
+.classe-choice:hover img:nth-child(2){
+  display: block;
+}
+
+.classe-choice img:nth-child(3){
+  display: block;
+}
+
+.classe-choice:hover img:nth-child(3){
+  display: none;
+}
+
+.container-classe label > input{ /* HIDE RADIO */
+  visibility: hidden; /* Makes input not-clickable */
+  position: absolute; /* Remove input from document flow */
+}
+.container-classe label > input + img{ /* IMAGE STYLES */
+  cursor:pointer;
+}
+
+.container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+    display: block;
+}
+
+.container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
+  display: none;
+}
+
+
+@media screen and (max-width: 1050px) {
+
+  .container-classe{
+    width: 50%;
+    padding: 10px;
+  }
+  .classe-choice img{
+    height: inherit;
+    width: auto;
+  }
+
+  .classe-choice {
+    width: 100%;
+    float: none;
+    display: flex;
+    height: 150px;
+  }
+}
+
+.cadre-tutoriel {
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat;
+  position: absolute;
+  height: 347px;
+  width: 250px;
+  z-index: 9999;
+}
+.cadre-tutoriel .tuto-text div{
+  width: 100%;
+  margin-bottom: 20px;
+}
+.tutoriel-start .cadre-tutoriel{
+  background: url("/assets/images/tutoriel/scroll.png") no-repeat ;
+  position: absolute;
+  height: 347px;
+  width: 250px;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+.tuto-text{
+  color: black;
+}
+.tuto-next{
+  background: url("/assets/images/tutoriel/next.png") no-repeat ;
+  height: 35px;
+  width: 76px;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+}
+.cadre-tutoriel .tuto-text{
+  margin: 75px 25px 0 25px;
+}
+
+.cadre-tutoriel .tuto-next{
+  margin: 55px;
+}
+
+//Step 2
+.tutoriel-personnage .personnage-z{
+  position: relative;
+  z-index: 8000;
+}
+
+.tutoriel-personnage .cadre-tutoriel{
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.tutoriel-menu-donjon .menu-dungeons{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-spell .menu-spell{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-perso .menu-perso{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-menu-options .menu-option{
+  z-index: 8000;
+  position: relative
+}
+
+.tutoriel-infobar .cadre-tutoriel, .tutoriel-menu-donjon .cadre-tutoriel, .tutoriel-menu-perso .cadre-tutoriel, .tutoriel-menu-spell .cadre-tutoriel, .tutoriel-menu-options .cadre-tutoriel{
+  margin: auto;
+  top: 0px;
+  bottom: 75px;
+  left: 100px;
+  right: 0;
+}
+.tutoriel-infobar .infobar-mana{
+  z-index: 8000;
+}
+
+.tutoriel-infobar .infobar-life{
+  z-index: 7999;
+}
+
+.tutoriel-infobar .infobar{
+  z-index: 7998;
+}
+
+@media screen and (max-width: 1050px) {
+  .tutoriel-personnage .cadre-tutoriel {
+    left: 410px
+  }
+}
+
+.tutoriel-equipement .cadreweapons{
+  position: relative;
+  z-index: 7000;
+}
+.tutoriel-equipement .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 100px;
+  right: 0;
+}
+
+.tutoriel-map .cadre-tutoriel{
+  margin: auto;
+  top: 0;
+  bottom: 125px;
+  left: 0;
+  right: 600px;
+}
+
+.tutoriel-map .cadre-droite{
+  position: relative;
+  z-index: 7000;
+}

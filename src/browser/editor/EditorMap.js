@@ -18,7 +18,7 @@ type Props = {
     viewer: Object,
 };
 
-let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
+let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,monsters,viewMonster,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -29,8 +29,9 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
     activeTiles.map(active => activeTile = active);
     activeMonsters.map(active => activeMonster = active);
 
+
     const onInputKeyDown = event => {
-        if (!fields.name.value.trim()) return;
+         if (!fields.name.value.trim()) return;
         addNameMap(fields.name.value,viewer,worldmap);
         fields.$reset();
     };
@@ -86,18 +87,23 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
 
     if(worldmap && worldmap.worldmap)
     {
+
+
+        console.log('camera',worldmap.camera);
+
+
         let activeConstructMapTop = false;
         let activeConstructMapRight = false;
         let activeUserMapStart = false;
 
         if(!worldmap.viewonmonster)
         {
-            editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
-                var col = Object.keys(worldmap.worldmap.maptiles[keyRow]).map(function (keyCol) {
+            editor = Object.keys(worldmap.camera.maptiles).map(function (keyRow) {
+                var col = Object.keys(worldmap.camera.maptiles[keyRow]).map(function (keyCol) {
 
-                    if(worldmap.worldmap.maptiles[keyRow][keyCol].character && worldmap.worldmap.maptiles[keyRow][keyCol].character.type == "pj") {
+                    if(worldmap.camera.maptiles[keyRow][keyCol].character && worldmap.camera.maptiles[keyRow][keyCol].character.type == "pj") {
 
-                        if(worldmap.worldmap.maptiles[keyRow][keyCol] == worldmap.worldmap.maptiles[worldmap.worldmap.size_map_min][worldmap.worldmap.size_map_min]   )
+                        if(worldmap.camera.maptiles[keyRow][keyCol] == worldmap.camera.maptiles[worldmap.camera.size_map_min][worldmap.camera.size_map_min]   )
                         {
                             activeUserMapStart = true;
                         }
@@ -108,8 +114,8 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
                                     <div><span className="top" onClick={() => FullBlockTop(keyCol,worldmap, viewer, activeTile)} >+</span></div>
                                  }
 
-                                     <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
-                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]}
+                                     <MapTile key={worldmap.camera.maptiles[keyRow][keyCol].id} viewer={viewer}
+                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.camera.maptiles[keyRow][keyCol]}
                                     />
                             </div>);
                     }
@@ -119,12 +125,12 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
                         activeConstructMapTop = false;
                         activeConstructMapRight = false;
 
-                        if(worldmap.worldmap.maptiles[keyRow][keyCol] == worldmap.worldmap.maptiles[worldmap.worldmap.size_map_min][keyCol]   )
+                        if(worldmap.camera.maptiles[keyRow][keyCol] == worldmap.camera.maptiles[worldmap.camera.size_map_min][keyCol]   )
                         {
                             activeConstructMapTop = true;
                         }
 
-                        if(worldmap.worldmap.maptiles[keyRow][keyCol]  == worldmap.worldmap.maptiles[keyRow][worldmap.worldmap.size_map])
+                        if(worldmap.camera.maptiles[keyRow][keyCol]  == worldmap.camera.maptiles[keyRow][worldmap.camera.size_map])
                         {
                             activeConstructMapRight = true;
                         }
@@ -141,8 +147,8 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
                                 }
 
 
-                            <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
-                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]} pickmaptile={pickmaptile}
+                            <MapTile key={worldmap.camera.maptiles[keyRow][keyCol].id} viewer={viewer}
+                                     worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.camera.maptiles[keyRow][keyCol]} pickmaptile={pickmaptile}
                             />
                             </div>
                         );
@@ -159,13 +165,13 @@ let EditorMap = ({ FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer
             }
         }
         else {
-            editor = Object.keys(worldmap.worldmap.maptiles).map(function (keyRow) {
-                var col = Object.keys(worldmap.worldmap.maptiles[keyRow]).map(function (keyCol) {
+            editor = Object.keys(worldmap.camera.maptiles).map(function (keyRow) {
+                var col = Object.keys(worldmap.camera.maptiles[keyRow]).map(function (keyCol) {
 
                      return(
 
-                    <MapTile key={worldmap.worldmap.maptiles[keyRow][keyCol].id} viewer={viewer}
-                             worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.worldmap.maptiles[keyRow][keyCol]}
+                    <MapTile key={worldmap.camera.maptiles[keyRow][keyCol].id} viewer={viewer}
+                             worldmap={worldmap} row={keyRow} col={keyCol} maptile={worldmap.camera.maptiles[keyRow][keyCol]}
                     />);
 
 
@@ -253,6 +259,7 @@ EditorMap.propTypes = {
     worldmap: React.PropTypes.object.isRequired,
     maptiles: React.PropTypes.object,
     monsters: React.PropTypes.object,
+    camera: React.PropTypes.object,
     activeTiles: React.PropTypes.object,
     activeMonsters: React.PropTypes.object,
     addNameMap: React.PropTypes.func.isRequired,
@@ -267,6 +274,7 @@ EditorMap = fields(EditorMap, {
 export default connect(state => ({
     viewer: state.editor.viewer,
     maptiles : state.editor.maptiles,
+    camera : state.editor.camera,
     monsters : state.editor.monsters,
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
