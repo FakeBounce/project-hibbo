@@ -111,11 +111,12 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                     <div className="cadre-menu-div-editor">
                         <ul className="menu-fixe-editor">
                             <Link exactly to='/game'>Dungeons</Link>
-                            <a href="#option"><li><span className="btn-menu">Options</span></li></a>
+                            <SignOut className="test"/>
                         </ul>
                     </div>
                 </div>
                 <div className="cadre-editor">
+
                         {
                             !mapactive?
 
@@ -132,6 +133,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                         }
 
                     <div className="cmenu-editor">
+
                         {!loaded ?
                             <Loading />
                             : viewer ?
@@ -150,6 +152,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                                 : <Text>Aucun utilisateur</Text>
                         }
                     </div>
+
 
                 </div>
 

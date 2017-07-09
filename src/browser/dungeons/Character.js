@@ -42,6 +42,10 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
             MonsterTurn(dungeon,true);
         },500);
     }
+    if(character.nextTurn)
+    {
+        MonsterTurn(dungeon,true);
+    }
     if(character.is_moving && character.type == "pnj")
     {
         classes= "monster pj-"+character.direction;

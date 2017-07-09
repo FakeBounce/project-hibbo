@@ -238,6 +238,10 @@ const dungeonsReducer = (state = new State(), action) => {
             return state;
         }
 
+        case actions.CREATE_PERSO: {
+            return state;
+        }
+
         case actions.CAN_USE_SKILL: {
             let payload = action.payload;
             let vl = state.verifloaded;
@@ -255,6 +259,14 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.END_SKILL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.SHOW_AOE_SKILL: {
             let payload = action.payload;
             let vl = state.verifloaded;
             vl++;

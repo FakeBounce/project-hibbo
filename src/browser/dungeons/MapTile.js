@@ -6,7 +6,7 @@ import React from 'react';
 import Character from './Character';
 import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
-import { moveCharacter,movingCharacter,trySkill,endSkill } from '../../common/dungeons/actions';
+import { moveCharacter,movingCharacter,trySkill,endSkill,showAoeSkill } from '../../common/dungeons/actions';
 
 type Props = {
     dungeon: Object,
@@ -15,7 +15,7 @@ type Props = {
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill,showAoeSkill }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -30,6 +30,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     var move = false;
     let maptileAction;
     var is_targeted = false;
+    var tile_hover = '';
 
     maptileAction = function(){
         if(typeof maptile.character !== 'undefined')
@@ -64,6 +65,13 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
                 classImage = classImage+ " is_target_aoe";
             }
     }
+    if(maptile.aoe_target)
+    {
+        tile_hover = function(){
+            showAoeSkill(dungeon,maptile);
+            console.log('is targeted');
+        };
+    }
     if(dungeon.user.character.is_using_skill)
     {
         if(typeof maptile.is_target !== 'undefined') {
@@ -95,11 +103,11 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     <Flex>
         {
           character ?
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
                 <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction}></Flex>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}></Flex>
         }
     </Flex>
     );
@@ -117,4 +125,4 @@ Maptile.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { moveCharacter,movingCharacter,trySkill,endSkill }) (Maptile);
+}), { moveCharacter,movingCharacter,trySkill,endSkill,showAoeSkill }) (Maptile);
