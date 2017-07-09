@@ -256,7 +256,6 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         let monsters = dungeon.dungeon.monsters;
         let monster_moves = [];
 
-       if(monster){
          monsters.map((monster,index) => {
            if(monster != null)
            {
@@ -334,7 +333,6 @@ export const EndTurn = (dungeon) => ({firebase}) => {
              }
            }
          });
-       }
 
         dungeon.dungeon.monsters = monsters;
         if(monster_moves.length > 0)
