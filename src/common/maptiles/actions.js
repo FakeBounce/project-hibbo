@@ -17,6 +17,7 @@ export const saveMaptile = maptile =>  ({ firebase }) => {
 export const MAPTILE_COMPLETED = 'MAPTILE_COMPLETED';
 export const FIREBASE_SAVE_MAPTILE = 'FIREBASE_SAVE_MAPTILE';
 export const DELETE_USER = 'DELETE_USER';
+export const ADD_DEFAULT_DUNGEON = 'ADD_DEFAULT_DUNGEON';
 
 
 // CREATE + SAVE VERSION
@@ -26,14 +27,26 @@ export const deleteUser = (viewer) => ({ firebase }) => {
         [`activeMap/${viewer.id}`]:null,
         [`users/${viewer.id}/active`]:null,
         [`users/${viewer.id}/characters`]:null,
+
     });
     return {
         type: DELETE_USER,
         payload: null,
     };
 };
+
+export const addDefaultDungeon = () => ({ firebase}) => {
+
+    firebase.update({
+        [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
+    });
+    return {
+        type: ADD_DEFAULT_DUNGEON,
+        payload: null,
+    };
+};
+
 export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase }) => {
-  // var dungeon = { description: `Training dungeon`, id: `0665f39f-707c-4a5d-9fab-c3e18456746c`,idMap: `603414e3-d8fc-4b3f-ac56-376160eb7960`,name: `Practice`};
   firebase.update({
       [`classes/Warrior`]:{
             name:"Warrior",
@@ -962,10 +975,10 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   // firebase.update({
   //   [`maptiles/${id}`]: { completed: false, id: id, title : `Grass Left Door`,image:"/assets/images/grass_left_door.png" },
   // });
-
-     firebase.update({
-       [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
-     });
+  //
+  //    firebase.update({
+  //      [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
+  //    });
 
                 // ADD FAKE DUNGEON
   //[`dungeons/${id}`]: { id: id, map:`987654321`, name : `Practice`,description : `Training dungeon` },
