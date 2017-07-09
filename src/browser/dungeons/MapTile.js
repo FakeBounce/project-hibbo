@@ -43,6 +43,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             }
         }
 
+        console.log(dungeon, row, col);
         return movingCharacter(dungeon,row,col);
     };
     if(typeof maptile.is_target !== 'undefined')
