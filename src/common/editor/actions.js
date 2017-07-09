@@ -25,6 +25,8 @@ export const ACTIVE_DUNGEONS = 'ACTIVE_DUNGEONS';
 export const SAVE_MAP_NAME = 'SAVE_MAP_NAME';
 export const FULL_BLOCK_RIGHT = 'FULL_BLOCK_RIGHT';
 export const FULL_BLOCK_TOP = 'FULL_BLOCK_TOP';
+export const ZOOM_PLUS_EDIT = 'ZOOM_PLUS_EDIT';
+export const ZOOM_MINUS_EDIT = 'ZOOM_MINUS_EDIT';
 
 export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'editormaps/'+worldmap.id;
@@ -332,7 +334,10 @@ export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,fireb
         {
             var id = maptile.id;
             maptile.id = getUid();
+
+            //update worldmap
             worldmap.worldmap.maptiles[row][col] = jsonConcat(worldmap.worldmap.maptiles[row][col],maptile);
+            worldmap.camera.maptiles[row][col] = jsonConcat(worldmap.camera.maptiles[row][col],maptile);
 
             firebase.update({
                 [`activeMap/${viewer.id}`]: worldmap,
@@ -349,7 +354,7 @@ export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,fireb
 
 export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,firebase }) => {
 
-
+console.log('MONSTER',monster);
     if(monster)
     {
         var id = monster.id;
@@ -361,16 +366,21 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
             if(typeof worldmap.worldmap.maptiles[row][col].character !== 'undefined' && worldmap.worldmap.monsters)
             {
                 delete worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number];
+                delete worldmap.camera.monsters[worldmap.camera.maptiles[row][col].character.number];
             }
             worldmap.worldmap.maptiles[row][col].character = null;
+            worldmap.camera.maptiles[row][col].character = null;
         }
+        else
         if(monster.type == "pj")
         {
             if(worldmap.worldmap.maptiles)
             {
                 worldmap.worldmap.maptiles[worldmap.user.character.row][worldmap.user.character.col].character = null;
+                worldmap.camera.maptiles[worldmap.user.character.row][worldmap.user.character.col].character = null;
 
                 worldmap.worldmap.maptiles[row][col].character = monster;
+                worldmap.camera.maptiles[row][col].character = monster;
 
                 worldmap.user.character.row = row;
                 worldmap.user.character.col = col;
@@ -384,25 +394,38 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
             if(typeof  worldmap.worldmap.monsters === 'undefined')
             {
                 worldmap.worldmap.monsters = [];
+                worldmap.worldmap.monsters = [];
             }
             var is_here = false;
-                worldmap.worldmap.monsters.map(m => {
+            worldmap.worldmap.monsters.map(m => {
                if(parseInt(m.row) == row && parseInt(m.col) == col)
                {
                    is_here = m;
                    return true;
                }
+
+            });
+            worldmap.camera.monsters.map(m => {
+               if(parseInt(m.row) == row && parseInt(m.col) == col)
+               {
+                   is_here = m;
+                   return true;
+               }
+
             });
             if(is_here)
             {
                 worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
+                worldmap.camera.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
             }
             else {
 
                 var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
+                var testRowIndex = worldmap.camera.monsters.push(mo) - 1;
                 mo.number = testRowIndex;
             }
             worldmap.worldmap.maptiles[row][col].character = mo;
+            worldmap.camera.maptiles[row][col].character = mo;
         }
 
         firebase.update({
@@ -528,7 +551,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character};
+    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15};
 
     if(viewer)
     {
@@ -563,26 +586,72 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
     };
 };
 
-export const ZoomEditMap = (camera) =>  ({firebase}) => {
+export const ZoomEditMap = (camera, viewer,colmax) =>  ({firebase}) => {
 
     let newmap = camera;
-
     if(camera)
     {
-        for(let i=0; i < camera.size_map ; i++)
-        {
-            newmap.worldmap.maptiles[i][camera.size_map] = null;
-        }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
 
+        for(let i = camera.col_start ; i <= camera.size_map ; i++)
+        {
+            newmap.maptiles[camera.row_start][i] = null;
+        }
+
+        for(let i = camera.row_start  ; i <= colmax  ; i++)
+        {
+            newmap.maptiles[i][camera.size_map] = null;
+        }
+
+        newmap.row_start = camera.row_start + 1 ;
+        newmap.row_end = camera.row_end - 1;
+        newmap.col_end = camera.col_end -1;
+        newmap.size_map = camera.size_map -1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: newmap,
         });
     }
 
     return {
         type: ZOOM_PLUS_EDIT,
+        payload: newmap
+    }
+};
+
+export const ZoomMinorEditMap = (camera, viewer, colmax,worldmap) => ({firebase}) => {
+
+    let newmap = worldmap;
+
+    if(camera)
+    {
+
+        for(let j = 0 ; j< ((worldmap.worldmap.size_map - camera.size_map) + 1) ; j++)
+        {
+
+            for(let i = newmap.col_start ; i <= newmap.size_map ; i++)
+            {
+                 newmap.maptiles[newmap.row_start][i] = null;
+            }
+
+            for(let i = newmap.row_start  ; i <= colmax  ; i++)
+            {
+                newmap.maptiles[i][newmap.size_map] = null;
+            }
+
+            newmap.row_start = camera.row_start + 1 ;
+            newmap.row_end = camera.row_end - 1;
+            newmap.col_end = camera.col_end -1;
+            newmap.size_map = camera.size_map -1;
+        }
+
+
+        firebase.update({
+            [`activeMap/${viewer.id}/camera`]: newmap,
+        });
+    }
+
+    return {
+        type: ZOOM_MINUS_EDIT,
         payload: newmap
     }
 };
@@ -743,11 +812,16 @@ export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase
                 newmap.worldmap.maptiles[row][i].title = tile.title;
                 newmap.worldmap.maptiles[row][i].type = tile.type;
 
+                newmap.camera.maptiles[row][i].image = tile.image;
+                newmap.camera.maptiles[row][i].title = tile.title;
+                newmap.camera.maptiles[row][i].type = tile.type;
+
             }
             else {
                 if (tile.type == "walkable") {
                     tile.id = getUid();
                     newmap.worldmap.maptiles[row][i] = tile;
+                    newmap.camera.maptiles[row][i] = tile;
                 }
             }
             tile.id = getUid();
@@ -778,14 +852,15 @@ export const FullBlockTop = (col,worldmap, viewer, tile) => ({ getUid,firebase }
             {
                 if (!worldmap.worldmap.maptiles[i][col].character) {
 
-                    console.log("id col",newmap.worldmap.maptiles[i][col]);
                     tile.id = getUid();
                     newmap.worldmap.maptiles[i][col] = tile;
+                    newmap.camera.maptiles[i][col] = tile;
                 }
                 else {
                     if (tile.type == "walkable") {
                         tile.id = getUid();
                         newmap.worldmap.maptiles[i][col] = tile;
+                        newmap.camera.maptiles[i][col] = tile;
                     }
                 }
             }
