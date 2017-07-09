@@ -1596,6 +1596,17 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top:40px;
 }
 
+.infoBulle .infopersonnage .headerInfoPerso h4 {
+  margin: 0;
+}
+
+.titleInfoPerso h4{
+  margin:0;
+}
+
+.tableInfoPerso {
+  margin:0 auto;
+}
 .infoBulle .infopersonnage {
   display: none;
   position: fixed;
@@ -1604,12 +1615,14 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 550px;
   margin: 0 auto;
   z-index: 28024;
-  background: url(/assets/images/login/infoCharacter.png);
+  //background: url(/assets/images/login/infoCharacter.png);
   background-size: cover;
-  height: 240px;
+  height: auto;
   left: 380px;
   color: #333;
   text-align: center;
+  opacity: 0.6;
+  padding: 15px 0;
 }
 
 .infoBulle:hover .infopersonnage {
@@ -1626,6 +1639,11 @@ progress[value].progressSkills::-webkit-progress-value {
   float: left;
   margin: 7px 0;
   color: #333;
+}
+
+.imgConditionPersonnage{
+  width:30px;
+  height:30px;
 }
 
 // info bulle compétences

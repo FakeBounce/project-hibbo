@@ -23,14 +23,16 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     let classes = 'monster';
     var gif = '';
     var opposed_img = '';
-    let conditions = '';
+    let conditions = false;
     if(character.conditions)
     {
       conditions = character.conditions.map(cond => {
-          console.log('cond',cond.image);
+          console.log('cond',cond);
           let cond_image = '/assets/images/skills/'+cond.image;
-          return(<Image src={cond_image} />);
+          return(<th><Image className="imgConditionPersonnage" src={cond_image} /></th>);
       });
+
+
     }
     console.log('conditions',conditions);
 
@@ -130,18 +132,21 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
         }
     };
     return (
-      <div className="infoBulle"><div className="infopersonnage">
-        <div className="headerInfoPerso">
-          <h3><Image className={classes} src={character.image} />{character.name}</h3>
+      <div className="infoBulle">
+        <div className="infopersonnage">
+          <div className="headerInfoPerso">
+            <h3><Image className={classes} src={character.image} />{character.name}</h3>
+          </div>
+          <ul>
+            <li>Health: {character.health}</li>
+            <li>Damage: {character.damage}</li>
+            <li>Movement: {character.movement}</li>
+            <li>Range: {character.range}</li>
+          </ul>
+          {
+            conditions && <div className="titleInfoPerso"><h4>Skills Damage</h4><table className="tableInfoPerso"><tr>{conditions}</tr></table></div>
+          }
         </div>
-        <ul>
-          <li>Health: {character.health}</li>
-          <li>Damage: {character.damage}</li>
-          <li>Movement: {character.movement}</li>
-          <li>Range: {character.range}</li>
-        </ul>
-        {conditions}
-      </div>
         <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
       </div>
     );
