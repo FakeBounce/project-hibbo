@@ -5,6 +5,7 @@
 import { Range } from 'immutable';
 export const SHOW_AOE_SKILL = 'SHOW_AOE_SKILL';
 export const LOAD_TUTO_REF = 'LOAD_TUTO_REF';
+export const TRY_ITEM = 'TRY_ITEM';
 export const LOAD_VIEWER_CHANGES = 'LOAD_VIEWER_CHANGES';
 export const LOAD_VIEWER_REF = 'LOAD_VIEWER_REF';
 export const LOAD_STEP = 'LOAD_STEP';
@@ -54,6 +55,8 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     character.is_casting = 0;
     character.current_skill = false;
     character.buffs = false;
+    character.maxhealth = character.health;
+    character.maxenergy = character.energy;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -1252,6 +1255,15 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
         delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
         pj.row = pj.moving_row;
         pj.col = pj.moving_col;
+        if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+        {
+            if(!pj.items)
+            {
+                pj.items = [];
+            }
+            pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+        }
 
         pj.to_move.splice(0,1);
         if(pj.to_move.length)
@@ -1318,6 +1330,18 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
             pj.row = pj.moving_row;
             pj.col = pj.moving_col;
+
+            if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+            {
+                if(!pj.items)
+                {
+                    pj.items = [];
+                }
+                pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+                dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+
+            }
+
             pj.moving_row = null;
             pj.moving_col = null;
             pj.is_moving = false;
@@ -1338,6 +1362,34 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
     });
     return {
         type: MOVE_CHARACTER,
+        payload: dungeon
+    }
+};
+
+/************ Items *****************/
+
+export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
+    var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
+    var cast_ready = false;
+    dungeon.error_message = '';
+    if(!pj.is_moving && !pj.is_attacking && !pj.is_using_skill) {
+        let item = pj.items[number-1];
+        item.cast_time = 0;
+        let result = doSkill(pj,map,dungeon,item,cast_ready,row,col,firebase);
+        pj = result.pj;
+        item = result.item;
+        pj.items.splice(number-1,1);
+
+        dungeon = result.dungeon;
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: TRY_ITEM,
         payload: dungeon
     }
 };
@@ -2343,7 +2395,11 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
                     pj.health = pj.health + skill.heal_instant;
                     if(skill.heal_percent_instant)
                     {
-                        pj.health = pj.maxhealth/skill.heal_percent_instant*100;
+                        pj.health =  pj.maxhealth + (pj.maxhealth*skill.heal_percent_instant/100);
+                    }
+                    if(skill.energy_percent_heal)
+                    {
+                        pj.energy =  pj.energy + (pj.maxenergy*skill.energy_percent_heal/100);
                     }
                     pj.energy = pj.energy + skill.energy_heal;
                     if(pj.health > pj.maxhealth)

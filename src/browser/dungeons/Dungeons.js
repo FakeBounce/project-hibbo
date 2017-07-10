@@ -10,11 +10,12 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons,tryItem, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
     let weapon_list = '';
     var skills_list = '';
+    var object_list = '';
     let dungeon;
     let health = 100;
     let maxhealth = 100;
@@ -23,6 +24,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let experience = 0;
     let maxexperience = 0;
     let skill_function = false;
+    let item_function = false;
     let picture = false;
 
     if(!dviewer)
@@ -101,6 +103,39 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                       <li>Energy cost: {skill.energy_cost}</li>
                                       <li>Damage instant: {skill.damage_instant}</li>
                                   </ul>
+                              </div>
+                          </div>);
+                    })
+                }
+
+                if(dungeon.user.character.items) {
+                    var cpt = 0;
+                    var styles;
+                    object_list = dungeon.user.character.items.map(item => {
+                        var classSkill = 'skill';
+                        if(dungeonActive)
+                        {
+                            item_function = function () {
+                                tryItem(dungeon,dungeon.user.character.row,dungeon.user.character.col,cpt);
+                            };
+                        }
+                        cpt++;
+                        var skill_image = "assets/images/objets/"+item.image;
+                        var cd_percent = parseFloat(1);
+                        if(item.cooldown)
+                        {
+                            cd_percent  = 1 - (Math.round(parseInt(item.cooldown) * 100.0 / parseInt(item.rest)) / 100);
+                        }
+                        styles = {
+                            opacity: cd_percent
+                        };
+                      return (
+                          <div className="oneSkill">
+                              <span>{cpt}</span>
+                              <Image style={styles} key={item.id} className={`skills ${classSkill}`} onClick={() => item_function(item)} src={skill_image}></Image>
+                              <div className="info">
+                                  <h3>{item.name}</h3>
+                                  <h4>Description: {item.description}</h4>
                               </div>
                           </div>);
                     })
@@ -226,6 +261,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
+                                {object_list}
                         </div>
                     </div>
                 </div>
@@ -274,4 +310,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
