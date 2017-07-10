@@ -2379,3 +2379,12 @@ progress[value].progressSkills::-webkit-progress-value {
   position: relative;
   z-index: 7000;
 }
+
+.object {
+  z-index: 5;
+  height: 30px;
+  width: 30px;
+  margin-left: -6px;
+  margin-top: -3px;
+  cursor: pointer;
+}

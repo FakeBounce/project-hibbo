@@ -31,6 +31,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     let maptileAction;
     var is_targeted = false;
     var tile_hover = '';
+    var item = false;
 
     maptileAction = function(){
         if(typeof maptile.character !== 'undefined')
@@ -99,17 +100,24 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             move = dungeon.user.character.is_moving;
         }
     }
-
+    if(typeof maptile.item !== 'undefined' && maptile.item != null)
+    {
+        let src = "/assets/images/objets/"+maptile.item.image;
+        item = <Image className="object" src={src}/>;
+    }
     classImage = classImage + ' correctifDisplay';
     return (
     <Flex>
         {
           character ?
             <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
                 <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}></Flex>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
+            </Flex>
         }
     </Flex>
     );
