@@ -38,7 +38,86 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const SET_PSEUDO = 'SET_PSEUDO';
 export const CREATE_PERSO = 'CREATE_PERSO';
+export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
+export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 
+/************ Display Equipement ***************************/
+export const PickEquipment = (viewer, equipment) => ({ firebase }) => {
+viewer.pick_equipment = equipment;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: equipment,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
+    console.log("vu",viewer);
+    let character = viewer.characters[viewer.active];
+    //si luser n'a pas equipements
+    if(character.equipped_equipments == null){
+        Object.keys(equipment.benefits).map(p => {
+            if(character[p]){
+                character[p] = character[p] + equipment.benefits[p];
+            }
+            else{
+                character[p] = equipment.benefits[p];
+            }
+        });
+        character.equipped_equipments = {};
+        character.equipped_equipments[equipment.type] = equipment;
+    }
+    else{
+        //si luser a un equipement du type de l'objet
+        if(character.equipped_equipments[equipment.type]){
+            let equipment_wear = character.equipped_equipments[equipment.type];
+            if(equipment_wear && equipment_wear.benefits) {
+                //on soustraie l'ancien
+                Object.keys(equipment_wear.benefits).map(p => {
+                    character[p] = character[p] - equipment_wear.benefits[p];
+                });
+                character.inventory.push(equipment_wear);
+            }
+            //on additione le nouveau
+            Object.keys(equipment.benefits).map(p => {
+                if(character[p]){
+                    character[p] = character[p] + equipment.benefits[p];
+                }
+                else{
+                    character[p] = equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments[equipment.type] = equipment;
+            character.inventory[equipment.name] = null;
+        }
+        else{
+            //on additione le nouveau
+            Object.keys(equipment.benefits).map(p => {
+                if(character[p]){
+                    character[p] = character[p] + equipment.benefits[p];
+                }
+                else{
+                    character[p] = equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments[equipment.type] = equipment;
+            character.inventory[equipment.name] = null;
+        }
+    }
+
+    viewer.characters[viewer.active] = character;
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+
+    return {
+        type: ADD_EQUIPMENT,
+        payload: viewer,
+    }
+};
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -1954,3 +2033,5 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
     }
     return {map:map,pj:pj};
 }
+
+

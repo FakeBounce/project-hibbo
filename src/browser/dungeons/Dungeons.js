@@ -5,14 +5,15 @@
 import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
+import Inventory from './Inventory';
 import SignOut from '../auth/SignOut';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { AddEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep }) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment}) => {
     let weapon_list = '';
     var skills_list = '';
     let dungeon;
@@ -24,6 +25,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let maxexperience = 1000;
     let skill_function = false;
     let picture = false;
+    let pick_equipment_list = '';
 
     if(!dviewer)
     {
@@ -31,14 +33,14 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     }
     else
     {
-        if (dviewer.weapons) {
-            weapon_list = dviewer.weapons.map(weapon => {
-                let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
-                return (<div key={weapon.id} className={classObjet}></div>);
+        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
+            pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
+                console.log(benef);
+               return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{dviewer.pick_equipment.benefits[benef]}</div></div>)
             });
         }
+
         picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
-        console.log("dvddd",dviewer);
         if(dviewer.tuto && dviewer.tuto < 8)
         {
             if(typeof tutoriel === 'undefined' || tutoriel == null)
@@ -161,6 +163,24 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                             </div>
                         </div>
                     </div>
+                    {dviewer && dviewer.pick_equipment != null &&
+                        <div className="inventory_pick">
+                            <div className="equipment-block">
+                                <Image src={dviewer.pick_equipment.img}/>
+                            </div>
+                            <div className="inventory_pick_info">
+                                <div className="inventory_pick_info_class"><div>Classe :</div><div>{dviewer.pick_equipment.classe}</div></div>
+                                <div className="inventory_pick_info_type"><div>Type : </div><div>{dviewer.pick_equipment.type}</div></div>
+                            </div>
+                            <div className="inventory_pick_benefit">
+                                {pick_equipment_list}
+                            </div>
+                            <div className="inventory_pick_action">
+                                <div className="equip" onClick={() => AddEquipment(dviewer, dviewer.pick_equipment)}>Equiper</div>
+                                <div className="supp">Supprimer</div>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <div className="cadre-droite-max">
                     <div className="cadre-menu">
@@ -192,7 +212,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="cmenu cadre-perso">
                             <a name="personnage" id="personnage"></a>
-                            Perso
+                            <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
                         <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
                         <div className="cmenu cadre-option">
@@ -244,6 +264,7 @@ Dungeons.propTypes = {
     LoadViewer : React.PropTypes.func.isRequired,
     LoadNextStep : React.PropTypes.func.isRequired,
     LoadStep : React.PropTypes.func.isRequired,
+    AddEquipment : React.PropTypes.func.isRequired,
     preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
     verifloaded: React.PropTypes.number,
@@ -277,4 +298,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { AddEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
