@@ -237,11 +237,13 @@ let EditorMap = ({ MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,ca
               <h2>Zoom</h2>
               <div className="zoom">
 
+
                 <div className="zoomPlus" onClick={() => ZoomEditMap(worldmap.camera,viewer,worldmap)}></div>
                 <div className="zoomMoins" onClick={() => ZoomMinorEditMap(worldmap.camera,viewer,worldmap)}></div>
-                {/*<div className="zoomMoins" onClick={() => MoveUpEditMap(worldmap.camera,viewer,worldmap)}></div>*/}
-                <div className="zoomMoins" onClick={() => MoveDownEditMap(worldmap.camera,viewer,worldmap)}></div>
-
+                <div className="zoomHaut"></div>
+                <div className="zoomBas" onClick={() => MoveDownEditMap(worldmap.camera,viewer,worldmap)}></div>
+                <div className="zoomGauche"></div>
+                <div className="zoomDroite"></div>
               </div>
             </div>
           </div>
