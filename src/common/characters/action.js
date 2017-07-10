@@ -7,7 +7,6 @@ import { Range } from 'immutable';
 export const MOVE_CHARACTER = 'MOVE_CHARACTER';
 
 export const moveCharacter = (dungeon,char) =>  ({ firebase }) => {
-    console.log(dungeon,char);
     // firebase.update({
     //     [`maptile/${id}`]: {completed: false, id: id, title: `MapTile #123`},
     // });

@@ -258,7 +258,6 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         monsters.map((monster,index) => {
             if(monster != null)
             {
-                console.log('m1',monster);
                 monster.damage_time_spell = 0;
                 monster.damage_time_spell_duration = 0;
                 if(!monster.conditions)
@@ -436,15 +435,22 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                     var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
                     if(monster.can_attack)
                     {
+
+
                         monster.is_moving = false;
                         monster.can_move_attack = false;
-                        monster.direction = range.direction;
                         dungeon.monster_info_row = monster.row;
                         dungeon.monster_info_col = monster.col;
                         dungeon.user.character.is_attacked = true;
+                        monster.direction = range.direction;
+                        dungeon.user.character.is_attacked = true;
                         dungeon.user.character.attacked_direction = monster.direction;
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
                         monster.is_attacking = true;
+                        monster.can_attack = true;
+                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                        dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+
                     }
                     if(monster.can_move_attack)
                     {
@@ -459,6 +465,128 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                         var m_col = parseInt(monster.col);
                         var can_move = false;
 
+                        var tab_rg = [];
+                        var result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,true);
+                        result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,false);
+                        tab_rg = result.tab;
+
+
+                        var tab = [];
+                        var map = dungeon.dungeon.maptiles;
+                        var i=0;
+                        var j=1;
+                        var pj_row = parseInt(monster.row);
+                        var pj_col = parseInt(monster.col);
+                        tab[0] = [];
+                        tab[0].push({row:pj_row,col:pj_col});
+                        var crow;
+                        var ccol;
+                        var found = false;
+                        var to_push = false;
+                        do
+                        {
+                            if(tab[i])
+                            {
+                                tab[i].map(t =>{
+                                    pj_row = t.row;
+                                    pj_col = t.col;
+                                    if(!tab[j])
+                                    {
+                                        tab[j] = [];
+                                    }
+                                    if(typeof map[pj_row+1] !== "undefined" && !found)
+                                    {
+                                        if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                        {
+                                            if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                            {
+                                                crow = pj_row+1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row-1]  !== "undefined" && !found)
+                                    {
+                                        if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                        {
+                                            if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                                crow = pj_row - 1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row] !== "undefined")
+                                    {
+                                        if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                            {
+                                                ccol = pj_col+1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                        if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                            {
+                                                ccol = pj_col-1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            i++;
+                            j++;
+                        }while(i<=monster.movement && !found);
+
+                        console.log('found : ',found);
+                        console.log('tab : ',tab);
+                        if(found)
+                        {
+                            let rec_result = recursiveTa(found,[]);
+                            moves = rec_result.m.reverse();
+
+                            monster.moves = moves;
+                            monster.is_moving = true;
+                            monster.direction = moves[0].next;
+                        }
+                        else {
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
+                            cdntmv = true;
+                        }
+                        /*
                         if ( range.totalColU > 0 && !can_move)
                         {
                             if(typeof  maptiles[m_row][m_col - 1] !== "undefined")
@@ -563,7 +691,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                             dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
                             cdntmv = true;
                         }
-
+                        */
                     }
                     dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                     dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -600,7 +728,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
     if(typeof dungeon.monster_moves !== "undefined") {
         if (dungeon.monster_moves.length > 0) {
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
-            console.log('m',monster);
             if(monster != null || typeof monster === "undefined")
             {
                 let m_row = monster.row;
@@ -609,7 +736,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                     var map = dungeon.dungeon.maptiles;
                     var range = comparePosition(monster.row, monster.col, pj.row, pj.col);
                     var maptiles = dungeon.dungeon.maptiles;
-                    monster.is_moving = false;
 
                     monster.direction = range.direction;
                     maptiles[monster.moves[0].row][monster.moves[0].col].character = monster;
@@ -618,99 +744,108 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                     monster.col = monster.moves[0].col;
                     m_row = monster.row;
                     m_col = monster.col;
-                    if(map[monster.row][monster.col].trap)
+
+                    monster.moves.splice(0,1);
+                    if(typeof monster.moves !== 'undefined' && monster.moves.length)
                     {
-                        var result = false;
-                        map[monster.row][monster.col].trap.map((skill,index) => {
-                            if (skill.aoe_front) {
-                                result = setSkillsTarget(map, monster, skill, "up");
-                                map = result.map;
-                            }
-                            if (skill.aoe_back) {
-                                result = setSkillsTarget(map, monster, skill, "down");
-                                map = result.map;
-                            }
-                            if (skill.aoe_right) {
-                                result = setSkillsTarget(map, monster, skill, "right");
-                                map = result.map;
-                            }
-                            if (skill.aoe_left) {
-                                result = setSkillsTarget(map, monster, skill, "left");
-                                map = result.map;
-                            }
-
-
-                            let target = [];
-                            Object.keys(map).map(m1 => {
-                                Object.keys(map[m1]).map(m2 => {
-                                    if(map[m1][m2].is_target_aoe && map[m1][m2].character )
-                                    {
-                                        if(map[m1][m2].character.type != "pj")
-                                        {
-                                            target.push({row:m1,col:m2});
-                                        }
-                                    }
-                                })
-                            });
-
-                            target.map(t => {
-                                var pnj = map[t.row][t.col].character;
-                                if(pnj.type != "pj")
-                                {
-                                    var positions = comparePosition(0,0,0,0);
-                                    if(pnj.health > 0)
-                                    {
-                                        pnj.health = pnj.health - skill.damage_instant;
-                                        if(skill.damage_instant_buff)
-                                        {
-                                            pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                                        }
-                                        if(pnj.health<=0)
-                                        {
-                                            if(t.row == monster.row && t.col == monster.col)
-                                            {
-                                                monster = null;
-                                            }
-                                            pnj = null;
-                                            dungeon.monster_info_row = null;
-                                            dungeon.monster_info_col = null;
-                                        }
-                                    }
-                                    if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
-                                    {
-                                        dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
-                                    }
-                                    else {
-                                        delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
-                                    }
-                                    map[t.row][t.col].character = pnj;
-                                    dungeon.dungeon.maptiles = map;
-                                }
-                            });
-                            map = unsetAoeSkills(map);
-                            dungeon.dungeon.maptiles = map;
-                        });
-                    }
-                    if(monster != null)
-                    {
-                        monster.moves = false;
-                        monster.can_move_attack = false;
-                        dungeon.monster_info_row = monster.row;
-                        dungeon.monster_info_col = monster.col;
-                        dungeon.user.character.is_attacked = true;
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
-                        monster.is_attacking = true;
-                        monster.can_attack = true;
-                        var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
-                        monster.direction = rg.direction;
-                        dungeon.user.character.attacked_direction = rg.direction;
-                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
-                        dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                        monster.direction = pj.to_move[0].next;
                     }
                     else {
-                        pj.nextTurn = true;
-                        dungeon.user.character = pj;
+                        monster.is_moving = false;
+                        if(monster != null)
+                        {
+                            monster.moves = false;
+                            monster.can_move_attack = false;
+                            dungeon.monster_info_row = monster.row;
+                            dungeon.monster_info_col = monster.col;
+                            dungeon.user.character.is_attacked = true;
+                            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                            monster.is_attacking = true;
+                            monster.can_attack = true;
+                            var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
+                            monster.direction = rg.direction;
+                            dungeon.user.character.attacked_direction = rg.direction;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                            dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                        }
+                        else {
+                            pj.nextTurn = true;
+                            dungeon.user.character = pj;
+                        }
                     }
+                    // if(map[monster.row][monster.col].trap)
+                    // {
+                    //     var result = false;
+                    //     map[monster.row][monster.col].trap.map((skill,index) => {
+                    //         if (skill.aoe_front) {
+                    //             result = setSkillsTarget(map, monster, skill, "up");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_back) {
+                    //             result = setSkillsTarget(map, monster, skill, "down");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_right) {
+                    //             result = setSkillsTarget(map, monster, skill, "right");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_left) {
+                    //             result = setSkillsTarget(map, monster, skill, "left");
+                    //             map = result.map;
+                    //         }
+                    //
+                    //
+                    //         let target = [];
+                    //         Object.keys(map).map(m1 => {
+                    //             Object.keys(map[m1]).map(m2 => {
+                    //                 if(map[m1][m2].is_target_aoe && map[m1][m2].character )
+                    //                 {
+                    //                     if(map[m1][m2].character.type != "pj")
+                    //                     {
+                    //                         target.push({row:m1,col:m2});
+                    //                     }
+                    //                 }
+                    //             })
+                    //         });
+                    //
+                    //         target.map(t => {
+                    //             var pnj = map[t.row][t.col].character;
+                    //             if(pnj.type != "pj")
+                    //             {
+                    //                 var positions = comparePosition(0,0,0,0);
+                    //                 if(pnj.health > 0)
+                    //                 {
+                    //                     pnj.health = pnj.health - skill.damage_instant;
+                    //                     if(skill.damage_instant_buff)
+                    //                     {
+                    //                         pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                    //                     }
+                    //                     if(pnj.health<=0)
+                    //                     {
+                    //                         if(t.row == monster.row && t.col == monster.col)
+                    //                         {
+                    //                             monster = null;
+                    //                         }
+                    //                         pnj = null;
+                    //                         dungeon.monster_info_row = null;
+                    //                         dungeon.monster_info_col = null;
+                    //                     }
+                    //                 }
+                    //                 if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                    //                 {
+                    //                     dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                    //                 }
+                    //                 else {
+                    //                     delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                    //                 }
+                    //                 map[t.row][t.col].character = pnj;
+                    //                 dungeon.dungeon.maptiles = map;
+                    //             }
+                    //         });
+                    //         map = unsetAoeSkills(map);
+                    //         dungeon.dungeon.maptiles = map;
+                    //     });
+                    // }
                 }
             }
             else {
@@ -819,7 +954,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 totalRow = totalRow*-1;
             }
             //Check if user can move to location
-            if(totalRow+totalCol > 1 || totalRow+totalCol == 0)
+            if(totalRow+totalCol == 0)
             {
                 message = 'You cannot walk there.';
                 if(totalRow+totalCol > 1)
@@ -829,6 +964,119 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 dungeon.user.character.is_moving = false;
                 dungeon.user.character.moving_row = null;
                 dungeon.user.character.moving_col = null;
+            }
+            else if(totalRow+totalCol > 1)
+            {
+                var tab = [];
+                var map = dungeon.dungeon.maptiles;
+                var pj = dungeon.user.character;
+                var i=0;
+                var j=1;
+                var pj_row = parseInt(pj.row);
+                var pj_col = parseInt(pj.col);
+                tab[0] = [];
+                tab[0].push({row:pj_row,col:pj_col});
+                var crow;
+                var ccol;
+                var found = false;
+                var to_push = false;
+                do
+                {
+                    if(tab[i])
+                    {
+                        tab[i].map(t =>{
+                            pj_row = t.row;
+                            pj_col = t.col;
+                            if(!tab[j])
+                            {
+                                tab[j] = [];
+                            }
+                            if(typeof map[pj_row+1] !== "undefined" && !found)
+                            {
+                                if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                {
+                                    if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                    {
+                                        crow = pj_row+1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row-1]  !== "undefined" && !found)
+                            {
+                                if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                {
+                                    if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                        crow = pj_row - 1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row] !== "undefined")
+                            {
+                                if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                    {
+                                        ccol = pj_col+1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                                if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                    {
+                                        ccol = pj_col-1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    i++;
+                    j++;
+                }while(i<=pj.movement && !found);
+
+                if(found)
+                {
+                    var moves = [];
+                    let result = recursiveTa(found,[]);
+                    moves = result.m.reverse();
+                    pj.to_move = moves;
+                    dungeon.user.character.is_moving = moves[0].next;
+                    dungeon.user.character.moving_row = moves[0].row;
+                    dungeon.user.character.moving_col = moves[0].col;
+                    dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+moves[0].next+".png";
+                }
+                else {
+                    message = 'You cannot walk there.';
+                    dungeon.error_message = message;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                    dungeon.user.character.is_moving = false;
+                    dungeon.user.character.moving_row = null;
+                    dungeon.user.character.moving_col = null;
+                }
+
             }
             else
             {
@@ -868,18 +1116,55 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         payload: dungeon,
         component: { canMove: canMove,message: message,direction: direction}
     }
-}
+};
+
+function recursiveTa(found,moves)
+{
+  if(found.ta)
+  {
+      let ta = found.ta;
+      found.ta = null;
+      moves.push(found);
+      return recursiveTa(ta,moves);
+  }
+  return {f:found,m:moves};
+};
 
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 
-    if(dungeon.user.character.is_moving)
-    {
+    var pj = dungeon.user.character;
 
+    if(typeof pj.to_move !== "undefined" && pj.to_move.length)
+    {
+        var direction = comparePosition(pj.row,pj.col,pj.moving_row,pj.moving_col);
+        dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction.direction+".png";
+        dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        pj.row = pj.moving_row;
+        pj.col = pj.moving_col;
+
+        pj.to_move.splice(0,1);
+        if(pj.to_move.length)
+        {
+            pj.is_moving = pj.to_move[0].next;
+            pj.moving_row = pj.to_move[0].row;
+            pj.moving_col = pj.to_move[0].col;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+pj.to_move[0].next+".png";
+        }
+        else {
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
+            dungeon.error_message = '';
+        }
+    }
+    else if(pj.is_moving)
+    {
         let canMove = false;
         let message = '';
         let direction = '';
-        let totalRow = dungeon.user.character.row - dungeon.user.character.moving_row;
-        let totalCol = dungeon.user.character.col - dungeon.user.character.moving_col;
+        let totalRow = pj.row - pj.moving_row;
+        let totalCol = pj.col - pj.moving_col;
         if(totalRow < 0)
         {
             direction = 'down';
@@ -918,25 +1203,26 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
         if(canMove)
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-            dungeon.dungeon.maptiles[dungeon.user.character.moving_row][dungeon.user.character.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            delete dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            dungeon.user.character.row = dungeon.user.character.moving_row;
-            dungeon.user.character.col = dungeon.user.character.moving_col;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
-            dungeon.user.character.is_moving = false;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            pj.row = pj.moving_row;
+            pj.col = pj.moving_col;
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
             dungeon.error_message = '';
         }
         else
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
             dungeon.error_message = message;
-            dungeon.user.character.is_moving = false;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
+            pj.is_moving = false;
+            pj.moving_row = null;
+            pj.moving_col = null;
         }
     }
+    dungeon.user.character = pj;
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
@@ -953,6 +1239,7 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
     pj.is_using_skill = false;
     pj.try_skill = false;
     dungeon.error_message = '';
+    map = unsetAoeSkills(map);
     if(!pj.is_casting)
     {
         if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn)
@@ -1093,6 +1380,7 @@ export const endSkill = (dungeon) => ({firebase}) => {
 
 export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
     pj.is_attacking = false;
     dungeon.error_message = '';
     if(!pj.is_casting)
@@ -1108,18 +1396,28 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
             //Replace with pj.range
             if(pj.range >= range.totalRange && range.totalRange > 0)
             {
-                if(pj.action >= pj.basicCost)
+                let is_on_range = false;
+                is_on_range = setRange(map,pj,0,pj.range,true,row,col);
+                if(!is_on_range)
                 {
-                    pj.is_attacking = true;
-                    pj.attacking_row = row;
-                    pj.attacking_col = col;
-                    dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
-                    dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
-                    dungeon.monster_info_row = row;
-                    dungeon.monster_info_col = col;
+                    is_on_range = setRange(map,pj,0,pj.range,false,row,col);
+                }
+                if(is_on_range) {
+                    if (pj.action >= pj.basicCost) {
+                        pj.is_attacking = true;
+                        pj.attacking_row = row;
+                        pj.attacking_col = col;
+                        dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
+                        dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
+                        dungeon.monster_info_row = row;
+                        dungeon.monster_info_col = col;
+                    }
+                    else {
+                        dungeon.error_message = 'Not enough action points';
+                    }
                 }
                 else {
-                    dungeon.error_message = 'Not enough action points';
+                    dungeon.error_message = "Something is blocking the view";
                 }
             }
             else {
@@ -1703,8 +2001,6 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                 pj.direction = positions.direction;
                 pj.equipped_spells[pj.current_skill] = skill;
                 map[pj.row][pj.col].character = pj;
-                console.log(map);
-                console.log('map[row][col]',map[row][col]);
                 dungeon.dungeon.maptiles = map;
                 dungeon.user.character = pj;
             }
@@ -2455,7 +2751,6 @@ function unsetAoeSkills(map) {
 
 function setSkillsTarget(map,pj,skill,direction = "all",is_on_target = false,on_hover = false)
 {
-    console.log('ok',on_hover);
     let self = skill.self;
     let result;
     if(direction == "all" || direction == "left")
@@ -2814,15 +3109,118 @@ function setDiagonalAoeSkill(map,pj,min,hor,aoe,on_hover = false) {
     }
     return {map:map,pj:pj};
 }
+
+function setLinearAoeSkill(map,pj,min,hor,aoe) {
+    for(let j=min;j<=aoe;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                    {
+                        map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
 function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
-
-
-    let imin = neg;
-    let imax = pos;
     let crt_row = 0;
     while(imax)
     {
-        for(let j=-imax;j<=imax;j++)
+        for(let j=imin;j>=imax;j++)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if (aoe) {
+                                map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj" && !aoe) {
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
         {
             if(hor)
             {
@@ -2892,40 +3290,150 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
     }
     return {map:map,pj:pj};
 }
-function setLinearAoeSkill(map,pj,min,hor,aoe) {
-    for(let j=min;j<=aoe;j++)
+
+function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
+    if(neg<0)
     {
-        if(hor)
+        for(let j=pos;j>=neg;j--)
         {
-            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            if(hor)
             {
-                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_aoe = true;
-                        pj.can_use_skill = true;
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                     {
-                        break;
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
         }
-        else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+    }
+    else {
+        for(let j=neg;j<=pos;j++)
+        {
+            if(hor)
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_aoe = true;
-                        pj.can_use_skill = true;
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                     {
-                        break;
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -2934,35 +3442,141 @@ function setLinearAoeSkill(map,pj,min,hor,aoe) {
     return {map:map,pj:pj};
 }
 
-function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
 
-    for(let j=neg;j<=pos;j++)
+
+function setRange(map,pj,neg,pos,hor,row,col){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    while(imax)
     {
+        for(let j=imin;j<=imax;j++)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=imin;j<=imax;j++)
+    {
+        if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+        {
+            return true;
+        }
         if(hor)
         {
-            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
                     {
-                        if(aoe)
+                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
                         {
-                            map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
-                        {
-                            if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                            if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
                             {
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                                pj.can_use_skill = true;
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
                             }
                         }
                     }
@@ -2974,28 +3588,15 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
         else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            if(typeof map[parseInt(pj.row)-j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
-                    {
-                        if(aoe)
-                        {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
-                        {
-                            if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                    if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                            if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
                             }
                         }
                     }
@@ -3007,5 +3608,386 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
     }
-    return {map:map,pj:pj};
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    return false;
+}
+
+function setRangeMonsters(map,pj,neg,pos,diag,hor){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    var tab = [];
+    var c_row = 0;
+    var c_col = 0;
+    while(imax)
+    {
+        for(let j=imin;j<=imax;j++)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = c_col;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=diag;j<=diag;j++)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    for(let j=-diag;j>=-diag;j--)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][c_col].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)-j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)+j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    return {map:map,tab:tab};
 }

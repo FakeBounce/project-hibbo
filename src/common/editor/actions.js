@@ -486,8 +486,6 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
 
     if(viewer){
         character = viewer.characters[viewer.active];
-
-        console.log('char',character);
     }
     for(var i = 0 ; i <16 ;i ++)
     {
@@ -753,8 +751,6 @@ export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase
             tile.id = getUid();
         }
         tile.id = getUid();
-
-        console.log('row', newmap.worldmap.maptiles[row]);
         firebase.update({
             [`activeMap/${viewer.id}`]: newmap,
         });

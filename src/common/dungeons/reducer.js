@@ -85,7 +85,6 @@ const dungeonsReducer = (state = new State(), action) => {
                 else {
                     tutoriel = action.payload.tutoriel;
                 }
-                console.log('MAJ tutoriel',tutoriel);
                 return state.set('tutoriel', tutoriel);
             }
             return state;

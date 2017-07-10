@@ -49,8 +49,6 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
     {
         if(maptiles)
         {
-
-            console.log('maptiles');
             maptiles.map(list => {
                 if (activeTile) {
                     if (list.id == activeTile.id) {

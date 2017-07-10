@@ -38,7 +38,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
             });
         }
         picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
-        console.log("dvddd",dviewer);
         if(dviewer.tuto && dviewer.tuto < 8)
         {
             if(typeof tutoriel === 'undefined' || tutoriel == null)

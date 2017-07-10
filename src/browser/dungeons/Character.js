@@ -26,7 +26,6 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
 
   onkeydown = (event: KeyboardEvent) => {
     if(event.key === "ArrowUp"){
-      console.log('test');
     }
   };
 
@@ -54,21 +53,19 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(character.is_moving && character.type == "pnj")
     {
         classes= "monster pj-"+character.direction;
-        console.log(classes);
         setTimeout(function(){
             MonsterMove(dungeon);
         },500);
     }
     if(move && character.type == "pj")
     {
-
         gif = 'pj-'+move;
         classes= "monster "+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/"+move+".gif";
         setTimeout(function(){
             character.image = "/assets/images/classes/"+character.name+"/"+move+".png";
             moveCharacter(dungeon,row,col);
-        },500);
+        },450);
     }
     if(character.try_skill && character.type == "pj")
     {

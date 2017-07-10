@@ -37,10 +37,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
         {
             if(maptile.character != null)
             {
-                if(maptile.character.type == "pj")
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -57,6 +54,13 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             };
         }
     }
+    if(typeof maptile.is_movable !== 'undefined')
+    {
+        if(maptile.is_movable)
+        {
+            classImage = classImage+ " is_target_aoe";
+        }
+    }
     if(typeof maptile.is_target_aoe !== 'undefined')
     {
             if(maptile.is_target_aoe)
@@ -68,7 +72,6 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     {
         tile_hover = function(){
             showAoeSkill(dungeon,maptile);
-            console.log('is targeted');
         };
     }
     if(dungeon.user.character.is_using_skill)

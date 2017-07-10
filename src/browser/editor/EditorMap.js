@@ -87,11 +87,6 @@ let EditorMap = ({ camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap
 
     if(worldmap && worldmap.worldmap)
     {
-
-
-        console.log('camera',worldmap.camera);
-
-
         let activeConstructMapTop = false;
         let activeConstructMapRight = false;
         let activeUserMapStart = false;
