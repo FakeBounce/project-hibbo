@@ -1648,6 +1648,29 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
+// switch
+
+.btnSwitch{
+  font-family: inherit;
+  font-weight: 600;
+  border: 0;
+  color: #fff;
+  background-image: url(/assets/images/login/switch.png);
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: contain;
+  height: 40px;
+  width: 30px;
+  box-shadow: none;
+  cursor: pointer;
+  position: absolute;
+  font-size: 10px;
+  text-align: center;
+  padding-top: 7px;
+  margin-left: -21px;
+  margin-top: 50px;
+}
+
 //info bulle personnages
 
 
@@ -1657,14 +1680,10 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
-.infoBulle .infopersonnage .imageCharacter .headerInfoPerso{
-  margin-top: 40px;
-}
-
 .infoBulle .infopersonnage .headerInfoPerso h3 {
   width:100%;
   text-align: center;
-  margin-top:40px;
+  margin:10px 0;
 }
 
 .infoBulle .infopersonnage .headerInfoPerso h4 {
@@ -1679,21 +1698,17 @@ progress[value].progressSkills::-webkit-progress-value {
   margin:0 auto;
 }
 .infoBulle .infopersonnage {
-  display: none;
-  position: fixed;
-  top: 300px;
+  display: block;
   background-color: aliceblue;
-  width: 550px;
-  margin: 0 auto;
+  width: 216px;
   z-index: 28024;
-  //background: url(/assets/images/login/infoCharacter.png);
   background-size: cover;
-  height: auto;
-  left: 380px;
   color: #333;
   text-align: center;
-  opacity: 0.6;
   padding: 15px 0;
+  position: absolute;
+  top: 114px;
+  left: -59px;
 }
 
 .infoBulle:hover .infopersonnage {
@@ -1702,6 +1717,7 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .infoBulle .infopersonnage ul {
   margin: 0;
+  padding:0;
 }
 
 .infoBulle .infopersonnage ul li {
@@ -1722,15 +1738,17 @@ progress[value].progressSkills::-webkit-progress-value {
 .infobar-spell-number .oneSkill .info{
   display: none;
   position: absolute;
-  top: -303px;
-  background-color: aliceblue;
-  width: 550px;
+  top: -225px;
+  width: 350px;
   margin: 0 auto;
   z-index: 202530;
-  background: url(/assets/images/login/info.png);
+  background-color: #9dbac3;
   background-size: cover;
-  height: 240px;
-  left:-200px;
+  height: 150px;
+  left: 20px;
+  padding: 10px 0;
+  font-size: 13px;
+  background: url(/assets/images/login/info2.png) no-repeat;
 }
 
 .infobar-spell-number .oneSkill:hover .info{
@@ -1743,24 +1761,23 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .infobar-spell-number .oneSkill .info ul li{
   list-style: none;
-  width: 33%;
+  width: 33.33%;
   float: left;
-  margin: 7px 0;
+  margin: 0;
   color: #333;
+  padding: 0 10px;
 }
 
 .infobar-spell-number .oneSkill .info h3{
-  float: right;
-  width: 90%;
-  margin: 40px 0 0 0;
+  margin: 0;
   color: #333;
+  padding: 25px 0 0 0;
 }
 
 .infobar-spell-number .oneSkill .info h4{
-  float: right;
-  width: 350px;
   color: #333;
-  margin: 25px 50px 25px 0;
+  margin: 0;
+  padding: 4px 35px 0 35px;
 }
 
 

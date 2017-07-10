@@ -204,7 +204,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     </div>
                 </div>
                 <div className="cadre-bas-max">
-                    <div>
+                  <div>
                         <div className="infobar-mana">
                             <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
                             </div>
@@ -224,6 +224,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                             </div>
                         </div>
                         <div className="infobar-spell-number">
+                          <a className="btnSwitch"></a>
                                 {skills_list}
                         </div>
                     </div>
