@@ -42,8 +42,9 @@ export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
 export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 
 /************ Display Equipement ***************************/
-export const PickEquipment = (viewer, equipment) => ({ firebase }) => {
-viewer.pick_equipment = equipment;
+export const PickEquipment = (viewer, equipment, wear) => ({ firebase }) => {
+    equipment.wear = wear;
+    viewer.pick_equipment = equipment;
     firebase.update({
         [`users/${viewer.id}/pick_equipment`]: equipment,
     });
@@ -53,65 +54,135 @@ viewer.pick_equipment = equipment;
     }
 };
 
-export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
-    console.log("vu",viewer);
+export const RemoveEquipment = (viewer, equipment) => ({ firebase }) => {
     let character = viewer.characters[viewer.active];
-    //si luser n'a pas equipements
-    if(character.equipped_equipments == null){
+    if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+    {
         Object.keys(equipment.benefits).map(p => {
             if(character[p]){
-                character[p] = character[p] + equipment.benefits[p];
-            }
-            else{
-                character[p] = equipment.benefits[p];
+                character[p] = character[p] - equipment.benefits[p];
             }
         });
-        character.equipped_equipments = {};
-        character.equipped_equipments[equipment.type] = equipment;
-    }
-    else{
-        //si luser a un equipement du type de l'objet
-        if(character.equipped_equipments[equipment.type]){
-            let equipment_wear = character.equipped_equipments[equipment.type];
-            if(equipment_wear && equipment_wear.benefits) {
-                //on soustraie l'ancien
-                Object.keys(equipment_wear.benefits).map(p => {
-                    character[p] = character[p] - equipment_wear.benefits[p];
-                });
-                character.inventory.push(equipment_wear);
-            }
-            //on additione le nouveau
-            Object.keys(equipment.benefits).map(p => {
-                if(character[p]){
-                    character[p] = character[p] + equipment.benefits[p];
-                }
-                else{
-                    character[p] = equipment.benefits[p];
-                }
-            });
-            character.equipped_equipments[equipment.type] = equipment;
-            character.inventory[equipment.name] = null;
+
+        character.equipped_equipments[equipment.type] = null;
+        if(!character.inventory){
+            character.inventory = {};
         }
-        else{
-            //on additione le nouveau
-            Object.keys(equipment.benefits).map(p => {
-                if(character[p]){
-                    character[p] = character[p] + equipment.benefits[p];
-                }
-                else{
-                    character[p] = equipment.benefits[p];
-                }
-            });
-            character.equipped_equipments[equipment.type] = equipment;
-            character.inventory[equipment.name] = null;
-        }
+        character.inventory[equipment.name] = equipment;
     }
 
-    viewer.characters[viewer.active] = character;
-
+    viewer.pick_equipment = null;
     firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
         [`users/${viewer.id}/characters/${viewer.active}`]: character,
     });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const DeleteEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+    if(!equipment.wear){
+        if(character.inventory[equipment.name])
+        {
+            character.inventory[equipment.name] = null
+        }
+    }
+    else{
+        if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+        {
+            Object.keys(equipment.benefits).map(p => {
+                if(character[p]){
+                    character[p] = character[p] - equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments[equipment.type] = null;
+        }
+    }
+
+    viewer.pick_equipment = null;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+
+    //es ce que luser peut le porter
+    if(character.name == equipment.classe || equipment.classe == "All") {
+        //si luser n'a pas equipements
+        if (character.equipped_equipments == null) {
+            Object.keys(equipment.benefits).map(p => {
+                if (character[p]) {
+                    character[p] = character[p] + equipment.benefits[p];
+                }
+                else {
+                    character[p] = equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments = {};
+            character.equipped_equipments[equipment.type] = equipment;
+            character.inventory[equipment.name] = null;
+        }
+        else {
+            //si luser a un equipement du type de l'objet
+            if (character.equipped_equipments[equipment.type]) {
+                let equipment_wear = character.equipped_equipments[equipment.type];
+                if (equipment_wear && equipment_wear.benefits) {
+                    //on soustraie l'ancien
+                    Object.keys(equipment_wear.benefits).map(p => {
+                        character[p] = character[p] - equipment_wear.benefits[p];
+                    });
+                    character.inventory[equipment_wear.name] = equipment_wear;
+                }
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+            else {
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+        }
+
+        viewer.characters[viewer.active] = character;
+        viewer.pick_equipment = null;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: null,
+            [`users/${viewer.id}/characters/${viewer.active}`]: character,
+        });
+    }
+    else{
+        viewer.pick_equipment.error = "Vous n'êtes pas " + viewer.pick_equipment.classe;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: viewer.pick_equipment,
+        });
+    }
 
     return {
         type: ADD_EQUIPMENT,
@@ -1529,9 +1600,11 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
     classe.pseudo = pseudo;
     classe.row = 0;
     classe.col = 0;
+    //add equi init
     viewer.characters.push(classe);
     viewer.active = 0;
     viewer.tuto = 1;
+
 
 
 
@@ -1540,6 +1613,58 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
         [`users/${viewer.id}/active`]: viewer.active,
         [`users/${viewer.id}/tuto`]: 1
     });
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
+            name: "init_1",
+            img: "/assets/images/weapons/init_1.png",
+            type: "helmet",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
+            name: "init_2",
+            img: "/assets/images/weapons/init_2.png",
+            type: "armor",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
+            name: "init_3",
+            img: "/assets/images/weapons/init_3.png",
+            type: "boots",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
+            name: "init_4",
+            img: "/assets/images/weapons/init_4.png",
+            type: "weapon",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
 
     return {
         type: CREATE_PERSO,

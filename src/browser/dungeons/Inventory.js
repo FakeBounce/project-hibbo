@@ -5,28 +5,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Image } from '../app/components';
-import { PickEquipment } from '../../common/dungeons/actions';
+import { PickEquipment, RemoveEquipment } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
     viewer: Object
 };
 
-const Inventory = ({ character , viewer , PickEquipment }: Props) => {
+const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment }: Props) => {
     console.log(character);
     let equipment = '';
     let picture = '';
-    const ShowEquipment = function (equip) {
-        PickEquipment(viewer, equip);
+    const ShowEquipment = function (equip, wear) {
+        PickEquipment(viewer, equip, wear);
     };
 
     if(character) {
         picture = "/assets/images/classes/"+ character.name +"-profil.png";
         if (character.inventory) {
-            equipment = character.inventory.map(equip => {
-                return (<div className="equipment-block" onClick={() => ShowEquipment(equip)}>
-                    <div className="equipment"><Image src={equip.img}/></div>
-                </div>)
+            equipment = Object.keys(character.inventory).map(equip => {
+                if(character.inventory[equip] && character.inventory[equip].img != null && character.inventory[equip].img != 'undefined') {
+                    return (<div className="equipment-block">
+                        <div className="equipment"><Image src={character.inventory[equip].img} onClick={() => ShowEquipment(character.inventory[equip], false)}/></div>
+                    </div>)
+                }
             })
         }
     }
@@ -35,27 +37,30 @@ const Inventory = ({ character , viewer , PickEquipment }: Props) => {
             <div className="separator"></div>
             <div className="inventory">
                 {equipment}
+                <div className="equipment-block">
+                    <div className="equipment"></div>
+                </div>
             </div>
             <div className="inventory-perso">
                 <Image className="profil-img" src={picture}/>
                 <div className="equipment helmet">
                     {character.equipped_equipments && character.equipped_equipments["helmet"] &&
-                        <Image src={character.equipped_equipments["helmet"].img}/>
+                        <Image className="eq-select" src={character.equipped_equipments["helmet"].img} onClick={() => ShowEquipment(character.equipped_equipments["helmet"], true)}/>
                     }
                 </div>
                 < div className="equipment armor">
                     {character.equipped_equipments && character.equipped_equipments["armor"] &&
-                        <Image src={character.equipped_equipments["armor"].img}/>
+                        <Image className="eq-select" src={character.equipped_equipments["armor"].img} onClick={() => ShowEquipment(character.equipped_equipments["armor"], true)}/>
                     }
                 </div>
                 <div className="equipment weapon">
                     {character.equipped_equipments && character.equipped_equipments["weapon"] &&
-                        <Image src={character.equipped_equipments["weapon"].img}/>
+                        <Image className="eq-select" src={character.equipped_equipments["weapon"].img} onClick={() => ShowEquipment(character.equipped_equipments["weapon"], true)}/>
                     }
                 </div>
                 <div className="equipment boots">
                     {character.equipped_equipments && character.equipped_equipments["boots"] &&
-                        <Image src={character.equipped_equipments["boots"].img}/>
+                        <Image className="eq-select" src={character.equipped_equipments["boots"].img} onClick={() => ShowEquipment(character.equipped_equipments["boots"], true)}/>
                     }
                 </div>
             </div>
@@ -70,6 +75,6 @@ Inventory.propTypes = {
 };
 
 export default connect(state => ({
-}), { PickEquipment }) (Inventory);
+}), { PickEquipment, RemoveEquipment }) (Inventory);
 
 

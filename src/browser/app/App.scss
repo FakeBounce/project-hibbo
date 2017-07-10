@@ -1392,6 +1392,22 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 6000;
 }
 
+.infobar-mana-div .text-info{
+  position: absolute;
+  line-height: 91px;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+}
+
+.infobar-life-div .text-info{
+  position: absolute;
+  line-height: 120px;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+}
+
 .cadre-bas-max .infobar-life{
   background: url("/assets/images/infobar/lifebar.png") no-repeat;
   position: absolute;
@@ -2263,15 +2279,16 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .inventory_pick_info{
-  padding-top:15px;
-  margin-left: 40px;
+  padding-top: 15px;
+  margin-left: 10px;
+  margin-bottom: 90px;
+  width: 200px;
 }
 
 .inventory_pick_benefit{
-  margin-top: 45px;
-  height: 100px;
-  overflow-y: auto;
-  width: 224px;
+  width: 180px;
+  margin-bottom: 80px;
+  margin-left: 15px;
 }
 
 .inventory_pick_info_benef{
@@ -2279,10 +2296,23 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-left: 20px;
 }
 
-.inventory_pick_info_class div , .inventory_pick_info_type div, .inventory_pick_info_benef div{
+.inventory_pick_info_class, .inventory_pick_info_type{
+  height: 38px;
+  line-height: 38px;
+}
+
+.inventory_pick_info_class div ,.inventory_pick_info_type div, .inventory_pick_info_benef div{
   width: 50%;
   float: left;
   text-align: left;
+}
+
+.inventory_pick_info_benef div:nth-child(1){
+  width: 70%;
+}
+
+.inventory_pick_info_benef div:nth-child(2){
+  width: 30%;
 }
 
 .inventory_pick .equipment-block{
@@ -2296,6 +2326,17 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 74px;
   height: 74px;
   background: url("/assets/images/inventory/equipement.png");
+}
+
+.eq-select{
+  width: 58px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  margin: auto;
+  cursor: pointer;
 }
 
 .inventory_pick_action div{
@@ -2331,6 +2372,34 @@ progress[value].progressSkills::-webkit-progress-value {
   border:1px solid #333333;
 }
 
+.inventory_pick_benefit::-webkit-scrollbar{
+  width:8px;
+  background-color:#808080;
+}
+
+.inventory_pick_benefit::-webkit-scrollbar-thumb{
+  background-color:#393d41;
+  border-radius:10px;
+}
+.inventory_pick_benefit::-webkit-scrollbar-thumb:hover{
+  background-color:#5c6362;
+  border:1px solid #333333;
+}
+.inventory_pick_benefit::-webkit-scrollbar-thumb:active{
+  background-color:#393d41;
+  border:1px solid #333333;
+}
+
+.w45{
+  width: 45%;
+  float:left;
+}
+
+.w55{
+  width: 55%;
+  float:left;
+}
+
 .inventory .separator{
   position: absolute;
   right: 0;
@@ -2364,6 +2433,7 @@ progress[value].progressSkills::-webkit-progress-value {
   left: 0;
   margin: auto;
   position: absolute;
+  cursor: pointer;
 }
 
 .inventory-perso{

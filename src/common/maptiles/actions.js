@@ -5109,10 +5109,35 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
   });*/
 
   //ADD FAKE WEAPONS
+  var a = getUid();
+  var b = getUid();
+  var c = getUid();
+  var d = getUid();
+  var e = getUid();
+  var f = getUid();
+  var g = getUid();
+  var h = getUid();
+  var i = getUid();
+  var j = getUid();
+  var k = getUid();
+  var l = getUid();
+  var m = getUid();
+  var n = getUid();
+  var o = getUid();
+  var p = getUid();
+  var q = getUid();
+  var r = getUid();
+  var s = getUid();
+  var t = getUid();
+  var u = getUid();
+  var v = getUid();
+  var w = getUid();
+  var x = getUid();
+  var y = getUid();
+  var z = getUid();
   firebase.update({
-    [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory`]: {
-        0: {
-            name: "0",
+    [`equipments/${a}`]: {
+            name: a,
             img: "/assets/images/weapons/armor_1.png",
             type: "armor",
             classe: "Mage",
@@ -5122,9 +5147,25 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 spell_damage: 500
             },
 
-        },
-        1: {
-            name: "1",
+        }});
+
+    firebase.update({
+        [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory/${a}`]: {
+            name: a,
+            img: "/assets/images/weapons/armor_1.png",
+            type: "armor",
+            classe: "Mage",
+            benefits: {
+                health:  100,
+                energy: 1000,
+                spell_damage: 500
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${b}`]: {
+            name: b,
             img: "/assets/images/weapons/weapon_1.png",
             type: "weapon",
             classe: "Mage",
@@ -5134,9 +5175,25 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 spell_damage: 500
             },
 
-        },
-        2: {
-            name: "2",
+        }});
+
+    firebase.update({
+        [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory/${b}`]: {
+            name: b,
+            img: "/assets/images/weapons/weapon_1.png",
+            type: "weapon",
+            classe: "Mage",
+            benefits: {
+                health:  1000,
+                energy: 1000,
+                spell_damage: 500
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${c}`]: {
+            name: c,
             img: "/assets/images/weapons/armor_2.png",
             type: "armor",
             classe: "Mage",
@@ -5145,20 +5202,50 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 spell_damage: 1500
             },
 
-        },
-        3: {
-            name: "3",
-            img: "/assets/images/weapons/weapon_2.png",
+        }});
+
+    firebase.update({
+        [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory/${c}`]: {
+            name: c,
+            img: "/assets/images/weapons/armor_2.png",
             type: "armor",
+            classe: "Mage",
+            benefits: {
+                energy: 3000,
+                spell_damage: 1500
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${d}`]: {
+            name: d,
+            img: "/assets/images/weapons/weapon_2.png",
+            type: "weapon",
             classe: "Mage",
             benefits: {
                 energy: 1000,
                 spell_damage: 2000
             },
 
-        },
-        4: {
-            name: "4",
+        }});
+
+    firebase.update({
+        [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory/${d}`]: {
+            name: d,
+            img: "/assets/images/weapons/weapon_2.png",
+            type: "weapon",
+            classe: "Mage",
+            benefits: {
+                energy: 1000,
+                spell_damage: 2000
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${e}`]: {
+            name: e,
             img: "/assets/images/weapons/helmet_1.png",
             type: "helmet",
             classe: "Mage",
@@ -5167,9 +5254,24 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 spell_damage: 1000
             },
 
-        },
-        5: {
-            name: "5",
+        }});
+
+    firebase.update({
+        [`users/iZndq6gNXyOeYsS8xDHenTyMQJe2/characters/0/inventory/${e}`]: {
+            name: e,
+            img: "/assets/images/weapons/helmet_1.png",
+            type: "helmet",
+            classe: "Mage",
+            benefits: {
+                energy: 1000,
+                spell_damage: 1000
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${f}`]: {
+            name: f,
             img: "/assets/images/weapons/boots_6.png",
             type: "boots",
             classe: "Mage",
@@ -5178,266 +5280,341 @@ export const maptileCompleted = () => ({ getUid, now, firebase, firebaseDatabase
                 spell_damage: 500
             },
 
-        },
-        // 6: {
-        //     name: "6",
-        //     img: "/assets/images/weapons/armor_3.png",
-        //     type: "armor",
-        //     classe: "Mage",
-        //     benefits: {
-        //         energy: 3000,
-        //         spell_damage: 300
-        //     },
-        //
-        // },
-        // 7: {
-        //     name: "7",
-        //     img: "/assets/images/weapons/boots_3.png",
-        //     type: "boots",
-        //     classe: "Mage",
-        //     benefits: {
-        //         energy: 3000,
-        //         spell_damage: 300
-        //     },
-        //
-        // },
-        // 8: {
-        //     name: "8",
-        //     img: "/assets/images/weapons/helmet_2.png",
-        //     type: "helmet",
-        //     classe: "Mage",
-        //     benefits: {
-        //         energy: 2000,
-        //         spell_damage: 2000
-        //     },
-        //
-        // },
-        // 9: {
-        //     name: "9",
-        //     img: "/assets/images/weapons/weapon_3.png",
-        //     type: "weapon",
-        //     classe: "Mage",
-        //     benefits: {
-        //         energy: 5000,
-        //         spell_damage: 5000
-        //     },
-        //
-        // },
-        // 10: {
-        //     name: "10",
-        //     img: "/assets/images/weapons/weapon_4.png",
-        //     type: "weapon",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1000,
-        //         energy: 1000,
-        //         damage: 1000
-        //     },
-        //
-        // },
-        // 11: {
-        //     name: "11",
-        //     img: "/assets/images/weapons/armor_6.png",
-        //     type: "armor",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1000,
-        //         energy: 1000,
-        //         damage: 1000
-        //     },
-        //
-        // },
-        // 12: {
-        //     name: "12",
-        //     img: "/assets/images/weapons/boots_3.png",
-        //     type: "boots",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1000,
-        //         energy: 1000,
-        //         damage: 1000
-        //     },
-        //
-        // },
-        // 13: {
-        //     name: "13",
-        //     img: "/assets/images/weapons/helmet_5.png",
-        //     type: "helmet",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1000,
-        //         energy: 1000,
-        //         damage: 1000
-        //     },
-        //
-        // },
-        // 14: {
-        //     name: "14",
-        //     img: "/assets/images/weapons/weapon_5.png",
-        //     type: "weapon",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage: 1500
-        //     },
-        //
-        // },
-        // 15: {
-        //     name: "15",
-        //     img: "/assets/images/weapons/armor_7.png",
-        //     type: "armor",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage: 1500
-        //     },
-        //
-        // },
-        // 16: {
-        //     name: "16",
-        //     img: "/assets/images/weapons/boots_4.png",
-        //     type: "boots",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage: 1500
-        //     },
-        //
-        // },
-        // 17: {
-        //     name: "17",
-        //     img: "/assets/images/weapons/helmet_6.png",
-        //     type: "helmet",
-        //     classe: "Ranger",
-        //     benefits: {
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage: 1500
-        //     },
-        //
-        // },
-        // 18: {
-        //     name: "18",
-        //     img: "/assets/images/weapons/weapon_7.png",
-        //     type: "weapon",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 1500,
-        //         damage_reduction_flat: 200,
-        //         armor: 200
-        //     },
-        //
-        // },
-        // 19: {
-        //     name: "19",
-        //     img: "/assets/images/weapons/armor_4.png",
-        //     type: "armor",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 2000,
-        //         damage_reduction_flat: 200,
-        //         armor: 200
-        //     },
-        //
-        // },
-        // 20: {
-        //     name: "20",
-        //     img: "/assets/images/weapons/boots_1.png",
-        //     type: "boots",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 2000,
-        //         damage_reduction_flat: 200,
-        //         armor: 200
-        //     },
-        //
-        // },
-        // 21: {
-        //     name: "21",
-        //     img: "/assets/images/weapons/helmet_3.png",
-        //     type: "helmet",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 2000,
-        //         damage_reduction_flat: 200,
-        //         armor: 200
-        //     },
-        //
-        // },
-        // 22: {
-        //     name: "22",
-        //     img: "/assets/images/weapons/weapon_8.png",
-        //     type: "weapon",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage_reduction_flat: 200,
-        //     },
-        //
-        // },
-        // 23: {
-        //     name: "23",
-        //     img: "/assets/images/weapons/helmet_4.png",
-        //     type: "helmet",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1000,
-        //         health: 1500,
-        //         energy: 1500,
-        //         damage_return: 200,
-        //     },
-        //
-        // },
-        // 24: {
-        //     name: "24",
-        //     img: "/assets/images/weapons/armor_5.png",
-        //     type: "armor",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1500,
-        //         health: 1000,
-        //         armor: 200,
-        //         damage_return: 200,
-        //     },
-        //
-        // },
-        // 25: {
-        //     name: "25",
-        //     img: "/assets/images/weapons/boots_2.png",
-        //     type: "boots",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 1500,
-        //         health: 1000,
-        //         armor: 200,
-        //         damage_return: 200,
-        //     },
-        //
-        // },
-        // 26: {
-        //     name: "26",
-        //     img: "/assets/images/weapons/weapon_6.png",
-        //     type: "weapon",
-        //     classe: "Warrior",
-        //     benefits: {
-        //         damage: 3000,
-        //         health: 1500,
-        //         energy: 1500,
-        //         spell_damage: 1500
-        //     },
-        //
-        // },
-    }
-  });
+        }});
+
+    firebase.update({
+        [`equipments/${g}`]: {
+            name: g,
+            img: "/assets/images/weapons/armor_3.png",
+            type: "armor",
+            classe: "Mage",
+            benefits: {
+                energy: 3000,
+                spell_damage: 300
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${h}`]: {
+            name: h,
+            img: "/assets/images/weapons/boots_3.png",
+                type: "boots",
+                classe: "Mage",
+                benefits: {
+                    energy: 3000,
+                    spell_damage: 300
+                },
+
+        }});
+
+    firebase.update({
+        [`equipments/${i}`]: {
+            name: i,
+            img: "/assets/images/weapons/helmet_2.png",
+            type: "helmet",
+            classe: "Mage",
+            benefits: {
+                energy: 2000,
+                spell_damage: 2000
+            },
+
+        }});
+
+    firebase.update({
+        [`equipments/${j}`]: {
+            name: j,
+            img: "/assets/images/weapons/weapon_3.png",
+                type: "weapon",
+                classe: "Mage",
+                benefits: {
+                    energy: 5000,
+                    spell_damage: 5000
+                },
+        }});
+
+    firebase.update({
+        [`equipments/${k}`]: {
+            name: k,
+            img: "/assets/images/weapons/weapon_4.png",
+                type: "weapon",
+                classe: "Ranger",
+                benefits: {
+                    health: 1000,
+                    energy: 1000,
+                    damage: 1000
+                },
+        }});
+
+    firebase.update({
+        [`equipments/${l}`]: {
+            name: l,
+            img: "/assets/images/weapons/armor_6.png",
+            type: "armor",
+            classe: "Ranger",
+            benefits: {
+                health: 1000,
+                energy: 1000,
+                damage: 1000
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${m}`]: {
+            name: m,
+            img: "/assets/images/weapons/boots_3.png",
+            type: "boots",
+            classe: "Ranger",
+            benefits: {
+                health: 1000,
+                energy: 1000,
+                damage: 1000
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${n}`]: {
+            name: n,
+            img: "/assets/images/weapons/helmet_5.png",
+            type: "helmet",
+            classe: "Ranger",
+            benefits: {
+                health: 1000,
+                energy: 1000,
+                damage: 1000
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${o}`]: {
+            name: o,
+            img: "/assets/images/weapons/weapon_5.png",
+            type: "weapon",
+            classe: "Ranger",
+            benefits: {
+                health: 1500,
+                energy: 1500,
+                damage: 1500
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${p}`]: {
+            name: p,
+            img: "/assets/images/weapons/armor_7.png",
+            type: "armor",
+            classe: "Ranger",
+            benefits: {
+                health: 1500,
+                energy: 1500,
+                damage: 1500
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${q}`]: {
+            name: q,
+            img: "/assets/images/weapons/boots_4.png",
+            type: "boots",
+            classe: "Ranger",
+            benefits: {
+                health: 1500,
+                energy: 1500,
+                damage: 1500
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${r}`]: {
+            name: r,
+            img: "/assets/images/weapons/helmet_6.png",
+            type: "helmet",
+            classe: "Ranger",
+            benefits: {
+                health: 1500,
+                energy: 1500,
+                damage: 1500
+            },
+        }});
+
+
+    firebase.update({
+        [`equipments/${s}`]: {
+            name: s,
+            img: "/assets/images/weapons/weapon_7.png",
+            type: "weapon",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 1500,
+                damage_reduction_flat: 200,
+                armor: 200
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${t}`]: {
+            name: t,
+            img: "/assets/images/weapons/armor_4.png",
+            type: "armor",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 2000,
+                damage_reduction_flat: 200,
+                armor: 200
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${u}`]: {
+            name: u,
+            img: "/assets/images/weapons/boots_1.png",
+            type: "boots",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 2000,
+                damage_reduction_flat: 200,
+                armor: 200
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${v}`]: {
+            name: v,
+            img: "/assets/images/weapons/helmet_3.png",
+            type: "helmet",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 2000,
+                damage_reduction_flat: 200,
+                armor: 200
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${w}`]: {
+            name: w,
+            img: "/assets/images/weapons/weapon_8.png",
+            type: "weapon",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 1500,
+                energy: 1500,
+                damage_reduction_flat: 200,
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${w}`]: {
+            name: w,
+            img: "/assets/images/weapons/helmet_4.png",
+            type: "helmet",
+            classe: "Warrior",
+            benefits: {
+                damage: 1000,
+                health: 1500,
+                energy: 1500,
+                damage_return: 200,
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${x}`]: {
+            name: x,
+            img: "/assets/images/weapons/armor_5.png",
+            type: "armor",
+            classe: "Warrior",
+            benefits: {
+                damage: 1500,
+                health: 1000,
+                armor: 200,
+                damage_return: 200,
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${y}`]: {
+            name: y,
+            img: "/assets/images/weapons/boots_2.png",
+            type: "boots",
+            classe: "Warrior",
+            benefits: {
+                damage: 1500,
+                health: 1000,
+                armor: 200,
+                damage_return: 200,
+            },
+        }});
+
+    firebase.update({
+        [`equipments/${z}`]: {
+            name: z,
+            img: "/assets/images/weapons/weapon_6.png",
+            type: "weapon",
+            classe: "Warrior",
+            benefits: {
+                damage: 3000,
+                health: 1500,
+                energy: 1500,
+                spell_damage: 1500
+            },
+        }});
+
+    // firebase.update({
+    //     [`equipments/init_1`]: {
+    //         name: "init_1",
+    //         img: "/assets/images/weapons/init_1.png",
+    //         type: "helmet",
+    //         classe: "All",
+    //         benefits: {
+    //             damage: 100,
+    //             health: 100,
+    //             energy: 100,
+    //         },
+    //     }});
+    //
+    // firebase.update({
+    //     [`equipments/init_2`]: {
+    //         name: "init_2",
+    //         img: "/assets/images/weapons/init_2.png",
+    //         type: "armor",
+    //         classe: "All",
+    //         benefits: {
+    //             damage: 100,
+    //             health: 100,
+    //             energy: 100,
+    //         },
+    //     }});
+    //
+    // firebase.update({
+    //     [`equipments/init_3`]: {
+    //         name: "init_3",
+    //         img: "/assets/images/weapons/init_3.png",
+    //         type: "boots",
+    //         classe: "All",
+    //         benefits: {
+    //             damage: 100,
+    //             health: 100,
+    //             energy: 100,
+    //         },
+    //     }});
+    //
+    // firebase.update({
+    //     [`equipments/init_4`]: {
+    //         name: "init_4",
+    //         img: "/assets/images/weapons/init_4.png",
+    //         type: "weapon",
+    //         classe: "All",
+    //         benefits: {
+    //             damage: 100,
+    //             health: 100,
+    //             energy: 100,
+    //         },
+    //     }});
 
   return {
     type: MAPTILE_COMPLETED,

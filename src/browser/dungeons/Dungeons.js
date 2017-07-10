@@ -11,9 +11,9 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { AddEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment}) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
     let weapon_list = '';
     var skills_list = '';
     let dungeon;
@@ -33,6 +33,11 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     }
     else
     {
+        if(dviewer.characters && dviewer.characters[dviewer.active]){
+            maxhealth = health = dviewer.characters[dviewer.active].health;
+            maxenergy = energy = dviewer.characters[dviewer.active].energy;
+        }
+
         if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
             pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
                 console.log(benef);
@@ -132,9 +137,9 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
         }
     }
     var health_percent = health/maxhealth * 100;
-    let healthbar = "<div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
+    let healthbar = "<div class='text-info'><span>"+ health +"</span></div><div class='progress vertical-life'><div class='progress-bar progress-bar-life' role='progressbar' aria-valuenow='"+health+"' aria-valuemin='0' aria-valuemax='"+maxhealth+"' style='width:"+health_percent+"%;'></div></div>";
     var energy_percent = energy/maxenergy * 100;
-    let energybar = "<div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
+    let energybar = "<div class='text-info'><span>"+ energy +"</span></div><div class='progress vertical-mana'><div class='progress-bar progress-bar-mana' role='progressbar' aria-valuenow='"+energy+"' aria-valuemin='0' aria-valuemax='"+maxenergy+"' style='width:"+energy_percent+"%;'></div></div>";
     return (
         <View className={classStep}>
             <div className={classN}></div>
@@ -165,20 +170,39 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     </div>
                     {dviewer && dviewer.pick_equipment != null &&
                         <div className="inventory_pick">
-                            <div className="equipment-block">
-                                <Image src={dviewer.pick_equipment.img}/>
-                            </div>
                             <div className="inventory_pick_info">
-                                <div className="inventory_pick_info_class"><div>Classe :</div><div>{dviewer.pick_equipment.classe}</div></div>
-                                <div className="inventory_pick_info_type"><div>Type : </div><div>{dviewer.pick_equipment.type}</div></div>
+                                <div className="w45">
+                                    <div className="equipment-block">
+                                        <Image src={dviewer.pick_equipment.img}/>
+                                    </div>
+                                </div>
+                                <div className="w55">
+                                    <div className="inventory_pick_info_class"><div>Classe :</div><div>{dviewer.pick_equipment.classe}</div></div>
+                                    <div className="inventory_pick_info_type"><div>Type : </div><div>{dviewer.pick_equipment.type}</div></div>
+                                </div>
                             </div>
                             <div className="inventory_pick_benefit">
                                 {pick_equipment_list}
                             </div>
                             <div className="inventory_pick_action">
-                                <div className="equip" onClick={() => AddEquipment(dviewer, dviewer.pick_equipment)}>Equiper</div>
-                                <div className="supp">Supprimer</div>
+                                {dviewer.pick_equipment.wear != null && dviewer.pick_equipment.wear != 'undefined' ?
+                                    dviewer.pick_equipment.wear == false?
+                                        <div className="equip"
+                                             onClick={() => AddEquipment(dviewer, dviewer.pick_equipment)}>Equiper</div>
+                                        :
+                                        <div className="equip"
+                                             onClick={() => RemoveEquipment(dviewer, dviewer.pick_equipment)}>Retirer</div>
+                                    : ""
+
+                                }
+                                <div className="supp"
+                                     onClick={() => DeleteEquipment(dviewer, dviewer.pick_equipment)}>Supprimer</div>
                             </div>
+                            {dviewer.pick_equipment.error &&
+                                <div>
+                                    {dviewer.pick_equipment.error}
+                                </div>
+                            }
                         </div>
                     }
                 </div>
@@ -265,6 +289,8 @@ Dungeons.propTypes = {
     LoadNextStep : React.PropTypes.func.isRequired,
     LoadStep : React.PropTypes.func.isRequired,
     AddEquipment : React.PropTypes.func.isRequired,
+    RemoveEquipment : React.PropTypes.func.isRequired,
+    DeleteEquipment : React.PropTypes.func.isRequired,
     preLoadActiveDungeon : React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object,
     verifloaded: React.PropTypes.number,
@@ -298,4 +324,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { AddEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
