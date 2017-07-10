@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill } from '../../common/dungeons/actions';
+import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill, movingCharacter  } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -15,7 +15,7 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill }) => {
+let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter, move, character }) => {
 
     var error_msg = '';
     var monster_image = '';
@@ -24,8 +24,9 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     var monster_name = '';
 
   onkeydown = (event: KeyboardEvent) => {
-    console.log(event: KeyboardEvent);
     var skills_list = dungeon.user.character.equipped_spells;
+    var gif = '';
+    let classes= "monster";
     if(event.key === "1" || event.key === "&"){
       CanUseSkill(dungeon, viewer, skills_list[0]);
     }
@@ -49,6 +50,24 @@ let WorldMap = ({ worldmap,dungeon,viewer,dungeonsOP,cancelDungeon,EndTurn,Monst
     }
     if(event.key === "8" || event.key === "_"){
       CanUseSkill(dungeon, viewer, skills_list[7]);
+    }
+    if(event.key === "ArrowUp") {
+      return movingCharacter(dungeon, dungeon.user.character.row - 1, dungeon.user.character.col);
+    }
+    if(event.key === "ArrowDown"){
+      return movingCharacter(dungeon, dungeon.user.character.row + 1, dungeon.user.character.col);
+    }
+    if(event.key === "ArrowLeft"){
+      return movingCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col - 1);
+    }
+    if(event.key === "ArrowRight"){
+      return movingCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col + 1);
+    }
+    if(event.keyCode === 32){
+      if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.monster_turn)
+      {
+        EndTurn(dungeon);
+      }
     }
   };
 
@@ -134,4 +153,4 @@ export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill })(WorldMap);
+}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter })(WorldMap);

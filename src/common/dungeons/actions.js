@@ -3,7 +3,9 @@
  */
 
 import { Range } from 'immutable';
+export const SHOW_AOE_SKILL = 'SHOW_AOE_SKILL';
 export const LOAD_TUTO_REF = 'LOAD_TUTO_REF';
+export const TRY_ITEM = 'TRY_ITEM';
 export const LOAD_VIEWER_CHANGES = 'LOAD_VIEWER_CHANGES';
 export const LOAD_VIEWER_REF = 'LOAD_VIEWER_REF';
 export const LOAD_STEP = 'LOAD_STEP';
@@ -195,12 +197,16 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
     var character = viewer.characters[viewer.active];
+    let levelup_character = character;
     character.row = 0;
     character.col = 0;
     character.is_attacking = false;
     character.is_moving = false;
+    character.is_casting = 0;
     character.current_skill = false;
     character.buffs = false;
+    character.maxhealth = character.health;
+    character.maxenergy = character.energy;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -218,17 +224,21 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                             displayName:viewer.displayName,
                             character :character,
                             default_character : {
-                                movevement:character.movement,
+                                movement:character.movement,
                                 action:character.action,
                                 damage:character.damage,
+                                damage_time:character.damage_time,
+                                damage_time_duration:character.damage_time_duration,
                                 maxhealth:character.health,
                                 maxenergy: character.energy,
-                                maxexperience: 1000,
+                                maxexperience: character.maxexperience,
+                                heal_on_energy_percent: 0,
                                 damage_reduction_flat: character.damage_reduction_flat,
                                 damage_reduction_percent: character.damage_reduction_percent,
                                 damage_return: character.damage_return,
                                 damage_return_percent: character.damage_return_percent,
                             },
+                            levelup_character: levelup_character,
                         },
                     dungeon:worldmap,
                     createdAt: now()
@@ -323,6 +333,20 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         pj.is_attacked = false;
         var default_pj = dungeon.user.default_character;
         pj = jsonConcat(pj,default_pj);
+
+        if(pj.is_casting)
+        {
+            if(pj.is_casting > 0){
+                pj.is_casting = pj.is_casting - 1;
+            }
+            if(pj.is_casting == 0 && pj.current_skill)
+            {
+                let cast_ready = true;
+                let skill = pj.equipped_spells[pj.current_skill];
+                let result = doSkill(pj,dungeon.dungeon.maptiles,dungeon,skill,cast_ready,pj.row,pj.col,firebase);
+            }
+        }
+
         if(!pj.buffs)
         {
             pj.buffs = false;
@@ -341,6 +365,9 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                     pj.health = pj.health + skill.heal_time;
                     pj.energy = pj.energy + skill.energy_time;
                     pj.damage = pj.damage + (skill.damage_buff_flat - skill.damage_debuff_flat);
+                    pj.damage_time = pj.damage_time + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                    pj.damage_time_duration = skill.damage_time_duration;
+                    pj.heal_on_energy_percent = skill.heal_on_energy_percent;
 
                     if(skill.damage_buff_percent || skill.damage_debuff_percent)
                     {
@@ -379,80 +406,122 @@ export const EndTurn = (dungeon) => ({firebase}) => {
 
         });
 
-        dungeon.user.character = pj;
-
         let monsters = dungeon.dungeon.monsters;
         let monster_moves = [];
-        monsters.map((monster,index) => {
-            if(monster != null)
-            {
-                if(!monster.conditions)
-                {
-                    monster.conditions = false;
-                }
-                else {
-                    monster.conditions.map((skill,index) => {
-                        if(!monster.conditions[index].condition_duration)
-                        {
-                            monster.conditions[index].condition_duration = monster.conditions[index].duration-1;
-                        }
-                        else {
-                            monster.conditions[index].condition_duration = monster.conditions[index].condition_duration-1;
-                        }
-                        if(monster.conditions[index].condition_duration > 0)
-                        {
-                            monster.health = monster.health - skill.damage_time;
-                            monster.damage = monster.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+         monsters.map((monster,index) => {
+           if(monster != null)
+           {
+             monster.damage_time_spell = 0;
+             monster.damage_time_spell_duration = 0;
+             if(!monster.conditions)
+             {
+               monster.conditions = false;
+             }
+             else {
+               monster.conditions.map((skill,index) => {
+                 if(!monster.conditions[index].condition_duration)
+                 {
+                   monster.conditions[index].condition_duration = monster.conditions[index].duration-1;
+                 }
+                 else {
+                   monster.conditions[index].condition_duration = monster.conditions[index].condition_duration-1;
+                 }
+                 if(monster.conditions[index].condition_duration > 0)
+                 {
+                   monster.health = monster.health - skill.damage_time;
+                   monster.damage_time_spell = monster.damage_time_spell + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                   if(skill.damage_time_spell_duration)
+                   {
+                     monster.damage_time_spell_duration = skill.damage_time_spell_duration;
+                   }
+                   // monster.damage = monster.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                   //
+                   // if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
+                   // {
+                   //     monster.damage = monster.damage*skill.damage_time_buff_percent/100;
+                   //     monster.damage = monster.damage*skill.damage_time_debuff_percent/100;
+                   // }
 
-                            if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
-                            {
-                                monster.damage = monster.damage*skill.damage_time_buff_percent/100;
-                                monster.damage = monster.damage*skill.damage_time_debuff_percent/100;
-                            }
+                   monster.movement = monster.movement + (skill.movement_buff - skill.movement_debuff);
+                   if(monster.health > monster.maxhealth)
+                   {
+                     monster.health = monster.maxhealth;
+                   }
+                   dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                   if(monster.health<=0)
+                   {
+                       pj.experience = pj.experience + monster.experience;
+                       if(pj.experience >= pj.maxexperience)
+                       {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
 
-                            monster.movement = monster.movement + (skill.movement_buff - skill.movement_debuff);
-                            if(monster.health > monster.maxhealth)
-                            {
-                                monster.health = monster.maxhealth;
-                            }
-                            dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
-                            if(monster.health<=0)
-                            {
-                                monsters[index] = null;
-                                dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
-                                monster = null;
-                                dungeon.monster_info_row = null;
-                                dungeon.monster_info_col = null;
-                            }
-                        }
-                        else {
-                            monster.conditions.splice(index,1);
-                        }
-                    });
-                }
-                if(monster != null)
-                {
-                    let range = comparePosition(monster.row,monster.col,pj.row,pj.col);
-                    monster.can_attack = false;
-                    monster.can_move_attack = false;
-                    console.log('i',index);
-                    if(range.totalRange <= monster.range)
-                    {
-                        monster.can_attack = true;
-                        monster.direction = range.direction;
-                        dungeon.monster_moves = true;
-                        monster_moves.push(index);
-                    }
-                    else if(range.totalRange <= (monster.range+monster.movement))
-                    {
-                        monster.can_move_attack = true;
-                        monster.direction = range.direction;
-                        dungeon.monster_moves = true;
-                        monster_moves.push(index);
-                    }
-                }
-            }
-        });
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                           default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                           default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                           default_char.damage = pj.damage_lvl;
+                           default_char.maxexperience = pj.maxexperience;
+                           default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                           lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                           lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                           lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                           lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                           lvlup_char.damage = pj.damage_lvl;
+                           lvlup_char.maxexperience = pj.maxexperience;
+                           lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                           firebase.update({
+                               [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                           });
+
+                           dungeon.user.default_character = default_char;
+                       }
+                     monsters[index] = null;
+                     dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
+                     monster = null;
+                     dungeon.monster_info_row = null;
+                     dungeon.monster_info_col = null;
+                   }
+                 }
+                 else {
+                   monster.conditions.splice(index,1);
+                 }
+               });
+             }
+             if(monster != null)
+             {
+               let range = comparePosition(monster.row,monster.col,pj.row,pj.col);
+               monster.can_attack = false;
+               monster.can_move_attack = false;
+               if(range.totalRange <= monster.range)
+               {
+                 monster.can_attack = true;
+                 monster.direction = range.direction;
+                 dungeon.monster_moves = true;
+                 monster_moves.push(index);
+               }
+               else if(range.totalRange <= (monster.range+monster.movement))
+               {
+                 monster.can_move_attack = true;
+                 monster.direction = range.direction;
+                 dungeon.monster_moves = true;
+                 monster_moves.push(index);
+               }
+             }
+           }
+         });
+
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+
         dungeon.dungeon.monsters = monsters;
         if(monster_moves.length > 0)
         {
@@ -488,47 +557,137 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
             {
                 if(dungeon.monster_moves.length > 0 && !dungeon.stop_turn)
                 {
-                    if(dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking)
+                    if(dungeon.dungeon.monsters[dungeon.monster_moves[0]])
                     {
-                        var pnj = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
-                        var row = pnj.row;
-                        var col = pnj.col;
-                        var damage = pnj.damage;
-                        var returned_damage = 0;
-                        damage = damage - dungeon.user.character.damage_reduction_flat;
-                        damage = damage - dungeon.user.character.damage_return;
-                        returned_damage = dungeon.user.character.damage_return;
-                        if(dungeon.user.character.damage_reduction_percent && damage > 0)
+                        if(dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking)
                         {
-                            damage = damage*dungeon.user.character.damage_reduction_percent/100;
-                        }
-                        if(dungeon.user.character.damage_return_percent && damage > 0)
-                        {
-                            returned_damage = returned_damage + (damage*dungeon.user.character.damage_return_percent/100);
-                            damage = damage*dungeon.user.character.damage_return_percent/100;
-                        }
-                        if(damage > 0)
-                        {
-                            dungeon.user.character.health -= (damage);
-                        }
-                        pnj.is_attacking = false;
-                        pnj.can_attack = false;
-                        pnj.moves = null;
-                        pnj.can_move_attack = false;
-                        if(returned_damage)
-                        {
-                            pnj.health -=  returned_damage;
+                            var pnj = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
+                            var row = pnj.row;
+                            var col = pnj.col;
+
                             if(pnj.health<=0)
                             {
+                                var pj = dungeon.user.character;
+                                pj.experience = pj.experience + pnj.experience;
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
 
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
                                 dungeon.monster_info_col = null;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]] = pnj;
+                                dungeon.dungeon.maptiles[row][col].character = pnj;
+                                dungeon.monster_moves.splice(0,1);
+                            }
+                            else {
+                                var damage = pnj.damage;
+                                var returned_damage = 0;
+                                damage = damage - dungeon.user.character.damage_reduction_flat;
+                                damage = damage - dungeon.user.character.damage_return;
+                                returned_damage = dungeon.user.character.damage_return;
+                                if(dungeon.user.character.damage_reduction_percent && damage > 0)
+                                {
+                                    damage = damage*dungeon.user.character.damage_reduction_percent/100;
+                                }
+                                if(dungeon.user.character.damage_return_percent && damage > 0)
+                                {
+                                    returned_damage = returned_damage + (damage*dungeon.user.character.damage_return_percent/100);
+                                    damage = damage*dungeon.user.character.damage_return_percent/100;
+                                }
+                                if(damage > 0)
+                                {
+                                    dungeon.user.character.health -= (damage);
+                                }
+                                pnj.is_attacking = false;
+                                pnj.can_attack = false;
+                                pnj.moves = null;
+                                pnj.can_move_attack = false;
+                                if(returned_damage)
+                                {
+                                    pnj.health -=  returned_damage;
+                                    if(pnj.health<=0)
+                                    {
+                                        pj = dungeon.user.character;
+                                        pj.experience = pj.experience + pnj.experience;
+                                        if(pj.experience >= pj.maxexperience)
+                                        {
+                                            let lvlup_char = dungeon.user.levelup_character;
+                                            let default_char = dungeon.user.default_character;
+
+                                            let maxxp = pj.maxexperience;
+                                            pj.health = pj.health + pj.health_lvl;
+                                            pj.energy = pj.energy + pj.energy_lvl;
+                                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                            pj.damage = pj.damage + pj.damage_lvl;
+                                            pj.experience = pj.experience - maxxp;
+                                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                            default_char.damage = pj.damage_lvl;
+                                            default_char.maxexperience = pj.maxexperience;
+                                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                            lvlup_char.damage = pj.damage_lvl;
+                                            lvlup_char.maxexperience = pj.maxexperience;
+                                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                            firebase.update({
+                                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                            });
+
+                                            dungeon.user.default_character = default_char;
+                                            dungeon.user.character = pj;
+                                        }
+                                        pnj = null;
+                                        dungeon.monster_info_row = null;
+                                        dungeon.monster_info_col = null;
+                                    }
+                                }
+                                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]] = pnj;
+                                dungeon.dungeon.maptiles[row][col].character = pnj;
+                                dungeon.monster_moves.splice(0,1);
                             }
                         }
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
-                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = pnj;
-                        dungeon.dungeon.maptiles[row][col].character = pnj;
+                    }
+                    else {
+                        dungeon.user.character.nextTurn = false;
                         dungeon.monster_moves.splice(0,1);
                     }
                 }
@@ -539,15 +698,22 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                     var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
                     if(monster.can_attack)
                     {
+
+
                         monster.is_moving = false;
                         monster.can_move_attack = false;
-                        monster.direction = range.direction;
                         dungeon.monster_info_row = monster.row;
                         dungeon.monster_info_col = monster.col;
                         dungeon.user.character.is_attacked = true;
+                        monster.direction = range.direction;
+                        dungeon.user.character.is_attacked = true;
                         dungeon.user.character.attacked_direction = monster.direction;
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
                         monster.is_attacking = true;
+                        monster.can_attack = true;
+                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                        dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+
                     }
                     if(monster.can_move_attack)
                     {
@@ -562,6 +728,128 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                         var m_col = parseInt(monster.col);
                         var can_move = false;
 
+                        var tab_rg = [];
+                        var result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,true);
+                        result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,false);
+                        tab_rg = result.tab;
+
+
+                        var tab = [];
+                        var map = dungeon.dungeon.maptiles;
+                        var i=0;
+                        var j=1;
+                        var pj_row = parseInt(monster.row);
+                        var pj_col = parseInt(monster.col);
+                        tab[0] = [];
+                        tab[0].push({row:pj_row,col:pj_col});
+                        var crow;
+                        var ccol;
+                        var found = false;
+                        var to_push = false;
+                        do
+                        {
+                            if(tab[i])
+                            {
+                                tab[i].map(t =>{
+                                    pj_row = t.row;
+                                    pj_col = t.col;
+                                    if(!tab[j])
+                                    {
+                                        tab[j] = [];
+                                    }
+                                    if(typeof map[pj_row+1] !== "undefined" && !found)
+                                    {
+                                        if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                        {
+                                            if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                            {
+                                                crow = pj_row+1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row-1]  !== "undefined" && !found)
+                                    {
+                                        if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                        {
+                                            if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                                crow = pj_row - 1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row] !== "undefined")
+                                    {
+                                        if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                            {
+                                                ccol = pj_col+1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                        if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                            {
+                                                ccol = pj_col-1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            i++;
+                            j++;
+                        }while(i<=monster.movement && !found);
+
+                        console.log('found : ',found);
+                        console.log('tab : ',tab);
+                        if(found)
+                        {
+                            let rec_result = recursiveTa(found,[]);
+                            moves = rec_result.m.reverse();
+
+                            monster.moves = moves;
+                            monster.is_moving = true;
+                            monster.direction = moves[0].next;
+                        }
+                        else {
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
+                            cdntmv = true;
+                        }
+                        /*
                         if ( range.totalColU > 0 && !can_move)
                         {
                             if(typeof  maptiles[m_row][m_col - 1] !== "undefined")
@@ -666,7 +954,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                             dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
                             cdntmv = true;
                         }
-
+                        */
                     }
                     dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                     dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -699,34 +987,133 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
 
 export const MonsterMove = (dungeon) => ({firebase}) => {
 
+    let pj = dungeon.user.character;
     if(typeof dungeon.monster_moves !== "undefined") {
         if (dungeon.monster_moves.length > 0) {
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
-            if (monster.is_moving && !monster.is_attacking) {
-                let pj = dungeon.user.character;
-                var range = comparePosition(monster.row, monster.col, pj.row, pj.col);
-                var maptiles = dungeon.dungeon.maptiles;
-                monster.is_moving = false;
+            if(monster != null || typeof monster === "undefined")
+            {
+                let m_row = monster.row;
+                let m_col = monster.col;
+                if (monster.is_moving && !monster.is_attacking) {
+                    var map = dungeon.dungeon.maptiles;
+                    var range = comparePosition(monster.row, monster.col, pj.row, pj.col);
+                    var maptiles = dungeon.dungeon.maptiles;
 
-                monster.direction = range.direction;
-                maptiles[monster.moves[0].row][monster.moves[0].col].character = monster;
-                maptiles[monster.row][monster.col].character = null;
-                monster.row = monster.moves[0].row;
-                monster.col = monster.moves[0].col;
-                monster.moves = false;
-                monster.can_move_attack = false;
-                dungeon.monster_info_row = monster.row;
-                dungeon.monster_info_col = monster.col;
-                dungeon.user.character.is_attacked = true;
-                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
-                monster.is_attacking = true;
-                monster.can_attack = true;
-                var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
-                monster.direction = rg.direction;
-                dungeon.user.character.attacked_direction = rg.direction;
-                dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
-                dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                    monster.direction = range.direction;
+                    maptiles[monster.moves[0].row][monster.moves[0].col].character = monster;
+                    maptiles[monster.row][monster.col].character = null;
+                    monster.row = monster.moves[0].row;
+                    monster.col = monster.moves[0].col;
+                    m_row = monster.row;
+                    m_col = monster.col;
 
+                    monster.moves.splice(0,1);
+                    if(typeof monster.moves !== 'undefined' && monster.moves.length)
+                    {
+                        monster.direction = monster.moves[0].next;
+                    }
+                    else {
+                        monster.is_moving = false;
+                        if(monster != null)
+                        {
+                            monster.moves = false;
+                            monster.can_move_attack = false;
+                            dungeon.monster_info_row = monster.row;
+                            dungeon.monster_info_col = monster.col;
+                            dungeon.user.character.is_attacked = true;
+                            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                            monster.is_attacking = true;
+                            monster.can_attack = true;
+                            var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
+                            monster.direction = rg.direction;
+                            dungeon.user.character.attacked_direction = rg.direction;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                            dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                        }
+                        else {
+                            pj.nextTurn = true;
+                            dungeon.user.character = pj;
+                        }
+                    }
+                    // if(map[monster.row][monster.col].trap)
+                    // {
+                    //     var result = false;
+                    //     map[monster.row][monster.col].trap.map((skill,index) => {
+                    //         if (skill.aoe_front) {
+                    //             result = setSkillsTarget(map, monster, skill, "up");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_back) {
+                    //             result = setSkillsTarget(map, monster, skill, "down");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_right) {
+                    //             result = setSkillsTarget(map, monster, skill, "right");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_left) {
+                    //             result = setSkillsTarget(map, monster, skill, "left");
+                    //             map = result.map;
+                    //         }
+                    //
+                    //
+                    //         let target = [];
+                    //         Object.keys(map).map(m1 => {
+                    //             Object.keys(map[m1]).map(m2 => {
+                    //                 if(map[m1][m2].is_target_aoe && map[m1][m2].character )
+                    //                 {
+                    //                     if(map[m1][m2].character.type != "pj")
+                    //                     {
+                    //                         target.push({row:m1,col:m2});
+                    //                     }
+                    //                 }
+                    //             })
+                    //         });
+                    //
+                    //         target.map(t => {
+                    //             var pnj = map[t.row][t.col].character;
+                    //             if(pnj.type != "pj")
+                    //             {
+                    //                 var positions = comparePosition(0,0,0,0);
+                    //                 if(pnj.health > 0)
+                    //                 {
+                    //                     pnj.health = pnj.health - skill.damage_instant;
+                    //                     if(skill.damage_instant_buff)
+                    //                     {
+                    //                         pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                    //                     }
+                    //                     if(pnj.health<=0)
+                    //                     {
+                    //                         if(t.row == monster.row && t.col == monster.col)
+                    //                         {
+                    //                             monster = null;
+                    //                         }
+                    //                         pnj = null;
+                    //                         dungeon.monster_info_row = null;
+                    //                         dungeon.monster_info_col = null;
+                    //                     }
+                    //                 }
+                    //                 if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                    //                 {
+                    //                     dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                    //                 }
+                    //                 else {
+                    //                     delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                    //                 }
+                    //                 map[t.row][t.col].character = pnj;
+                    //                 dungeon.dungeon.maptiles = map;
+                    //             }
+                    //         });
+                    //         map = unsetAoeSkills(map);
+                    //         dungeon.dungeon.maptiles = map;
+                    //     });
+                    // }
+                }
+            }
+            else {
+                pj.nextTurn = true;
+                dungeon.user.character = pj;
             }
         }
         else {
@@ -750,31 +1137,33 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
 };
 
 function EndMonsterTurn(dungeon){
-    dungeon.user.character.is_attacked = false;
+    var pj = dungeon.user.character;
+    pj.is_attacked = false;
     var opposed_img = '';
     if(
-        dungeon.user.character.attacked_direction == "left")
+        pj.attacked_direction == "left")
     {
         opposed_img = 'right';
     }
     if(
-        dungeon.user.character.attacked_direction == "right")
+        pj.attacked_direction == "right")
     {
         opposed_img = 'left';
     }
     if(
-        dungeon.user.character.attacked_direction == "up")
+        pj.attacked_direction == "up")
     {
         opposed_img = 'down';
     }
     if(
-        dungeon.user.character.attacked_direction == "down")
+        pj.attacked_direction == "down")
     {
         opposed_img = 'up';
     }
-    dungeon.user.character.image = "/assets/images/classes/"+dungeon.user.character.name+"/"+opposed_img+".png";
-    dungeon.user.character.attacked_direction = "";
-    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+    pj.image = "/assets/images/classes/"+pj.name+"/"+opposed_img+".png";
+    pj.attacked_direction = "";
+    dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    dungeon.user.character = pj;
     dungeon.monster_moves = [];
     dungeon.end_turn = false;
     dungeon.monster_turn = false;
@@ -788,80 +1177,199 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking && !dungeon.end_turn && !dungeon.monster_turn)
+    if(!dungeon.user.character.is_casting)
     {
-        if(dungeon.stop_turn)
+        if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking && !dungeon.end_turn && !dungeon.monster_turn)
         {
-            dungeon.stop_turn = false;
-        }
-        let canMove = false;
-        let message = '';
-        let direction = '';
-        let totalRow = dungeon.user.character.row - row;
-        let totalCol = dungeon.user.character.col - col;
-        if(totalRow < 0)
-        {
-            direction = 'down';
-        }
-        else if(totalRow > 0)
-        {
-            direction = 'up';
-        }
-        else if(totalCol < 0)
-        {
-            direction = 'right';
-        }
-        else if(totalCol > 0)
-        {
-            direction = 'left';
-        }
-        //Transform total difference to positive int
-        if(totalCol < 0)
-        {
-            totalCol = totalCol*-1;
-        }
-        //Transform total difference to positive int
-        if(totalRow < 0)
-        {
-            totalRow = totalRow*-1;
-        }
-        //Check if user can move to location
-        if(totalRow+totalCol > 1 || totalRow+totalCol == 0)
-        {
-            message = 'You cannot walk there.';
-            if(totalRow+totalCol > 1)
-                message = 'You are too far from this location.';
-            dungeon.error_message = message;
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-            dungeon.user.character.is_moving = false;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
-        }
-        else
-        {
-            if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
+            if(dungeon.stop_turn)
             {
-                canMove = true;
-                dungeon.user.character.is_moving = direction;
-                dungeon.user.character.moving_row = row;
-                dungeon.user.character.moving_col = col;
-                dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-                dungeon.error_message = '';
+                dungeon.stop_turn = false;
             }
-            else {
+            let canMove = false;
+            let message = '';
+            let direction = '';
+            let totalRow = dungeon.user.character.row - row;
+            let totalCol = dungeon.user.character.col - col;
+            if(totalRow < 0)
+            {
+                direction = 'down';
+            }
+            else if(totalRow > 0)
+            {
+                direction = 'up';
+            }
+            else if(totalCol < 0)
+            {
+                direction = 'right';
+            }
+            else if(totalCol > 0)
+            {
+                direction = 'left';
+            }
+            //Transform total difference to positive int
+            if(totalCol < 0)
+            {
+                totalCol = totalCol*-1;
+            }
+            //Transform total difference to positive int
+            if(totalRow < 0)
+            {
+                totalRow = totalRow*-1;
+            }
+            //Check if user can move to location
+            if(totalRow+totalCol == 0)
+            {
                 message = 'You cannot walk there.';
+                if(totalRow+totalCol > 1)
+                    message = 'You are too far from this location.';
                 dungeon.error_message = message;
                 dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
                 dungeon.user.character.is_moving = false;
                 dungeon.user.character.moving_row = null;
                 dungeon.user.character.moving_col = null;
             }
+            else if(totalRow+totalCol > 1)
+            {
+                var tab = [];
+                var map = dungeon.dungeon.maptiles;
+                var pj = dungeon.user.character;
+                var i=0;
+                var j=1;
+                var pj_row = parseInt(pj.row);
+                var pj_col = parseInt(pj.col);
+                tab[0] = [];
+                tab[0].push({row:pj_row,col:pj_col});
+                var crow;
+                var ccol;
+                var found = false;
+                var to_push = false;
+                do
+                {
+                    if(tab[i])
+                    {
+                        tab[i].map(t =>{
+                            pj_row = t.row;
+                            pj_col = t.col;
+                            if(!tab[j])
+                            {
+                                tab[j] = [];
+                            }
+                            if(typeof map[pj_row+1] !== "undefined" && !found)
+                            {
+                                if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                {
+                                    if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                    {
+                                        crow = pj_row+1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row-1]  !== "undefined" && !found)
+                            {
+                                if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                {
+                                    if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                        crow = pj_row - 1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row] !== "undefined")
+                            {
+                                if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                    {
+                                        ccol = pj_col+1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                                if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                    {
+                                        ccol = pj_col-1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    i++;
+                    j++;
+                }while(i<=pj.movement && !found);
+
+                if(found)
+                {
+                    var moves = [];
+                    let result = recursiveTa(found,[]);
+                    moves = result.m.reverse();
+                    pj.to_move = moves;
+                    dungeon.user.character.is_moving = moves[0].next;
+                    dungeon.user.character.moving_row = moves[0].row;
+                    dungeon.user.character.moving_col = moves[0].col;
+                    dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+moves[0].next+".png";
+                }
+                else {
+                    message = 'You cannot walk there.';
+                    dungeon.error_message = message;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                    dungeon.user.character.is_moving = false;
+                    dungeon.user.character.moving_row = null;
+                    dungeon.user.character.moving_col = null;
+                }
+
+            }
+            else
+            {
+                if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
+                {
+                    canMove = true;
+                    dungeon.user.character.is_moving = direction;
+                    dungeon.user.character.moving_row = row;
+                    dungeon.user.character.moving_col = col;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                    dungeon.error_message = '';
+                }
+                else {
+                    message = 'You cannot walk there.';
+                    dungeon.error_message = message;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                    dungeon.user.character.is_moving = false;
+                    dungeon.user.character.moving_row = null;
+                    dungeon.user.character.moving_col = null;
+                }
+            }
+        }
+        else {
+            let canMove = false;
+            let message = 'Please wait.';
+            let direction = '';
         }
     }
     else {
-        let canMove = false;
-        let message = 'Please wait.';
-        let direction = '';
+        dungeon.error_message = 'You cannot move while casting a spell';
     }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
@@ -871,18 +1379,64 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         payload: dungeon,
         component: { canMove: canMove,message: message,direction: direction}
     }
-}
+};
+
+function recursiveTa(found,moves)
+{
+  if(found.ta)
+  {
+      let ta = found.ta;
+      found.ta = null;
+      moves.push(found);
+      return recursiveTa(ta,moves);
+  }
+  return {f:found,m:moves};
+};
 
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 
-    if(dungeon.user.character.is_moving)
-    {
+    var pj = dungeon.user.character;
 
+    if(typeof pj.to_move !== "undefined" && pj.to_move.length)
+    {
+        var direction = comparePosition(pj.row,pj.col,pj.moving_row,pj.moving_col);
+        dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction.direction+".png";
+        dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        pj.row = pj.moving_row;
+        pj.col = pj.moving_col;
+        if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+        {
+            if(!pj.items)
+            {
+                pj.items = [];
+            }
+            pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+        }
+
+        pj.to_move.splice(0,1);
+        if(pj.to_move.length)
+        {
+            pj.is_moving = pj.to_move[0].next;
+            pj.moving_row = pj.to_move[0].row;
+            pj.moving_col = pj.to_move[0].col;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+pj.to_move[0].next+".png";
+        }
+        else {
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
+            dungeon.error_message = '';
+        }
+    }
+    else if(pj.is_moving)
+    {
         let canMove = false;
         let message = '';
         let direction = '';
-        let totalRow = dungeon.user.character.row - dungeon.user.character.moving_row;
-        let totalCol = dungeon.user.character.col - dungeon.user.character.moving_col;
+        let totalRow = pj.row - pj.moving_row;
+        let totalCol = pj.col - pj.moving_col;
         if(totalRow < 0)
         {
             direction = 'down';
@@ -921,30 +1475,71 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
         if(canMove)
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-            dungeon.dungeon.maptiles[dungeon.user.character.moving_row][dungeon.user.character.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            delete dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            dungeon.user.character.row = dungeon.user.character.moving_row;
-            dungeon.user.character.col = dungeon.user.character.moving_col;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
-            dungeon.user.character.is_moving = false;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            pj.row = pj.moving_row;
+            pj.col = pj.moving_col;
+
+            if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+            {
+                if(!pj.items)
+                {
+                    pj.items = [];
+                }
+                pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+                dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+
+            }
+
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
             dungeon.error_message = '';
         }
         else
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
             dungeon.error_message = message;
-            dungeon.user.character.is_moving = false;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
+            pj.is_moving = false;
+            pj.moving_row = null;
+            pj.moving_col = null;
         }
     }
+    dungeon.user.character = pj;
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
     return {
         type: MOVE_CHARACTER,
+        payload: dungeon
+    }
+};
+
+/************ Items *****************/
+
+export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
+    var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
+    var cast_ready = false;
+    dungeon.error_message = '';
+    if(!pj.is_moving && !pj.is_attacking && !pj.is_using_skill) {
+        let item = pj.items[number-1];
+        item.cast_time = 0;
+        let result = doSkill(pj,map,dungeon,item,cast_ready,row,col,firebase);
+        pj = result.pj;
+        item = result.item;
+        pj.items.splice(number-1,1);
+
+        dungeon = result.dungeon;
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: TRY_ITEM,
         payload: dungeon
     }
 };
@@ -956,57 +1551,69 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
     pj.is_using_skill = false;
     pj.try_skill = false;
     dungeon.error_message = '';
-    if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn)
+    map = unsetAoeSkills(map);
+    if(!pj.is_casting)
     {
-        if(dungeon.stop_turn)
+        if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn)
         {
-            dungeon.stop_turn = false;
-        }
-        if((skill.uses === -1 || skill.uses>0) && (typeof skill.cooldown === "undefined" || skill.cooldown == 0))
-        {
-            pj.can_use_skill = false;
-            pj.current_skill = false;
-            if(pj.energy>=skill.energy_cost)
+            if(dungeon.stop_turn)
             {
-                if(pj.action>=skill.action_cost)
+                dungeon.stop_turn = false;
+            }
+            if((skill.uses === -1 || skill.uses>0) && (typeof skill.cooldown === "undefined" || skill.cooldown == 0))
+            {
+                pj.can_use_skill = false;
+                pj.current_skill = false;
+                if(pj.energy>=skill.energy_cost)
                 {
-                    let result = setSkillsTarget(map,pj,skill);
-                    map = result.map;
-                    pj = result.pj;
-
-                    if(!skill.self)
+                    if(pj.action>=skill.action_cost)
                     {
-                        map[pj.row][pj.col].is_target = false;
-                        map[pj.row][pj.col].is_target_aoe = false;
-                    }
+                        let result = setSkillsTarget(map,pj,skill,"all",false,true);
+                        map = result.map;
+                        pj = result.pj;
 
-                    if(pj.can_use_skill)
-                    {
-                        pj.is_using_skill = true;
-                        pj.current_skill = skill.number;
+                        if(!skill.self)
+                        {
+                            map[pj.row][pj.col].is_target = false;
+                            map[pj.row][pj.col].is_target_aoe = false;
+                        }
+                        if(pj.can_use_skill)
+                        {
+                            pj.is_using_skill = true;
+                            pj.current_skill = skill.number;
+                        }
+                        else {
+                            dungeon.error_message = 'No target in range.';
+                            endSkill(dungeon);
+                        }
                     }
                     else {
-                        dungeon.error_message = 'No target in range.';
-                        endSkill(dungeon);
+                        dungeon.error_message = 'Not enough action points.';
                     }
                 }
+                else {
+                    dungeon.error_message = 'Not enough energy.';
+                }
             }
+            else {
+                if(skill.uses == 0)
+                {
+                    dungeon.error_message = 'This spell cannot be used anymore.';
+                }
+                if(skill.cooldown)
+                {
+                    dungeon.error_message = 'This spell is on cooldown for '+skill.cooldown+' turn(s)';
+                }
+            }
+            dungeon.user.character = pj;
+            dungeon.dungeon.maptiles = map;
+            firebase.update({
+                [`activeDungeons/${dungeon.user.id}`]: dungeon,
+            });
         }
-        else {
-            if(skill.uses == 0)
-            {
-                dungeon.error_message = 'This spell cannot be used anymore.';
-            }
-            if(skill.cooldown)
-            {
-                dungeon.error_message = 'This spell is on cooldown for '+skill.cooldown+' turn(s)';
-            }
-        }
-        dungeon.user.character = pj;
-        dungeon.dungeon.maptiles = map;
-        firebase.update({
-            [`activeDungeons/${dungeon.user.id}`]: dungeon,
-        });
+    }
+    else {
+        dungeon.error_message = 'You cannot move while casting a spell';
     }
     return {
         type: CAN_USE_SKILL,
@@ -1018,308 +1625,14 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
     var map = dungeon.dungeon.maptiles;
     pj.try_skill = false;
+    var cast_ready = false;
     dungeon.error_message = '';
     if(!pj.is_moving && !pj.is_attacking && pj.is_using_skill) {
         pj.is_using_skill = false;
         let skill = dungeon.user.character.equipped_spells[dungeon.user.character.current_skill];
-        if(!skill.aoe_linear && !skill.aoe_diagonal && !skill.range_cone && !skill.aoe_front && !skill.aoe_left && !skill.aoe_right && !skill.aoe_back && !skill.self && !skill.damage_time)
-        {
-            if(typeof map[row][col].character !== 'undefined')
-            {
-                pj.try_skill = true;
-                dungeon.error_message = '';
-                var pnj = map[row][col].character;
-                let result = dealDamage(pj,pnj,dungeon,map,row,col,skill);
-                pj = result.pj;
-                pnj = result.pnj;
-                dungeon = result.dungeon;
-                map = result.map;
-                skill = result.skill;
-                map = unsetAoeSkills(map);
-            }
-        }
-        if(skill.self)
-        {
-            dungeon.error_message = '';
-            if(skill.aoe_diagonal || skill.aoe_linear)
-            {
-                let target = [];
-                Object.keys(map).map(m1 => {
-                    Object.keys(map[m1]).map(m2 => {
-                        if(map[m1][m2].is_target_aoe && map[m1][m2].character )
-                        {
-                            if(map[m1][m2].character.type != "pj")
-                            {
-                                target.push({row:m1,col:m2});
-                            }
-                        }
-                    })
-                });
+        let result = doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase);
 
-                target.map(t => {
-                    var pnj = map[t.row][t.col].character;
-                    var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
-                    if(pnj.health > 0)
-                    {
-                        pnj.health = pnj.health - skill.damage_instant;
-                        if(skill.damage_instant_buff)
-                        {
-                            pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                        }
-                        if(pnj.health<=0)
-                        {
-                            pnj = null;
-                            dungeon.monster_info_row = null;
-                            dungeon.monster_info_col = null;
-                        }
-                    }
-                    pj.direction = positions.direction;
-                    dungeon.user.character = pj;
-                    map[pj.row][pj.col].character = pj;
-                    if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
-                    {
-                        dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
-                    }
-                    else {
-                        delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
-                    }
-                    map[t.row][t.col].character = pnj;
-                    dungeon.dungeon.maptiles = map;
-                });
-                pj.try_skill = true;
-                pj.action = pj.action - skill.action_cost;
-                pj.energy = pj.energy - skill.energy_cost;
-                skill = skillCd(skill);
-                pj.can_use_skill = false;
-                pj.is_attacking = false;
-                pj.attacking_row = null;
-                pj.attacking_col = null;
-                pj.equipped_spells[pj.current_skill] = skill;
-                dungeon.user.character = pj;
-                map = unsetAoeSkills(map);
-            }
-            if(skill.duration && (skill.damage_type == "Buff" || skill.damage_type == "Melee_Counter"))
-            {
-                if(!pj.buffs)
-                {
-                    pj.buffs = [];
-                }
-                pj.buffs.push(skill);
-
-                pj.health = pj.health + skill.heal_time;
-                pj.energy = pj.energy + skill.energy_time;
-                if(pj.health > pj.maxhealth)
-                {
-                    pj.health = pj.maxhealth;
-                }
-                if(pj.energy > pj.maxenergy)
-                {
-                    pj.energy = pj.maxenergy;
-                }
-                pj.damage = pj.damage + skill.damage_buff_flat + skill.damage_debuff_flat;
-
-                if(skill.damage_buff_percent || skill.damage_debuff_percent)
-                {
-                    pj.damage = pj.damage*skill.damage_buff_percent/100;
-                    pj.damage = pj.damage*skill.damage_debuff_percent/100;
-                }
-
-                pj.movement = pj.movement + skill.movement_buff + skill.movement_debuff;
-                pj.damage_reduction_flat = pj.damage_reduction_flat + skill.damage_reduction_flat;
-                pj.damage_reduction_percent = pj.damage_reduction_percent + skill.damage_reduction_percent;
-                pj.damage_return = pj.damage_return + skill.damage_return;
-                pj.damage_return_percent = pj.damage_return_percent + skill.damage_return_percent;
-                if(skill.damage_buff_percent)
-                {
-                    pj.damage = pj.damage*skill.damage_buff_percent/100;
-                }
-                skill = skillCd(skill);
-                if(!pj.direction)
-                {
-                    pj.direction = "down";
-                }
-                pj.try_skill = true;
-                pj.action = pj.action - skill.action_cost;
-                pj.energy = pj.energy - skill.energy_cost;
-                pj.equipped_spells[pj.current_skill] = skill;
-                console.log('3',pj);
-                map[pj.row][pj.col].character = pj;
-                dungeon.dungeon.maptiles = map;
-                dungeon.user.character = pj;
-                map = unsetAoeSkills(map);
-            }
-            if(skill.damage_type == "Heal")
-            {
-                pj.health = pj.health + skill.heal_instant;
-                if(skill.heal_percent_instant)
-                {
-                    pj.health = pj.maxhealth/skill.heal_percent_instant*100;
-                }
-                pj.energy = pj.energy + skill.energy_heal;
-                if(pj.health > pj.maxhealth)
-                {
-                    pj.health = pj.maxhealth;
-                }
-                if(pj.energy > pj.maxenergy)
-                {
-                    pj.energy = pj.maxenergy;
-                }
-                if(!pj.direction)
-                {
-                    pj.direction = "down";
-                }
-                skill = skillCd(skill);
-                pj.try_skill = true;
-                pj.action = pj.action - skill.action_cost;
-                pj.energy = pj.energy - skill.energy_cost;
-                pj.equipped_spells[pj.current_skill] = skill;
-                map[pj.row][pj.col].character = pj;
-                dungeon.dungeon.maptiles = map;
-                dungeon.user.character = pj;
-                map = unsetAoeSkills(map);
-            }
-        }
-        if(skill.movement_instant)
-        {
-            dungeon.error_message = '';
-            if(skill.aoe_diagonal || skill.aoe_linear)
-            {
-                let tiles = 0;
-                var position = comparePosition(pj.row,pj.col,row,col);
-                map = unsetAoeSkills(map);
-                let result =  setSkillsTarget(map,pj,skill,position.direction);
-                map = result.map;
-                pj = result.pj;
-
-                let target = [];
-                Object.keys(map).map(m1 => {
-                    Object.keys(map[m1]).map(m2 => {
-                        if(map[m1][m2].is_target_aoe)
-                        {
-                            tiles++;
-                            target.push({row:m1,col:m2});
-                        }
-                    })
-                });
-                pj.is_moving_instant = tiles;
-                target.map(t => {
-                    if(map[t.row][t.col].character)
-                    {
-                        var pnj = map[t.row][t.col].character;
-                        var positions = comparePosition(pj.row,pj.col,row,col);
-                        if(pnj.health > 0)
-                        {
-                            pnj.health = pnj.health - skill.damage_instant;
-                            if(skill.damage_instant_buff)
-                            {
-                                pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                            }
-                            if(pnj.health<=0)
-                            {
-                                pnj = null;
-                                dungeon.monster_info_row = null;
-                                dungeon.monster_info_col = null;
-                            }
-                        }
-                        pj.direction = positions.direction;
-                        dungeon.user.character = pj;
-                        map[pj.row][pj.col].character = pj;
-                        if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
-                        {
-                            dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
-                        }
-                        else {
-                            delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
-                        }
-                        map[t.row][t.col].character = pnj;
-                        dungeon.dungeon.maptiles = map;
-                    }
-                });
-            }
-            pj.try_skill = true;
-            pj.direction = position.direction;
-            pj.action = pj.action - skill.action_cost;
-            pj.energy = pj.energy - skill.energy_cost;
-            skill = skillCd(skill);
-            pj.can_use_skill = false;
-            pj.is_attacking = false;
-            pj.attacking_row = null;
-            pj.attacking_col = null;
-            pj.equipped_spells[pj.current_skill] = skill;
-            dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
-            dungeon.user.character = pj;
-            map = unsetAoeSkills(map);
-        }
-        if(skill.damage_time)
-        {
-            if(typeof map[row][col].character !== 'undefined')
-            {
-                pj.try_skill = true;
-                dungeon.error_message = '';
-                var pnj = map[row][col].character;
-                var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
-                if(pnj.health > 0)
-                {
-                    pnj.health = pnj.health - skill.damage_instant;
-                    if(skill.damage_instant_buff)
-                    {
-                        pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                    }
-                    if(!pnj.conditions)
-                    {
-                        pnj.conditions = [];
-                    }
-                    pnj.conditions.push(skill);
-
-                    pnj.health = pnj.health - skill.damage_time;
-                    pnj.damage = pnj.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
-
-                    console.log('dmg',pnj.damage);
-                    if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
-                    {
-                        console.log('dmg2',pnj.damage);
-                        pnj.damage = pnj.damage*skill.damage_time_buff_percent/100;
-                        console.log('dmg3',pnj.damage);
-                        pnj.damage = pnj.damage*skill.damage_time_debuff_percent/100;
-                        console.log('dmg4',pnj.damage);
-                    }
-
-                    pnj.movement = pnj.movement + (skill.movement_buff - skill.movement_debuff);
-                    if(pnj.health > pnj.maxhealth)
-                    {
-                        pnj.health = pnj.maxhealth;
-                    }
-
-                    pj.action = pj.action - skill.action_cost;
-                    pj.energy = pj.energy - skill.energy_cost;
-                    skill = skillCd(skill);
-                    if(pnj.health<=0)
-                    {
-                        pnj = null;
-                        dungeon.monster_info_row = null;
-                        dungeon.monster_info_col = null;
-                    }
-                    pj.can_use_skill = false;
-                    pj.is_attacking = false;
-                    pj.attacking_row = null;
-                    pj.attacking_col = null;
-                    pj.direction = positions.direction;
-                    pj.equipped_spells[pj.current_skill] = skill;
-                }
-                dungeon.user.character = pj;
-                map[pj.row][pj.col].character = pj;
-                if(pnj != null && typeof pnj !== 'undefined' && map[row][col].character)
-                {
-                    dungeon.dungeon.monsters[map[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[row][col].character.number],pnj);
-                }
-                else {
-                    delete dungeon.dungeon.monsters[map[row][col].character.number];
-                }
-                map[row][col].character = pnj;
-                dungeon.dungeon.maptiles = map;
-                map = unsetAoeSkills(map);
-            }
-        }
+        dungeon = result.dungeon;
     }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
@@ -1361,7 +1674,6 @@ export const endSkill = (dungeon) => ({firebase}) => {
     map = unsetAoeSkills(map);
     pj.try_skill = false;
     pj.is_using_skill = false;
-    pj.current_skill = false;
     pj.can_use_skill = false;
     pj.is_attacking = false;
     pj.attacking_row = null;
@@ -1378,40 +1690,55 @@ export const endSkill = (dungeon) => ({firebase}) => {
     }
 };
 
-
-
 export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
     pj.is_attacking = false;
     dungeon.error_message = '';
-    if(!pj.is_moving  && !dungeon.end_turn && !dungeon.monster_turn)
+    if(!pj.is_casting)
     {
-        if(dungeon.stop_turn)
+        if(!pj.is_moving  && !dungeon.end_turn && !dungeon.monster_turn)
         {
-            dungeon.stop_turn = false;
-        }
-        var range = comparePosition(pj.row,pj.col,row,col);
-        pj.direction = range.direction;
-        //Replace with pj.range
-        if(pj.range >= range.totalRange && range.totalRange > 0)
-        {
-            if(pj.action >= pj.basicCost)
+            if(dungeon.stop_turn)
             {
-                pj.is_attacking = true;
-                pj.attacking_row = row;
-                pj.attacking_col = col;
-                dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
-                dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
-                dungeon.monster_info_row = row;
-                dungeon.monster_info_col = col;
+                dungeon.stop_turn = false;
+            }
+            var range = comparePosition(pj.row,pj.col,row,col);
+            pj.direction = range.direction;
+            //Replace with pj.range
+            if(pj.range >= range.totalRange && range.totalRange > 0)
+            {
+                let is_on_range = false;
+                is_on_range = setRange(map,pj,0,pj.range,true,row,col);
+                if(!is_on_range)
+                {
+                    is_on_range = setRange(map,pj,0,pj.range,false,row,col);
+                }
+                if(is_on_range) {
+                    if (pj.action >= pj.basicCost) {
+                        pj.is_attacking = true;
+                        pj.attacking_row = row;
+                        pj.attacking_col = col;
+                        dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
+                        dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
+                        dungeon.monster_info_row = row;
+                        dungeon.monster_info_col = col;
+                    }
+                    else {
+                        dungeon.error_message = 'Not enough action points';
+                    }
+                }
+                else {
+                    dungeon.error_message = "Something is blocking the view";
+                }
             }
             else {
-                dungeon.error_message = 'Not enough action points';
+                dungeon.error_message = "You're too far.";
             }
         }
-        else {
-            dungeon.error_message = "You're too far.";
-        }
+    }
+    else {
+        dungeon.error_message = 'You cannot move while casting a spell';
     }
     dungeon.user.character = pj;
     dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
@@ -1441,8 +1768,103 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
                     {
                         pnj.health = pnj.health - pj.damage;
                         pj.action = pj.action - pj.basicCost;
+                        if(pj.damage_time)
+                        {
+                            if(!pnj.conditions)
+                            {
+                                pnj.conditions = [];
+                            }
+                            var cond = {
+                                name: "Poisoned Arrows",
+                                // animation: "spell1.gif",
+                                image: "Apply_Poison.jpg",
+                                damage_instant: 0,
+                                damage_time: pj.damage_time,
+                                damage_instant_buff: 0,
+                                damage_instant_debuff: 0,
+                                damage_type: "Buff",
+                                damage_debuff_flat: 0,
+                                damage_buff_flat: 0,
+                                damage_debuff_percent: 0,
+                                damage_buff_percent: 0,
+                                damage_reduction_flat: 0,
+                                damage_reduction_percent: 0,
+                                damage_time_buff_flat: 0,
+                                damage_time_buff_percent: 0,
+                                damage_time_debuff_flat: 0,
+                                damage_time_debuff_percent: 0,
+                                damage_return: 0,
+                                damage_return_percent: 0,
+                                life_buff: 0,
+                                life_debuff: 0,
+                                heal_instant: 0,
+                                heal_time: 0,
+                                heal_percent_instant: 0,
+                                heal_percent_time: 0,
+                                movement_instant: 0,
+                                movement_buff: 0,
+                                movement_debuff: 0,
+                                energy_heal: 0,
+                                energy_time: 0,
+                                energy_percent_heal: 0,
+                                energy_percent_time: 0,
+                                condition_duration: pj.damage_time_duration,
+                                damage_time_spell_duration: 0,
+                                description: "Poisoned arrow",
+                            };
+                            pnj.conditions.push(cond);
+
+                            pnj.health = pnj.health - cond.damage_time;
+                            pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                            if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                            {
+                                pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                                pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                            }
+
+                            pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                            if(pnj.health > pnj.maxhealth)
+                            {
+                                pnj.health = pnj.maxhealth;
+                            }
+                        }
                         if(pnj.health<=0)
                         {
+                            pj.experience = pj.experience + pnj.experience;
+                            if(pj.experience >= pj.maxexperience)
+                            {
+                                let lvlup_char = dungeon.user.levelup_character;
+                                let default_char = dungeon.user.default_character;
+
+                                let maxxp = pj.maxexperience;
+                                pj.health = pj.health + pj.health_lvl;
+                                pj.energy = pj.energy + pj.energy_lvl;
+                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                pj.damage = pj.damage + pj.damage_lvl;
+                                pj.experience = pj.experience - maxxp;
+                                pj.maxexperience = (pj.maxexperience*120/100);
+
+                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                default_char.damage = pj.damage_lvl;
+                                default_char.maxexperience = pj.maxexperience;
+                                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.damage = pj.damage_lvl;
+                                lvlup_char.maxexperience = pj.maxexperience;
+                                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                firebase.update({
+                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                });
+
+                                dungeon.user.default_character = default_char;
+                                dungeon.user.character = pj;
+                            }
                             pnj = null;
                             dungeon.monster_info_row = null;
                             dungeon.monster_info_col = null;
@@ -1600,6 +2022,964 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
     classe.pseudo = pseudo;
     classe.row = 0;
     classe.col = 0;
+    viewer.characters.push(classe);
+    viewer.active = 0;
+    viewer.tuto = 1;
+
+
+
+    firebase.update({
+        [`users/${viewer.id}/characters/`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+        [`users/${viewer.id}/tuto`]: 1
+    });
+
+    return {
+        type: CREATE_PERSO,
+        payload: { viewer },
+    };
+
+};
+export const LoadViewer = (viewer) => ({ firebase }) => {
+    if(viewer)
+    {
+        const getPromise = async () => {
+            try {
+                return await firebase.database.ref('/users/'+viewer.id).once('value').then(function(snapshot) {
+                    var username = snapshot.val();
+                    return {username};
+                });
+            } catch (error) {
+                console.log('An error occured. We could not load the dungeon. Try again later.');
+                throw error;
+            }
+        };
+        return {
+            type: LOAD_VIEWER,
+            payload: getPromise(),
+        };
+    }
+    return {
+        type: LOAD_VIEWER,
+        payload: ''
+    }
+};
+
+
+
+export const showAoeSkill = (dungeon,maptile) => ({}) => {
+    var map = dungeon.dungeon.maptiles;
+    map.map(m1 => m1.map(m2 => {
+        m2.is_target_aoe = false;
+    }));
+
+    maptile.aoe_target.map(m => {
+       map[m.row][m.col]. is_target_aoe = true;
+    });
+
+    dungeon.dungeon.maptiles = map;
+    return {
+        type: SHOW_AOE_SKILL,
+        payload: dungeon,
+    }
+}
+
+function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
+{
+
+    if(skill.cast_time && !pj.is_casting && !cast_ready)
+    {
+        var positions = comparePosition(pj.row,pj.col,row,col);
+        pj.is_casting = skill.cast_time;
+        pj.action = pj.action - skill.action_cost;
+        pj.energy = pj.energy - skill.energy_cost;
+        pj.health = pj.health - skill.life_cost;
+        if(pj.heal_on_energy_percent)
+        {
+            pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+        }
+        skill = skillCd(skill);
+        pj.can_use_skill = false;
+        pj.is_attacking = false;
+        pj.attacking_row = null;
+        pj.attacking_col = null;
+        pj.direction = positions.direction;
+        pj.equipped_spells[pj.current_skill] = skill;
+        pj.direction = "down";
+        pj.try_skill = true;
+        dungeon.user.character = pj;
+        map[pj.row][pj.col].character = pj;
+        dungeon.dungeon.maptiles = map;
+        map = unsetAoeSkills(map);
+    }
+    else {
+
+        if(!skill.aoe_linear && !skill.aoe_diagonal && !skill.range_cone && !skill.aoe_front && !skill.aoe_left && !skill.aoe_right && !skill.aoe_back && !skill.self && !skill.damage_time && !skill.damage_time_buff_flat)
+        {
+            if(typeof map[row][col].character !== 'undefined')
+            {
+                pj.try_skill = true;
+                dungeon.error_message = '';
+                var pnj = map[row][col].character;
+                let result = dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase);
+                pj = result.pj;
+                pnj = result.pnj;
+                dungeon = result.dungeon;
+                map = result.map;
+                skill = result.skill;
+                map = unsetAoeSkills(map);
+            }
+        }
+        if(skill.range_on_target)
+        {
+            if(skill.aoe_diagonal || skill.aoe_linear)
+            {
+                map = unsetAoeSkills(map);
+                var fake_pj = {row:row,col:col,can_use_skill:false};
+                let res;
+                let rg = comparePosition(pj.row,pj.col,row,col);
+                let dr = '';
+                if (skill.aoe_front) {
+                    res = setSkillsTarget(map, fake_pj, skill, rg.direction,true);
+                    map = res.map;
+                }
+                if (skill.aoe_back) {
+                    if(rg.direction == "up")
+                    {
+                        dr = "down";
+                    }
+                    if(rg.direction == "down")
+                    {
+                        dr = "up";
+                    }
+                    if(rg.direction == "right")
+                    {
+                        dr = "left";
+                    }
+                    if(rg.direction == "left")
+                    {
+                        dr = "right";
+                    }
+                    res = setSkillsTarget(map, fake_pj, skill, dr,true);
+                    map = res.map;
+                }
+                if (skill.aoe_right) {
+                    if(rg.direction == "up")
+                    {
+                        dr = "right";
+                    }
+                    if(rg.direction == "down")
+                    {
+                        dr = "left";
+                    }
+                    if(rg.direction == "right")
+                    {
+                        dr = "down";
+                    }
+                    if(rg.direction == "left")
+                    {
+                        dr = "up";
+                    }
+                    res = setSkillsTarget(map, fake_pj, skill, dr,true);
+                    map = res.map;
+                }
+                if (skill.aoe_left) {
+                    if(rg.direction == "up")
+                    {
+                        dr = "left";
+                    }
+                    if(rg.direction == "down")
+                    {
+                        dr = "right";
+                    }
+                    if(rg.direction == "right")
+                    {
+                        dr = "up";
+                    }
+                    if(rg.direction == "left")
+                    {
+                        dr = "down";
+                    }
+                    res = setSkillsTarget(map, fake_pj, skill, dr,true);
+                    map = res.map;
+                }
+
+                let target = [];
+                Object.keys(map).map(m1 => {
+                    Object.keys(map[m1]).map(m2 => {
+                        if(map[m1][m2].is_target_aoe)
+                        {
+                            let dsf = {row:m1,col:m2};
+                        }
+                        if(map[m1][m2].is_target_aoe && map[m1][m2].character)
+                        {
+                            if(map[m1][m2].character.type != "pj")
+                            {
+                                target.push({row:m1,col:m2});
+                            }
+                        }
+                    })
+                });
+
+                target.map(t => {
+                    var pnj = map[t.row][t.col].character;
+                    var positions = comparePosition(row,col,pnj.row,pnj.col);
+                    if(pnj.health > 0)
+                    {
+                        pnj.health = pnj.health - skill.damage_instant;
+                        if(skill.damage_instant_buff)
+                        {
+                            pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                        }
+                        if(pnj.damage_time_spell)
+                        {
+                            if(!pnj.conditions)
+                            {
+                                pnj.conditions = [];
+                            }
+                            var cond = {
+                                name: "Rogdor Mark",
+                                // animation: "spell1.gif",
+                                image: "Mark_of_Rodgort.jpg",
+                                damage_instant: 0,
+                                damage_time: pnj.damage_time_spell,
+                                damage_instant_buff: 0,
+                                damage_instant_debuff: 0,
+                                damage_type: "Buff",
+                                damage_debuff_flat: 0,
+                                damage_buff_flat: 0,
+                                damage_debuff_percent: 0,
+                                damage_buff_percent: 0,
+                                damage_reduction_flat: 0,
+                                damage_reduction_percent: 0,
+                                damage_time_buff_flat: 0,
+                                damage_time_buff_percent: 0,
+                                damage_time_debuff_flat: 0,
+                                damage_time_debuff_percent: 0,
+                                damage_return: 0,
+                                damage_return_percent: 0,
+                                life_buff: 0,
+                                life_debuff: 0,
+                                heal_instant: 0,
+                                heal_time: 0,
+                                heal_percent_instant: 0,
+                                heal_percent_time: 0,
+                                movement_instant: 0,
+                                movement_buff: 0,
+                                movement_debuff: 0,
+                                energy_heal: 0,
+                                energy_time: 0,
+                                energy_percent_heal: 0,
+                                energy_percent_time: 0,
+                                condition_duration: pnj.damage_time_spell_duration,
+                                damage_time_spell_duration: pnj.damage_time_spell_duration,
+                                description: "Rogdor Mark",
+                            };
+                            pnj.conditions.push(cond);
+
+                            pnj.health = pnj.health - cond.damage_time;
+                            // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                            // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                            // {
+                            //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                            //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                            // }
+
+                            pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                            if(pnj.health > pnj.maxhealth)
+                            {
+                                pnj.health = pnj.maxhealth;
+                            }
+                        }
+                        if(pnj.health<=0)
+                        {
+                            pj.experience = pj.experience + pnj.experience;
+
+                            if(pj.experience >= pj.maxexperience)
+                            {
+                                let lvlup_char = dungeon.user.levelup_character;
+                                let default_char = dungeon.user.default_character;
+
+                                let maxxp = pj.maxexperience;
+                                pj.health = pj.health + pj.health_lvl;
+                                pj.energy = pj.energy + pj.energy_lvl;
+                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                pj.damage = pj.damage + pj.damage_lvl;
+                                pj.experience = pj.experience - maxxp;
+                                pj.maxexperience = (pj.maxexperience*120/100);
+
+                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                default_char.damage = pj.damage_lvl;
+                                default_char.maxexperience = pj.maxexperience;
+                                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.damage = pj.damage_lvl;
+                                lvlup_char.maxexperience = pj.maxexperience;
+                                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                firebase.update({
+                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                });
+
+                                dungeon.user.default_character = default_char;
+                                dungeon.user.character = pj;
+                            }
+                            pnj = null;
+                            dungeon.monster_info_row = null;
+                            dungeon.monster_info_col = null;
+                        }
+                    }
+                    pj.direction = positions.direction;
+                    dungeon.user.character = pj;
+                    map[pj.row][pj.col].character = pj;
+                    if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                    {
+                        dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                    }
+                    else {
+                        delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                    }
+                    map[t.row][t.col].character = pnj;
+                    dungeon.dungeon.maptiles = map;
+                });
+                pj.try_skill = true;
+                pj.action = pj.action - skill.action_cost;
+                pj.energy = pj.energy - skill.energy_cost;
+                pj.health = pj.health - skill.life_cost;
+                if(pj.heal_on_energy_percent)
+                {
+                    pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                }
+                skill = skillCd(skill);
+                pj.can_use_skill = false;
+                pj.is_attacking = false;
+                pj.attacking_row = null;
+                pj.attacking_col = null;
+                pj.equipped_spells[pj.current_skill] = skill;
+                dungeon.user.character = pj;
+                map = unsetAoeSkills(map);
+            }
+        }
+        if(skill.self)
+        {
+            dungeon.error_message = '';
+            if(skill.damage_type == "Trap")
+            {
+                var positions = comparePosition(pj.row,pj.col,row,col);
+                if(!map[row][col].trap)
+                {
+                    map[row][col].trap = [];
+                }
+                map[row][col].trap.push(skill);
+                pj.try_skill = true;
+                pj.can_use_skill = false;
+                pj.is_attacking = false;
+                pj.attacking_row = null;
+                pj.attacking_col = null;
+                pj.direction = positions.direction;
+                pj.equipped_spells[pj.current_skill] = skill;
+                map[pj.row][pj.col].character = pj;
+                dungeon.dungeon.maptiles = map;
+                dungeon.user.character = pj;
+            }
+            else {
+                if(skill.aoe_diagonal || skill.aoe_linear)
+                {
+                    let target = [];
+                    Object.keys(map).map(m1 => {
+                        Object.keys(map[m1]).map(m2 => {
+                            if(map[m1][m2].is_target_aoe && map[m1][m2].character )
+                            {
+                                if(map[m1][m2].character.type != "pj")
+                                {
+                                    target.push({row:m1,col:m2});
+                                }
+                            }
+                        })
+                    });
+
+                    target.map(t => {
+                        var pnj = map[t.row][t.col].character;
+                        var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
+                        if(pnj.health > 0)
+                        {
+                            pnj.health = pnj.health - skill.damage_instant;
+                            if(skill.damage_instant_buff)
+                            {
+                                pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                            }
+                            if(pnj.health<=0)
+                            {
+                                pj.experience = pj.experience + pnj.experience;
+
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
+
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
+                                pnj = null;
+                                dungeon.monster_info_row = null;
+                                dungeon.monster_info_col = null;
+                            }
+                        }
+                        pj.direction = positions.direction;
+                        dungeon.user.character = pj;
+                        map[pj.row][pj.col].character = pj;
+                        if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                        {
+                            dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                        }
+                        else {
+                            delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                        }
+                        map[t.row][t.col].character = pnj;
+                        dungeon.dungeon.maptiles = map;
+                    });
+                    pj.try_skill = true;
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    pj.health = pj.health - skill.life_cost;
+                    if(pj.heal_on_energy_percent)
+                    {
+                        pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                    }
+                    skill = skillCd(skill);
+                    pj.can_use_skill = false;
+                    pj.is_attacking = false;
+                    pj.attacking_row = null;
+                    pj.attacking_col = null;
+                    pj.equipped_spells[pj.current_skill] = skill;
+                    dungeon.user.character = pj;
+                    map = unsetAoeSkills(map);
+                }
+                if(skill.duration && (skill.damage_type == "Buff" || skill.damage_type == "Melee_Counter"))
+                {
+                    if(!pj.buffs)
+                    {
+                        pj.buffs = [];
+                    }
+                    pj.buffs.push(skill);
+
+                    pj.health = pj.health + skill.heal_time;
+                    pj.energy = pj.energy + skill.energy_time;
+                    if(pj.health > pj.maxhealth)
+                    {
+                        pj.health = pj.maxhealth;
+                    }
+                    if(pj.energy > pj.maxenergy)
+                    {
+                        pj.energy = pj.maxenergy;
+                    }
+                    pj.heal_on_energy_percent = skill.heal_on_energy_percent;
+                    pj.damage = pj.damage + skill.damage_buff_flat + skill.damage_debuff_flat;
+                    pj.damage_time = pj.damage_time + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                    pj.damage_time_duration = skill.damage_time_duration;
+
+                    if(skill.damage_buff_percent || skill.damage_debuff_percent)
+                    {
+                        pj.damage = pj.damage*skill.damage_buff_percent/100;
+                        pj.damage = pj.damage*skill.damage_debuff_percent/100;
+                    }
+
+                    pj.movement = pj.movement + skill.movement_buff + skill.movement_debuff;
+                    pj.damage_reduction_flat = pj.damage_reduction_flat + skill.damage_reduction_flat;
+                    pj.damage_reduction_percent = pj.damage_reduction_percent + skill.damage_reduction_percent;
+                    pj.damage_return = pj.damage_return + skill.damage_return;
+                    pj.damage_return_percent = pj.damage_return_percent + skill.damage_return_percent;
+                    if(skill.damage_buff_percent)
+                    {
+                        pj.damage = pj.damage*skill.damage_buff_percent/100;
+                    }
+                    skill = skillCd(skill);
+                    pj.direction = "down";
+                    pj.try_skill = true;
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    pj.health = pj.health - skill.life_cost;
+                    if(pj.heal_on_energy_percent)
+                    {
+                        pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                    }
+                    pj.equipped_spells[pj.current_skill] = skill;
+                    map[pj.row][pj.col].character = pj;
+                    dungeon.dungeon.maptiles = map;
+                    dungeon.user.character = pj;
+                    map = unsetAoeSkills(map);
+                }
+                if(skill.damage_type == "Heal")
+                {
+                    pj.health = pj.health + skill.heal_instant;
+                    if(skill.heal_percent_instant)
+                    {
+                        pj.health =  pj.maxhealth + (pj.maxhealth*skill.heal_percent_instant/100);
+                    }
+                    if(skill.energy_percent_heal)
+                    {
+                        pj.energy =  pj.energy + (pj.maxenergy*skill.energy_percent_heal/100);
+                    }
+                    pj.energy = pj.energy + skill.energy_heal;
+                    if(pj.health > pj.maxhealth)
+                    {
+                        pj.health = pj.maxhealth;
+                    }
+                    if(pj.energy > pj.maxenergy)
+                    {
+                        pj.energy = pj.maxenergy;
+                    }
+                    pj.direction = "down";
+                    skill = skillCd(skill);
+                    pj.try_skill = true;
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    pj.health = pj.health - skill.life_cost;
+                    if(pj.heal_on_energy_percent)
+                    {
+                        pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                    }
+                    pj.equipped_spells[pj.current_skill] = skill;
+                    map[pj.row][pj.col].character = pj;
+                    dungeon.dungeon.maptiles = map;
+                    dungeon.user.character = pj;
+                    map = unsetAoeSkills(map);
+                }
+            }
+        }
+        else if(skill.movement_instant)
+        {
+            dungeon.error_message = '';
+            if(skill.aoe_diagonal || skill.aoe_linear)
+            {
+                let tiles = 0;
+                var position = comparePosition(pj.row,pj.col,row,col);
+                map = unsetAoeSkills(map);
+                let result =  setSkillsTarget(map,pj,skill,position.direction);
+                map = result.map;
+                pj = result.pj;
+
+                let target = [];
+                Object.keys(map).map(m1 => {
+                    Object.keys(map[m1]).map(m2 => {
+                        if(map[m1][m2].is_target_aoe)
+                        {
+                            tiles++;
+                            target.push({row:m1,col:m2});
+                        }
+                    })
+                });
+                pj.is_moving_instant = tiles;
+                target.map(t => {
+                    if(map[t.row][t.col].character)
+                    {
+                        var pnj = map[t.row][t.col].character;
+                        var positions = comparePosition(pj.row,pj.col,row,col);
+                        if(pnj.health > 0)
+                        {
+                            pnj.health = pnj.health - skill.damage_instant;
+                            if(skill.damage_instant_buff)
+                            {
+                                pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                            }
+                            if(pnj.damage_time_spell)
+                            {
+                                if(!pnj.conditions)
+                                {
+                                    pnj.conditions = [];
+                                }
+                                var cond = {
+                                    name: "Rogdor Mark",
+                                    // animation: "spell1.gif",
+                                    image: "Mark_of_Rodgort.jpg",
+                                    damage_instant: 0,
+                                    damage_time: pnj.damage_time_spell,
+                                    damage_instant_buff: 0,
+                                    damage_instant_debuff: 0,
+                                    damage_type: "Buff",
+                                    damage_debuff_flat: 0,
+                                    damage_buff_flat: 0,
+                                    damage_debuff_percent: 0,
+                                    damage_buff_percent: 0,
+                                    damage_reduction_flat: 0,
+                                    damage_reduction_percent: 0,
+                                    damage_time_buff_flat: 0,
+                                    damage_time_buff_percent: 0,
+                                    damage_time_debuff_flat: 0,
+                                    damage_time_debuff_percent: 0,
+                                    damage_return: 0,
+                                    damage_return_percent: 0,
+                                    life_buff: 0,
+                                    life_debuff: 0,
+                                    heal_instant: 0,
+                                    heal_time: 0,
+                                    heal_percent_instant: 0,
+                                    heal_percent_time: 0,
+                                    movement_instant: 0,
+                                    movement_buff: 0,
+                                    movement_debuff: 0,
+                                    energy_heal: 0,
+                                    energy_time: 0,
+                                    energy_percent_heal: 0,
+                                    energy_percent_time: 0,
+                                    condition_duration: pnj.damage_time_spell_duration,
+                                    damage_time_spell_duration: pnj.damage_time_spell_duration,
+                                    description: "Rogdor Mark",
+                                };
+                                pnj.conditions.push(cond);
+
+                                pnj.health = pnj.health - cond.damage_time;
+                                // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                                // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                                // {
+                                //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                                //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                                // }
+
+                                pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                                if(pnj.health > pnj.maxhealth)
+                                {
+                                    pnj.health = pnj.maxhealth;
+                                }
+                            }
+                            if(pnj.health<=0)
+                            {
+                                pj.experience = pj.experience + pnj.experience;
+
+
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
+
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
+                                pnj = null;
+                                dungeon.monster_info_row = null;
+                                dungeon.monster_info_col = null;
+                            }
+                        }
+                        pj.direction = positions.direction;
+                        dungeon.user.character = pj;
+                        map[pj.row][pj.col].character = pj;
+                        if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                        {
+                            dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                        }
+                        else {
+                            delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                        }
+                        map[t.row][t.col].character = pnj;
+                        dungeon.dungeon.maptiles = map;
+                    }
+                });
+            }
+            pj.try_skill = true;
+            pj.direction = position.direction;
+            pj.action = pj.action - skill.action_cost;
+            pj.energy = pj.energy - skill.energy_cost;
+            pj.health = pj.health - skill.life_cost;
+            if(pj.heal_on_energy_percent)
+            {
+                pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+            }
+            skill = skillCd(skill);
+            pj.can_use_skill = false;
+            pj.is_attacking = false;
+            pj.attacking_row = null;
+            pj.attacking_col = null;
+            pj.equipped_spells[pj.current_skill] = skill;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+            dungeon.user.character = pj;
+            map = unsetAoeSkills(map);
+        }
+        else if(skill.damage_time)
+        {
+            if(typeof map[row][col].character !== 'undefined')
+            {
+                pj.try_skill = true;
+                dungeon.error_message = '';
+                var pnj = map[row][col].character;
+                var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
+                if(pnj.health > 0)
+                {
+                    pnj.health = pnj.health - skill.damage_instant;
+                    if(skill.damage_instant_buff)
+                    {
+                        pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                    }
+                    if(!pnj.conditions)
+                    {
+                        pnj.conditions = [];
+                    }
+                    pnj.conditions.push(skill);
+
+                    pnj.health = pnj.health - skill.damage_time;
+                    // pnj.damage = pnj.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                    // if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
+                    // {
+                    //     pnj.damage = pnj.damage*skill.damage_time_buff_percent/100;
+                    //     pnj.damage = pnj.damage*skill.damage_time_debuff_percent/100;
+                    // }
+
+                    pnj.movement = pnj.movement + (skill.movement_buff - skill.movement_debuff);
+                    if(pnj.health > pnj.maxhealth)
+                    {
+                        pnj.health = pnj.maxhealth;
+                    }
+
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    pj.health = pj.health - skill.life_cost;
+                    if(pj.heal_on_energy_percent)
+                    {
+                        pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                    }
+                    skill = skillCd(skill);
+                    if(pnj.health<=0)
+                    {
+                        pj.experience = pj.experience + pnj.experience;
+
+
+                        if(pj.experience >= pj.maxexperience)
+                        {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
+
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                            default_char.damage = pj.damage_lvl;
+                            default_char.maxexperience = pj.maxexperience;
+                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.damage = pj.damage_lvl;
+                            lvlup_char.maxexperience = pj.maxexperience;
+                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            firebase.update({
+                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                            });
+
+                            dungeon.user.default_character = default_char;
+                            dungeon.user.character = pj;
+                        }
+                        pnj = null;
+                        dungeon.monster_info_row = null;
+                        dungeon.monster_info_col = null;
+                    }
+                    pj.can_use_skill = false;
+                    pj.is_attacking = false;
+                    pj.attacking_row = null;
+                    pj.attacking_col = null;
+                    pj.direction = positions.direction;
+                    pj.equipped_spells[pj.current_skill] = skill;
+                }
+                dungeon.user.character = pj;
+                map[pj.row][pj.col].character = pj;
+                if(pnj != null && typeof pnj !== 'undefined' && map[row][col].character)
+                {
+                    dungeon.dungeon.monsters[map[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[row][col].character.number],pnj);
+                }
+                else {
+                    delete dungeon.dungeon.monsters[map[row][col].character.number];
+                }
+                map[row][col].character = pnj;
+                dungeon.dungeon.maptiles = map;
+                map = unsetAoeSkills(map);
+            }
+        }
+        else if(skill.damage_time_buff_flat || skill.damage_time_buff_percent)
+        {
+            if(typeof map[row][col].character !== 'undefined')
+            {
+                pj.try_skill = true;
+                dungeon.error_message = '';
+                var pnj = map[row][col].character;
+                var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
+                if(pnj.health > 0)
+                {
+                    pnj.health = pnj.health - skill.damage_instant;
+                    if(skill.damage_instant_buff)
+                    {
+                        pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                    }
+                    if(!pnj.conditions)
+                    {
+                        pnj.conditions = [];
+                    }
+                    skill.damage_time_spell_duration = skill.damage_time_duration;
+                    pnj.conditions.push(skill);
+
+                    pnj.health = pnj.health - skill.damage_time;
+                    if(!pnj.damage_time_spell)
+                    {
+                        pnj.damage_time_spell = 0;
+                    }
+                    pnj.damage_time_spell = pnj.damage_time_spell + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                    pnj.damage_time_spell_duration = skill.damage_time_duration;
+                    // pnj.damage = pnj.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                    // if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
+                    // {
+                    //     pnj.damage = pnj.damage*skill.damage_time_buff_percent/100;
+                    //     pnj.damage = pnj.damage*skill.damage_time_debuff_percent/100;
+                    // }
+
+                    pnj.movement = pnj.movement + (skill.movement_buff - skill.movement_debuff);
+                    if(pnj.health > pnj.maxhealth)
+                    {
+                        pnj.health = pnj.maxhealth;
+                    }
+
+                    pj.action = pj.action - skill.action_cost;
+                    pj.energy = pj.energy - skill.energy_cost;
+                    pj.health = pj.health - skill.life_cost;
+                    if(pj.heal_on_energy_percent)
+                    {
+                        pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+                    }
+                    skill = skillCd(skill);
+                    if(pnj.health<=0)
+                    {
+                        pj.experience = pj.experience + pnj.experience;
+
+                        if(pj.experience >= pj.maxexperience)
+                        {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
+
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                            default_char.damage = pj.damage_lvl;
+                            default_char.maxexperience = pj.maxexperience;
+                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.damage = pj.damage_lvl;
+                            lvlup_char.maxexperience = pj.maxexperience;
+                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            firebase.update({
+                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                            });
+
+                            dungeon.user.default_character = default_char;
+                            dungeon.user.character = pj;
+                        }
+                        pnj = null;
+                        dungeon.monster_info_row = null;
+                        dungeon.monster_info_col = null;
+                    }
+                    pj.can_use_skill = false;
+                    pj.is_attacking = false;
+                    pj.attacking_row = null;
+                    pj.attacking_col = null;
+                    pj.direction = positions.direction;
+                    pj.equipped_spells[pj.current_skill] = skill;
+                }
+
+                dungeon.user.character = pj;
+                map[pj.row][pj.col].character = pj;
+                if(pnj != null && typeof pnj !== 'undefined' && map[row][col].character)
+                {
+                    dungeon.dungeon.monsters[map[row][col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[row][col].character.number],pnj);
+                }
+                else {
+                    delete dungeon.dungeon.monsters[map[row][col].character.number];
+                }
+                map[row][col].character = pnj;
+                dungeon.dungeon.maptiles = map;
+                map = unsetAoeSkills(map);
+            }
+        }
+    }
+    return {pj:pj,map:map,skill:skill,dungeon:dungeon};
+}
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    viewer.characters = [];
+    classe.pseudo = pseudo;
+    classe.row = 0;
+    classe.col = 0;
     //add equi init
     viewer.characters.push(classe);
     viewer.active = 0;
@@ -1698,21 +3078,368 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
     }
 };
 
-function dealDamage(pj,pnj,dungeon,map,row,col,skill)
+function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
 {
     var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
     if(pnj.health > 0)
     {
-        pnj.health = pnj.health - skill.damage_instant;
+        var damage = pj.damage;
         if(skill.damage_instant_buff)
         {
-            pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+            pnj.health = pnj.health - (damage+skill.damage_instant_buff);
+            if(pnj.damage_time_spell)
+            {
+                if(!pnj.conditions)
+                {
+                    pnj.conditions = [];
+                }
+                var cond = {
+                    name: "Rogdor Mark",
+                    // animation: "spell1.gif",
+                    image: "Mark_of_Rodgort.jpg",
+                    damage_instant: 0,
+                    damage_time: pnj.damage_time_spell,
+                    damage_instant_buff: 0,
+                    damage_instant_debuff: 0,
+                    damage_type: "Buff",
+                    damage_debuff_flat: 0,
+                    damage_buff_flat: 0,
+                    damage_debuff_percent: 0,
+                    damage_buff_percent: 0,
+                    damage_reduction_flat: 0,
+                    damage_reduction_percent: 0,
+                    damage_time_buff_flat: 0,
+                    damage_time_buff_percent: 0,
+                    damage_time_debuff_flat: 0,
+                    damage_time_debuff_percent: 0,
+                    damage_return: 0,
+                    damage_return_percent: 0,
+                    life_buff: 0,
+                    life_debuff: 0,
+                    heal_instant: 0,
+                    heal_time: 0,
+                    heal_percent_instant: 0,
+                    heal_percent_time: 0,
+                    movement_instant: 0,
+                    movement_buff: 0,
+                    movement_debuff: 0,
+                    energy_heal: 0,
+                    energy_time: 0,
+                    energy_percent_heal: 0,
+                    energy_percent_time: 0,
+                    condition_duration: pnj.damage_time_spell_duration,
+                    damage_time_spell_duration: pnj.damage_time_spell_duration,
+                    description: "Rogdor Mark",
+                };
+                pnj.conditions.push(cond);
+
+                pnj.health = pnj.health - cond.damage_time;
+                // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                // {
+                //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                // }
+
+                pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                if(pnj.health > pnj.maxhealth)
+                {
+                    pnj.health = pnj.maxhealth;
+                }
+            }
+        }
+        else if(skill.damage_instant)
+        {
+            pnj.health = pnj.health - skill.damage_instant;
+            if(pnj.damage_time_spell)
+            {
+                if(!pnj.conditions)
+                {
+                    pnj.conditions = [];
+                }
+                var cond = {
+                    name: "Rogdor Mark",
+                    // animation: "spell1.gif",
+                    image: "Mark_of_Rodgort.jpg",
+                    damage_instant: 0,
+                    damage_time: pnj.damage_time_spell,
+                    damage_instant_buff: 0,
+                    damage_instant_debuff: 0,
+                    damage_type: "Buff",
+                    damage_debuff_flat: 0,
+                    damage_buff_flat: 0,
+                    damage_debuff_percent: 0,
+                    damage_buff_percent: 0,
+                    damage_reduction_flat: 0,
+                    damage_reduction_percent: 0,
+                    damage_time_buff_flat: 0,
+                    damage_time_buff_percent: 0,
+                    damage_time_debuff_flat: 0,
+                    damage_time_debuff_percent: 0,
+                    damage_return: 0,
+                    damage_return_percent: 0,
+                    life_buff: 0,
+                    life_debuff: 0,
+                    heal_instant: 0,
+                    heal_time: 0,
+                    heal_percent_instant: 0,
+                    heal_percent_time: 0,
+                    movement_instant: 0,
+                    movement_buff: 0,
+                    movement_debuff: 0,
+                    energy_heal: 0,
+                    energy_time: 0,
+                    energy_percent_heal: 0,
+                    energy_percent_time: 0,
+                    condition_duration: pnj.damage_time_spell_duration,
+                    damage_time_spell_duration: pnj.damage_time_spell_duration,
+                    description: "Rogdor Mark",
+                };
+                pnj.conditions.push(cond);
+
+                pnj.health = pnj.health - cond.damage_time;
+                // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                // {
+                //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                // }
+
+                pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                if(pnj.health > pnj.maxhealth)
+                {
+                    pnj.health = pnj.maxhealth;
+                }
+            }
+        }
+        else {
+            damage = damage + (skill.damage_buff_flat - skill.damage_debuff_flat);
+            if(skill.damage_buff_percent)
+            {
+                damage = damage*skill.damage_buff_percent/100;
+            }
+            pnj.health = pnj.health - damage;
+            if(pnj.damage_time_spell)
+            {
+                if(!pnj.conditions)
+                {
+                    pnj.conditions = [];
+                }
+                var cond = {
+                    name: "Rogdor Mark",
+                    // animation: "spell1.gif",
+                    image: "Mark_of_Rodgort.jpg",
+                    damage_instant: 0,
+                    damage_time: pnj.damage_time_spell,
+                    damage_instant_buff: 0,
+                    damage_instant_debuff: 0,
+                    damage_type: "Buff",
+                    damage_debuff_flat: 0,
+                    damage_buff_flat: 0,
+                    damage_debuff_percent: 0,
+                    damage_buff_percent: 0,
+                    damage_reduction_flat: 0,
+                    damage_reduction_percent: 0,
+                    damage_time_buff_flat: 0,
+                    damage_time_buff_percent: 0,
+                    damage_time_debuff_flat: 0,
+                    damage_time_debuff_percent: 0,
+                    damage_return: 0,
+                    damage_return_percent: 0,
+                    life_buff: 0,
+                    life_debuff: 0,
+                    heal_instant: 0,
+                    heal_time: 0,
+                    heal_percent_instant: 0,
+                    heal_percent_time: 0,
+                    movement_instant: 0,
+                    movement_buff: 0,
+                    movement_debuff: 0,
+                    energy_heal: 0,
+                    energy_time: 0,
+                    energy_percent_heal: 0,
+                    energy_percent_time: 0,
+                    condition_duration: pnj.damage_time_spell_duration,
+                    damage_time_spell_duration: pnj.damage_time_spell_duration,
+                    description: "Rogdor Mark",
+                };
+                pnj.conditions.push(cond);
+
+                pnj.health = pnj.health - cond.damage_time;
+                // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+                // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+                // {
+                //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+                //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+                // }
+
+                pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+                if(pnj.health > pnj.maxhealth)
+                {
+                    pnj.health = pnj.maxhealth;
+                }
+            }
+        }
+        if(pj.damage_time)
+        {
+            if(!pnj.conditions)
+            {
+                pnj.conditions = [];
+            }
+            var cond = {
+                name: "Poisoned Arrows",
+                // animation: "spell1.gif",
+                image: "Apply_Poison.jpg",
+                damage_instant: 0,
+                damage_time: pj.damage_time,
+                damage_instant_buff: 0,
+                damage_instant_debuff: 0,
+                damage_type: "Buff",
+                damage_debuff_flat: 0,
+                damage_buff_flat: 0,
+                damage_debuff_percent: 0,
+                damage_buff_percent: 0,
+                damage_reduction_flat: 0,
+                damage_reduction_percent: 0,
+                damage_time_buff_flat: 0,
+                damage_time_buff_percent: 0,
+                damage_time_debuff_flat: 0,
+                damage_time_debuff_percent: 0,
+                damage_return: 0,
+                damage_return_percent: 0,
+                life_buff: 0,
+                life_debuff: 0,
+                heal_instant: 0,
+                heal_time: 0,
+                heal_percent_instant: 0,
+                heal_percent_time: 0,
+                movement_instant: 0,
+                movement_buff: 0,
+                movement_debuff: 0,
+                energy_heal: 0,
+                energy_time: 0,
+                energy_percent_heal: 0,
+                energy_percent_time: 0,
+                condition_duration: pj.damage_time_duration,
+                damage_time_spell_duration: 0,
+                description: "Poisoned arrow",
+            };
+            pnj.conditions.push(cond);
+
+            pnj.health = pnj.health - cond.damage_time;
+            // pnj.damage = pnj.damage - (cond.damage_time_buff_flat - cond.damage_time_debuff_flat);
+            // if(cond.damage_time_buff_percent || cond.damage_time_debuff_percent)
+            // {
+            //     pnj.damage = pnj.damage*cond.damage_time_buff_percent/100;
+            //     pnj.damage = pnj.damage*cond.damage_time_debuff_percent/100;
+            // }
+
+            pnj.movement = pnj.movement + (cond.movement_buff - cond.movement_debuff);
+            if(pnj.health > pnj.maxhealth)
+            {
+                pnj.health = pnj.maxhealth;
+            }
         }
         pj.action = pj.action - skill.action_cost;
         pj.energy = pj.energy - skill.energy_cost;
+        pj.health = pj.health - skill.life_cost;
+        if(pj.heal_on_energy_percent)
+        {
+            pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
+        }
         skill = skillCd(skill);
         if(pnj.health<=0)
         {
+            pj.experience = pj.experience + pnj.experience;
+
+
+            if(pj.experience >= pj.maxexperience)
+            {
+                let lvlup_char = dungeon.user.levelup_character;
+                let default_char = dungeon.user.default_character;
+
+                let maxxp = pj.maxexperience;
+                pj.health = pj.health + pj.health_lvl;
+                pj.energy = pj.energy + pj.energy_lvl;
+                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                pj.damage = pj.damage + pj.damage_lvl;
+                pj.experience = pj.experience - maxxp;
+                pj.maxexperience = (pj.maxexperience*120/100);
+
+                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                default_char.damage = pj.damage_lvl;
+                default_char.maxexperience = pj.maxexperience;
+                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                lvlup_char.damage = pj.damage_lvl;
+                lvlup_char.maxexperience = pj.maxexperience;
+                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+
+                firebase.update({
+                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
+            name: "init_1",
+            img: "/assets/images/weapons/init_1.png",
+            type: "helmet",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
+            name: "init_2",
+            img: "/assets/images/weapons/init_2.png",
+            type: "armor",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
+            name: "init_3",
+            img: "/assets/images/weapons/init_3.png",
+            type: "boots",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
+            name: "init_4",
+            img: "/assets/images/weapons/init_4.png",
+            type: "weapon",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+                });
+
+                dungeon.user.default_character = default_char;
+                dungeon.user.character = pj;
+            }
             pnj = null;
             dungeon.monster_info_row = null;
             dungeon.monster_info_col = null;
@@ -1742,11 +3469,12 @@ function unsetAoeSkills(map) {
     map.map(m1 => m1.map(m2 => {
         m2.is_target = false;
         m2.is_target_aoe = false;
+        m2.aoe_target = false;
     }));
     return map;
 }
 
-function setSkillsTarget(map,pj,skill,direction = "all")
+function setSkillsTarget(map,pj,skill,direction = "all",is_on_target = false,on_hover = false)
 {
     let self = skill.self;
     let result;
@@ -1768,16 +3496,34 @@ function setSkillsTarget(map,pj,skill,direction = "all")
 
         if(skill.aoe_diagonal > 0)
         {
-            result = setDiagonalAoeSkill(map, pj, (skill.aoe_diagonal * -1), true, (skill.range_minimum * -1));
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setDiagonalAoeSkill(map, pj, (skill.aoe_diagonal * -1), true, (skill.range_minimum * -1));
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setDiagonalAoeSkill(map, pj, (skill.aoe_diagonal * -1), true, (skill.range_minimum * -1));
+                map = result.map;
+                pj = result.pj;
+            }
         }
 
         if(skill.aoe_linear > 0)
         {
-            result = setLinearAoeSkill(map, pj, (skill.aoe_linear * -1), true, (skill.range_minimum * -1));
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setLinearAoeSkill(map, pj, (skill.aoe_linear * -1), true, (skill.range_minimum * -1));
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setLinearAoeSkill(map, pj, (skill.aoe_linear * -1), true, (skill.range_minimum * -1));
+                map = result.map;
+                pj = result.pj;
+            }
         }
     }
     if(direction == "all" || direction == "right")
@@ -1798,16 +3544,34 @@ function setSkillsTarget(map,pj,skill,direction = "all")
 
         if(skill.aoe_linear > 0)
         {
-            result = setLinearAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_linear);
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setLinearAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_linear);
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setLinearAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_linear);
+                map = result.map;
+                pj = result.pj;
+            }
         }
 
         if(skill.aoe_diagonal > 0)
         {
-            result = setDiagonalAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_diagonal);
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setDiagonalAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_diagonal);
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setDiagonalAoeSkill(map,pj,skill.range_minimum,true,skill.aoe_diagonal);
+                map = result.map;
+                pj = result.pj;
+            }
         }
     }
     if(direction == "all" || direction == "up")
@@ -1828,16 +3592,34 @@ function setSkillsTarget(map,pj,skill,direction = "all")
 
         if(skill.aoe_linear > 0)
         {
-            result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),false,(skill.range_minimum*-1));
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),false,(skill.range_minimum*-1));
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setLinearAoeSkill(map,pj,(skill.aoe_linear*-1),false,(skill.range_minimum*-1));
+                map = result.map;
+                pj = result.pj;
+            }
         }
 
         if(skill.aoe_diagonal > 0)
         {
-            result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),false,(skill.range_minimum*-1));
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),false,(skill.range_minimum*-1));
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setDiagonalAoeSkill(map,pj,(skill.aoe_diagonal*-1),false,(skill.range_minimum*-1));
+                map = result.map;
+                pj = result.pj;
+            }
         }
     }
     if(direction == "all" || direction == "down")
@@ -1858,17 +3640,50 @@ function setSkillsTarget(map,pj,skill,direction = "all")
 
         if(skill.aoe_linear > 0)
         {
-            result = setLinearAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_linear);
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setLinearAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_linear);
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setLinearAoeSkill(map,pj,skill.range_minimum,false,skill.aoe_linear);
+                map = result.map;
+                pj = result.pj;
+            }
         }
 
         if(skill.aoe_diagonal > 0)
         {
-            result = setDiagonalAoeSkill(map, pj, skill.range_minimum, false, skill.aoe_diagonal);
-            map = result.map;
-            pj = result.pj;
+            if(skill.range_on_target && is_on_target)
+            {
+                result = setDiagonalAoeSkill(map, pj, skill.range_minimum, false, skill.aoe_diagonal);
+                map = result.map;
+                pj = result.pj;
+            }
+            else if(!skill.range_on_target) {
+
+                result = setDiagonalAoeSkill(map, pj, skill.range_minimum, false, skill.aoe_diagonal);
+                map = result.map;
+                pj = result.pj;
+            }
         }
+    }
+
+    if(on_hover)
+    {
+        map.map((m1,i1) => {
+            m1.map((m2,i2) => {
+                if (map[i1][i2].is_target) {
+                    let fake_pj = {row: i1, col: i2, can_use_skill: false};
+                    result = setDiagonalAoeSkill(map, fake_pj, skill.range_minimum, false, skill.aoe_diagonal, on_hover);
+                    map = result.map;
+                    result = setDiagonalAoeSkill(map, fake_pj, skill.range_minimum, true, skill.aoe_diagonal, on_hover);
+                    map = result.map;
+                }
+            });
+        });
     }
 
     return {map:map,pj:pj};
@@ -1879,7 +3694,7 @@ function comparePosition(r1,c1,r2,c2){
     let totalRow = r1 - r2;
     let totalColU = c1 - c2;
     let totalCol = c1 - c2;
-    let direction = "";
+    let direction = "down";
     let totalRange = 0;
     if(totalRow < 0)
     {
@@ -1932,115 +3747,94 @@ function skillCd(skill)
     return skill;
 }
 
-function setDiagonalAoeSkill(map,pj,min,hor,aoe) {
-    for(let j=min;j<=aoe;j++)
+function setDiagonalAoeSkill(map,pj,min,hor,aoe,on_hover = false) {
+    let imin = min;
+    let imax = aoe;
+    let crt_row = 1;
+    if(on_hover && aoe==1 && hor)
     {
-        if(hor)
-        {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
-            {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
-                {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
-                    {
-                        map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target_aoe = true;
-                        pj.can_use_skill = true;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
-            {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)-j] !== 'undefined')
-                {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)-j].type == "walkable")
-                    {
-                        map[parseInt(pj.row)+j][parseInt(pj.col)-j].is_target_aoe = true;
-                        pj.can_use_skill = true;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-        }
+        crt_row = 0;
     }
-    return {map:map,pj:pj};
-}
-function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
-    for(let j=neg;j<=pos;j++)
+    while(imax)
     {
-        if(hor)
+        for(let j=-imax;j<=imax;j++)
         {
-            if(typeof map[parseInt(pj.row) + j] !== 'undefined')
+            let t = {row:crt_row,col:j};
+            let c_col = parseInt(pj.col)+j;
+            if(hor)
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                let c_row = parseInt(pj.row)+crt_row;
+                if(typeof map[c_row] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                    if(typeof map[c_row][c_col] !== 'undefined')
                     {
-                        if(aoe)
+                        if(map[c_row][c_col].type == "walkable")
                         {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
-                        {
-                            if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                            if(on_hover)
                             {
-                                map[parseInt(pj.row)+j][parseInt(pj.col)+j].is_target = true;
-                                pj.can_use_skill = true;
-                                break;
+                                if(((c_row)  != pj.row) || ((c_col)  != pj.col))
+                                {
+                                    if(!map[pj.row][pj.col].aoe_target)
+                                    {
+                                        map[pj.row][pj.col].aoe_target = [];
+                                    }
+                                    map[pj.row][pj.col].aoe_target.push({row:c_row,col:c_col});
+                                }
                             }
-                            if(self) {
+                            else {
+                                map[c_row][c_col].is_target_aoe = true;
                                 pj.can_use_skill = true;
-                                map[parseInt(pj.row) + j][parseInt(pj.col) + j].is_target = true;
                             }
                         }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                }
+            }
+            else {
+                let c_row = parseInt(pj.row)-crt_row;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
                     {
-                        break;
-                    }
+                        if(map[c_row][c_col].type == "walkable")
+                        {
 
+                            if(on_hover)
+                            {
+                                if(((c_row)  != pj.row) || ((c_col)  != pj.col))
+                                {
+                                    if(!map[pj.row][pj.col].aoe_target)
+                                    {
+                                        map[pj.row][pj.col].aoe_target = [];
+                                    }
+                                    map[pj.row][pj.col].aoe_target.push({row:c_row,col:c_col});
+                                }
+                            }
+                            else {
+                                map[c_row][c_col].is_target_aoe = true;
+                                pj.can_use_skill = true;
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                 }
             }
         }
-        else {
-            if (typeof map[parseInt(pj.row) + j] !== 'undefined') {
-                if (typeof map[parseInt(pj.row) + j][parseInt(pj.col) - j] !== 'undefined') {
-                    if (map[parseInt(pj.row) + j][parseInt(pj.col) - j].type == "walkable") {
-                        if (aoe) {
-                            map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if ((typeof map[parseInt(pj.row) + j][parseInt(pj.col) - j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)-j].character != null) {
-                            if (map[parseInt(pj.row) + j][parseInt(pj.col) - j].character.type == "pnj" && !aoe) {
-                                map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
-                                pj.can_use_skill = true;
-                                break;
-                            }
-                            if(self) {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row) + j][parseInt(pj.col) - j].is_target = true;
-                            }
-                        }
-                    }
-                    else {
-                        break;
-                    }
-
-                }
-            }
+        if(crt_row != 0)
+        {
+            imax--;
         }
+        crt_row++;
     }
     return {map:map,pj:pj};
 }
+
 function setLinearAoeSkill(map,pj,min,hor,aoe) {
     for(let j=min;j<=aoe;j++)
     {
@@ -2082,36 +3876,432 @@ function setLinearAoeSkill(map,pj,min,hor,aoe) {
     }
     return {map:map,pj:pj};
 }
+function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
+    let crt_row = 0;
+    while(imax)
+    {
+        for(let j=imin;j>=imax;j++)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if (aoe) {
+                                map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj" && !aoe) {
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if (aoe) {
+                                map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj" && !aoe) {
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+    return {map:map,pj:pj};
+}
 
 function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
-
-    for(let j=neg;j<=pos;j++)
+    if(neg<0)
     {
+        for(let j=pos;j>=neg;j--)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        for(let j=neg;j<=pos;j++)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
+
+
+
+function setRange(map,pj,neg,pos,hor,row,col){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    while(imax)
+    {
+        for(let j=imin;j<=imax;j++)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=imin;j<=imax;j++)
+    {
+        if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+        {
+            return true;
+        }
         if(hor)
         {
-            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
                     {
-                        if(aoe)
+                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
                         {
-                            map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
-                        {
-                            if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                            if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
                             {
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                                pj.can_use_skill = true;
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
                             }
                         }
                     }
@@ -2123,28 +4313,15 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
         else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            if(typeof map[parseInt(pj.row)-j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
-                    {
-                        if(aoe)
-                        {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
-                        {
-                            if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                    if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                            if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
                             }
                         }
                     }
@@ -2156,7 +4333,386 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
     }
-    return {map:map,pj:pj};
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    return false;
 }
 
+function setRangeMonsters(map,pj,neg,pos,diag,hor){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    var tab = [];
+    var c_row = 0;
+    var c_col = 0;
+    while(imax)
+    {
+        for(let j=imin;j<=imax;j++)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = c_col;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
 
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=diag;j<=diag;j++)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    for(let j=-diag;j>=-diag;j--)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][c_col].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)-j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)+j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    return {map:map,tab:tab};
+}

@@ -19,7 +19,6 @@ let Me = ({viewer,dviewer,LoadViewer}) => {
         LoadViewer(viewer);
     }else {
         if (viewer) {
-            console.log("viewer2",viewer);
         }
     }
     return (

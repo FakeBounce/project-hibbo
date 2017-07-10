@@ -6,7 +6,7 @@ import React from 'react';
 import Character from './Character';
 import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
-import { moveCharacter,movingCharacter,trySkill,endSkill } from '../../common/dungeons/actions';
+import { moveCharacter,movingCharacter,trySkill,endSkill,showAoeSkill } from '../../common/dungeons/actions';
 
 type Props = {
     dungeon: Object,
@@ -15,7 +15,7 @@ type Props = {
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill }: Props) => {
+const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill,showAoeSkill }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -30,16 +30,15 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     var move = false;
     let maptileAction;
     var is_targeted = false;
+    var tile_hover = '';
+    var item = false;
 
     maptileAction = function(){
         if(typeof maptile.character !== 'undefined')
         {
             if(maptile.character != null)
             {
-                if(maptile.character.type == "pj")
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
@@ -56,12 +55,25 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             };
         }
     }
+    if(typeof maptile.is_movable !== 'undefined')
+    {
+        if(maptile.is_movable)
+        {
+            classImage = classImage+ " is_target_aoe";
+        }
+    }
     if(typeof maptile.is_target_aoe !== 'undefined')
     {
             if(maptile.is_target_aoe)
             {
                 classImage = classImage+ " is_target_aoe";
             }
+    }
+    if(maptile.aoe_target)
+    {
+        tile_hover = function(){
+            showAoeSkill(dungeon,maptile);
+        };
     }
     if(dungeon.user.character.is_using_skill)
     {
@@ -88,17 +100,24 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             move = dungeon.user.character.is_moving;
         }
     }
-
+    if(typeof maptile.item !== 'undefined' && maptile.item != null)
+    {
+        let src = "/assets/images/objets/"+maptile.item.image;
+        item = <Image className="object" src={src}/>;
+    }
     classImage = classImage + ' correctifDisplay';
     return (
     <Flex>
         {
           character ?
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction}>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
                 <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction}></Flex>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
+            </Flex>
         }
     </Flex>
     );
@@ -116,4 +135,4 @@ Maptile.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { moveCharacter,movingCharacter,trySkill,endSkill }) (Maptile);
+}), { moveCharacter,movingCharacter,trySkill,endSkill,showAoeSkill }) (Maptile);

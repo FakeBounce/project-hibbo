@@ -15,9 +15,10 @@ const State = Record({
     viewer: null,
     tutoriel: null,
     dungeonsOP: Map(),
-    classes: Map(),
+    classes: null,
     division: null,
-    class: null,
+    pseudo: null,
+    classe: null
 }, 'dungeon');
 
 const dungeonsReducer = (state = new State(), action) => {
@@ -64,7 +65,7 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.LOAD_CLASSES: {
-            const classes = action.payload;
+            const { classes } = action.payload;
             return state.set('classes', classes);
         }
 
@@ -85,6 +86,7 @@ const dungeonsReducer = (state = new State(), action) => {
                 else {
                     tutoriel = action.payload.tutoriel;
                 }
+                console.log('MAJ tutoriel',tutoriel);
                 return state.set('tutoriel', tutoriel);
             }
             return state;
@@ -228,24 +230,15 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('verifloaded',vl);
         }
 
+<<<<<<< HEAD
         case actions.SET_PSEUDO: {
+            console.log(action.payload);
             let payload = action.payload;
             if(payload.length > 0){
                 return state.set("pseudo",payload);
             }
             return state;
-        }
-
-        case actions.CREATE_PERSO: {
-            return state;
-        }
-
-        case actions.ADD_EQUIPMENT: {
-            let payload = action.payload;
-            console.log('reducer',payload);
-            return state;
-        }
-
+=======
         case actions.CAN_USE_SKILL: {
             let payload = action.payload;
             let vl = state.verifloaded;
@@ -262,28 +255,13 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('verifloaded',vl);
         }
 
-        case actions.TRY_ITEM: {
-            let payload = action.payload;
-            let vl = state.verifloaded;
-            vl++;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
-                .set('verifloaded',vl);
-        }
-
         case actions.END_SKILL: {
             let payload = action.payload;
             let vl = state.verifloaded;
             vl++;
             return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
                 .set('verifloaded',vl);
-        }
-
-        case actions.SHOW_AOE_SKILL: {
-            let payload = action.payload;
-            let vl = state.verifloaded;
-            vl++;
-            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
-                .set('verifloaded',vl);
+>>>>>>> 9b386ca8f46561aa75df4fa10ba11062fad72949
         }
 
         default:

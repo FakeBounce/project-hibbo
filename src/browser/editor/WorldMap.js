@@ -39,9 +39,6 @@ let WorldMap = ({ worldmap,viewer,loadWorldMap }) => {
                     Description : {worldmap.name}
                 </Text>
             </div>
-
-
-
         </View>
     );
 };

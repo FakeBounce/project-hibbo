@@ -8,22 +8,24 @@ import WorldMap from './WorldMap';
 import Inventory from './Inventory';
 import SignOut from '../auth/SignOut';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
-import { Block, View, Text, Image, Loading } from '../app/components';
+import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
     let weapon_list = '';
     var skills_list = '';
+    var object_list = '';
     let dungeon;
     let health = 100;
     let maxhealth = 100;
     let energy = 100;
     let maxenergy = 100;
     let experience = 0;
-    let maxexperience = 1000;
+    let maxexperience = 0;
     let skill_function = false;
+    let item_function = false;
     let picture = false;
     let pick_equipment_list = '';
 
@@ -33,6 +35,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     }
     else
     {
+        experience = dviewer.characters[dviewer.active].experience;
+        maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if(dviewer.characters && dviewer.characters[dviewer.active]){
             maxhealth = health = dviewer.characters[dviewer.active].health;
             maxenergy = energy = dviewer.characters[dviewer.active].energy;
@@ -70,7 +74,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     energy = dungeon.user.character.energy;
                     maxenergy = dungeon.user.default_character.maxenergy;
                     experience = dungeon.user.character.experience;
-                    maxexperience = dungeon.user.default_character.maxexperience;
+                    maxexperience = dungeon.user.character.maxexperience;
                 }
                 dungeonActive = true;
 
@@ -107,6 +111,39 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                                       <li>Energy cost: {skill.energy_cost}</li>
                                       <li>Damage instant: {skill.damage_instant}</li>
                                   </ul>
+                              </div>
+                          </div>);
+                    })
+                }
+
+                if(dungeon.user.character.items) {
+                    var cpt = 0;
+                    var styles;
+                    object_list = dungeon.user.character.items.map(item => {
+                        var classSkill = 'skill';
+                        if(dungeonActive)
+                        {
+                            item_function = function () {
+                                tryItem(dungeon,dungeon.user.character.row,dungeon.user.character.col,cpt);
+                            };
+                        }
+                        cpt++;
+                        var skill_image = "assets/images/objets/"+item.image;
+                        var cd_percent = parseFloat(1);
+                        if(item.cooldown)
+                        {
+                            cd_percent  = 1 - (Math.round(parseInt(item.cooldown) * 100.0 / parseInt(item.rest)) / 100);
+                        }
+                        styles = {
+                            opacity: cd_percent
+                        };
+                      return (
+                          <div className="oneSkill">
+                              <span>{cpt}</span>
+                              <Image style={styles} key={item.id} className={`skills ${classSkill}`} onClick={() => item_function(item)} src={skill_image}></Image>
+                              <div className="info">
+                                  <h3>{item.name}</h3>
+                                  <h4>Description: {item.description}</h4>
                               </div>
                           </div>);
                     })
@@ -242,11 +279,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                           <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <div>
-                              <a className="btn-option-editeur" href={window.location.origin + '/editor'}>
-                                <span>Editeur</span>
-                              </a>
-                            </div>
+                            <Link className="btnEidteurOption" exactly to='/editor'>Editeur</Link>
                             <SignOut/>
                         </div>
                     </div>
@@ -273,6 +306,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         </div>
                         <div className="infobar-spell-number">
                                 {skills_list}
+                                {object_list}
                         </div>
                     </div>
                 </div>
@@ -324,4 +358,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
