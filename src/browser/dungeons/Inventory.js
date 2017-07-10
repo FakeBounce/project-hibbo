@@ -13,7 +13,6 @@ type Props = {
 };
 
 const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment }: Props) => {
-    console.log(character);
     let equipment = '';
     let picture = '';
     const ShowEquipment = function (equip, wear) {

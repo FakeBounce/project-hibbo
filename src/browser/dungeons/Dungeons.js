@@ -28,6 +28,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
     let item_function = false;
     let picture = false;
     let pick_equipment_list = '';
+    let end_modal = '';
 
     if(!dviewer)
     {
@@ -44,7 +45,6 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
 
         if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
             pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
-                console.log(benef);
                return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{dviewer.pick_equipment.benefits[benef]}</div></div>)
             });
         }
@@ -151,6 +151,11 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
 
                 if(dviewer && typeof dungeon.dungeon !== "undefined") {
                     wdmap.push(<WorldMap key={dungeon.dungeon.id} worldmap={dungeon.dungeon} dungeon={dungeon}/>);
+                }
+
+                if(dungeon.is_finished)
+                {
+                    end_modal = 'Fin du donjon';
                 }
             }
             else {
@@ -285,6 +290,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                     </div>
                 </div>
                 <div className="cadre-bas-max">
+                    {end_modal}
                     <div>
                         <div className="infobar-mana">
                             <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>

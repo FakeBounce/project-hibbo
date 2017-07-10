@@ -242,7 +242,6 @@ const dungeonsReducer = (state = new State(), action) => {
 
         case actions.ADD_EQUIPMENT: {
             let payload = action.payload;
-            console.log('reducer',payload);
             return state;
         }
 
