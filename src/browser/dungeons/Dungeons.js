@@ -11,9 +11,9 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { ChangeTab, DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
     let weapon_list = '';
     var skills_list = '';
     var object_list = '';
@@ -28,6 +28,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
     let item_function = false;
     let picture = false;
     let pick_equipment_list = '';
+    let tab = "dungeons";
 
     if(!dviewer)
     {
@@ -35,11 +36,16 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
     }
     else
     {
+
         experience = dviewer.characters[dviewer.active].experience;
         maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if(dviewer.characters && dviewer.characters[dviewer.active]){
             maxhealth = health = dviewer.characters[dviewer.active].health;
             maxenergy = energy = dviewer.characters[dviewer.active].energy;
+        }
+
+        if(dviewer.tab != null & dviewer.tab != 'undefined'){
+            tab = dviewer.tab;
         }
 
         if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
@@ -205,7 +211,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                             </div>
                         </div>
                     </div>
-                    {dviewer && dviewer.pick_equipment != null &&
+                    {tab == "perso" && dviewer && dviewer.pick_equipment != null &&
                         <div className="inventory_pick">
                             <div className="inventory_pick_info">
                                 <div className="w45">
@@ -247,10 +253,22 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                     <div className="cadre-menu">
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
-                                <a href="#dungeons"><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
-                                <a href="#personnage"><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
-                                <a href="#skill"><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
-                                <a href="#option"><li className="menu-option"><span className="btn-menu">Options</span></li></a>
+                                {dungeon ?
+                                    <div>
+                                        <a href="#dungeons">
+                                            <li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li>
+                                        </a>
+                                        <li className="menu-perso"><span className="btn-menu">Personnage</span></li>
+                                        <li className="menu-spell"><span className="btn-menu">Compétences</span></li>
+                                        <li className="menu-option"><span className="btn-menu">Options</span></li>
+                                    </div> :
+                                    <div>
+                                        <a href="#dungeons" onClick={() => ChangeTab(dviewer, "dungeons")}><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
+                                        <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
+                                        <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
+                                        <a href="#option" onClick={() => ChangeTab(dviewer,"option")}><li className="menu-option"><span className="btn-menu">Options</span></li></a>
+                                    </div>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -358,4 +376,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { ChangeTab, AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);

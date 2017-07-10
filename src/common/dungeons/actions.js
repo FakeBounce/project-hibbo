@@ -43,6 +43,20 @@ export const CREATE_PERSO = 'CREATE_PERSO';
 export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
 export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 
+/************ Change Tabs **********************************/
+export const ChangeTab = (viewer, tab) => ({firebase}) => {
+    viewer.tab = tab;
+
+    firebase.update({
+        [`users/${viewer.id}/tab`]: tab,
+    });
+
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
 /************ Display Equipement ***************************/
 export const PickEquipment = (viewer, equipment, wear) => ({ firebase }) => {
     equipment.wear = wear;
