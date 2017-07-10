@@ -13,6 +13,8 @@
   box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Fresca');
+
 html {
   // Changes the default tap highlight to be completely transparent in iOS.
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -24,11 +26,12 @@ html {
 body {
   // Remove the margin in all browsers.
   background-image: url("/assets/images/wallpaper.jpg");
-background-size: cover;
-background-repeat: no-repeat;
-overflow-x: hidden;
-color: #cccccc;
-background-attachment:fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  color: #cccccc;
+  background-attachment:fixed;
+  font-family: 'Fresca', sans-serif;
 }
 
 .title-hibbo{
@@ -2569,35 +2572,6 @@ progress[value].progressSkills::-webkit-progress-value {
   border:1px solid #333333;
 }
 
-.w20{
-  width: 20%;
-  float:left;
-}
-
-.w25{
-  width: 25%;
-  float:left;
-}
-
-.w30{
-  width: 30%;
-  float:left;
-}
-
-.w40{
-  width: 40%;
-  float:left;
-}
-
-.w45{
-  width: 45%;
-  float:left;
-}
-
-.w55{
-  width: 55%;
-  float:left;
-}
 
 .separator{
   position: absolute;
@@ -2722,4 +2696,93 @@ progress[value].progressSkills::-webkit-progress-value {
   margin-top: -3px;
   cursor: pointer;
   position: absolute;
+}
+
+.stats {
+  margin-top: 140px;
+  margin-left: 20px;
+  width: 195px;
+  overflow: auto;
+  height: 300px;
+  position:relative;
+  z-index:3;
+}
+
+.stats .stat, .stats .stat_large{
+  min-height: 20px;
+  font-size: 12px;
+}
+
+.stats .stat div, .stats .stat_large div{
+  float: left;
+}
+
+.stats .stat div:nth-child(1){
+  width: 70%;
+}
+
+.stats .stat div:nth-child(2){
+  width: 30%;
+}
+
+.stats .stat_large div:nth-child(1){
+  width: 80%;
+}
+
+.stats .stat_large div:nth-child(2){
+  width: 20%;
+}
+
+.stats::-webkit-scrollbar{
+  width:8px;
+  background-color:#808080;
+  border-radius:10px;
+}
+
+.stats::-webkit-scrollbar-thumb{
+  background-color:#393d41;
+  border-radius:10px;
+}
+.stats::-webkit-scrollbar-thumb:hover{
+  background-color:#5c6362;
+  border:1px solid #333333;
+}
+.stats::-webkit-scrollbar-thumb:active{
+  background-color:#393d41;
+  border:1px solid #333333;
+}
+
+.w20{
+  width: 20%;
+  float:left;
+}
+
+.w25{
+  width: 25%;
+  float:left;
+}
+
+.w30{
+  width: 30%;
+  float:left;
+}
+
+.w40{
+  width: 40%;
+  float:left;
+}
+
+.w45{
+  width: 45%;
+  float:left;
+}
+
+.w55{
+  width: 55%;
+  float:left;
+}
+
+.w80{
+  width: 80%;
+  float:left;
 }

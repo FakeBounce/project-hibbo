@@ -7,6 +7,7 @@ import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import Inventory from './Inventory';
 import SignOut from '../auth/SignOut';
+import Stats from './Stats';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
@@ -203,6 +204,9 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                             </div>
                         </div>
                     </div>
+                    {tab == "perso" && dviewer.characters[dviewer.active] &&
+                        <Stats character={dviewer.characters[dviewer.active]}/>
+                    }
                 </div>
                 <div className="cadre-droite-max">
                     <div className="cadre-menu">
