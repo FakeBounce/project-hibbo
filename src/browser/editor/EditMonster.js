@@ -20,7 +20,7 @@ const EditMonster = ({ pickmonster,row,col,monster, viewer,worldmap,active }: Pr
     };
 
 
-    var classImage = "case ";
+    var classImage = "caseChooseEditeur ";
 
     if(active == "active")
     {
