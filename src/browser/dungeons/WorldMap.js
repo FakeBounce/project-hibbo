@@ -71,7 +71,6 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
         EndTurn(dungeon);
       }
     }
-
   };
 
     if(dungeon.error_message)

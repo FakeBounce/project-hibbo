@@ -198,7 +198,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                           <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <Link exactly to='/editor'>Editeur</Link>
+                            <Link className="btnEidteurOption" exactly to='/editor'>Editeur</Link>
                             <SignOut/>
                         </div>
                     </div>
