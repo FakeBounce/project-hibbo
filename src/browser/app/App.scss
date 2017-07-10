@@ -132,6 +132,43 @@ Input.input-map-editor{
   float: left;
   margin: 0 10px;
 }
+.zoomHaut{
+  background: url(/assets/images/editor/btnhaut.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomBas{
+  background: url(/assets/images/editor/btnbas.png) no-repeat;
+  width: 40px;
+  height: 44px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomGauche{
+  background: url(/assets/images/editor/btngauche.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomDroite{
+  background: url(/assets/images/editor/btndroite.png) no-repeat;
+  width: 44px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
 
 .btn-editeur-exit{
   box-sizing: border-box;

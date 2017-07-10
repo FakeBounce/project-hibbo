@@ -233,9 +233,12 @@ let EditorMap = ({ ZoomMinorEditMap,ZoomEditMap,camera,FullBlockRight,FullBlockT
               <h2>Zoom</h2>
               <div className="zoom">
 
-                {/*<div className="zoomPlus" onClick={() => ZoomEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map)}></div>*/}
-                {/*<div className="zoomMoins" onClick={() => ZoomMinorEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map,worldmap)}></div>*/}
-
+                {<div className="zoomPlus" onClick={() => ZoomEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map)}></div>}
+                {<div className="zoomMoins" onClick={() => ZoomMinorEditMap(worldmap.camera,viewer,worldmap.worldmap.size_map,worldmap)}></div>}
+                <div className="zoomHaut"></div>
+                <div className="zoomBas"></div>
+                <div className="zoomGauche"></div>
+                <div className="zoomDroite"></div>
               </div>
             </div>
           </div>
