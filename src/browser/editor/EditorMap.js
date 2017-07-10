@@ -33,7 +33,7 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
     activeTiles.map(active => activeTile = active);
     activeMonsters.map(active => activeMonster = active);
     activeObjects.map(active => activeObject = active);
-//console.log('activeObject',activeObject);
+
     const onInputKeyDown = event => {
          if (!fields.name.value.trim()) return;
         addNameMap(fields.name.value,viewer,worldmap);

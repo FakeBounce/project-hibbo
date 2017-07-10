@@ -35,7 +35,6 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
     let player = false;
 
 
-    //console.log('maptile',maptile);
     if(typeof maptile.character !== 'undefined' && maptile.character != null ) {
         monster = true;
     }
@@ -61,7 +60,15 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
         {
            object = true;
         }
+        if(typeof maptile.character !== 'undefined' && maptile.character != null )
+        {
+            monster = true;
 
+            if(maptile.character.type == "pj")
+            {
+                player = true;
+            }
+        }
         viewobjects = true;
     }
     else
@@ -132,10 +139,16 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
         return (
             object?
                 monster?
-                <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
-                    <Item item={maptile.item} />
-                    <ShadowMonster  />
-                </Flex>
+                    player ?
+                        <Flex className={classImage} style={styles.bg} >
+                            <Item item={maptile.item} />
+                            <Monster monster={maptile.character} />
+                        </Flex>
+                        :
+                        <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
+                            <Item item={maptile.item} />
+                            <ShadowMonster  />
+                        </Flex>
                 :
                 <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)}>
                     <Item item={maptile.item} />
@@ -143,9 +156,14 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
 
             :
                 monster?
-                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
-                        <ShadowMonster  />
-                    </Flex>
+                    player?
+                        <Flex className={classImage} style={styles.bg} >
+                            <Monster monster={maptile.character} />
+                        </Flex>
+                        :
+                        <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
+                            <ShadowMonster  />
+                        </Flex>
                     :
                     <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)}>
                     </Flex>
@@ -159,27 +177,27 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
             monster ?
                 player?
                     <Flex className={classImage} style={styles.bg} >
-                        <ShadowItem />
-                        <ShadowMonster/>
+                        <Item item={maptile.item} />
+                        <Monster monster={maptile.character} />
                     </Flex>
                     :
                     <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)} >
-                        <ShadowItem />
-                        <ShadowMonster />
+                        <Item item={maptile.item} />
+                        <Monster monster={maptile.character} />
                     </Flex>
                 :
                 <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
-                    <ShadowItem />
+                    <Item item={maptile.item} />
                 </Flex>
             :
             monster ?
                 player?
                     <Flex className={classImage} style={styles.bg} >
-                        <ShadowMonster />
+                        <Monster monster={maptile.character} />
                     </Flex>
                     :
                     <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)} >
-                        <ShadowMonster />
+                        <Monster monster={maptile.character} />
                     </Flex>
                 :
                 <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>

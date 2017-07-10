@@ -128,6 +128,7 @@ export const LoadMonsters = (snap: Object) => {
         payload: { monsters },
     };
 };
+
 export const LoadItems = (snap: Object) => {
     const items = snap.val();
     return {
@@ -301,7 +302,6 @@ export const viewTile = (worldmap) => ({ firebase}) => {
         payload: worldmap
     }
 };
-
 
 export const pickobject = (item,viewer) =>  ({ firebase }) => {
     var path = 'items/'+item.id;
@@ -604,6 +604,13 @@ export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase, getU
 
     console.log('item', item);
     if(item) {
+
+        if(item.name == "remove")
+        {
+            worldmap.camera.maptiles[row][col].item = null;
+            worldmap.worldmap.maptiles[row][col].item = null;
+        }
+        else
         if( worldmap.worldmap.maptiles[row][col].type == "walkable") {
 
             item.id = getUid();
@@ -611,11 +618,11 @@ export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase, getU
             //update worldmap
             worldmap.worldmap.maptiles[row][col].item = item;
             worldmap.camera.maptiles[row][col].item = item;
-
+        }
             firebase.update({
                 [`activeMap/${viewer.id}`]: worldmap,
             });
-        }
+
     }
 
     return {
@@ -786,6 +793,7 @@ export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
         payload: camera
     }
 };
+
 export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
 
     if(camera && camera.size_map != worldmap.worldmap.size_map)
@@ -805,17 +813,20 @@ export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
         payload: camera
     }
 };
+
 export const MoveRightEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+        if(camera.col_end < worldmap.worldmap.col_end){
+            camera.col_start = camera.col_start + 1;
+            camera.col_end =  camera.col_end + 1;
 
-        camera.col_start = camera.col_start + 1;
-        camera.col_end = camera.col_end + 1;
+            firebase.update({
+                [`activeMap/${viewer.id}/camera`]: camera,
+            });
+        }
 
-        firebase.update({
-            [`activeMap/${viewer.id}/camera`]: camera,
-        });
     }
 
     return {
@@ -828,13 +839,15 @@ export const MoveLeftEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+       if(camera.col_start > worldmap.worldmap.col_start){
+            camera.col_start = camera.col_start - 1;
+            camera.col_end = camera.col_end - 1;
 
-        camera.col_start = camera.col_start - 1;
-        camera.col_end = camera.col_end - 1;
+            firebase.update({
+                [`activeMap/${viewer.id}/camera`]: camera,
+            });
+        }
 
-        firebase.update({
-            [`activeMap/${viewer.id}/camera`]: camera,
-        });
     }
 
 
@@ -848,12 +861,14 @@ export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
     if(camera)
     {
 
-        camera.row_end = camera.row_end - 1;
-        camera.row_start = camera.row_start - 1;
+        if(camera.row_start > worldmap.worldmap.row_start) {
+            camera.row_end = camera.row_end - 1;
+            camera.row_start = camera.row_start - 1;
 
-        firebase.update({
-            [`activeMap/${viewer.id}/camera`]: camera,
-        });
+            firebase.update({
+                [`activeMap/${viewer.id}/camera`]: camera,
+            });
+        }
     }
 
     return {
@@ -866,12 +881,14 @@ export const MoveDownEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
     if(camera)
     {
 
-        camera.row_end = camera.row_end + 1;
-        camera.row_start = camera.row_start +1;
+        if(camera.row_end < worldmap.worldmap.row_end) {
+            camera.row_end = camera.row_end + 1;
+            camera.row_start = camera.row_start + 1;
 
-        firebase.update({
-            [`activeMap/${viewer.id}/camera`]: camera,
-        });
+            firebase.update({
+                [`activeMap/${viewer.id}/camera`]: camera,
+            });
+        }
     }
 
     return {
@@ -889,23 +906,24 @@ export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase
 
         for(let i=0; i <= worldmap.camera.size_map ; i++)
         {
-            if (!worldmap.camera.maptiles[row][i].character) {
+            if (!worldmap.camera.maptiles[row][i].character && !worldmap.camera.maptiles[row][i].item) {
                 tile.id = getUid();
-
-                newmap.worldmap.maptiles[row][i].image = tile.image;
-                newmap.worldmap.maptiles[row][i].title = tile.title;
-                newmap.worldmap.maptiles[row][i].type = tile.type;
 
                 newmap.camera.maptiles[row][i].image = tile.image;
                 newmap.camera.maptiles[row][i].title = tile.title;
                 newmap.camera.maptiles[row][i].type = tile.type;
 
+                worldmap.worldmap.maptiles[row][i].image = tile.image;
+                worldmap.worldmap.maptiles[row][i].title = tile.title;
+                worldmap.worldmap.maptiles[row][i].type = tile.type;
             }
             else {
                 if (tile.type == "walkable") {
                     tile.id = getUid();
-                    newmap.worldmap.maptiles[row][i] = tile;
-                    newmap.camera.maptiles[row][i] = tile;
+
+                    newmap.camera.maptiles[row][i] = jsonConcat(newmap.camera.maptiles[row][i],tile);
+                    worldmap.worldmap.maptiles[row][i] = jsonConcat(newmap.camera.maptiles[row][i],tile);
+
                 }
             }
             tile.id = getUid();
@@ -933,17 +951,19 @@ export const FullBlockTop = (col,worldmap, viewer, tile) => ({ getUid,firebase }
 
             for(let i=0; i <= worldmap.camera.size_map ; i++)
             {
-                if (!worldmap.camera.maptiles[i][col].character) {
+                if (!worldmap.camera.maptiles[i][col].character && !worldmap.camera.maptiles[i][col].item) {
 
                     tile.id = getUid();
-                    newmap.worldmap.maptiles[i][col] = tile;
+
+                    worldmap.worldmap.maptiles[i][col] = tile;
                     newmap.camera.maptiles[i][col] = tile;
                 }
                 else {
-                    if (tile.type == "walkable") {
+                    if (tile.type == "walkable" ) {
                         tile.id = getUid();
-                        newmap.worldmap.maptiles[i][col] = tile;
-                        newmap.camera.maptiles[i][col] = tile;
+
+                        worldmap.worldmap.maptiles[i][col] = jsonConcat(worldmap.camera.maptiles[i][col],tile);
+                        newmap.camera.maptiles[i][col] = jsonConcat(newmap.camera.maptiles[i][col],tile);
                     }
                 }
             }

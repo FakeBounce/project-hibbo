@@ -23,7 +23,6 @@ const ShadowMonster = ({ row,col, viewer,worldmap }: Props) => {
 };
 
 ShadowMonster.propTypes = {
-    monster: React.PropTypes.object.isRequired,
 };
 
 export default connect(state => ({

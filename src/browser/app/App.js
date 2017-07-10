@@ -49,8 +49,7 @@ let App = ({ currentLocale, currentTheme }) => (
       <Match exactly pattern="/" component={SignIn} />
       <Match authorized pattern="/game" component={Dungeons} />
       <Match pattern="/map" component={Map} />
-      <Match pattern="/editor" component={Editor} />
-      <Match pattern="/me" component={Me} />
+      <Match authorized pattern="/editor" component={Editor} />
       <Miss component={NotFound} />
     </ContainerApp>
   </ThemeProvider>

@@ -89,17 +89,18 @@ background-attachment:fixed;
   margin: 10px auto;
   cursor: pointer;
   border: 0;
-  color: rgb(255, 255, 255);
+  color: white;
   background-color: transparent;
   border-radius: 2px;
   background-image: url(/assets/images/login/buttonblue.png);
   background-repeat: no-repeat;
   background-attachment: scroll;
-  height: 53px;
-  width: 195px;
+  height: 33px;
+  width: 124px;
   box-shadow: none;
   text-align: center;
-  padding:16px;
+  background-size: contain;
+  line-height: 33px;
 }
 
 .actionsEditeur{
@@ -498,7 +499,7 @@ Input.input-map-editor{
 }
 
 .btn-haut-editeur{
-  width:50%;
+  width:33%;
   float: left;
 }
 

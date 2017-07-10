@@ -27,10 +27,9 @@ let Me = ({viewer,dviewer,LoadViewer}) => {
                 viewer?
                     <Text>{viewer.displayName}</Text>
                     :
-                    <Text>Aucun Uti</Text>
+                    <Text>No users detected</Text>
 
             }
-
 
         </View>
     );
