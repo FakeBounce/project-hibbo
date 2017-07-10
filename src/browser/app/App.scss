@@ -2407,6 +2407,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 30px;
   margin-left: 25px;
   line-height: 30px;
+  margin-bottom: 10px;
 }
 
 .tutoriel-map .cadre-tutoriel{
@@ -2423,36 +2424,49 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 //Inventaire
+.container-inventory{
+  width: 500px;
+  height: 360px;
+  float: left;
+}
+
 .inventory{
   position: relative;
   width: 500px;
-  height: 360px;
+  height: 270px;
   padding: 20px;
   float: left;
   overflow-y: auto;
 }
 
 .inventory_pick{
+  width: 500px;
+  height: 110px;
   margin-top: 140px;
   text-align: center;
 }
 
 .inventory_pick_info{
-  padding-top: 15px;
-  margin-left: 10px;
-  margin-bottom: 90px;
-  width: 200px;
+
 }
 
 .inventory_pick_benefit{
-  width: 180px;
-  margin-bottom: 80px;
-  margin-left: 15px;
+  padding: 10px;
+  height: 70px;
+  overflow: auto;
 }
 
 .inventory_pick_info_benef{
-  padding-top: 15px;
-  margin-left: 20px;
+  width: 100%;
+  display: flex;
+}
+
+.inventory_pick_info_benef div:nth-child(1){
+   width: 70%;
+}
+
+.inventory_pick_info_benef div:nth-child(2){
+  width: 30%;
 }
 
 .inventory_pick_info_class, .inventory_pick_info_type{
@@ -2461,17 +2475,9 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .inventory_pick_info_class div ,.inventory_pick_info_type div, .inventory_pick_info_benef div{
-  width: 50%;
   float: left;
   text-align: left;
-}
-
-.inventory_pick_info_benef div:nth-child(1){
-  width: 70%;
-}
-
-.inventory_pick_info_benef div:nth-child(2){
-  width: 30%;
+  margin-right: 5px;
 }
 
 .inventory_pick .equipment-block{
@@ -2549,6 +2555,26 @@ progress[value].progressSkills::-webkit-progress-value {
   border:1px solid #333333;
 }
 
+.w20{
+  width: 20%;
+  float:left;
+}
+
+.w25{
+  width: 25%;
+  float:left;
+}
+
+.w30{
+  width: 30%;
+  float:left;
+}
+
+.w40{
+  width: 40%;
+  float:left;
+}
+
 .w45{
   width: 45%;
   float:left;
@@ -2559,9 +2585,9 @@ progress[value].progressSkills::-webkit-progress-value {
   float:left;
 }
 
-.inventory .separator{
+.separator{
   position: absolute;
-  right: 0;
+  left: 10px;
   top: 0;
   bottom: 0;
   height: 95%;
