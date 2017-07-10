@@ -33,8 +33,6 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
     activeTiles.map(active => activeTile = active);
     activeMonsters.map(active => activeMonster = active);
 
-    console.log('monsters',monsters);
-    console.log('items',items);
     const onInputKeyDown = event => {
          if (!fields.name.value.trim()) return;
         addNameMap(fields.name.value,viewer,worldmap);
@@ -66,7 +64,6 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
         }
         else
         if (worldmap.viewonobject && !worldmap.viewonmonster) {
-            console.log('salut');
             if(worldmap.active_dungeon != "")
             {
                 dungeon = true;
@@ -104,11 +101,6 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
 
     if(worldmap && worldmap.worldmap)
     {
-
-
-        console.log('camera',worldmap.camera);
-
-
         let activeConstructMapTop = false;
         let activeConstructMapRight = false;
 

@@ -34,9 +34,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
     {
         if(!dviewer.characters && classes)
         {
-            console.log("classess",classes);
             classe_list = Object.keys(classes).map(classe => {
-                console.log("class", classe);
                 if(classes[classe] && classes[classe].name != 'undefined') {
                     let src = "/assets/images/classes/" + classes[classe].sprites_name + ".png";
                     let srcf = "/assets/images/classes/" + classes[classe].sprites_name + "-f.png";

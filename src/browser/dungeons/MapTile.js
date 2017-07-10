@@ -31,20 +31,17 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     let maptileAction;
     var is_targeted = false;
     var tile_hover = '';
+    var item = false;
 
     maptileAction = function(){
         if(typeof maptile.character !== 'undefined')
         {
             if(maptile.character != null)
             {
-                if(maptile.character.type == "pj")
-                {
-                    return false;
-                }
+                return false;
             }
         }
 
-        console.log(dungeon, row, col);
         return movingCharacter(dungeon,row,col);
     };
     if(typeof maptile.is_target !== 'undefined')
@@ -58,6 +55,13 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             };
         }
     }
+    if(typeof maptile.is_movable !== 'undefined')
+    {
+        if(maptile.is_movable)
+        {
+            classImage = classImage+ " is_target_aoe";
+        }
+    }
     if(typeof maptile.is_target_aoe !== 'undefined')
     {
             if(maptile.is_target_aoe)
@@ -69,7 +73,6 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     {
         tile_hover = function(){
             showAoeSkill(dungeon,maptile);
-            console.log('is targeted');
         };
     }
     if(dungeon.user.character.is_using_skill)
@@ -97,17 +100,24 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             move = dungeon.user.character.is_moving;
         }
     }
-
+    if(typeof maptile.item !== 'undefined' && maptile.item != null)
+    {
+        let src = "/assets/images/objets/"+maptile.item.image;
+        item = <Image className="object" src={src}/>;
+    }
     classImage = classImage + ' correctifDisplay';
     return (
     <Flex>
         {
           character ?
             <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
                 <Character is_targeted={is_targeted} dungeon={dungeon} move={move} row={row} col={col} character={maptile.character}/>
             </Flex>
             :
-            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}></Flex>
+            <Flex className={classImage} style={styles.bg} onClick={maptileAction} onMouseEnter={tile_hover}>
+                {item}
+            </Flex>
         }
     </Flex>
     );

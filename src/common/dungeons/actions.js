@@ -5,6 +5,7 @@
 import { Range } from 'immutable';
 export const SHOW_AOE_SKILL = 'SHOW_AOE_SKILL';
 export const LOAD_TUTO_REF = 'LOAD_TUTO_REF';
+export const TRY_ITEM = 'TRY_ITEM';
 export const LOAD_VIEWER_CHANGES = 'LOAD_VIEWER_CHANGES';
 export const LOAD_VIEWER_REF = 'LOAD_VIEWER_REF';
 export const LOAD_STEP = 'LOAD_STEP';
@@ -39,13 +40,178 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const SET_PSEUDO = 'SET_PSEUDO';
 export const CREATE_PERSO = 'CREATE_PERSO';
+export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
+export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 
+/************ Change Tabs **********************************/
+export const ChangeTab = (viewer, tab) => ({firebase}) => {
+    viewer.tab = tab;
+
+    firebase.update({
+        [`users/${viewer.id}/tab`]: tab,
+    });
+
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+/************ Display Equipement ***************************/
+export const PickEquipment = (viewer, equipment, wear) => ({ firebase }) => {
+    equipment.wear = wear;
+    viewer.pick_equipment = equipment;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: equipment,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const RemoveEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+    if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+    {
+        Object.keys(equipment.benefits).map(p => {
+            if(character[p]){
+                character[p] = character[p] - equipment.benefits[p];
+            }
+        });
+
+        character.equipped_equipments[equipment.type] = null;
+        if(!character.inventory){
+            character.inventory = {};
+        }
+        character.inventory[equipment.name] = equipment;
+    }
+
+    viewer.pick_equipment = null;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const DeleteEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+    if(!equipment.wear){
+        if(character.inventory[equipment.name])
+        {
+            character.inventory[equipment.name] = null
+        }
+    }
+    else{
+        if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+        {
+            Object.keys(equipment.benefits).map(p => {
+                if(character[p]){
+                    character[p] = character[p] - equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments[equipment.type] = null;
+        }
+    }
+
+    viewer.pick_equipment = null;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+
+    //es ce que luser peut le porter
+    if(character.name == equipment.classe || equipment.classe == "All") {
+        //si luser n'a pas equipements
+        if (character.equipped_equipments == null) {
+            Object.keys(equipment.benefits).map(p => {
+                if (character[p]) {
+                    character[p] = character[p] + equipment.benefits[p];
+                }
+                else {
+                    character[p] = equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments = {};
+            character.equipped_equipments[equipment.type] = equipment;
+            character.inventory[equipment.name] = null;
+        }
+        else {
+            //si luser a un equipement du type de l'objet
+            if (character.equipped_equipments[equipment.type]) {
+                let equipment_wear = character.equipped_equipments[equipment.type];
+                if (equipment_wear && equipment_wear.benefits) {
+                    //on soustraie l'ancien
+                    Object.keys(equipment_wear.benefits).map(p => {
+                        character[p] = character[p] - equipment_wear.benefits[p];
+                    });
+                    character.inventory[equipment_wear.name] = equipment_wear;
+                }
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+            else {
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+        }
+
+        viewer.characters[viewer.active] = character;
+        viewer.pick_equipment = null;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: null,
+            [`users/${viewer.id}/characters/${viewer.active}`]: character,
+        });
+    }
+    else{
+        viewer.pick_equipment.error = "Vous n'êtes pas " + viewer.pick_equipment.classe;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: viewer.pick_equipment,
+        });
+    }
+
+    return {
+        type: ADD_EQUIPMENT,
+        payload: viewer,
+    }
+};
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'maps/'+dungeon.worldmap;
     var Uid = getUid();
     var character = viewer.characters[viewer.active];
+    let levelup_character = character;
     character.row = 0;
     character.col = 0;
     character.is_attacking = false;
@@ -53,6 +219,8 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     character.is_casting = 0;
     character.current_skill = false;
     character.buffs = false;
+    character.maxhealth = character.health;
+    character.maxenergy = character.energy;
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
@@ -77,13 +245,14 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                                 damage_time_duration:character.damage_time_duration,
                                 maxhealth:character.health,
                                 maxenergy: character.energy,
-                                maxexperience: 1000,
+                                maxexperience: character.maxexperience,
                                 heal_on_energy_percent: 0,
                                 damage_reduction_flat: character.damage_reduction_flat,
                                 damage_reduction_percent: character.damage_reduction_percent,
                                 damage_return: character.damage_return,
                                 damage_return_percent: character.damage_return_percent,
                             },
+                            levelup_character: levelup_character,
                         },
                     dungeon:worldmap,
                     createdAt: now()
@@ -188,7 +357,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
             {
                 let cast_ready = true;
                 let skill = pj.equipped_spells[pj.current_skill];
-                let result = doSkill(pj,dungeon.dungeon.maptiles,dungeon,skill,cast_ready,pj.row,pj.col);
+                let result = doSkill(pj,dungeon.dungeon.maptiles,dungeon,skill,cast_ready,pj.row,pj.col,firebase);
             }
         }
 
@@ -251,15 +420,11 @@ export const EndTurn = (dungeon) => ({firebase}) => {
 
         });
 
-        dungeon.user.character = pj;
-
         let monsters = dungeon.dungeon.monsters;
         let monster_moves = [];
-
          monsters.map((monster,index) => {
            if(monster != null)
            {
-             console.log('m1',monster);
              monster.damage_time_spell = 0;
              monster.damage_time_spell_duration = 0;
              if(!monster.conditions)
@@ -299,6 +464,40 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                    dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
                    if(monster.health<=0)
                    {
+                       pj.experience = pj.experience + monster.experience;
+                       if(pj.experience >= pj.maxexperience)
+                       {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
+
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                           default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                           default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                           default_char.damage = pj.damage_lvl;
+                           default_char.maxexperience = pj.maxexperience;
+                           default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                           lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                           lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                           lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                           lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                           lvlup_char.damage = pj.damage_lvl;
+                           lvlup_char.maxexperience = pj.maxexperience;
+                           lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                           firebase.update({
+                               [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                           });
+
+                           dungeon.user.default_character = default_char;
+                       }
                      monsters[index] = null;
                      dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
                      monster = null;
@@ -333,6 +532,9 @@ export const EndTurn = (dungeon) => ({firebase}) => {
              }
            }
          });
+
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
 
         dungeon.dungeon.monsters = monsters;
         if(monster_moves.length > 0)
@@ -379,6 +581,42 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
 
                             if(pnj.health<=0)
                             {
+                                var pj = dungeon.user.character;
+                                pj.experience = pj.experience + pnj.experience;
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
+
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
                                 dungeon.monster_info_col = null;
@@ -414,6 +652,42 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                                     pnj.health -=  returned_damage;
                                     if(pnj.health<=0)
                                     {
+                                        pj = dungeon.user.character;
+                                        pj.experience = pj.experience + pnj.experience;
+                                        if(pj.experience >= pj.maxexperience)
+                                        {
+                                            let lvlup_char = dungeon.user.levelup_character;
+                                            let default_char = dungeon.user.default_character;
+
+                                            let maxxp = pj.maxexperience;
+                                            pj.health = pj.health + pj.health_lvl;
+                                            pj.energy = pj.energy + pj.energy_lvl;
+                                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                            pj.damage = pj.damage + pj.damage_lvl;
+                                            pj.experience = pj.experience - maxxp;
+                                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                            default_char.damage = pj.damage_lvl;
+                                            default_char.maxexperience = pj.maxexperience;
+                                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                            lvlup_char.damage = pj.damage_lvl;
+                                            lvlup_char.maxexperience = pj.maxexperience;
+                                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                            firebase.update({
+                                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                            });
+
+                                            dungeon.user.default_character = default_char;
+                                            dungeon.user.character = pj;
+                                        }
                                         pnj = null;
                                         dungeon.monster_info_row = null;
                                         dungeon.monster_info_col = null;
@@ -438,15 +712,22 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                     var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
                     if(monster.can_attack)
                     {
+
+
                         monster.is_moving = false;
                         monster.can_move_attack = false;
-                        monster.direction = range.direction;
                         dungeon.monster_info_row = monster.row;
                         dungeon.monster_info_col = monster.col;
                         dungeon.user.character.is_attacked = true;
+                        monster.direction = range.direction;
+                        dungeon.user.character.is_attacked = true;
                         dungeon.user.character.attacked_direction = monster.direction;
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
                         monster.is_attacking = true;
+                        monster.can_attack = true;
+                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                        dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+
                     }
                     if(monster.can_move_attack)
                     {
@@ -461,6 +742,128 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                         var m_col = parseInt(monster.col);
                         var can_move = false;
 
+                        var tab_rg = [];
+                        var result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,true);
+                        result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,false);
+                        tab_rg = result.tab;
+
+
+                        var tab = [];
+                        var map = dungeon.dungeon.maptiles;
+                        var i=0;
+                        var j=1;
+                        var pj_row = parseInt(monster.row);
+                        var pj_col = parseInt(monster.col);
+                        tab[0] = [];
+                        tab[0].push({row:pj_row,col:pj_col});
+                        var crow;
+                        var ccol;
+                        var found = false;
+                        var to_push = false;
+                        do
+                        {
+                            if(tab[i])
+                            {
+                                tab[i].map(t =>{
+                                    pj_row = t.row;
+                                    pj_col = t.col;
+                                    if(!tab[j])
+                                    {
+                                        tab[j] = [];
+                                    }
+                                    if(typeof map[pj_row+1] !== "undefined" && !found)
+                                    {
+                                        if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                        {
+                                            if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                            {
+                                                crow = pj_row+1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row-1]  !== "undefined" && !found)
+                                    {
+                                        if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                        {
+                                            if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                                crow = pj_row - 1;
+                                                to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                                tab_rg.map(tg => {
+                                                    if(crow == tg.row && (pj_col) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                    if(typeof map[pj_row] !== "undefined")
+                                    {
+                                        if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                            {
+                                                ccol = pj_col+1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                        if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                        {
+                                            if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                            {
+                                                ccol = pj_col-1;
+                                                to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                                tab_rg.map(tg => {
+                                                    if(pj_row == tg.row && (ccol) == tg.col)
+                                                    {
+                                                        found = to_push;
+                                                    }
+                                                });
+                                                tab[j].push(to_push);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            i++;
+                            j++;
+                        }while(i<=monster.movement && !found);
+
+                        console.log('found : ',found);
+                        console.log('tab : ',tab);
+                        if(found)
+                        {
+                            let rec_result = recursiveTa(found,[]);
+                            moves = rec_result.m.reverse();
+
+                            monster.moves = moves;
+                            monster.is_moving = true;
+                            monster.direction = moves[0].next;
+                        }
+                        else {
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
+                            cdntmv = true;
+                        }
+                        /*
                         if ( range.totalColU > 0 && !can_move)
                         {
                             if(typeof  maptiles[m_row][m_col - 1] !== "undefined")
@@ -565,7 +968,7 @@ export const MonsterTurn = (dungeon,attack = false) => ({firebase}) => {
                             dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
                             cdntmv = true;
                         }
-
+                        */
                     }
                     dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                     dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -602,7 +1005,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
     if(typeof dungeon.monster_moves !== "undefined") {
         if (dungeon.monster_moves.length > 0) {
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
-            console.log('m',monster);
             if(monster != null || typeof monster === "undefined")
             {
                 let m_row = monster.row;
@@ -611,7 +1013,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                     var map = dungeon.dungeon.maptiles;
                     var range = comparePosition(monster.row, monster.col, pj.row, pj.col);
                     var maptiles = dungeon.dungeon.maptiles;
-                    monster.is_moving = false;
 
                     monster.direction = range.direction;
                     maptiles[monster.moves[0].row][monster.moves[0].col].character = monster;
@@ -620,99 +1021,108 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                     monster.col = monster.moves[0].col;
                     m_row = monster.row;
                     m_col = monster.col;
-                    if(map[monster.row][monster.col].trap)
+
+                    monster.moves.splice(0,1);
+                    if(typeof monster.moves !== 'undefined' && monster.moves.length)
                     {
-                        var result = false;
-                        map[monster.row][monster.col].trap.map((skill,index) => {
-                            if (skill.aoe_front) {
-                                result = setSkillsTarget(map, monster, skill, "up");
-                                map = result.map;
-                            }
-                            if (skill.aoe_back) {
-                                result = setSkillsTarget(map, monster, skill, "down");
-                                map = result.map;
-                            }
-                            if (skill.aoe_right) {
-                                result = setSkillsTarget(map, monster, skill, "right");
-                                map = result.map;
-                            }
-                            if (skill.aoe_left) {
-                                result = setSkillsTarget(map, monster, skill, "left");
-                                map = result.map;
-                            }
-
-
-                            let target = [];
-                            Object.keys(map).map(m1 => {
-                                Object.keys(map[m1]).map(m2 => {
-                                    if(map[m1][m2].is_target_aoe && map[m1][m2].character )
-                                    {
-                                        if(map[m1][m2].character.type != "pj")
-                                        {
-                                            target.push({row:m1,col:m2});
-                                        }
-                                    }
-                                })
-                            });
-
-                            target.map(t => {
-                                var pnj = map[t.row][t.col].character;
-                                if(pnj.type != "pj")
-                                {
-                                    var positions = comparePosition(0,0,0,0);
-                                    if(pnj.health > 0)
-                                    {
-                                        pnj.health = pnj.health - skill.damage_instant;
-                                        if(skill.damage_instant_buff)
-                                        {
-                                            pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                                        }
-                                        if(pnj.health<=0)
-                                        {
-                                            if(t.row == monster.row && t.col == monster.col)
-                                            {
-                                                monster = null;
-                                            }
-                                            pnj = null;
-                                            dungeon.monster_info_row = null;
-                                            dungeon.monster_info_col = null;
-                                        }
-                                    }
-                                    if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
-                                    {
-                                        dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
-                                    }
-                                    else {
-                                        delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
-                                    }
-                                    map[t.row][t.col].character = pnj;
-                                    dungeon.dungeon.maptiles = map;
-                                }
-                            });
-                            map = unsetAoeSkills(map);
-                            dungeon.dungeon.maptiles = map;
-                        });
-                    }
-                    if(monster != null)
-                    {
-                        monster.moves = false;
-                        monster.can_move_attack = false;
-                        dungeon.monster_info_row = monster.row;
-                        dungeon.monster_info_col = monster.col;
-                        dungeon.user.character.is_attacked = true;
-                        dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
-                        monster.is_attacking = true;
-                        monster.can_attack = true;
-                        var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
-                        monster.direction = rg.direction;
-                        dungeon.user.character.attacked_direction = rg.direction;
-                        dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
-                        dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                        monster.direction = monster.moves[0].next;
                     }
                     else {
-                        pj.nextTurn = true;
-                        dungeon.user.character = pj;
+                        monster.is_moving = false;
+                        if(monster != null)
+                        {
+                            monster.moves = false;
+                            monster.can_move_attack = false;
+                            dungeon.monster_info_row = monster.row;
+                            dungeon.monster_info_col = monster.col;
+                            dungeon.user.character.is_attacked = true;
+                            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character = dungeon.user.character;
+                            monster.is_attacking = true;
+                            monster.can_attack = true;
+                            var rg = comparePosition(monster.row,monster.col,pj.row,pj.col);
+                            monster.direction = rg.direction;
+                            dungeon.user.character.attacked_direction = rg.direction;
+                            dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
+                            dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                        }
+                        else {
+                            pj.nextTurn = true;
+                            dungeon.user.character = pj;
+                        }
                     }
+                    // if(map[monster.row][monster.col].trap)
+                    // {
+                    //     var result = false;
+                    //     map[monster.row][monster.col].trap.map((skill,index) => {
+                    //         if (skill.aoe_front) {
+                    //             result = setSkillsTarget(map, monster, skill, "up");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_back) {
+                    //             result = setSkillsTarget(map, monster, skill, "down");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_right) {
+                    //             result = setSkillsTarget(map, monster, skill, "right");
+                    //             map = result.map;
+                    //         }
+                    //         if (skill.aoe_left) {
+                    //             result = setSkillsTarget(map, monster, skill, "left");
+                    //             map = result.map;
+                    //         }
+                    //
+                    //
+                    //         let target = [];
+                    //         Object.keys(map).map(m1 => {
+                    //             Object.keys(map[m1]).map(m2 => {
+                    //                 if(map[m1][m2].is_target_aoe && map[m1][m2].character )
+                    //                 {
+                    //                     if(map[m1][m2].character.type != "pj")
+                    //                     {
+                    //                         target.push({row:m1,col:m2});
+                    //                     }
+                    //                 }
+                    //             })
+                    //         });
+                    //
+                    //         target.map(t => {
+                    //             var pnj = map[t.row][t.col].character;
+                    //             if(pnj.type != "pj")
+                    //             {
+                    //                 var positions = comparePosition(0,0,0,0);
+                    //                 if(pnj.health > 0)
+                    //                 {
+                    //                     pnj.health = pnj.health - skill.damage_instant;
+                    //                     if(skill.damage_instant_buff)
+                    //                     {
+                    //                         pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
+                    //                     }
+                    //                     if(pnj.health<=0)
+                    //                     {
+                    //                         if(t.row == monster.row && t.col == monster.col)
+                    //                         {
+                    //                             monster = null;
+                    //                         }
+                    //                         pnj = null;
+                    //                         dungeon.monster_info_row = null;
+                    //                         dungeon.monster_info_col = null;
+                    //                     }
+                    //                 }
+                    //                 if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
+                    //                 {
+                    //                     dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
+                    //                 }
+                    //                 else {
+                    //                     delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
+                    //                 }
+                    //                 map[t.row][t.col].character = pnj;
+                    //                 dungeon.dungeon.maptiles = map;
+                    //             }
+                    //         });
+                    //         map = unsetAoeSkills(map);
+                    //         dungeon.dungeon.maptiles = map;
+                    //     });
+                    // }
                 }
             }
             else {
@@ -821,7 +1231,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 totalRow = totalRow*-1;
             }
             //Check if user can move to location
-            if(totalRow+totalCol > 1 || totalRow+totalCol == 0)
+            if(totalRow+totalCol == 0)
             {
                 message = 'You cannot walk there.';
                 if(totalRow+totalCol > 1)
@@ -831,6 +1241,119 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 dungeon.user.character.is_moving = false;
                 dungeon.user.character.moving_row = null;
                 dungeon.user.character.moving_col = null;
+            }
+            else if(totalRow+totalCol > 1)
+            {
+                var tab = [];
+                var map = dungeon.dungeon.maptiles;
+                var pj = dungeon.user.character;
+                var i=0;
+                var j=1;
+                var pj_row = parseInt(pj.row);
+                var pj_col = parseInt(pj.col);
+                tab[0] = [];
+                tab[0].push({row:pj_row,col:pj_col});
+                var crow;
+                var ccol;
+                var found = false;
+                var to_push = false;
+                do
+                {
+                    if(tab[i])
+                    {
+                        tab[i].map(t =>{
+                            pj_row = t.row;
+                            pj_col = t.col;
+                            if(!tab[j])
+                            {
+                                tab[j] = [];
+                            }
+                            if(typeof map[pj_row+1] !== "undefined" && !found)
+                            {
+                                if(typeof map[pj_row+1][pj_col] !== "undefined")
+                                {
+                                    if(map[pj_row+1][pj_col].type == "walkable" && !map[pj_row+1][pj_col].character)
+                                    {
+                                        crow = pj_row+1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"down"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row-1]  !== "undefined" && !found)
+                            {
+                                if (typeof map[pj_row - 1][pj_col] !== "undefined")
+                                {
+                                    if (map[pj_row - 1][pj_col].type == "walkable" && !map[pj_row - 1][pj_col].character) {
+                                        crow = pj_row - 1;
+                                        to_push = {row:crow,col:pj_col,ta:t,next:"up"};
+                                        if(crow == row && (pj_col) == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                            if(typeof map[pj_row] !== "undefined")
+                            {
+                                if(typeof map[pj_row][pj_col+1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col+1].type == "walkable" && !map[pj_row][pj_col+1].character)
+                                    {
+                                        ccol = pj_col+1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"right"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                                if(typeof map[pj_row][pj_col-1] !== "undefined" && !found)
+                                {
+                                    if(map[pj_row][pj_col-1].type == "walkable" && !map[pj_row][pj_col-1].character)
+                                    {
+                                        ccol = pj_col-1;
+                                        to_push = {row:pj_row,col:ccol,ta:t,next:"left"};
+                                        if(pj_row == row && ccol == col)
+                                        {
+                                            found = to_push;
+                                        }
+                                        tab[j].push(to_push);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    i++;
+                    j++;
+                }while(i<=pj.movement && !found);
+
+                if(found)
+                {
+                    var moves = [];
+                    let result = recursiveTa(found,[]);
+                    moves = result.m.reverse();
+                    pj.to_move = moves;
+                    dungeon.user.character.is_moving = moves[0].next;
+                    dungeon.user.character.moving_row = moves[0].row;
+                    dungeon.user.character.moving_col = moves[0].col;
+                    dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+moves[0].next+".png";
+                }
+                else {
+                    message = 'You cannot walk there.';
+                    dungeon.error_message = message;
+                    dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+                    dungeon.user.character.is_moving = false;
+                    dungeon.user.character.moving_row = null;
+                    dungeon.user.character.moving_col = null;
+                }
+
             }
             else
             {
@@ -869,19 +1392,65 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         type: MOVING_CHARACTER,
         payload: dungeon,
         component: { canMove: canMove,message: message,direction: direction}
-    };
+    }
+};
+
+function recursiveTa(found,moves)
+{
+  if(found.ta)
+  {
+      let ta = found.ta;
+      found.ta = null;
+      moves.push(found);
+      return recursiveTa(ta,moves);
+  }
+  return {f:found,m:moves};
 };
 
 export const moveCharacter = (dungeon) => ({ firebase }) => {
 
-    if(dungeon.user.character.is_moving)
-    {
+    var pj = dungeon.user.character;
 
+    if(typeof pj.to_move !== "undefined" && pj.to_move.length)
+    {
+        var direction = comparePosition(pj.row,pj.col,pj.moving_row,pj.moving_col);
+        dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction.direction+".png";
+        dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+        pj.row = pj.moving_row;
+        pj.col = pj.moving_col;
+        if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+        {
+            if(!pj.items)
+            {
+                pj.items = [];
+            }
+            pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+        }
+
+        pj.to_move.splice(0,1);
+        if(pj.to_move.length)
+        {
+            pj.is_moving = pj.to_move[0].next;
+            pj.moving_row = pj.to_move[0].row;
+            pj.moving_col = pj.to_move[0].col;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+pj.to_move[0].next+".png";
+        }
+        else {
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
+            dungeon.error_message = '';
+        }
+    }
+    else if(pj.is_moving)
+    {
         let canMove = false;
         let message = '';
         let direction = '';
-        let totalRow = dungeon.user.character.row - dungeon.user.character.moving_row;
-        let totalCol = dungeon.user.character.col - dungeon.user.character.moving_col;
+        let totalRow = pj.row - pj.moving_row;
+        let totalCol = pj.col - pj.moving_col;
         if(totalRow < 0)
         {
             direction = 'down';
@@ -920,30 +1489,71 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
         if(canMove)
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
-            dungeon.dungeon.maptiles[dungeon.user.character.moving_row][dungeon.user.character.moving_col].character = dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            delete dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character;
-            dungeon.user.character.row = dungeon.user.character.moving_row;
-            dungeon.user.character.col = dungeon.user.character.moving_col;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
-            dungeon.user.character.is_moving = false;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
+            pj.row = pj.moving_row;
+            pj.col = pj.moving_col;
+
+            if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
+            {
+                if(!pj.items)
+                {
+                    pj.items = [];
+                }
+                pj.items.push(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item);
+                dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item = null;
+
+            }
+
+            pj.moving_row = null;
+            pj.moving_col = null;
+            pj.is_moving = false;
             dungeon.error_message = '';
         }
         else
         {
-            dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[dungeon.user.character.row][dungeon.user.character.col].character.name+"/"+direction+".png";
+            dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
             dungeon.error_message = message;
-            dungeon.user.character.is_moving = false;
-            dungeon.user.character.moving_row = null;
-            dungeon.user.character.moving_col = null;
+            pj.is_moving = false;
+            pj.moving_row = null;
+            pj.moving_col = null;
         }
     }
+    dungeon.user.character = pj;
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
     return {
         type: MOVE_CHARACTER,
+        payload: dungeon
+    }
+};
+
+/************ Items *****************/
+
+export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
+    var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
+    var cast_ready = false;
+    dungeon.error_message = '';
+    if(!pj.is_moving && !pj.is_attacking && !pj.is_using_skill) {
+        let item = pj.items[number-1];
+        item.cast_time = 0;
+        let result = doSkill(pj,map,dungeon,item,cast_ready,row,col,firebase);
+        pj = result.pj;
+        item = result.item;
+        pj.items.splice(number-1,1);
+
+        dungeon = result.dungeon;
+        dungeon.user.character = pj;
+        dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
+    }
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+    return {
+        type: TRY_ITEM,
         payload: dungeon
     }
 };
@@ -955,6 +1565,7 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
     pj.is_using_skill = false;
     pj.try_skill = false;
     dungeon.error_message = '';
+    map = unsetAoeSkills(map);
     if(!pj.is_casting)
     {
         if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn)
@@ -1033,7 +1644,7 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
     if(!pj.is_moving && !pj.is_attacking && pj.is_using_skill) {
         pj.is_using_skill = false;
         let skill = dungeon.user.character.equipped_spells[dungeon.user.character.current_skill];
-        let result = doSkill(pj,map,dungeon,skill,cast_ready,row,col);
+        let result = doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase);
 
         dungeon = result.dungeon;
     }
@@ -1095,6 +1706,7 @@ export const endSkill = (dungeon) => ({firebase}) => {
 
 export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
+    var map = dungeon.dungeon.maptiles;
     pj.is_attacking = false;
     dungeon.error_message = '';
     if(!pj.is_casting)
@@ -1110,18 +1722,28 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
             //Replace with pj.range
             if(pj.range >= range.totalRange && range.totalRange > 0)
             {
-                if(pj.action >= pj.basicCost)
+                let is_on_range = false;
+                is_on_range = setRange(map,pj,0,pj.range,true,row,col);
+                if(!is_on_range)
                 {
-                    pj.is_attacking = true;
-                    pj.attacking_row = row;
-                    pj.attacking_col = col;
-                    dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
-                    dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
-                    dungeon.monster_info_row = row;
-                    dungeon.monster_info_col = col;
+                    is_on_range = setRange(map,pj,0,pj.range,false,row,col);
+                }
+                if(is_on_range) {
+                    if (pj.action >= pj.basicCost) {
+                        pj.is_attacking = true;
+                        pj.attacking_row = row;
+                        pj.attacking_col = col;
+                        dungeon.dungeon.maptiles[row][col].character.is_attacked = true;
+                        dungeon.dungeon.maptiles[row][col].character.attacked_direction = range.direction;
+                        dungeon.monster_info_row = row;
+                        dungeon.monster_info_col = col;
+                    }
+                    else {
+                        dungeon.error_message = 'Not enough action points';
+                    }
                 }
                 else {
-                    dungeon.error_message = 'Not enough action points';
+                    dungeon.error_message = "Something is blocking the view";
                 }
             }
             else {
@@ -1222,6 +1844,41 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
                         }
                         if(pnj.health<=0)
                         {
+                            pj.experience = pj.experience + pnj.experience;
+                            if(pj.experience >= pj.maxexperience)
+                            {
+                                let lvlup_char = dungeon.user.levelup_character;
+                                let default_char = dungeon.user.default_character;
+
+                                let maxxp = pj.maxexperience;
+                                pj.health = pj.health + pj.health_lvl;
+                                pj.energy = pj.energy + pj.energy_lvl;
+                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                pj.damage = pj.damage + pj.damage_lvl;
+                                pj.experience = pj.experience - maxxp;
+                                pj.maxexperience = (pj.maxexperience*120/100);
+
+                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                default_char.damage = pj.damage_lvl;
+                                default_char.maxexperience = pj.maxexperience;
+                                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.damage = pj.damage_lvl;
+                                lvlup_char.maxexperience = pj.maxexperience;
+                                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                firebase.update({
+                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                });
+
+                                dungeon.user.default_character = default_char;
+                                dungeon.user.character = pj;
+                            }
                             pnj = null;
                             dungeon.monster_info_row = null;
                             dungeon.monster_info_col = null;
@@ -1374,29 +2031,6 @@ export const LoadTutoRef = (snap: Object) => {
     };
 };
 
-export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
-    viewer.characters = [];
-    classe.pseudo = pseudo;
-    classe.row = 0;
-    classe.col = 0;
-    viewer.characters.push(classe);
-    viewer.active = 0;
-    viewer.tuto = 1;
-
-
-
-    firebase.update({
-        [`users/${viewer.id}/characters/`]: viewer.characters,
-        [`users/${viewer.id}/active`]: viewer.active,
-        [`users/${viewer.id}/tuto`]: 1
-    });
-
-    return {
-        type: CREATE_PERSO,
-        payload: { viewer },
-    };
-
-};
 export const LoadViewer = (viewer) => ({ firebase }) => {
     if(viewer)
     {
@@ -1441,7 +2075,7 @@ export const showAoeSkill = (dungeon,maptile) => ({}) => {
     }
 }
 
-function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
+function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 {
 
     if(skill.cast_time && !pj.is_casting && !cast_ready)
@@ -1478,7 +2112,7 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                 pj.try_skill = true;
                 dungeon.error_message = '';
                 var pnj = map[row][col].character;
-                let result = dealDamage(pj,pnj,dungeon,map,row,col,skill);
+                let result = dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase);
                 pj = result.pj;
                 pnj = result.pnj;
                 dungeon = result.dungeon;
@@ -1650,6 +2284,42 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                         }
                         if(pnj.health<=0)
                         {
+                            pj.experience = pj.experience + pnj.experience;
+
+                            if(pj.experience >= pj.maxexperience)
+                            {
+                                let lvlup_char = dungeon.user.levelup_character;
+                                let default_char = dungeon.user.default_character;
+
+                                let maxxp = pj.maxexperience;
+                                pj.health = pj.health + pj.health_lvl;
+                                pj.energy = pj.energy + pj.energy_lvl;
+                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                pj.damage = pj.damage + pj.damage_lvl;
+                                pj.experience = pj.experience - maxxp;
+                                pj.maxexperience = (pj.maxexperience*120/100);
+
+                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                default_char.damage = pj.damage_lvl;
+                                default_char.maxexperience = pj.maxexperience;
+                                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                lvlup_char.damage = pj.damage_lvl;
+                                lvlup_char.maxexperience = pj.maxexperience;
+                                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                firebase.update({
+                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                });
+
+                                dungeon.user.default_character = default_char;
+                                dungeon.user.character = pj;
+                            }
                             pnj = null;
                             dungeon.monster_info_row = null;
                             dungeon.monster_info_col = null;
@@ -1705,8 +2375,6 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                 pj.direction = positions.direction;
                 pj.equipped_spells[pj.current_skill] = skill;
                 map[pj.row][pj.col].character = pj;
-                console.log(map);
-                console.log('map[row][col]',map[row][col]);
                 dungeon.dungeon.maptiles = map;
                 dungeon.user.character = pj;
             }
@@ -1738,6 +2406,42 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                             }
                             if(pnj.health<=0)
                             {
+                                pj.experience = pj.experience + pnj.experience;
+
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
+
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
                                 dungeon.monster_info_col = null;
@@ -1832,7 +2536,11 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                     pj.health = pj.health + skill.heal_instant;
                     if(skill.heal_percent_instant)
                     {
-                        pj.health = pj.maxhealth/skill.heal_percent_instant*100;
+                        pj.health =  pj.maxhealth + (pj.maxhealth*skill.heal_percent_instant/100);
+                    }
+                    if(skill.energy_percent_heal)
+                    {
+                        pj.energy =  pj.energy + (pj.maxenergy*skill.energy_percent_heal/100);
                     }
                     pj.energy = pj.energy + skill.energy_heal;
                     if(pj.health > pj.maxhealth)
@@ -1958,6 +2666,43 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                             }
                             if(pnj.health<=0)
                             {
+                                pj.experience = pj.experience + pnj.experience;
+
+
+                                if(pj.experience >= pj.maxexperience)
+                                {
+                                    let lvlup_char = dungeon.user.levelup_character;
+                                    let default_char = dungeon.user.default_character;
+
+                                    let maxxp = pj.maxexperience;
+                                    pj.health = pj.health + pj.health_lvl;
+                                    pj.energy = pj.energy + pj.energy_lvl;
+                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                                    pj.damage = pj.damage + pj.damage_lvl;
+                                    pj.experience = pj.experience - maxxp;
+                                    pj.maxexperience = (pj.maxexperience*120/100);
+
+                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                                    default_char.damage = pj.damage_lvl;
+                                    default_char.maxexperience = pj.maxexperience;
+                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                                    lvlup_char.damage = pj.damage_lvl;
+                                    lvlup_char.maxexperience = pj.maxexperience;
+                                    lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                                    firebase.update({
+                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                                    });
+
+                                    dungeon.user.default_character = default_char;
+                                    dungeon.user.character = pj;
+                                }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
                                 dungeon.monster_info_col = null;
@@ -2042,6 +2787,43 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                     skill = skillCd(skill);
                     if(pnj.health<=0)
                     {
+                        pj.experience = pj.experience + pnj.experience;
+
+
+                        if(pj.experience >= pj.maxexperience)
+                        {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
+
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                            default_char.damage = pj.damage_lvl;
+                            default_char.maxexperience = pj.maxexperience;
+                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.damage = pj.damage_lvl;
+                            lvlup_char.maxexperience = pj.maxexperience;
+                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            firebase.update({
+                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                            });
+
+                            dungeon.user.default_character = default_char;
+                            dungeon.user.character = pj;
+                        }
                         pnj = null;
                         dungeon.monster_info_row = null;
                         dungeon.monster_info_col = null;
@@ -2119,6 +2901,42 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
                     skill = skillCd(skill);
                     if(pnj.health<=0)
                     {
+                        pj.experience = pj.experience + pnj.experience;
+
+                        if(pj.experience >= pj.maxexperience)
+                        {
+                            let lvlup_char = dungeon.user.levelup_character;
+                            let default_char = dungeon.user.default_character;
+
+                            let maxxp = pj.maxexperience;
+                            pj.health = pj.health + pj.health_lvl;
+                            pj.energy = pj.energy + pj.energy_lvl;
+                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                            pj.damage = pj.damage + pj.damage_lvl;
+                            pj.experience = pj.experience - maxxp;
+                            pj.maxexperience = (pj.maxexperience*120/100);
+
+                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                            default_char.damage = pj.damage_lvl;
+                            default_char.maxexperience = pj.maxexperience;
+                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                            lvlup_char.damage = pj.damage_lvl;
+                            lvlup_char.maxexperience = pj.maxexperience;
+                            lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                            firebase.update({
+                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                            });
+
+                            dungeon.user.default_character = default_char;
+                            dungeon.user.character = pj;
+                        }
                         pnj = null;
                         dungeon.monster_info_row = null;
                         dungeon.monster_info_col = null;
@@ -2148,8 +2966,85 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col)
     }
     return {pj:pj,map:map,skill:skill,dungeon:dungeon};
 }
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    viewer.characters = [];
+    classe.pseudo = pseudo;
+    classe.row = 0;
+    classe.col = 0;
+    //add equi init
+    viewer.characters.push(classe);
+    viewer.active = 0;
+    viewer.tuto = 1;
 
-function dealDamage(pj,pnj,dungeon,map,row,col,skill)
+
+
+
+    firebase.update({
+        [`users/${viewer.id}/characters/`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+        [`users/${viewer.id}/tuto`]: 1
+    });
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
+            name: "init_1",
+            img: "/assets/images/weapons/init_1.png",
+            type: "helmet",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
+            name: "init_2",
+            img: "/assets/images/weapons/init_2.png",
+            type: "armor",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
+            name: "init_3",
+            img: "/assets/images/weapons/init_3.png",
+            type: "boots",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
+            name: "init_4",
+            img: "/assets/images/weapons/init_4.png",
+            type: "weapon",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    return {
+        type: CREATE_PERSO,
+        payload: { viewer },
+    };
+
+};
+
+function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
 {
     var positions = comparePosition(pj.row,pj.col,pnj.row,pnj.col);
     if(pnj.health > 0)
@@ -2421,6 +3316,44 @@ function dealDamage(pj,pnj,dungeon,map,row,col,skill)
         skill = skillCd(skill);
         if(pnj.health<=0)
         {
+            pj.experience = pj.experience + pnj.experience;
+
+
+            if(pj.experience >= pj.maxexperience)
+            {
+                let lvlup_char = dungeon.user.levelup_character;
+                let default_char = dungeon.user.default_character;
+
+                let maxxp = pj.maxexperience;
+                pj.health = pj.health + pj.health_lvl;
+                pj.energy = pj.energy + pj.energy_lvl;
+                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+                pj.damage = pj.damage + pj.damage_lvl;
+                pj.experience = pj.experience - maxxp;
+                pj.maxexperience = (pj.maxexperience*120/100);
+
+                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+                default_char.damage = pj.damage_lvl;
+                default_char.maxexperience = pj.maxexperience;
+                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+                lvlup_char.damage = pj.damage_lvl;
+                lvlup_char.maxexperience = pj.maxexperience;
+                lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
+
+                firebase.update({
+                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                });
+
+                dungeon.user.default_character = default_char;
+                dungeon.user.character = pj;
+            }
             pnj = null;
             dungeon.monster_info_row = null;
             dungeon.monster_info_col = null;
@@ -2457,7 +3390,6 @@ function unsetAoeSkills(map) {
 
 function setSkillsTarget(map,pj,skill,direction = "all",is_on_target = false,on_hover = false)
 {
-    console.log('ok',on_hover);
     let self = skill.self;
     let result;
     if(direction == "all" || direction == "left")
@@ -2816,15 +3748,118 @@ function setDiagonalAoeSkill(map,pj,min,hor,aoe,on_hover = false) {
     }
     return {map:map,pj:pj};
 }
+
+function setLinearAoeSkill(map,pj,min,hor,aoe) {
+    for(let j=min;j<=aoe;j++)
+    {
+        if(hor)
+        {
+            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    {
+                        map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            {
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                {
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                    {
+                        map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_aoe = true;
+                        pj.can_use_skill = true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    return {map:map,pj:pj};
+}
 function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
-
-
-    let imin = neg;
-    let imax = pos;
     let crt_row = 0;
     while(imax)
     {
-        for(let j=-imax;j<=imax;j++)
+        for(let j=imin;j>=imax;j++)
+        {
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj" && !aoe)
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if (aoe) {
+                                map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj" && !aoe) {
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                    pj.can_use_skill = true;
+                                }
+                                else if(self) {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
         {
             if(hor)
             {
@@ -2894,40 +3929,150 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
     }
     return {map:map,pj:pj};
 }
-function setLinearAoeSkill(map,pj,min,hor,aoe) {
-    for(let j=min;j<=aoe;j++)
+
+function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
+    if(neg<0)
     {
-        if(hor)
+        for(let j=pos;j>=neg;j--)
         {
-            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            if(hor)
             {
-                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_aoe = true;
-                        pj.can_use_skill = true;
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                     {
-                        break;
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
         }
-        else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+    }
+    else {
+        for(let j=neg;j<=pos;j++)
+        {
+            if(hor)
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                if(typeof map[parseInt(pj.row)] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                    if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_aoe = true;
-                        pj.can_use_skill = true;
+                        if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                    pj.can_use_skill = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    else
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                     {
-                        break;
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
+                        {
+                            if(aoe)
+                            {
+                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                pj.can_use_skill = true;
+                            }
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                                    break;
+                                }
+                                if(self)
+                                {
+                                    pj.can_use_skill = true;
+                                    map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
             }
@@ -2936,35 +4081,141 @@ function setLinearAoeSkill(map,pj,min,hor,aoe) {
     return {map:map,pj:pj};
 }
 
-function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
 
-    for(let j=neg;j<=pos;j++)
+
+function setRange(map,pj,neg,pos,hor,row,col){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    while(imax)
     {
+        for(let j=imin;j<=imax;j++)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-crt_row] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=imin;j<=imax;j++)
+    {
+        if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+        {
+            return true;
+        }
         if(hor)
         {
-            if(typeof map[parseInt(pj.row)] !== 'undefined')
+            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
+                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
+                    if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
                     {
-                        if(aoe)
+                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
                         {
-                            map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
-                        {
-                            if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj"&& !aoe)
+                            if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
                             {
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
-                                pj.can_use_skill = true;
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)][parseInt(pj.col)+j].is_target = true;
                             }
                         }
                     }
@@ -2976,28 +4227,15 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
         else {
-            if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+            if(typeof map[parseInt(pj.row)-j] !== 'undefined')
             {
-                if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
+                if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
                 {
-                    if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
-                    {
-                        if(aoe)
-                        {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
-                            pj.can_use_skill = true;
-                        }
-                        if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
-                        {
-                            if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"&& !aoe){
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row)+j][parseInt(pj.col)].is_target = true;
+                    if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                            if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
                                 break;
-                            }
-                            if(self)
-                            {
-                                pj.can_use_skill = true;
-                                map[parseInt(pj.row) + j][parseInt(pj.col)].is_target = true;
                             }
                         }
                     }
@@ -3009,5 +4247,386 @@ function setLinearSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             }
         }
     }
-    return {map:map,pj:pj};
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if((parseInt(pj.row)+j) == row && (parseInt(pj.col)+j) == col)
+            {
+                return true;
+            }
+            if(hor)
+            {
+                if(typeof map[parseInt(pj.row)+j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+
+                        if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].type == "walkable")
+                        {
+                            if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)+j].character != null)
+                            {
+                                if(map[parseInt(pj.row)+j][parseInt(pj.col)+j].character.type == "pnj")
+                                {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                if(typeof map[parseInt(pj.row)-j] !== 'undefined')
+                {
+                    if(typeof map[parseInt(pj.row)-j][parseInt(pj.col)+j] !== 'undefined')
+                    {
+                        if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].type == "walkable") {
+                            if ((typeof map[parseInt(pj.row) - j][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-j][parseInt(pj.col)+j].character != null) {
+                                if (map[parseInt(pj.row) - j][parseInt(pj.col) + j].character.type == "pnj") {
+
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    return false;
+}
+
+function setRangeMonsters(map,pj,neg,pos,diag,hor){
+    let imin = neg;
+    let imax = pos;
+    let crt_row = 0;
+    var tab = [];
+    var c_row = 0;
+    var c_col = 0;
+    while(imax)
+    {
+        for(let j=imin;j<=imax;j++)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = c_col;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        for(let j=-imin;j>=-imax;j--)
+        {
+            if(hor)
+            {
+                c_row = parseInt(pj.row)+crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if(map[c_row][c_col].type == "walkable")
+                        {
+                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                            {
+                                if(map[c_row][c_col].character.type == "pnj")
+                                {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else {
+                c_row = parseInt(pj.row)-crt_row;
+                c_col = parseInt(pj.col)+j;
+                if(typeof map[c_row] !== 'undefined')
+                {
+                    if(typeof map[c_row][c_col] !== 'undefined')
+                    {
+                        if (map[c_row][c_col].type == "walkable") {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                                if (map[c_row][c_col].character.type == "pnj") {
+
+                                        break;
+                                }
+                            }
+                            else {
+                                if(!(c_row == pj.row && c_col == pj.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        imax--;
+        crt_row++;
+    }
+
+    imin = neg;
+    imax = pos;
+    for(let j=diag;j<=diag;j++)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    for(let j=-diag;j>=-diag;j--)
+    {
+        if(hor)
+        {
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+
+                    if(map[c_row][c_col].type == "walkable")
+                    {
+                        if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        {
+                            if(map[c_row][c_col].character.type == "pnj")
+                            {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
+                {
+                    if (map[c_row][c_col].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+
+                                break;
+                            }
+                        }
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)-j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    for(let j=0;j<=pos;j++)
+    {
+        c_row = parseInt(pj.row)+j;
+        c_col = parseInt(pj.col);
+        if(typeof map[c_row] !== 'undefined')
+        {
+            if(typeof map[c_row][c_col] !== 'undefined')
+            {
+                if (map[c_row][c_col].type == "walkable") {
+                    if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                        if (map[c_row][c_col].character.type == "pnj") {
+
+                            break;
+                        }
+                    }
+                    else {
+                        if(!(c_row == pj.row && c_col == pj.col))
+                        {
+                            tab.push({row:c_row,col:c_col});
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    return {map:map,tab:tab};
 }

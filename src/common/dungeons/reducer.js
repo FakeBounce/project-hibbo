@@ -85,7 +85,6 @@ const dungeonsReducer = (state = new State(), action) => {
                 else {
                     tutoriel = action.payload.tutoriel;
                 }
-                console.log('MAJ tutoriel',tutoriel);
                 return state.set('tutoriel', tutoriel);
             }
             return state;
@@ -230,7 +229,6 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.SET_PSEUDO: {
-            console.log(action.payload);
             let payload = action.payload;
             if(payload.length > 0){
                 return state.set("pseudo",payload);
@@ -239,6 +237,12 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.CREATE_PERSO: {
+            return state;
+        }
+
+        case actions.ADD_EQUIPMENT: {
+            let payload = action.payload;
+            console.log('reducer',payload);
             return state;
         }
 
@@ -251,6 +255,14 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.TRY_SKILL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.TRY_ITEM: {
             let payload = action.payload;
             let vl = state.verifloaded;
             vl++;

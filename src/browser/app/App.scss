@@ -843,15 +843,6 @@ progress[value].progressMore::-webkit-progress-value {
   margin-top: 60px;
 }
 
-.weapon{
-  width: 50px;
-  height: 50px;
-  display: block;
-  float: left;
-  margin: 5px 10px;
-  border: 1px solid #fff;
-}
-
 .cadre {
   width: 55%;
   height: 260px;
@@ -1472,6 +1463,22 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 6000;
 }
 
+.infobar-mana-div .text-info{
+  position: absolute;
+  line-height: 91px;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+}
+
+.infobar-life-div .text-info{
+  position: absolute;
+  line-height: 120px;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+}
+
 .cadre-bas-max .infobar-life{
   background: url("/assets/images/infobar/lifebar.png") no-repeat;
   position: absolute;
@@ -1509,7 +1516,8 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 800px;
   height: 360px;
   z-index: 10;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: absolute;
 }
 
@@ -1534,6 +1542,7 @@ progress[value].progressSkills::-webkit-progress-value {
   left: -51px;
   z-index: -1;
 }
+
 .cadre-editor{
   width: 1025px;
   height: 460px;
@@ -2384,6 +2393,22 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 0;
 }
 
+.inventory_pick_action .supp{
+  background: url("/assets/images/inventory/buttongrey.png");
+  width: 76px;
+  height: 30px;
+  margin-left: 25px;
+  line-height: 30px;
+}
+
+.inventory_pick_action .equip{
+  background: url("/assets/images/inventory/buttongrey.png");
+  width: 76px;
+  height: 30px;
+  margin-left: 25px;
+  line-height: 30px;
+}
+
 .tutoriel-map .cadre-tutoriel{
   margin: auto;
   top: 0;
@@ -2395,4 +2420,266 @@ progress[value].progressSkills::-webkit-progress-value {
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
+}
+
+//Inventaire
+.inventory{
+  position: relative;
+  width: 500px;
+  height: 360px;
+  padding: 20px;
+  float: left;
+  overflow-y: auto;
+}
+
+.inventory_pick{
+  margin-top: 140px;
+  text-align: center;
+}
+
+.inventory_pick_info{
+  padding-top: 15px;
+  margin-left: 10px;
+  margin-bottom: 90px;
+  width: 200px;
+}
+
+.inventory_pick_benefit{
+  width: 180px;
+  margin-bottom: 80px;
+  margin-left: 15px;
+}
+
+.inventory_pick_info_benef{
+  padding-top: 15px;
+  margin-left: 20px;
+}
+
+.inventory_pick_info_class, .inventory_pick_info_type{
+  height: 38px;
+  line-height: 38px;
+}
+
+.inventory_pick_info_class div ,.inventory_pick_info_type div, .inventory_pick_info_benef div{
+  width: 50%;
+  float: left;
+  text-align: left;
+}
+
+.inventory_pick_info_benef div:nth-child(1){
+  width: 70%;
+}
+
+.inventory_pick_info_benef div:nth-child(2){
+  width: 30%;
+}
+
+.inventory_pick .equipment-block{
+  margin: auto;
+  left: 0;
+  right: 0;
+}
+
+.inventory_pick .equipment{
+  position: relative;
+  width: 74px;
+  height: 74px;
+  background: url("/assets/images/inventory/equipement.png");
+}
+
+.eq-select{
+  width: 58px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  margin: auto;
+  cursor: pointer;
+}
+
+.inventory_pick_action div{
+  float: left;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.inventory_pick .equipment img {
+  margin-top: 10px;
+  margin-right: 4px;
+  width: 55px;
+  box-sizing: border-box;
+}
+
+.inventory::-webkit-scrollbar{
+  width:16px;
+  background-color:#808080;
+}
+
+.inventory::-webkit-scrollbar-thumb{
+  background-color:#393d41;
+  border-radius:10px;
+}
+.inventory::-webkit-scrollbar-thumb:hover{
+  background-color:#5c6362;
+  border:1px solid #333333;
+}
+.inventory::-webkit-scrollbar-thumb:active{
+  background-color:#393d41;
+  border:1px solid #333333;
+}
+
+.inventory_pick_benefit::-webkit-scrollbar{
+  width:8px;
+  background-color:#808080;
+}
+
+.inventory_pick_benefit::-webkit-scrollbar-thumb{
+  background-color:#393d41;
+  border-radius:10px;
+}
+.inventory_pick_benefit::-webkit-scrollbar-thumb:hover{
+  background-color:#5c6362;
+  border:1px solid #333333;
+}
+.inventory_pick_benefit::-webkit-scrollbar-thumb:active{
+  background-color:#393d41;
+  border:1px solid #333333;
+}
+
+.w45{
+  width: 45%;
+  float:left;
+}
+
+.w55{
+  width: 55%;
+  float:left;
+}
+
+.inventory .separator{
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: 95%;
+  width: 10px;
+  margin: auto;
+  background: url("/assets/images/inventory/barv.png");
+}
+
+.inventory .equipment-block{
+  width: 20%;
+  float: left;
+  margin-bottom: 10px;
+}
+
+.inventory .equipment{
+  position: relative;
+  width: 74px;
+  height: 74px;
+  background: url("/assets/images/inventory/equipement.png");
+}
+
+.inventory .equipment img{
+  width: 55px;
+  top: 0;
+  box-sizing: border-box;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  cursor: pointer;
+}
+
+.inventory-perso{
+  position: relative;
+  float: left;
+  width: 300px;
+  height: 360px;
+}
+
+.inventory-perso .equipment{
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  opacity: 0.8;
+  background: url("/assets/images/inventory/equipement-empty.png");
+}
+
+.Ranger .inventory-perso .equipment.helmet{
+  top: 35px;
+  left: 130px;
+}
+.Ranger .inventory-perso .equipment.armor{
+  left: 130px;
+  top: 160px;
+}
+.Ranger .inventory-perso .equipment.weapon{
+  top: 160px;
+  left: 30px;
+}
+.Ranger .inventory-perso .equipment.boots{
+  bottom: 25px;
+  left: 130px;
+}
+
+.Warrior .inventory-perso .equipment.helmet{
+  top: 15px;
+  left: 115px;
+}
+.Warrior .inventory-perso .equipment.armor{
+  left: 115px;
+  top: 110px;
+}
+.Warrior .inventory-perso .equipment.weapon{
+  top: 150px;
+  left: 25px;
+}
+.Warrior .inventory-perso .equipment.boots{
+  bottom: 25px;
+  left: 115px;
+}
+
+.Mage .inventory-perso .equipment.helmet{
+  top: 15px;
+  left: 105px;
+}
+.Mage .inventory-perso .equipment.armor{
+  left: 105px;
+  top: 105px;
+}
+.Mage .inventory-perso .equipment.weapon{
+  top: 105px;
+  right: 35px;
+}
+.Mage .inventory-perso .equipment.boots{
+  bottom: 25px;
+  left: 105px;
+}
+
+.inventory-perso .profil-img{
+  width: 299px;
+  height: 360px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.5;
+}
+
+.Warrior .profil-img{
+  padding: 20px;
+}
+
+.object {
+  z-index: 5;
+  height: 30px;
+  width: 30px;
+  margin-left: -6px;
+  margin-top: -3px;
+  cursor: pointer;
+  position: absolute;
 }

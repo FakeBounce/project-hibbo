@@ -24,7 +24,6 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     var monster_name = '';
 
   onkeydown = (event: KeyboardEvent) => {
-    console.log(event: KeyboardEvent);
     var skills_list = dungeon.user.character.equipped_spells;
     var gif = '';
     let classes= "monster";
@@ -65,7 +64,6 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
       return movingCharacter(dungeon, dungeon.user.character.row, dungeon.user.character.col + 1);
     }
     if(event.keyCode === 32){
-      console.log('passe dans space');
       if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.monster_turn)
       {
         EndTurn(dungeon);

@@ -427,6 +427,7 @@ export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
                             damage: monster.damage,
                             health: monster.health,
                             maxhealth: monster.maxhealth,
+                            experience: monster.experience,
                             movement: monster.movement,
                             range: monster.range,
                             type: monster.type,
@@ -532,7 +533,6 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
                }
 
             });
-            console.log('worldmap.camera',worldmap.camera);
             worldmap.camera.monsters.map(m => {
                if(parseInt(m.row) == row && parseInt(m.col) == col)
                {
@@ -655,7 +655,6 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
 
     if(viewer){
         character = viewer.characters[viewer.active];
-
     }
     for(var i = 0 ; i <16 ;i ++)
     {
@@ -771,7 +770,6 @@ export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
             m1.map((m2,i2) => {
                 if(i1 == camera.row_end+1 && i2 <= camera.col_end+1)
                 {
-                    console.log(i2);
                     if(i2 == 0)
                     {
                         camera.maptiles[i1] = [];
@@ -876,7 +874,6 @@ export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
                 if(i1 == camera.row_start-1 && i2 <= camera.col_end)
                 {
-                    console.log(i2);
                     if(i2 == 0)
                     {
                         camera.maptiles[i1] = [];
@@ -913,7 +910,6 @@ export const MoveDownEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
                 if(i1 == camera.row_end+1 && i2 <= camera.col_end)
                 {
-                    console.log(i2);
                     if(i2 == 0)
                     {
                         camera.maptiles[i1] = [];

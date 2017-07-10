@@ -24,22 +24,21 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     var gif = '';
     var opposed_img = '';
     let conditions = false;
-    if(character.conditions)
-    {
-      conditions = character.conditions.map(cond => {
-          console.log('cond',cond);
-          let cond_image = '/assets/images/skills/'+cond.image;
-          return(<th><Image className="imgConditionPersonnage" src={cond_image} /></th>);
-      });
-
-
+    if(character.conditions) {
+        conditions = character.conditions.map(cond => {
+            let cond_image = '/assets/images/skills/' + cond.image;
+            return (<th><Image className="imgConditionPersonnage" src={cond_image}/></th>);
+        });
     }
-    console.log('conditions',conditions);
+
+  onkeydown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowUp") {
+      }
+  };
 
     if(character.is_attacking && character.type == "pj")
     {
         gif = 'pj-'+character.direction;
-        console.log(gif);
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
         setTimeout(function(){
@@ -61,7 +60,6 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(character.is_moving && character.type == "pnj")
     {
         classes= "monster pj-"+character.direction;
-        console.log(classes);
         setTimeout(function(){
             MonsterMove(dungeon);
         },500);
@@ -69,16 +67,12 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     if(move && character.type == "pj")
     {
         gif = 'pj-'+move;
-        console.log(gif);
         classes= "monster "+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/"+move+".gif";
-        console.log(character.image);
         setTimeout(function(){
             character.image = "/assets/images/classes/"+character.name+"/"+move+".png";
-            console.log(move);
-            console.log(dungeon,row,col);
             moveCharacter(dungeon,row,col);
-        },500);
+        },450);
     }
     if(character.try_skill && character.type == "pj")
     {
