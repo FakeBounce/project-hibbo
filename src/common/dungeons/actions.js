@@ -40,7 +40,157 @@ export const LOAD_WORLD_MAP = 'LOAD_WORLD_MAP';
 export const LOAD_WORLD_MAP_SUCCESS = 'LOAD_WORLD_MAP_SUCCESS';
 export const SET_PSEUDO = 'SET_PSEUDO';
 export const CREATE_PERSO = 'CREATE_PERSO';
+export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
+export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 
+/************ Display Equipement ***************************/
+export const PickEquipment = (viewer, equipment, wear) => ({ firebase }) => {
+    equipment.wear = wear;
+    viewer.pick_equipment = equipment;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: equipment,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const RemoveEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+    if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+    {
+        Object.keys(equipment.benefits).map(p => {
+            if(character[p]){
+                character[p] = character[p] - equipment.benefits[p];
+            }
+        });
+
+        character.equipped_equipments[equipment.type] = null;
+        if(!character.inventory){
+            character.inventory = {};
+        }
+        character.inventory[equipment.name] = equipment;
+    }
+
+    viewer.pick_equipment = null;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const DeleteEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+    if(!equipment.wear){
+        if(character.inventory[equipment.name])
+        {
+            character.inventory[equipment.name] = null
+        }
+    }
+    else{
+        if(character.equipped_equipments && character.equipped_equipments[equipment.type])
+        {
+            Object.keys(equipment.benefits).map(p => {
+                if(character[p]){
+                    character[p] = character[p] - equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments[equipment.type] = null;
+        }
+    }
+
+    viewer.pick_equipment = null;
+    firebase.update({
+        [`users/${viewer.id}/pick_equipment`]: null,
+        [`users/${viewer.id}/characters/${viewer.active}`]: character,
+    });
+    return {
+        type: PICK_EQUIPMENT,
+        payload: viewer,
+    }
+};
+
+export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
+    let character = viewer.characters[viewer.active];
+
+    //es ce que luser peut le porter
+    if(character.name == equipment.classe || equipment.classe == "All") {
+        //si luser n'a pas equipements
+        if (character.equipped_equipments == null) {
+            Object.keys(equipment.benefits).map(p => {
+                if (character[p]) {
+                    character[p] = character[p] + equipment.benefits[p];
+                }
+                else {
+                    character[p] = equipment.benefits[p];
+                }
+            });
+            character.equipped_equipments = {};
+            character.equipped_equipments[equipment.type] = equipment;
+            character.inventory[equipment.name] = null;
+        }
+        else {
+            //si luser a un equipement du type de l'objet
+            if (character.equipped_equipments[equipment.type]) {
+                let equipment_wear = character.equipped_equipments[equipment.type];
+                if (equipment_wear && equipment_wear.benefits) {
+                    //on soustraie l'ancien
+                    Object.keys(equipment_wear.benefits).map(p => {
+                        character[p] = character[p] - equipment_wear.benefits[p];
+                    });
+                    character.inventory[equipment_wear.name] = equipment_wear;
+                }
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+            else {
+                //on additione le nouveau
+                Object.keys(equipment.benefits).map(p => {
+                    if (character[p]) {
+                        character[p] = character[p] + equipment.benefits[p];
+                    }
+                    else {
+                        character[p] = equipment.benefits[p];
+                    }
+                });
+                character.equipped_equipments[equipment.type] = equipment;
+                character.inventory[equipment.name] = null;
+            }
+        }
+
+        viewer.characters[viewer.active] = character;
+        viewer.pick_equipment = null;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: null,
+            [`users/${viewer.id}/characters/${viewer.active}`]: character,
+        });
+    }
+    else{
+        viewer.pick_equipment.error = "Vous n'êtes pas " + viewer.pick_equipment.classe;
+        firebase.update({
+            [`users/${viewer.id}/pick_equipment`]: viewer.pick_equipment,
+        });
+    }
+
+    return {
+        type: ADD_EQUIPMENT,
+        payload: viewer,
+    }
+};
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -1867,29 +2017,6 @@ export const LoadTutoRef = (snap: Object) => {
     };
 };
 
-export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
-    viewer.characters = [];
-    classe.pseudo = pseudo;
-    classe.row = 0;
-    classe.col = 0;
-    viewer.characters.push(classe);
-    viewer.active = 0;
-    viewer.tuto = 1;
-
-
-
-    firebase.update({
-        [`users/${viewer.id}/characters/`]: viewer.characters,
-        [`users/${viewer.id}/active`]: viewer.active,
-        [`users/${viewer.id}/tuto`]: 1
-    });
-
-    return {
-        type: CREATE_PERSO,
-        payload: { viewer },
-    };
-
-};
 export const LoadViewer = (viewer) => ({ firebase }) => {
     if(viewer)
     {
@@ -2825,6 +2952,83 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
     }
     return {pj:pj,map:map,skill:skill,dungeon:dungeon};
 }
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    viewer.characters = [];
+    classe.pseudo = pseudo;
+    classe.row = 0;
+    classe.col = 0;
+    //add equi init
+    viewer.characters.push(classe);
+    viewer.active = 0;
+    viewer.tuto = 1;
+
+
+
+
+    firebase.update({
+        [`users/${viewer.id}/characters/`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+        [`users/${viewer.id}/tuto`]: 1
+    });
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
+            name: "init_1",
+            img: "/assets/images/weapons/init_1.png",
+            type: "helmet",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
+            name: "init_2",
+            img: "/assets/images/weapons/init_2.png",
+            type: "armor",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
+            name: "init_3",
+            img: "/assets/images/weapons/init_3.png",
+            type: "boots",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
+            name: "init_4",
+            img: "/assets/images/weapons/init_4.png",
+            type: "weapon",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    return {
+        type: CREATE_PERSO,
+        payload: { viewer },
+    };
+
+};
 
 function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
 {
@@ -3127,6 +3331,7 @@ function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
                 lvlup_char.damage = pj.damage_lvl;
                 lvlup_char.maxexperience = pj.maxexperience;
                 lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
+
 
                 firebase.update({
                     [`users/${dungeon.user.id}/characters/0`]: lvlup_char,

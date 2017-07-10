@@ -240,6 +240,12 @@ const dungeonsReducer = (state = new State(), action) => {
             return state;
         }
 
+        case actions.ADD_EQUIPMENT: {
+            let payload = action.payload;
+            console.log('reducer',payload);
+            return state;
+        }
+
         case actions.CAN_USE_SKILL: {
             let payload = action.payload;
             let vl = state.verifloaded;
