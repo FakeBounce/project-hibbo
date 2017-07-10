@@ -27,7 +27,6 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
     let skill_function = false;
     let item_function = false;
     let picture = false;
-    let pick_equipment_list = '';
     let tab = "dungeons";
 
     if(!dviewer)
@@ -46,13 +45,6 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
 
         if(dviewer.tab != null & dviewer.tab != 'undefined'){
             tab = dviewer.tab;
-        }
-
-        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
-            pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
-                console.log(benef);
-               return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{dviewer.pick_equipment.benefits[benef]}</div></div>)
-            });
         }
 
         picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
@@ -211,43 +203,6 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                             </div>
                         </div>
                     </div>
-                    {tab == "perso" && dviewer && dviewer.pick_equipment != null &&
-                        <div className="inventory_pick">
-                            <div className="inventory_pick_info">
-                                <div className="w45">
-                                    <div className="equipment-block">
-                                        <Image src={dviewer.pick_equipment.img}/>
-                                    </div>
-                                </div>
-                                <div className="w55">
-                                    <div className="inventory_pick_info_class"><div>Classe :</div><div>{dviewer.pick_equipment.classe}</div></div>
-                                    <div className="inventory_pick_info_type"><div>Type : </div><div>{dviewer.pick_equipment.type}</div></div>
-                                </div>
-                            </div>
-                            <div className="inventory_pick_benefit">
-                                {pick_equipment_list}
-                            </div>
-                            <div className="inventory_pick_action">
-                                {dviewer.pick_equipment.wear != null && dviewer.pick_equipment.wear != 'undefined' ?
-                                    dviewer.pick_equipment.wear == false?
-                                        <div className="equip"
-                                             onClick={() => AddEquipment(dviewer, dviewer.pick_equipment)}>Equiper</div>
-                                        :
-                                        <div className="equip"
-                                             onClick={() => RemoveEquipment(dviewer, dviewer.pick_equipment)}>Retirer</div>
-                                    : ""
-
-                                }
-                                <div className="supp"
-                                     onClick={() => DeleteEquipment(dviewer, dviewer.pick_equipment)}>Supprimer</div>
-                            </div>
-                            {dviewer.pick_equipment.error &&
-                                <div>
-                                    {dviewer.pick_equipment.error}
-                                </div>
-                            }
-                        </div>
-                    }
                 </div>
                 <div className="cadre-droite-max">
                     <div className="cadre-menu">
