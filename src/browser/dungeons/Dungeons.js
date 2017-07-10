@@ -21,7 +21,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     let energy = 100;
     let maxenergy = 100;
     let experience = 0;
-    let maxexperience = 1000;
+    let maxexperience = 0;
     let skill_function = false;
     let picture = false;
 
@@ -62,7 +62,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
                     energy = dungeon.user.character.energy;
                     maxenergy = dungeon.user.default_character.maxenergy;
                     experience = dungeon.user.character.experience;
-                    maxexperience = dungeon.user.default_character.maxexperience;
+                    maxexperience = dungeon.user.character.maxexperience;
                 }
                 dungeonActive = true;
 

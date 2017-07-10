@@ -427,6 +427,7 @@ export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
                             damage: monster.damage,
                             health: monster.health,
                             maxhealth: monster.maxhealth,
+                            experience: monster.experience,
                             movement: monster.movement,
                             range: monster.range,
                             type: monster.type,
