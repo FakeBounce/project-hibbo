@@ -31,6 +31,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,preLoadActiv
     }
     else
     {
+        experience = dviewer.characters[dviewer.active].experience;
+        maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if (dviewer.weapons) {
             weapon_list = dviewer.weapons.map(weapon => {
                 let classObjet = weapon.get ? 'weapon ' + weapon.css : 'weapon objetVide';
