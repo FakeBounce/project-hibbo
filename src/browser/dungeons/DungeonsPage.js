@@ -100,7 +100,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                         fontSize: '16px',
                                     }}
                                 >
-                                    Créer mon personnage
+                                    Create my character
                                 </Button>
                             </Block>
                             {!dviewer.characters && classe_list &&

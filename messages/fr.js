@@ -2,27 +2,27 @@
 export default [
   {
     "id": "app.buttons.add",
-    "defaultMessage": "Ajouter",
+    "defaultMessage": "Add",
   },
   {
     "id": "app.buttons.cancel",
-    "defaultMessage": "Annuler",
+    "defaultMessage": "Cancel",
   },
   {
     "id": "app.buttons.delete",
-    "defaultMessage": "Supprimer",
+    "defaultMessage": "Delete",
   },
   {
     "id": "app.buttons.dismiss",
-    "defaultMessage": "Rejeter",
+    "defaultMessage": "Reject",
   },
   {
     "id": "app.buttons.edit",
-    "defaultMessage": "Editer",
+    "defaultMessage": "Edit",
   },
   {
     "id": "app.buttons.save",
-    "defaultMessage": "Enregistrer",
+    "defaultMessage": "Save",
   },
   {
     "id": "app.buttons.signIn",
@@ -30,23 +30,23 @@ export default [
   },
   {
     "id": "app.buttons.signIn",
-    "defaultMessage": "Connexion",
+    "defaultMessage": "Login",
   },
   {
     "id": "app.buttons.signOut",
-    "defaultMessage": "Déconnexion",
+    "defaultMessage": "Logout",
   },
   {
     "id": "app.buttons.signUp",
-    "defaultMessage": "S'inscrire",
+    "defaultMessage": "Subscribe",
   },
   {
     "id": "app.buttons.submit",
-    "defaultMessage": "Envoyer",
+    "defaultMessage": "Send",
   },
   {
     "id": "app.confirm.areYouSure",
-    "defaultMessage": "Etes-vous sûr ?",
+    "defaultMessage": "Are you sure?",
   },
   {
     "id": "app.confirm.unsavedChanges",
@@ -54,7 +54,7 @@ export default [
   },
   {
     "id": "app.FieldError.required",
-    "defaultMessage": "Obligatoire",
+    "defaultMessage": "Obligatory",
   },
   {
     "id": "app.links.fields",
@@ -78,7 +78,7 @@ export default [
   },
   {
     "id": "app.links.notFound",
-    "defaultMessage": "Page introuvable",
+    "defaultMessage": "Page not found",
   },
   {
     "id": "app.links.offline",
@@ -90,39 +90,39 @@ export default [
   },
   {
     "id": "app.links.settings",
-    "defaultMessage": "Paramètres",
+    "defaultMessage": "Settings",
   },
   {
     "id": "app.links.signIn",
-    "defaultMessage": "Connexion",
+    "defaultMessage": "Login",
   },
   {
     "id": "app.links.todos",
-    "defaultMessage": "Tâches",
+    "defaultMessage": "Tasks",
   },
   {
     "id": "app.links.dungeon",
-    "defaultMessage": "Nouveau donjon",
+    "defaultMessage": "New dungeon",
   },
   {
     "id": "auth.email.emailLegend",
-    "defaultMessage": "Votre email : ",
+    "defaultMessage": "Your email : ",
   },
   {
     "id": "auth.email.passwordLegend",
-    "defaultMessage": "Votre password : ",
+    "defaultMessage": "Your password : ",
   },
   {
     "id": "auth.email.emailPlaceholder",
-    "defaultMessage": "votre@email.com",
+    "defaultMessage": "your@email.com",
   },
   {
     "id": "auth.email.passwordForgotten",
-    "defaultMessage": "Mot de passe oublié ?",
+    "defaultMessage": "Forgot password ?",
   },
   {
     "id": "auth.email.passwordPlaceholder",
-    "defaultMessage": "mot de passe",
+    "defaultMessage": "password",
   },
   {
     "id": "auth.email.passwordRecoveryLegend",
@@ -130,43 +130,43 @@ export default [
   },
   {
     "id": "auth.email.recoveryEmailSent",
-    "defaultMessage": "L'email contenant votre nouveau mot de passe a été envoyé.",
+    "defaultMessage": "Account has been reset. Check your email.",
   },
   {
     "id": "auth.email.resetPassword",
-    "defaultMessage": "Réinitialiser le mot de passe",
+    "defaultMessage": "Reset password",
   },
   {
     "id": "auth.signInError.email",
-    "defaultMessage": "L'adresse email n'est pas valide.",
+    "defaultMessage": "Email address is not valid.",
   },
   {
     "id": "auth.signInError.required",
-    "defaultMessage": "Veuillez remplir le champ {prop, select, email {email} password {mot de passe}}.",
+    "defaultMessage": "Please fill the input {prop, select, email {email} password {mot de passe}}.",
   },
   {
     "id": "auth.signInError.simplePassword",
-    "defaultMessage": "Le mot de passe doit contenir au moins {minLength} caractères.",
+    "defaultMessage": "Your password must contain at least {minLength} characters.",
   },
   {
     "id": "auth.social.facebookSignIn",
-    "defaultMessage": "Connexion Facebook",
+    "defaultMessage": "Login Facebook",
   },
   {
     "id": "firebase.error.EMAIL_TAKEN",
-    "defaultMessage": "Le compte utilisateur ne peut pas être créé car l'email indiqué est déjà utilisé.",
+    "defaultMessage": "The user account can not be created because the specified email already exist.",
   },
   {
     "id": "firebase.error.INVALID_EMAIL",
-    "defaultMessage": "L'email spécifié n'est pas valide.",
+    "defaultMessage": "The specified email is not valid.",
   },
   {
     "id": "firebase.error.INVALID_PASSWORD",
-    "defaultMessage": "Le mot de passe du compte utilisateur spécifié est incorrect.",
+    "defaultMessage": "The user password is not correct.",
   },
   {
     "id": "firebase.error.INVALID_USER",
-    "defaultMessage": "Le compte utilisateur spécifié n'existe pas.",
+    "defaultMessage": "The specified user account don't exist.",
   },
   {
     "id": "footer.madeByHtml",
@@ -178,11 +178,11 @@ export default [
   },
   {
     "id": "loading.loadingText",
-    "defaultMessage": "Chargement",
+    "defaultMessage": "Loading",
   },
   {
     "id": "loading.longLoadingText",
-    "defaultMessage": "Chargement trop long, s'il vous plaît vérifier votre connexion",
+    "defaultMessage": "Loading too long, please check your internet connection",
   },
   {
     "id": "notFound.continue",
@@ -190,11 +190,11 @@ export default [
   },
   {
     "id": "notFound.h1",
-    "defaultMessage": "Cette page n'est pas disponible",
+    "defaultMessage": "This page is not available",
   },
   {
     "id": "notFound.p",
-    "defaultMessage": "Le lien est peut-être périmé ou la page a été supprimée.",
+    "defaultMessage": "The link is maybe expired or the page has been deleted.",
   },
   {
     "id": "todos.buttons.add100",

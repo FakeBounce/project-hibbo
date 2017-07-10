@@ -76,15 +76,15 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
                                 {viewer.pick_equipment.wear != null && viewer.pick_equipment.wear != 'undefined' ?
                                     viewer.pick_equipment.wear == false ?
                                         <div className="equip"
-                                             onClick={() => AddEquipment(viewer, viewer.pick_equipment)}>Equiper</div>
+                                             onClick={() => AddEquipment(viewer, viewer.pick_equipment)}>Equip</div>
                                         :
                                         <div className="equip"
-                                             onClick={() => RemoveEquipment(viewer, viewer.pick_equipment)}>Retirer</div>
+                                             onClick={() => RemoveEquipment(viewer, viewer.pick_equipment)}>Remove</div>
                                     : ""
 
                                 }
                                 <div className="supp"
-                                     onClick={() => DeleteEquipment(viewer, viewer.pick_equipment)}>Supprimer
+                                     onClick={() => DeleteEquipment(viewer, viewer.pick_equipment)}>Delete
                                 </div>
                             </div>
                             {viewer.pick_equipment.error &&

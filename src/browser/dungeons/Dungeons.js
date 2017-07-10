@@ -217,14 +217,14 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                                         <a href="#dungeons">
                                             <li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li>
                                         </a>
-                                        <li className="menu-perso"><span className="btn-menu">Personnage</span></li>
-                                        <li className="menu-spell"><span className="btn-menu">Compétences</span></li>
+                                        <li className="menu-perso"><span className="btn-menu">Character</span></li>
+                                        <li className="menu-spell"><span className="btn-menu">Skills</span></li>
                                         <li className="menu-option"><span className="btn-menu">Options</span></li>
                                     </div> :
                                     <div>
                                         <a href="#dungeons" onClick={() => ChangeTab(dviewer, "dungeons")}><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
-                                        <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
-                                        <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
+                                        <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Character</span></li></a>
+                                        <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Skills</span></li></a>
                                         <a href="#option" onClick={() => ChangeTab(dviewer,"option")}><li className="menu-option"><span className="btn-menu">Options</span></li></a>
                                     </div>
                                 }
@@ -244,8 +244,8 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                                             dungeons.map(dungeon =>
                                                 <Dungeon key={dungeon.id} dungeon={dungeon}/>
                                             )
-                                            : <Text>Il n'y a pas encore de donjons.</Text>
-                                    : <Text>Veuillez vous connecter</Text>
+                                            : <Text>There are no dungeons yet.</Text>
+                                    : <Text>Please login</Text>
                             }
                         </div>
                         <div className="cmenu cadre-perso">
