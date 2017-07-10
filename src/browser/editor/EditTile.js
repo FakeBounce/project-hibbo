@@ -22,7 +22,7 @@ const EditTile = ({ maptile,picktile,viewer,worldmap,row,col,active }: Props) =>
     margin: '0'
   };
 
-    var classImage = "case ";
+    var classImage = "caseChooseEditeur ";
     var src = maptile.image;
     if(active == "active")
     {

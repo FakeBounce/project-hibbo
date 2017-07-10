@@ -229,7 +229,6 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.SET_PSEUDO: {
-            console.log(action.payload);
             let payload = action.payload;
             if(payload.length > 0){
                 return state.set("pseudo",payload);

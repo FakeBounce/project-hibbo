@@ -132,6 +132,43 @@ Input.input-map-editor{
   float: left;
   margin: 0 10px;
 }
+.zoomHaut{
+  background: url(/assets/images/editor/btnhaut.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomBas{
+  background: url(/assets/images/editor/btnbas.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomGauche{
+  background: url(/assets/images/editor/btngauche.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+.zoomDroite{
+  background: url(/assets/images/editor/btndroite.png) no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  cursor: pointer;
+  float: left;
+  margin: 0 10px;
+}
+
 
 .btn-editeur-exit{
   box-sizing: border-box;
@@ -256,6 +293,31 @@ Input.input-map-editor{
   text-align: center;
   padding:16px;
 }
+.btnEidteurOption{
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  min-height: 32px;
+  text-decoration: none;
+  display: block;
+  margin: 10px auto;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: 0px;
+  color: rgb(250, 177, 134);
+  background-color: transparent;
+  border-radius: 2px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 53px;
+  width: 190px;
+  box-shadow: none;
+  text-align: center;
+}
+
 
 .cadre-droite-interact-gauche{
   float: left;
@@ -282,6 +344,15 @@ Input.input-map-editor{
   background-size: 40px;
   border-bottom: 1px solid #87591A;
   border-right: 1px solid #87591A;
+}
+
+.caseChooseEditeur{
+  width: 40px;
+  height: 40px;
+  background-size: 40px;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
+  background-color: black;
 }
 
 .caseEditor{
@@ -1576,6 +1647,77 @@ progress[value].progressSkills::-webkit-progress-value {
   float: left;
   text-align: center;
 }
+
+//info bulle personnages
+
+
+.infoBulle .infopersonnage .imageCharacter {
+  float: left;
+  width:20%;
+  text-align: center;
+}
+
+.infoBulle .infopersonnage .imageCharacter .headerInfoPerso{
+  margin-top: 40px;
+}
+
+.infoBulle .infopersonnage .headerInfoPerso h3 {
+  width:100%;
+  text-align: center;
+  margin-top:40px;
+}
+
+.infoBulle .infopersonnage .headerInfoPerso h4 {
+  margin: 0;
+}
+
+.titleInfoPerso h4{
+  margin:0;
+}
+
+.tableInfoPerso {
+  margin:0 auto;
+}
+.infoBulle .infopersonnage {
+  display: none;
+  position: fixed;
+  top: 300px;
+  background-color: aliceblue;
+  width: 550px;
+  margin: 0 auto;
+  z-index: 28024;
+  //background: url(/assets/images/login/infoCharacter.png);
+  background-size: cover;
+  height: auto;
+  left: 380px;
+  color: #333;
+  text-align: center;
+  opacity: 0.6;
+  padding: 15px 0;
+}
+
+.infoBulle:hover .infopersonnage {
+  display: block;
+}
+
+.infoBulle .infopersonnage ul {
+  margin: 0;
+}
+
+.infoBulle .infopersonnage ul li {
+  list-style: none;
+  width: 50%;
+  float: left;
+  margin: 7px 0;
+  color: #333;
+}
+
+.imgConditionPersonnage{
+  width:30px;
+  height:30px;
+}
+
+// info bulle compétences
 
 .infobar-spell-number .oneSkill .info{
   display: none;

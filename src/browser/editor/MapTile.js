@@ -3,7 +3,7 @@ import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
 import Monster from './Monster';
 
-import { pickmaptile,pickmapmonster} from '../../common/editor/actions';
+import { pickmaptile,pickmapmonster,pickmapobject} from '../../common/editor/actions';
 
 type Props = {
     maptile: Object,
@@ -13,7 +13,7 @@ type Props = {
     worldmap: Object,
 };
 
-const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,activemaptile,activemapmonster }: Props) => {
+const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, viewer,worldmap,activemaptile,activemapmonster,activemapobject }: Props) => {
 
     const styles = {
         bg: {
@@ -22,7 +22,8 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,a
     };
     var monster = false;
     var viewmonsters = false;
-    let listmap = [];
+    var viewobjects = false;
+
     let player = false;
 
     if(worldmap.viewonmonster)
@@ -36,6 +37,18 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,a
             }
         }
         viewmonsters = true;
+    }
+    if(worldmap.viewonobject)
+    {
+        if(typeof maptile.character !== 'undefined' && maptile.character != null )
+        {
+            monster = true;
+            if(maptile.character.type == "pj")
+            {
+                player = true;
+            }
+        }
+        viewobjects = true;
     }
     else
     {
@@ -51,20 +64,19 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,a
 
     }
 
-
-
-
-
     let activepick;
     let activemonster;
+    let activeobject;
 
     activemaptile.map(active => activepick = active);
     activemapmonster.map(active => activemonster = active);
+    activemapobject.map(active => activeobject = active);
 
     var classImage = "caseEditor " + maptile.image;
 
-    return (
-        viewmonsters ?
+    if(viewmonsters)
+    {
+        return (
             monster ?
                 player?
                     <Flex className={classImage} style={styles.bg} >
@@ -74,27 +86,51 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster, viewer,worldmap,a
                     <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)} >
                         <Monster monster={maptile.character} />
                     </Flex>
-            :
-            <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)}>
-            </Flex>
-        :
-        player?
-            <Flex className={classImage} style={styles.bg}>
-            </Flex>
-            :
-            <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
-            </Flex>
+                :
+                <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)}>
+                </Flex>
+        );
+    }
+    else if(viewobjects)
+    {
+        return (
+            monster ?
+                player?
+                    <Flex className={classImage} style={styles.bg} >
+                        <Monster monster={maptile.character} />
+                    </Flex>
+                    :
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
+                        <Monster monster={maptile.character} />
+                    </Flex>
+                :
+                <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)}>
+                </Flex>
+        );
+    }
+    else {
+        return (
+                player?
+                    <Flex className={classImage} style={styles.bg}>
+                    </Flex>
+                    :
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
+                    </Flex>
 
-    );
+        );
+    }
+
 };
 
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
     pickmaptile: React.PropTypes.func,
-    pickmapmonster: React.PropTypes.func
+    pickmapmonster: React.PropTypes.func,
+    pickmapobject:React.PropTypes.func,
 };
 
 export default connect(state => ({
     activemaptile : state.editor.activeTile,
     activemapmonster : state.editor.activeMonster,
-}), { pickmaptile,pickmapmonster}) (Maptile);
+    activemapobject : state.editor.activeObject,
+}), { pickmaptile,pickmapmonster,pickmapobject}) (Maptile);

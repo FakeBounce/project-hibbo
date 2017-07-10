@@ -10,14 +10,19 @@ export const LOAD_ACTIVE_MAP = 'LOAD_ACTIVE_MAP';
 export const CANCEL_WORLDMAP = 'CANCEL_WORLDMAP';
 export const PICK_TILE = 'PICK_TILE';
 export const PICK_MONSTER = 'PICK_MONSTER';
+export const PICK_ITEM = 'PICK_ITEM';
 export const PICK_TILE_SUCCESS = 'PICK_TILE_SUCCESS';
 export const PICK_MONSTER_SUCCESS = 'PICK_MONSTER_SUCCESS';
+export const PICK_ITEM_SUCCESS = 'PICK_ITEM_SUCCESS';
 export const PICK_MAP_TILE = 'PICK_MAP_TILE';
 export const PICK_MAP_MONSTER = 'PICK_MAP_MONSTER';
+export const PICK_MAP_OBJECT = 'PICK_MAP_OBJECT';
 export const RELOAD_ACTIVE_MAP = 'RELOAD_ACTIVE_MAP';
 export const SAVE_WORLDMAP = 'SAVE_WORLDMAP';
 export const LOAD_MONSTERS = 'LOAD_MONSTERS';
+export const LOAD_ITEMS = 'LOAD_ITEMS';
 export const VIEW_MONSTER = 'VIEW_MONSTER';
+export const VIEW_OBJECT = 'VIEW_OBJECT';
 export const ADD_NEW_MAP = 'ADD_NEW_MAP';
 export const REMOVE_MAP = 'REMOVE_MAP';
 export const REMOVE_DUNGEONS = 'REMOVE_DUNGEONS';
@@ -25,10 +30,16 @@ export const ACTIVE_DUNGEONS = 'ACTIVE_DUNGEONS';
 export const SAVE_MAP_NAME = 'SAVE_MAP_NAME';
 export const FULL_BLOCK_RIGHT = 'FULL_BLOCK_RIGHT';
 export const FULL_BLOCK_TOP = 'FULL_BLOCK_TOP';
+export const ZOOM_PLUS_EDIT = 'ZOOM_PLUS_EDIT';
+export const ZOOM_MINUS_EDIT = 'ZOOM_MINUS_EDIT';
+export const MOVE_UP_EDIT = 'MOVE_UP_EDIT';
+export const MOVE_DOWN_EDIT = 'MOVE_DOWN_EDIT';
+export const MOVE_RIGHT_EDIT = 'MOVE_RIGHT_EDIT';
+export const MOVE_LEFT_EDIT = 'MOVE_LEFT_EDIT';
 
 export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'editormaps/'+worldmap.id;
-    console.log("v",viewer);
+
     if(viewer) {
 
         var Uid = getUid();
@@ -60,6 +71,7 @@ export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) =>
                         camera:worldmap,
                         active_dungeon: worldmap.active_dungeon,
                         viewonmonster: false,
+                        viewonobject: false,
                         createdAt: now()
                     };
                     if (worldmap.id) {
@@ -112,6 +124,13 @@ export const LoadMonsters = (snap: Object) => {
     return {
         type: LOAD_MONSTERS,
         payload: { monsters },
+    };
+};
+export const LoadItems = (snap: Object) => {
+    const items = snap.val();
+    return {
+        type: LOAD_ITEMS,
+        payload: { items },
     };
 };
 
@@ -221,6 +240,7 @@ export const viewMonster = (worldmap) => ({ firebase}) => {
     else {
         firebase.update({
             [`activeMap/${worldmap.user.id}/viewonmonster`]: true,
+            [`activeMap/${worldmap.user.id}/viewonobject`]: false,
         });
     }
 
@@ -229,6 +249,117 @@ export const viewMonster = (worldmap) => ({ firebase}) => {
         type: VIEW_MONSTER,
         payload: worldmap
     }
+};
+
+export const viewObject = (worldmap) => ({ firebase}) => {
+    if(worldmap.viewonobject)
+    {
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/viewonobject`]: false,
+        });
+    }
+    else {
+        firebase.update({
+            [`activeMap/${worldmap.user.id}/viewonobject`]: true,
+            [`activeMap/${worldmap.user.id}/viewonmonster`]: false,
+        });
+    }
+
+
+    return {
+        type: VIEW_OBJECT,
+        payload: worldmap
+    }
+};
+
+
+export const pickobject = (item,viewer) =>  ({ firebase }) => {
+    var path = 'items/'+item.id;
+
+    const getPromise = async () => {
+        try {
+            return await firebase.database.ref(path).once('value').then(function(snapshot){
+                let item = snapshot.val();
+
+                let itemPick = {
+                    "id":item.id,
+                    "action_cost":item.action_cost,
+                    "aoe_back":item.aoe_back,
+                    "aoe_diagonal":item.aoe_diagonal,
+                    "aoe_front":item.aoe_front,
+                    "name" : item.name,
+                    "image" : item.image,
+                    "aoe_left":item.aoe_left,
+                    "aoe_linear":item.aoe_linear,
+                    "aoe_right":item.aoe_right,
+                    "can_break":item.can_break,
+                    "cast_time":item.cast_time,
+                    "css":item.css,
+                    "damage_buff_flat":item.damage_buff_flat,
+                    "damage_buff_percent":item.damage_buff_percent,
+                    "damage_debuff_flat":item.damage_debuff_flat,
+                    "damage_debuff_percent":item.damage_debuff_percent,
+                    "damage_instant":item.damage_instant,
+                    "damage_instant_buff":item.damage_instant_buff,
+                    "damage_instant_debuff":item.damage_instant_debuff,
+                    "damage_reduction_flat":item.damage_reduction_flat,
+                    "damage_reduction_percent":item.damage_reduction_percent,
+                    "damage_return":item.damage_return,
+                    "damage_return_percent":item.damage_return_percent,
+                    "damage_time":item.damage_time,
+                    "damage_time_buff_flat":item.damage_time_buff_flat,
+                    "damage_time_buff_percent":item.damage_time_buff_percent,
+                    "damage_time_debuff_flat":item.damage_time_debuff_flat,
+                    "damage_time_debuff_percent":item.damage_time_debuff_percent,
+                    "damage_time_duration":item.damage_time_duration,
+                    "damage_type":item.damage_type,
+                    "description":item.description,
+                    "duration":item.duration,
+                    "energy_cost":item.energy_cost,
+                    "energy_heal":item.energy_heal,
+                    "energy_percent_heal":item.energy_percent_heal,
+                    "energy_percent_time":item.energy_percent_time,
+                    "energy_time":item.energy_time,
+                    "get":item.get,
+                    "heal_instant":item.heal_instant,
+                    "heal_on_energy_percent":item.heal_on_energy_percent,
+                    "heal_percent_instant":item.heal_percent_instant,
+                    "heal_percent_time":item.heal_percent_time,
+                    "heal_time":item.heal_time,
+                    "life_buff":item.life_buff,
+                    "life_cost":item.life_cost,
+                    "life_debuff":item.life_debuff,
+                    "movement_buff":item.movement_buff,
+                    "movement_debuff":item.movement_debuff,
+                    "movement_instant":item.movement_instant,
+                    "range_cone":item.range_cone,
+                    "range_diagonal":item.range_diagonal,
+                    "range_linear":item.range_linear,
+                    "range_minimum":item.range_minimum,
+                    "range_on_target":item.range_on_target,
+                    "rest":item.rest,
+                    "self":item.self,
+                    "uses":item.uses,
+                };
+
+                if(item.id)
+                {
+                    firebase.update({
+                        [`activeObject/${viewer.id}`]: itemPick,
+                        [`users/${viewer.id}/active_pickobject`]: item.id,
+                    });
+                }
+                return itemPick;
+            });
+        } catch (error) {
+            console.log('An error occured. We could not load the tile. Try again later.');
+            throw error;
+        }
+    };
+    return {
+        type: PICK_ITEM,
+        payload: getPromise(),
+    };
 };
 
 export const picktile = (maptile,viewer) =>  ({ firebase }) => {
@@ -267,7 +398,6 @@ export const picktile = (maptile,viewer) =>  ({ firebase }) => {
 
 export const pickmonster = (monster,viewer) =>  ({ firebase }) => {
     var path = 'monsters/'+monster.id;
-
 
         const getPromise = async () => {
             try {
@@ -332,7 +462,10 @@ export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,fireb
         {
             var id = maptile.id;
             maptile.id = getUid();
+
+            //update worldmap
             worldmap.worldmap.maptiles[row][col] = jsonConcat(worldmap.worldmap.maptiles[row][col],maptile);
+            worldmap.camera.maptiles[row][col] = jsonConcat(worldmap.camera.maptiles[row][col],maptile);
 
             firebase.update({
                 [`activeMap/${viewer.id}`]: worldmap,
@@ -349,7 +482,6 @@ export const pickmaptile = (maptile,viewer,worldmap,row,col) =>  ({ getUid,fireb
 
 export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,firebase }) => {
 
-
     if(monster)
     {
         var id = monster.id;
@@ -361,16 +493,21 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
             if(typeof worldmap.worldmap.maptiles[row][col].character !== 'undefined' && worldmap.worldmap.monsters)
             {
                 delete worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number];
+                delete worldmap.camera.monsters[worldmap.camera.maptiles[row][col].character.number];
             }
             worldmap.worldmap.maptiles[row][col].character = null;
+            worldmap.camera.maptiles[row][col].character = null;
         }
+        else
         if(monster.type == "pj")
         {
             if(worldmap.worldmap.maptiles)
             {
                 worldmap.worldmap.maptiles[worldmap.user.character.row][worldmap.user.character.col].character = null;
+                worldmap.camera.maptiles[worldmap.user.character.row][worldmap.user.character.col].character = null;
 
                 worldmap.worldmap.maptiles[row][col].character = monster;
+                worldmap.camera.maptiles[row][col].character = monster;
 
                 worldmap.user.character.row = row;
                 worldmap.user.character.col = col;
@@ -384,25 +521,38 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
             if(typeof  worldmap.worldmap.monsters === 'undefined')
             {
                 worldmap.worldmap.monsters = [];
+                worldmap.camera.monsters = [];
             }
             var is_here = false;
-                worldmap.worldmap.monsters.map(m => {
+            worldmap.worldmap.monsters.map(m => {
                if(parseInt(m.row) == row && parseInt(m.col) == col)
                {
                    is_here = m;
                    return true;
                }
+
+            });
+            worldmap.camera.monsters.map(m => {
+               if(parseInt(m.row) == row && parseInt(m.col) == col)
+               {
+                   is_here = m;
+                   return true;
+               }
+
             });
             if(is_here)
             {
                 worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
+                worldmap.camera.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
             }
             else {
 
                 var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
+                var testRowIndex = worldmap.camera.monsters.push(mo) - 1;
                 mo.number = testRowIndex;
             }
             worldmap.worldmap.maptiles[row][col].character = mo;
+            worldmap.camera.maptiles[row][col].character = mo;
         }
 
         firebase.update({
@@ -414,6 +564,24 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
     return {
         type: PICK_MAP_MONSTER,
+        payload: worldmap,
+    };
+
+};
+
+export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase }) => {
+
+    if(item) {
+        worldmap.worldmap.maptiles[row][col].item = item;
+
+        firebase.update({
+            [`activeMap/${viewer.id}`]: worldmap,
+        });
+
+    }
+
+    return {
+        type: PICK_MAP_OBJECT,
         payload: worldmap,
     };
 
@@ -526,7 +694,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character};
+    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15};
 
     if(viewer)
     {
@@ -561,170 +729,209 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
     };
 };
 
-export const ZoomEditMap = (camera) =>  ({firebase}) => {
+export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
 
-    let newmap = camera;
-
-    if(camera)
+    if(camera && camera.size_map > worldmap.worldmap.size_map_min)
     {
-        for(let i=0; i < camera.size_map ; i++)
-        {
-            newmap.worldmap.maptiles[i][camera.size_map] = null;
-        }
-        newmap.worldmap.maptiles[worldmap.worldmap.size_map] = null;
+    worldmap.worldmap.maptiles.map((m1,i1) =>
+        m1.map((m2,i2) => {
+            if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
+            {
+                camera.maptiles[i1] = null;
+            }
+            if(i2 == camera.col_end && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+            {
+                delete camera.maptiles[i1][i2];
+            }
+        }));
+
+        camera.row_end = camera.row_end - 1;
+        camera.col_end = camera.col_end -1;
+        camera.size_map = camera.size_map - 1;
 
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
     return {
         type: ZOOM_PLUS_EDIT,
-        payload: newmap
+        payload: camera
     }
 };
-export const MoveRightEditMap = (worldmap,camera) =>  ({firebase}) => {
 
-    let newmap = camera;
+export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
 
-    // camera size_map size_map_min
-    // camera size_map_min
-    // camera maptiles
-    // camera row_start
-    // camera col_start
-    // camera row_end
-    // camera col_end
-
-    // test if col right presente
-    if(worldmap.maptiles[camera.row_end+1][camera.col_end+1])
+    if(camera && camera.size_map != worldmap.worldmap.size_map)
     {
-        // delete colonne de gauche
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            newmap.maptiles[camera.row_start][i] = null;
-        }
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            // ajoute colonne droite
-            newmap.maptiles[camera.row_end + 1][i] = worldmap.maptiles[camera.row_end + 1][i]
-        }
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+                if(i1 == camera.row_end+1 && i2 <= camera.col_end+1)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+                if(i2 == camera.col_end+1 && i1 < camera.row_end+1)
+                {
+                    camera.maptiles[i1].push(m2);
+                }
+            }));
 
-        newmap.row_end += camera.row_end;
-        newmap.col_end += camera.col_end;
-        newmap.row_start -= row_start;
-        newmap.col_start -= col_start;
+        camera.row_end = camera.row_end + 1;
+        camera.col_end = camera.col_end +1;
+        camera.size_map = camera.size_map + 1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
+        });
+    }
+
+    return {
+        type: ZOOM_MINUS_EDIT,
+        payload: camera
+    }
+};
+export const MoveRightEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
+
+    if(camera)
+    {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i2 == camera.col_start && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+                {
+                    delete camera.maptiles[i1][i2];
+                }
+                if(i2 == camera.col_end+1 && i1 < camera.row_end+1)
+                {
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
+
+        camera.col_start = camera.col_start + 1;
+        camera.col_end = camera.col_end + 1;
+
+        firebase.update({
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
     return {
         type: MOVE_RIGHT_EDIT,
-        payload: newmap
+        payload: camera
     }
 };
-export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
+export const MoveLeftEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
-    let newmap = camera;
-
-
-    // test if col left presente
-    if(worldmap.maptiles[camera.row_start-1][camera.col_start-1])
+    if(camera)
     {
-        // delete colonne de droite
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            newmap.maptiles[camera.row-end][i] = null;
-        }
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            // ajoute colonne gauche
-            newmap.maptiles[camera.row_start - 1][i] = worldmap.maptiles[camera.start - 1][i];
-        }
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i2 == camera.col_end && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+                {
+                    delete camera.maptiles[i1][i2];
+                }
+                if(i2 == camera.col_start - 1 && i1 < camera.col_end+1)
+                {
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
+
+
+        camera.col_start = camera.col_start - 1;
+        camera.col_end = camera.col_end - 1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
+
     return {
         type: MOVE_LEFT_EDIT,
-        payload: newmap
+        payload: camera
     }
 };
-export const MoveUpEditMap = (worldmap,camera) =>  ({firebase}) => {
+export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
-    // camera size_map size_map_min
-    // camera size_map_min
-    // camera maptiles
-    // camera row_start
-    // camera col_start
-    // camera row_end
-    // camera col_end
-
-    // test if row up presente
-    if(worldmap.maptiles[camera.row_start-1][camera.col_start-1])
+    if(camera)
     {
-        // delete colonne de bas
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            newmap.maptiles[camera.row_end][i] = null;
-        }
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            // ajoute colonne haute
-            newmap.maptiles[camera.row_start - 1][i] = worldmap.maptiles[camera.row_start - 1][i]
-        }
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
 
-        newmap.row_end += camera.row_end;
-        newmap.col_end += camera.col_end;
-        newmap.row_start -= row_start;
-        newmap.col_start -= col_start;
+                if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
+                {
+                    camera.maptiles[i1] = null;
+                }
+
+                if(i1 == camera.row_start-1 && i2 <= camera.col_end)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
+
+        camera.row_end = camera.row_end - 1;
+        camera.row_start = camera.row_start - 1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
     return {
         type: MOVE_UP_EDIT,
-        payload: newmap
+        payload: camera
     }
 };
-export const MoveDownEditMap = (worldmap,camera) =>  ({firebase}) => {
+export const MoveDownEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
-    // test if row up presente
-    if(worldmap.maptiles[camera.row_end-1][camera.col_end-1])
+    if(camera)
     {
-        // delete colonne du haut
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            newmap.maptiles[camera.row_start][i] = null;
-        }
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            // ajoute colonne bas
-            newmap.maptiles[camera.row_end - 1][i] = worldmap.maptiles[camera.row_end - 1][i]
-        }
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
 
-        newmap.row_end += camera.row_end;
-        newmap.col_end += camera.col_end;
-        newmap.row_start -= row_start;
-        newmap.col_start -= col_start;
+                if(i1 == camera.row_start && i2 == camera.row_end && camera.maptiles[i1] != null)
+                {
+                    camera.maptiles[i1] = null;
+                }
+
+                if(i1 == camera.row_end+1 && i2 <= camera.col_end)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
+
+        camera.row_end = camera.row_end + 1;
+        camera.row_start = camera.row_start +1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
     return {
         type: MOVE_DOWN_EDIT,
-        payload: newmap
+        payload: camera
     }
-};
 
+};
 export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase }) => {
 
     let newmap = worldmap;
@@ -732,25 +939,31 @@ export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase
     if(row && worldmap && tile)
     {
 
-        for(let i=0; i <= worldmap.worldmap.size_map ; i++)
+        for(let i=0; i <= worldmap.camera.size_map ; i++)
         {
-            if (!worldmap.worldmap.maptiles[row][i].character) {
+            if (!worldmap.camera.maptiles[row][i].character) {
                 tile.id = getUid();
 
                 newmap.worldmap.maptiles[row][i].image = tile.image;
                 newmap.worldmap.maptiles[row][i].title = tile.title;
                 newmap.worldmap.maptiles[row][i].type = tile.type;
 
+                newmap.camera.maptiles[row][i].image = tile.image;
+                newmap.camera.maptiles[row][i].title = tile.title;
+                newmap.camera.maptiles[row][i].type = tile.type;
+
             }
             else {
                 if (tile.type == "walkable") {
                     tile.id = getUid();
                     newmap.worldmap.maptiles[row][i] = tile;
+                    newmap.camera.maptiles[row][i] = tile;
                 }
             }
             tile.id = getUid();
         }
         tile.id = getUid();
+
         firebase.update({
             [`activeMap/${viewer.id}`]: newmap,
         });
@@ -770,18 +983,19 @@ export const FullBlockTop = (col,worldmap, viewer, tile) => ({ getUid,firebase }
     if(col && worldmap && tile)
         {
 
-            for(let i=0; i <= worldmap.worldmap.size_map ; i++)
+            for(let i=0; i <= worldmap.camera.size_map ; i++)
             {
-                if (!worldmap.worldmap.maptiles[i][col].character) {
+                if (!worldmap.camera.maptiles[i][col].character) {
 
-                    console.log("id col",newmap.worldmap.maptiles[i][col]);
                     tile.id = getUid();
                     newmap.worldmap.maptiles[i][col] = tile;
+                    newmap.camera.maptiles[i][col] = tile;
                 }
                 else {
                     if (tile.type == "walkable") {
                         tile.id = getUid();
                         newmap.worldmap.maptiles[i][col] = tile;
+                        newmap.camera.maptiles[i][col] = tile;
                     }
                 }
             }

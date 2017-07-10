@@ -18,15 +18,22 @@ type Props = {
 
 const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attackMonster,MonsterMove,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
     const styles = {
-        margin: '0px 0px 0px 0px'
+        margin : '0',
     };
-    let classes= "monster";
+    let classes = 'monster';
     var gif = '';
     var opposed_img = '';
+    let conditions = false;
+    if(character.conditions) {
+        conditions = character.conditions.map(cond => {
+            let cond_image = '/assets/images/skills/' + cond.image;
+            return (<th><Image className="imgConditionPersonnage" src={cond_image}/></th>);
+        });
+    }
 
   onkeydown = (event: KeyboardEvent) => {
-    if(event.key === "ArrowUp"){
-    }
+      if (event.key === "ArrowUp") {
+      }
   };
 
     if(character.is_attacking && character.type == "pj")
@@ -119,7 +126,23 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
         }
     };
     return (
-            <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
+      <div className="infoBulle">
+        <div className="infopersonnage">
+          <div className="headerInfoPerso">
+            <h3><Image className={classes} src={character.image} />{character.name}</h3>
+          </div>
+          <ul>
+            <li>Health: {character.health}</li>
+            <li>Damage: {character.damage}</li>
+            <li>Movement: {character.movement}</li>
+            <li>Range: {character.range}</li>
+          </ul>
+          {
+            conditions && <div className="titleInfoPerso"><h4>Skills Damage</h4><table className="tableInfoPerso"><tr>{conditions}</tr></table></div>
+          }
+        </div>
+        <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
+      </div>
     );
 };
 
