@@ -60,6 +60,23 @@ background-attachment:fixed;
   cursor:pointer;
 }
 
+.shadowmonsterEditor {
+  position: absolute;
+  z-index: 5;
+  height: 10px;
+  width: 10px;
+  margin-left: 1px;
+  cursor:pointer;
+}
+.flex-relative-editor{
+  position : relative;
+}
+.top{
+  position: absolute;
+  top : -20px;
+  left : 5px
+}
+
 .changeSelection{
   box-sizing: border-box;
   font-family: inherit;
@@ -100,7 +117,7 @@ background-attachment:fixed;
 }
 span.bot {
   position: absolute;
-  right: 275px;
+  left: 30px;
 }
 
 Input.input-map-editor{
@@ -2386,5 +2403,12 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 30px;
   margin-left: -6px;
   margin-top: -3px;
+  cursor: pointer;
+}
+
+.itemEditor {
+  z-index: 5;
+  height: 20px;
+  width: 20px;
   cursor: pointer;
 }

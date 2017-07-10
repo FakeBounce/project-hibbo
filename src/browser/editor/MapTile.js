@@ -2,6 +2,9 @@ import React from 'react';
 import { Flex,Image,Text } from '../app/components';
 import { connect } from 'react-redux';
 import Monster from './Monster';
+import ShadowMonster from './ShadowMonster';
+import ShadowItem from './ShadowItem';
+import Item from './Item';
 
 import { pickmaptile,pickmapmonster,pickmapobject} from '../../common/editor/actions';
 
@@ -15,19 +18,33 @@ type Props = {
 
 const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, viewer,worldmap,activemaptile,activemapmonster,activemapobject }: Props) => {
 
+    let widthTile = 20 * (16 / (worldmap.camera.size_map+1) );
     const styles = {
         bg: {
             backgroundImage: "url("+maptile.image+")",
+            width : widthTile+"px",
+            height : widthTile+"px",
         }
+
     };
     var monster = false;
     var viewmonsters = false;
     var viewobjects = false;
+    let object = false;
 
     let player = false;
 
+
+    //console.log('maptile',maptile);
+    if(typeof maptile.character !== 'undefined' && maptile.character != null ) {
+        monster = true;
+    }
     if(worldmap.viewonmonster)
     {
+        if(typeof maptile.item !== 'undefined' && maptile.item != null )
+        {
+            object = true;
+        }
         if(typeof maptile.character !== 'undefined' && maptile.character != null )
         {
             monster = true;
@@ -40,18 +57,19 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
     }
     if(worldmap.viewonobject)
     {
-        if(typeof maptile.character !== 'undefined' && maptile.character != null )
+        if(typeof maptile.item !== 'undefined' && maptile.item != null )
         {
-            monster = true;
-            if(maptile.character.type == "pj")
-            {
-                player = true;
-            }
+           object = true;
         }
+
         viewobjects = true;
     }
     else
     {
+        if(typeof maptile.item !== 'undefined' && maptile.item != null )
+        {
+            object = true;
+        }
         if(typeof maptile.character !== 'undefined' && maptile.character != null )
         {
             monster = true;
@@ -77,6 +95,23 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
     if(viewmonsters)
     {
         return (
+            object ?
+                monster ?
+                    player?
+                        <Flex className={classImage} style={styles.bg} >
+                            <ShadowItem />
+                            <Monster monster={maptile.character} />
+                        </Flex>
+                        :
+                        <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)} >
+                            <ShadowItem />
+                            <Monster monster={maptile.character} />
+                        </Flex>
+                    :
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)}>
+                        <ShadowItem />
+                    </Flex>
+            :
             monster ?
                 player?
                     <Flex className={classImage} style={styles.bg} >
@@ -89,35 +124,69 @@ const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, vie
                 :
                 <Flex className={classImage} style={styles.bg} onClick={() => pickmapmonster(activemonster,viewer,worldmap, row, col)}>
                 </Flex>
+
         );
     }
     else if(viewobjects)
     {
         return (
-            monster ?
-                player?
-                    <Flex className={classImage} style={styles.bg} >
-                        <Monster monster={maptile.character} />
-                    </Flex>
-                    :
-                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
-                        <Monster monster={maptile.character} />
-                    </Flex>
+            object?
+                monster?
+                <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
+                    <Item item={maptile.item} />
+                    <ShadowMonster  />
+                </Flex>
                 :
                 <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)}>
+                    <Item item={maptile.item} />
                 </Flex>
+
+            :
+                monster?
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)} >
+                        <ShadowMonster  />
+                    </Flex>
+                    :
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmapobject(activeobject,viewer,worldmap, row, col)}>
+                    </Flex>
+
         );
     }
     else {
         return (
+
+        object ?
+            monster ?
                 player?
-                    <Flex className={classImage} style={styles.bg}>
+                    <Flex className={classImage} style={styles.bg} >
+                        <ShadowItem />
+                        <ShadowMonster/>
                     </Flex>
                     :
-                    <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)} >
+                        <ShadowItem />
+                        <ShadowMonster />
                     </Flex>
+                :
+                <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
+                    <ShadowItem />
+                </Flex>
+            :
+            monster ?
+                player?
+                    <Flex className={classImage} style={styles.bg} >
+                        <ShadowMonster />
+                    </Flex>
+                    :
+                    <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)} >
+                        <ShadowMonster />
+                    </Flex>
+                :
+                <Flex className={classImage} style={styles.bg} onClick={() => pickmaptile(activepick,viewer,worldmap, row, col)}>
+                </Flex>
 
-        );
+
+    );
     }
 
 };

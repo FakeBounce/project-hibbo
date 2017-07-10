@@ -4,27 +4,27 @@ import { connect } from 'react-redux';
 import { } from '../../common/editor/actions';
 
 type Props = {
-    item: Object,
     viewer: Object,
     row: Object,
     col: Object,
     worldmap: Object,
 };
 
-const Item = ({ row,col,item, viewer,worldmap }: Props) => {
+const ShadowMonster = ({ row,col, viewer,worldmap }: Props) => {
 
     const styles = {
         margin: '0'
     };
 
     return (
-        <Image className="itemEditor" src={'/assets/images/objets/' + item.image} style={styles}/>
+
+        <Image className="shadowmonsterEditor" src={'/assets/images/monsters/ShadowMonster.png'} style={styles}/>
     );
 };
 
-Item.propTypes = {
-    item: React.PropTypes.object.isRequired,
+ShadowMonster.propTypes = {
+    monster: React.PropTypes.object.isRequired,
 };
 
 export default connect(state => ({
-}), { }) (Item);
+}), { }) (ShadowMonster);

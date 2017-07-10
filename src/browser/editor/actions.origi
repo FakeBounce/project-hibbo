@@ -770,10 +770,22 @@ export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
 
     if(camera && camera.size_map > worldmap.worldmap.size_map_min)
     {
+    worldmap.worldmap.maptiles.map((m1,i1) =>
+        m1.map((m2,i2) => {
+            if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
+            {
+                camera.maptiles[i1] = null;
+            }
+            if(i2 == camera.col_end && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+            {
+                delete camera.maptiles[i1][i2];
+            }
+        }));
 
         camera.row_end = camera.row_end - 1;
         camera.col_end = camera.col_end -1;
         camera.size_map = camera.size_map - 1;
+
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
@@ -789,6 +801,21 @@ export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
 
     if(camera && camera.size_map != worldmap.worldmap.size_map)
     {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+                if(i1 == camera.row_end+1 && i2 <= camera.col_end+1)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+                if(i2 == camera.col_end+1 && i1 < camera.row_end+1)
+                {
+                    camera.maptiles[i1].push(m2);
+                }
+            }));
 
         camera.row_end = camera.row_end + 1;
         camera.col_end = camera.col_end +1;
@@ -808,6 +835,23 @@ export const MoveRightEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i2 == camera.col_start && i1 != camera.row_end+1 && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+                {
+                    delete camera.maptiles[i1][i2];
+                }
+                if(i2 == camera.col_end+1 && i1 <= camera.col_end && camera.maptiles[i1] != null )
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
 
         camera.col_start = camera.col_start + 1;
         camera.col_end = camera.col_end + 1;
@@ -827,6 +871,24 @@ export const MoveLeftEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i2 == camera.col_end && i1 != camera.row_end+1 && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+                {
+                    delete camera.maptiles[i1][i2];
+                }
+
+                if(i2 == camera.col_start-1 && i1 <= camera.row_end)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1].unshift(m2);
+                    }
+
+                }
+
+            }));
 
         camera.col_start = camera.col_start - 1;
         camera.col_end = camera.col_end - 1;
@@ -846,6 +908,24 @@ export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
+                {
+                    camera.maptiles[i1] = null;
+                }
+
+                if(i1 == camera.row_start-1 && i2 <= camera.col_end)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
 
         camera.row_end = camera.row_end - 1;
         camera.row_start = camera.row_start - 1;
@@ -864,6 +944,24 @@ export const MoveDownEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i1 == camera.row_start && i2 == camera.row_end && camera.maptiles[i1] != null)
+                {
+                    camera.maptiles[i1] = null;
+                }
+
+                if(i1 == camera.row_end+1 && i2 <= camera.col_end)
+                {
+                    if(i2 == 0)
+                    {
+                        camera.maptiles[i1] = [];
+                    }
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
 
         camera.row_end = camera.row_end + 1;
         camera.row_start = camera.row_start +1;
