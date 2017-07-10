@@ -2017,6 +2017,83 @@ export const LoadTutoRef = (snap: Object) => {
     };
 };
 
+export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
+    viewer.characters = [];
+    classe.pseudo = pseudo;
+    classe.row = 0;
+    classe.col = 0;
+    //add equi init
+    viewer.characters.push(classe);
+    viewer.active = 0;
+    viewer.tuto = 1;
+
+
+
+
+    firebase.update({
+        [`users/${viewer.id}/characters/`]: viewer.characters,
+        [`users/${viewer.id}/active`]: viewer.active,
+        [`users/${viewer.id}/tuto`]: 1
+    });
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
+            name: "init_1",
+            img: "/assets/images/weapons/init_1.png",
+            type: "helmet",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
+            name: "init_2",
+            img: "/assets/images/weapons/init_2.png",
+            type: "armor",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
+            name: "init_3",
+            img: "/assets/images/weapons/init_3.png",
+            type: "boots",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    firebase.update({
+        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
+            name: "init_4",
+            img: "/assets/images/weapons/init_4.png",
+            type: "weapon",
+            classe: "All",
+            benefits: {
+                damage: 100,
+                health: 100,
+                energy: 100,
+            },
+        }});
+
+    return {
+        type: CREATE_PERSO,
+        payload: { viewer },
+    };
+
+};
 export const LoadViewer = (viewer) => ({ firebase }) => {
     if(viewer)
     {
@@ -2952,83 +3029,6 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
     }
     return {pj:pj,map:map,skill:skill,dungeon:dungeon};
 }
-export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
-    viewer.characters = [];
-    classe.pseudo = pseudo;
-    classe.row = 0;
-    classe.col = 0;
-    //add equi init
-    viewer.characters.push(classe);
-    viewer.active = 0;
-    viewer.tuto = 1;
-
-
-
-
-    firebase.update({
-        [`users/${viewer.id}/characters/`]: viewer.characters,
-        [`users/${viewer.id}/active`]: viewer.active,
-        [`users/${viewer.id}/tuto`]: 1
-    });
-
-    firebase.update({
-        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_1`]: {
-            name: "init_1",
-            img: "/assets/images/weapons/init_1.png",
-            type: "helmet",
-            classe: "All",
-            benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
-            },
-        }});
-
-    firebase.update({
-        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_2`]: {
-            name: "init_2",
-            img: "/assets/images/weapons/init_2.png",
-            type: "armor",
-            classe: "All",
-            benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
-            },
-        }});
-
-    firebase.update({
-        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_3`]: {
-            name: "init_3",
-            img: "/assets/images/weapons/init_3.png",
-            type: "boots",
-            classe: "All",
-            benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
-            },
-        }});
-
-    firebase.update({
-        [`users/${viewer.id}/characters/${viewer.active}/inventory/init_4`]: {
-            name: "init_4",
-            img: "/assets/images/weapons/init_4.png",
-            type: "weapon",
-            classe: "All",
-            benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
-            },
-        }});
-
-    return {
-        type: CREATE_PERSO,
-        payload: { viewer },
-    };
-
-};
 
 function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
 {
@@ -3331,7 +3331,6 @@ function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
                 lvlup_char.damage = pj.damage_lvl;
                 lvlup_char.maxexperience = pj.maxexperience;
                 lvlup_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
-
 
                 firebase.update({
                     [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
@@ -4554,6 +4553,12 @@ function setRangeMonsters(map,pj,neg,pos,diag,hor){
             }
         }
     }
+<<<<<<< HEAD
+    return {map:map,pj:pj};
+}
+
+
+=======
 
     for(let j=0;j<=pos;j++)
     {
@@ -4616,3 +4621,4 @@ function setRangeMonsters(map,pj,neg,pos,diag,hor){
     }
     return {map:map,tab:tab};
 }
+>>>>>>> origin/master
