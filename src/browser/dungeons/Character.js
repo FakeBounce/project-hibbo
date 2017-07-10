@@ -23,12 +23,21 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
     let classes = 'monster';
     var gif = '';
     var opposed_img = '';
-    let conditions = false;
+    let conditions = false
+
     if(character.conditions) {
         conditions = character.conditions.map(cond => {
             let cond_image = '/assets/images/skills/' + cond.image;
-            return (<th><Image className="imgConditionPersonnage" src={cond_image}/></th>);
+            return (<Image className="imgConditionPersonnage" src={cond_image}/>);
         });
+    }
+
+    let buffs = false;
+    if(character.buffs) {
+      buffs = character.buffs.map(buff => {
+        let buff_image = 'assets/images/skills/' + buff.image;
+        return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+      });
     }
 
   onkeydown = (event: KeyboardEvent) => {
@@ -125,20 +134,26 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
             canAttackMonster(dungeon,character,row,col);
         }
     };
+    console.log(character);
     return (
       <div className="infoBulle">
         <div className="infopersonnage">
           <div className="headerInfoPerso">
-            <h3><Image className={classes} src={character.image} />{character.name}</h3>
-            {
-              conditions && <table className="tableInfoPerso"><tr>{conditions}</tr></table>
-            }
+            <h3><Image className={classes} src={character.image} />{character.name}
+              {
+                conditions && <div className="titleInfoPerso">{conditions}</div>
+              }
+              {
+                buffs && <div className="titleInfoPerso">{buffs}</div>
+              }
+            </h3>
           </div>
           <ul>
             <li>Health: {character.health}</li>
             <li>Damage: {character.damage}</li>
             <li>Movement: {character.movement}</li>
             <li>Range: {character.range}</li>
+            <li></li>
           </ul>
         </div>
         <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>

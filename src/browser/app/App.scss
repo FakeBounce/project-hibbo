@@ -13,6 +13,8 @@
   box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Fresca');
+
 html {
   // Changes the default tap highlight to be completely transparent in iOS.
   -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -24,11 +26,12 @@ html {
 body {
   // Remove the margin in all browsers.
   background-image: url("/assets/images/wallpaper.jpg");
-background-size: cover;
-background-repeat: no-repeat;
-overflow-x: hidden;
-color: #cccccc;
-background-attachment:fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  overflow-x: hidden;
+  color: #cccccc;
+  background-attachment:fixed;
+  font-family: 'Fresca', sans-serif;
 }
 
 .title-hibbo{
@@ -1540,8 +1543,13 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .cmenu {
-  width: 800px;
+  width: 779px;
   height: 360px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px;
+  overflow-y: scroll;
+  display: inline-block;
+  padding: 10px;
 }
 .Link{
   width: 25%;
@@ -1675,6 +1683,12 @@ progress[value].progressSkills::-webkit-progress-value {
   text-align: center;
 }
 
+.leftbtnendtour{
+  float: left;
+  width:50% !important;
+}
+
+
 // switch
 
 .btnSwitch{
@@ -1725,17 +1739,20 @@ progress[value].progressSkills::-webkit-progress-value {
   margin:0 auto;
 }
 .infoBulle .infopersonnage {
-  display: block;
+  display: none;
   background-color: aliceblue;
-  width: 216px;
+  width: 350px;
   z-index: 28024;
   background-size: cover;
   color: #333;
   text-align: center;
   padding: 15px 0;
   position: absolute;
-  top: 114px;
-  left: -59px;
+  top: 154px;
+  left: 6px;
+  background: url(/assets/images/login/infoperso2.png) no-repeat;
+  font-size: 13px;
+  height: 200px;
 }
 
 .infoBulle:hover .infopersonnage {
@@ -1765,13 +1782,13 @@ progress[value].progressSkills::-webkit-progress-value {
 .infobar-spell-number .oneSkill .info{
   display: none;
   position: absolute;
-  top: -225px;
+  top: -272px;
   width: 350px;
   margin: 0 auto;
   z-index: 202530;
   background-color: #9dbac3;
   background-size: cover;
-  height: 150px;
+  height: 200px;
   left: 20px;
   padding: 10px 0;
   font-size: 13px;
@@ -2573,35 +2590,6 @@ progress[value].progressSkills::-webkit-progress-value {
   border:1px solid #333333;
 }
 
-.w20{
-  width: 20%;
-  float:left;
-}
-
-.w25{
-  width: 25%;
-  float:left;
-}
-
-.w30{
-  width: 30%;
-  float:left;
-}
-
-.w40{
-  width: 40%;
-  float:left;
-}
-
-.w45{
-  width: 45%;
-  float:left;
-}
-
-.w55{
-  width: 55%;
-  float:left;
-}
 
 .separator{
   position: absolute;
@@ -2733,4 +2721,92 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 20px;
   width: 20px;
   cursor: pointer;
+}
+.stats {
+  margin-top: 140px;
+  margin-left: 20px;
+  width: 195px;
+  overflow: auto;
+  height: 300px;
+  position:relative;
+  z-index:3;
+}
+
+.stats .stat, .stats .stat_large{
+  min-height: 20px;
+  font-size: 12px;
+}
+
+.stats .stat div, .stats .stat_large div{
+  float: left;
+}
+
+.stats .stat div:nth-child(1){
+  width: 70%;
+}
+
+.stats .stat div:nth-child(2){
+  width: 30%;
+}
+
+.stats .stat_large div:nth-child(1){
+  width: 80%;
+}
+
+.stats .stat_large div:nth-child(2){
+  width: 20%;
+}
+
+.stats::-webkit-scrollbar{
+  width:8px;
+  background-color:#808080;
+  border-radius:10px;
+}
+
+.stats::-webkit-scrollbar-thumb{
+  background-color:#393d41;
+  border-radius:10px;
+}
+.stats::-webkit-scrollbar-thumb:hover{
+  background-color:#5c6362;
+  border:1px solid #333333;
+}
+.stats::-webkit-scrollbar-thumb:active{
+  background-color:#393d41;
+  border:1px solid #333333;
+}
+
+.w20{
+  width: 20%;
+  float:left;
+}
+
+.w25{
+  width: 25%;
+  float:left;
+}
+
+.w30{
+  width: 30%;
+  float:left;
+}
+
+.w40{
+  width: 40%;
+  float:left;
+}
+
+.w45{
+  width: 45%;
+  float:left;
+}
+
+.w55{
+  width: 55%;
+  float:left;
+}
+
+.w80{
+  width: 80%;
+  float:left;
 }
