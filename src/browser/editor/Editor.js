@@ -11,7 +11,7 @@ import SignOut from '../auth/SignOut';
 import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,CreateNewWorldMap } from '../../common/editor/actions';
+import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems,CreateNewWorldMap } from '../../common/editor/actions';
 
 
 
@@ -169,6 +169,7 @@ Editor = firebase((database, props) => {
     const MapActiveRef = database.child('activeMap');
     let WorldMapRef = database.child('activeMap');
     let MonsterRef = database.child('monsters');
+    let ItemRef = database.child('items');
     if(props.viewer)
     {
 
@@ -181,6 +182,7 @@ Editor = firebase((database, props) => {
         [MapActiveRef, 'on', 'value', props.LoadMapActive],
         [WorldMapRef, 'on', 'value', props.ReloadActiveMap],
         [MonsterRef, 'on', 'value', props.LoadMonsters],
+        [ItemRef, 'on', 'value', props.LoadItems],
     ];
 })(Editor);
 
@@ -193,6 +195,7 @@ Editor.propTypes = {
     loadWorldMap : React.PropTypes.func,
     activeMap : React.PropTypes.object,
     monsters : React.PropTypes.object,
+    items : React.PropTypes.object,
 };
 
 
@@ -204,4 +207,5 @@ export default connect(state => ({
     activeMap: state.editor.activeMap,
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
-}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters })(Editor);
+    items : state.editor.items,
+}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems })(Editor);

@@ -6,6 +6,7 @@ import * as actions from './actions';
 import Editor from './editor';
 import MapTile from './maptile';
 import Monster from './monster';
+import Item from './item';
 import { Record } from '../transit';
 import { Seq } from 'immutable';
 import { Map } from 'immutable';
@@ -14,11 +15,13 @@ const State = Record({
     maptiles: null,
     worldmaps:null,
     monsters:null,
+    items:null,
     loaded: false,
     viewer: null,
     activeMap: Map(),
     activeTile: Map(),
     activeMonster: Map(),
+    activeObject: Map(),
 
 }, 'editor');
 
@@ -78,6 +81,16 @@ const editorReducer = (state = new State(), action) => {
             return state.set('loaded', true)
                 .set('monsters',list);
         }
+        case actions.LOAD_ITEMS: {
+            const { items } = action.payload;
+
+            const list = Seq(items)
+            .map(itemsPresence => new Item(itemsPresence))
+                .toList();
+
+            return state.set('loaded', true)
+                .set('items',list);
+        }
 
         case actions.LOAD_ACTIVE_MAP: {
             const {activeMap} = action.payload;
@@ -120,6 +133,11 @@ const editorReducer = (state = new State(), action) => {
             const maptile = action.payload;
 
             return state.update('activeTile', map => map.set(state.viewer.id,maptile));
+        }
+        case actions.PICK_ITEM_SUCCESS: {
+            const item = action.payload;
+
+            return state.update('activeObject', map => map.set(state.viewer.id,item));
         }
 
         case actions.PICK_MONSTER_SUCCESS: {
