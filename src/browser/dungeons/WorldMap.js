@@ -117,8 +117,8 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 {/*</div>*/}
                 {/*</div>*/}
                 <h2 className="titre-map">{dungeon.description}</h2>
-                <div className="btn-map"><button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button></div>
-                <div className="btn-map"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Annuler le donjon</button></div>
+                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => doEndTurn(dungeon)}>Fin du tour</button></div>
+                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Annuler le donjon</button></div>
                 <div className="info-joueur"><span className="error-map">{error_msg}</span></div>
               </div>
               <div className="cadre">
