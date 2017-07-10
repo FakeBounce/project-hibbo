@@ -13,14 +13,14 @@ import { Block, Flex, Text, View,Image,Form,Input } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { fields } from '../../common/lib/redux-fields';
-import { MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,viewObject,pickmonster,pickobject,pickmapmonster,pickmapobject,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
+import { MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,cancelWorldmap,picktile,pickmaptile,saveWorldmap,viewMonster,viewObject,pickmonster,pickobject,pickmapmonster,pickmapobject,RemoveWorldmap,ActiveMapDungeon,RemoveMapDungeon} from '../../common/editor/actions';
 
 type Props = {
     worldmap: Object,
     viewer: Object,
 };
 
-let EditorMap = ({ MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,activeObjects,pickobject,pickmapobject,items,monsters,viewMonster,viewObject,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
+let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,camera,FullBlockRight,FullBlockTop,addNameMap,fields,worldmap,viewer,cancelWorldmap,RemoveWorldmap, maptiles,picktile,pickmaptile,saveWorldmap,activeTiles,activeMonsters,activeObjects,pickobject,pickmapobject,items,monsters,viewMonster,viewObject,pickmonster,pickmapmonster,ActiveMapDungeon,RemoveMapDungeon}) => {
     let editor;
     let listmaptiles = [];
     let listmonsters = [];
@@ -237,13 +237,12 @@ let EditorMap = ({ MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,ca
               <h2>Zoom</h2>
               <div className="zoom">
 
-
                 <div className="zoomPlus" onClick={() => ZoomEditMap(worldmap.camera,viewer,worldmap)}></div>
                 <div className="zoomMoins" onClick={() => ZoomMinorEditMap(worldmap.camera,viewer,worldmap)}></div>
-                <div className="zoomHaut"></div>
+                <div className="zoomHaut" onClick={() => MoveUpEditMap(worldmap.camera,viewer,worldmap)}></div>
                 <div className="zoomBas" onClick={() => MoveDownEditMap(worldmap.camera,viewer,worldmap)}></div>
-                <div className="zoomGauche"></div>
-                <div className="zoomDroite"></div>
+                <div className="zoomGauche" onClick={() => MoveLeftEditMap(worldmap.camera,viewer,worldmap)}></div>
+                <div className="zoomDroite" onClick={() => MoveRightEditMap(worldmap.camera,viewer,worldmap)}></div>
               </div>
             </div>
           </div>
@@ -286,4 +285,4 @@ export default connect(state => ({
     activeTiles : state.editor.activeTile,
     activeMonsters : state.editor.activeMonster,
     activeObjects : state.editor.activeObject,
-}), { MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,pickobject,pickmapobject,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,viewObject,pickmonster,pickmapmonster})(EditorMap);
+}), { MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMap,ZoomMinorEditMap,ZoomEditMap,FullBlockRight,FullBlockTop,addNameMap,RemoveMapDungeon,ActiveMapDungeon,cancelWorldmap,picktile,pickobject,pickmapobject,RemoveWorldmap,pickmaptile,saveWorldmap,viewMonster,viewObject,pickmonster,pickmapmonster})(EditorMap);

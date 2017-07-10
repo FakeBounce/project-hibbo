@@ -34,6 +34,8 @@ export const ZOOM_PLUS_EDIT = 'ZOOM_PLUS_EDIT';
 export const ZOOM_MINUS_EDIT = 'ZOOM_MINUS_EDIT';
 export const MOVE_UP_EDIT = 'MOVE_UP_EDIT';
 export const MOVE_DOWN_EDIT = 'MOVE_DOWN_EDIT';
+export const MOVE_RIGHT_EDIT = 'MOVE_RIGHT_EDIT';
+export const MOVE_LEFT_EDIT = 'MOVE_LEFT_EDIT';
 
 export const loadWorldMap = (worldmap,viewer) =>  ({ getUid, now, firebase }) => {
     var path = 'editormaps/'+worldmap.id;
@@ -796,30 +798,26 @@ export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
         payload: camera
     }
 };
-export const MoveRightEditMap = (viewer,worldmap,camera) =>  ({firebase}) => {
+export const MoveRightEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
     if(camera)
     {
         worldmap.worldmap.maptiles.map((m1,i1) =>
             m1.map((m2,i2) => {
-                if(i1 == camera.row_end+1 && i2 <= camera.col_end+1)
+
+                if(i2 == camera.col_start && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
                 {
-                    console.log(i2);
-                    if(i2 == 0)
-                    {
-                        camera.maptiles[i1] = [];
-                    }
-                    camera.maptiles[i1].push(m2);
+                    delete camera.maptiles[i1][i2];
                 }
                 if(i2 == camera.col_end+1 && i1 < camera.row_end+1)
                 {
                     camera.maptiles[i1].push(m2);
                 }
+
             }));
 
-        camera.row_end = camera.row_end + 1;
-        camera.col_end = camera.col_end +1;
-        camera.size_map = camera.size_map + 1;
+        camera.col_start = camera.col_start + 1;
+        camera.col_end = camera.col_end + 1;
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
@@ -827,37 +825,41 @@ export const MoveRightEditMap = (viewer,worldmap,camera) =>  ({firebase}) => {
     }
 
     return {
-        type: ZOOM_MINUS_EDIT,
+        type: MOVE_RIGHT_EDIT,
         payload: camera
     }
 };
-export const MoveLeftEditMap = (worldmap,camera) =>  ({firebase}) => {
+export const MoveLeftEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
 
-    let newmap = camera;
-
-
-    // test if col left presente
-    if(worldmap.maptiles[camera.row_start-1][camera.col_start-1])
+    if(camera)
     {
-        // delete colonne de droite
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            newmap.maptiles[camera.row-end][i] = null;
-        }
-        for( let i = 0 ; i <= newmap.size_map ; i++)
-        {
-            // ajoute colonne gauche
-            newmap.maptiles[camera.row_start - 1][i] = worldmap.maptiles[camera.start - 1][i];
-        }
+        worldmap.worldmap.maptiles.map((m1,i1) =>
+            m1.map((m2,i2) => {
+
+                if(i2 == camera.col_end && i1 != camera.row_end && camera.maptiles[i1] != null && camera.maptiles[i1][i2] != null)
+                {
+                    delete camera.maptiles[i1][i2];
+                }
+                if(i2 == camera.col_start - 1 && i1 < camera.col_end+1)
+                {
+                    camera.maptiles[i1].push(m2);
+                }
+
+            }));
+
+
+        camera.col_start = camera.col_start - 1;
+        camera.col_end = camera.col_end - 1;
 
         firebase.update({
-            [`activeMap/${worldmap.user.id}/camera`]: newmap,
+            [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
 
+
     return {
         type: MOVE_LEFT_EDIT,
-        payload: newmap
+        payload: camera
     }
 };
 export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
@@ -866,7 +868,13 @@ export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
     {
         worldmap.worldmap.maptiles.map((m1,i1) =>
             m1.map((m2,i2) => {
-                if(i1 == camera.row_end+1 && i2 <= camera.col_end+1)
+
+                if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
+                {
+                    camera.maptiles[i1] = null;
+                }
+
+                if(i1 == camera.row_start-1 && i2 <= camera.col_end)
                 {
                     console.log(i2);
                     if(i2 == 0)
@@ -876,20 +884,15 @@ export const MoveUpEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
                     camera.maptiles[i1].push(m2);
                 }
 
-                if(i1 == camera.row_end && i2 == camera.col_end && camera.maptiles[i1] != null)
-                {
-                    camera.maptiles[i1] = null;
-                }
             }));
 
-        camera.row_end = camera.row_end + 1;
-        camera.row_start = camera.row_start -1;
+        camera.row_end = camera.row_end - 1;
+        camera.row_start = camera.row_start - 1;
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
         });
     }
-
 
     return {
         type: MOVE_UP_EDIT,
@@ -932,6 +935,7 @@ export const MoveDownEditMap = (camera,viewer,worldmap) =>  ({firebase}) => {
         type: MOVE_DOWN_EDIT,
         payload: camera
     }
+
 };
 export const FullBlockRight = (row,worldmap, viewer, tile) => ({ getUid,firebase }) => {
 
