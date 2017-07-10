@@ -130,6 +130,9 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
         <div className="infopersonnage">
           <div className="headerInfoPerso">
             <h3><Image className={classes} src={character.image} />{character.name}</h3>
+            {
+              conditions && <table className="tableInfoPerso"><tr>{conditions}</tr></table>
+            }
           </div>
           <ul>
             <li>Health: {character.health}</li>
@@ -137,9 +140,6 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
             <li>Movement: {character.movement}</li>
             <li>Range: {character.range}</li>
           </ul>
-          {
-            conditions && <div className="titleInfoPerso"><h4>Skills Damage</h4><table className="tableInfoPerso"><tr>{conditions}</tr></table></div>
-          }
         </div>
         <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
       </div>
