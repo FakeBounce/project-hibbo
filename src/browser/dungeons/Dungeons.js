@@ -12,10 +12,11 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { ChangeTab, DeleteEquipment,switchPannel, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { SwitchCompaign, ChangeTab, DeleteEquipment,switchPannel, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
     let dungeons_list = '';
+    let dungeons_list_editor = '';
     var skills_list = '';
     var object_list = '';
     let dungeon;
@@ -33,6 +34,11 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
     let tab = "";   
     let switchbutton = false;
     let skill_tab = true;
+    let switchcompaign = true;
+
+    if(!window.location.hash){
+        tab = "dungeons";
+    }
 
     if(!dviewer)
     {
@@ -69,14 +75,10 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
             });
         }
 
-        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits) {
-            pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
-                return (<div className="inventory_pick_info_benef">
-                    <div>{benef} :</div>
-                    <div>{dviewer.pick_equipment.benefits[benef]}</div>
-                </div>)
-            });
+        if(dviewer.compaign != null & dviewer.compaign != 'undefined'){
+            switchcompaign = dviewer.compaign;
         }
+
         if(dviewer.tab != null & dviewer.tab != 'undefined'){
             tab = dviewer.tab;
         }
@@ -203,11 +205,19 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
 
                 let compteur = 0;
                 dungeons_list = dungeons.map(dung => {
-                    console.log("console",dung);
                     if(compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
                         let classeD = "compaign_dungeon" + compteur;
                         compteur++;
                         return (<div className={classeD}>
+                            <Dungeon key={dung.id} dungeon={dung}/>
+                        </div>)
+                    }
+                    return "";
+                });
+
+                dungeons_list_editor = dungeons.map(dung => {
+                    if(dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
+                        return (<div className="dungeon_editor">
                             <Dungeon key={dung.id} dungeon={dung}/>
                         </div>)
                     }
@@ -267,8 +277,14 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
                     }
                     {tab == "dungeons" && !dungeonActive && dungeons &&
                         <div className="button-dungeons">
-                            <div>Campaign</div>
-                            <div>Dungeons from Editor</div>
+                            { switchcompaign ?
+                                <div onClick={() => SwitchCompaign(dviewer,true)} className="active">Campaign</div> :
+                                <div onClick={() => SwitchCompaign(dviewer,true)} >Campaign</div>}
+                            { !switchcompaign ?
+                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Dungeons from
+                                    Editor</div> :
+                                <div onClick={() => SwitchCompaign(dviewer, false)}>Dungeons from Editor</div>
+                            }
                         </div>
                     }
                 </div>
@@ -277,7 +293,7 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
                                 {dungeon ?
-                                    <div>
+                                    <div className={tab}>
                                         <a href="#dungeons">
                                             <li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li>
                                         </a>
@@ -285,7 +301,7 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
                                         <li className="menu-spell"><span className="btn-menu">Skills</span></li>
                                         <li className="menu-option"><span className="btn-menu">Options</span></li>
                                     </div> :
-                                    <div>
+                                    <div className={tab}>
                                         <a href="#dungeons" onClick={() => ChangeTab(dviewer, "dungeons")}><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
                                         <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Character</span></li></a>
                                         <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Skills</span></li></a>
@@ -306,10 +322,11 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
                                     dungeonActive?
                                         verifloaded && wdmap
                                         :
-                                        dungeons ?
+                                        dungeons && dungeons_list ?
                                             <div className="container-map">
-                                                {
-                                                    dungeons_list
+                                                { switchcompaign ?
+                                                    dungeons_list :
+                                                    dungeons_list_editor
                                                  }
                                              </div>
                                             : <Text>There are no dungeons yet.</Text>
@@ -408,4 +425,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { ChangeTab, AddEquipment,switchPannel,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { SwitchCompaign, ChangeTab, AddEquipment,switchPannel,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);

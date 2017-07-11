@@ -472,7 +472,7 @@ Input.input-map-editor{
   text-align: center;
   list-style: none;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
-  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  background: url("/assets/images/interface/redbuttonb.png") no-repeat;
   height: 46px;
   line-height: 46px;
   padding-right: 20px;
@@ -977,14 +977,14 @@ progress[value].progressSkills::-webkit-progress-value {
   border: 1px solid #fff;
 }
 
-.skills {
-  width: 54px;
-  height: 54px;
+.skills{
+  width: 53px;
+  height: 53px;
   display: block;
   float: left;
-  margin: -3px 23px;
+  margin: 0 23px;
   border: 1px solid #fff;
-  cursor: url(/assets/images/cursor_pointer.png), pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon0{
@@ -2734,7 +2734,7 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 5;
   height: 20px;
   width: 20px;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+  cursor: pointer;
 }
 .stats {
   margin-top: 140px;
@@ -2834,40 +2834,27 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .button-dungeons{
   margin-top:200px;
-  margin-left:20px;
+  margin-left: 30px;
   width: 190px;
   text-align: center;
 }
 
 .button-dungeons div{
   background: url("/assets/images/login/button_dung.png");
-  height: 53px;
-  width: 190px;
-  line-height: 53px;
+  height: 46px;
+  width: 165px;
+  line-height: 46px;
   margin-bottom: 15px;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
   position: relative;
   z-index: 3;
-}
-
-.btn-small {
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  border: 0;
-  color: #fff;
-  background-image: url("/assets/images/login/actionbutton.png");
-  background-repeat: no-repeat;
-  background-color: transparent;
   background-size: contain;
-  height: 20px;
-  width: 70px;
-  box-shadow: none;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+  color: #fab186;
 }
 
-.pull-right{
-  float:right;
+.button-dungeons div.active{
+  background: url("/assets/images/login/button_dung_active.png");
+  background-size: contain;
 }
 
 .compaign_dungeon0{
@@ -2890,6 +2877,34 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .fix-h{
   height: 10px;
+}
+
+.dungeon_editor{
+  padding: 40px;
+  overflow: auto;
+}
+
+.dungeon_editor_e{
+
+}
+
+.dungeon_editor .one-level, .dungeon_editor_e .one-level{
+  width: 10%;
+  float: left;
+}
+
+//menu active
+.menu-fixe .dungeons li.menu-dungeons{
+  background: url("/assets/images/interface/redbutton.png") no-repeat;
+}
+.menu-fixe .perso li.menu-perso{
+  background: url("/assets/images/interface/redbutton.png") no-repeat;
+}
+.menu-fixe .skill li.menu-spell{
+  background: url("/assets/images/interface/redbutton.png") no-repeat;
+}
+.menu-fixe .option li.menu-option{
+  background: url("/assets/images/interface/redbutton.png") no-repeat;
 }
 
 

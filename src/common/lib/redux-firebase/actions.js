@@ -115,6 +115,7 @@ const saveUser = user => ({ firebase }) => {
                     [`users/${user.id}/photoURL`]: json.photoURL,
                     [`users/${user.id}/tuto`]: tuto,
                     [`users/${user.id}/tuto_loaded`]: false,
+                    [`users/${user.id}/tab`]: "dungeons",
                     [`users-emails/${user.id}`]: { email },
                 });
                 return username;

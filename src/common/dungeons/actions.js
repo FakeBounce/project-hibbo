@@ -47,8 +47,7 @@ export const CREATE_PERSO = 'CREATE_PERSO';
 export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
 export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 export const CHANGE_TAB = 'CHANGE_TAB';
-
-
+export const SWITCH_COMPAIGN = 'SWITCH_COMPAIGN';
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -4763,3 +4762,19 @@ export const switchPannel = (dungeon) => ({firebase}) => {
         payload: dungeon,
     }
 };
+
+export const SwitchCompaign = (viewer, compaign) => ({firebase}) => {
+    viewer.compaign = compaign;
+
+    firebase.update({
+        [`users/${viewer.id}/compaign`]: compaign,
+    });
+
+    return {
+        type: SWITCH_COMPAIGN,
+        payload: viewer,
+    }
+};
+
+
+
