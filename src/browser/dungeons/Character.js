@@ -27,16 +27,30 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
 
     if(character.conditions) {
         conditions = character.conditions.map(cond => {
-            let cond_image = '/assets/images/skills/' + cond.image;
-            return (<Image className="imgConditionPersonnage" src={cond_image}/>);
+            if(cond.is_item)
+            {
+                let cond_image = '/assets/images/objets/' + cond.image;
+                return (<Image className="imgConditionPersonnage" src={cond_image}/>);
+            }
+            else {
+                let cond_image = '/assets/images/skills/' + cond.image;
+                return (<Image className="imgConditionPersonnage" src={cond_image}/>);
+            }
         });
     }
 
     let buffs = false;
     if(character.buffs) {
       buffs = character.buffs.map(buff => {
-        let buff_image = 'assets/images/skills/' + buff.image;
-        return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+          if(buff.is_item)
+          {
+              let buff_image = 'assets/images/objets/' + buff.image;
+              return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+          }
+          else {
+              let buff_image = 'assets/images/skills/' + buff.image;
+              return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+          }
       });
     }
 

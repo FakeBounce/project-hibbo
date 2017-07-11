@@ -111,8 +111,6 @@ body {
 .actionsEditeur{
   display: -webkit-inline-box;
   padding:0;
-  position: relative;
-  z-index: 4;
 }
 
 .actionsEditeur li{
@@ -346,16 +344,11 @@ Input.input-map-editor{
 
 .cadre-droite-interact-gauche{
   float: left;
-  padding-left: 23px;
-  position: relative;
-  z-index: 3;
 }
 
 .cadre-droite-interact-droite {
   float: right;
   width:28%;
-  position: relative;
-  z-index: 3;
 }
 
 
@@ -380,7 +373,8 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: 40px;
-  border: 1px solid #87591A;
+  border-bottom: 1px solid #87591A;
+  border-right: 1px solid #87591A;
   background-color: black;
 }
 
@@ -433,16 +427,10 @@ Input.input-map-editor{
   left:0;
   right: 0;
   top: 0;
-  width: 1010px;
+  width: 1024px;
   height: 596px;
   margin: auto;
   position: absolute;
-  background-color: #16120F;
-}
-
-.fix-index-editor{
-  position: relative;
-  z-index: 4;
 }
 
 .container_app-img{
@@ -457,36 +445,6 @@ Input.input-map-editor{
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
   z-index: 2;
 }
-
-.container_form-img{
-  bottom: 0;
-  left:0;
-  right: 0;
-  top: 0;
-  width: 1074px;
-  height: 646px;
-  margin: auto;
-  position: absolute;
-  background: url("/assets/images/interface/cadre-classe.png") no-repeat;
-  z-index: 2;
-}
-
-.container_form_title{
-  height: 90px;
-  width: 1024px;
-  background: url("/assets/images/pla.png");
-  text-align: center;
-  line-height: 90px;
-  font-size: 35px;
-  color: #836854;
-}
-
-.container_form_classe{
-  height: 506px;
-  width: 1024px;
-  background-color: #16120f
-}
-
 .container_editor_app-img{
   bottom: 0;
   left:0;
@@ -509,12 +467,12 @@ Input.input-map-editor{
 }
 
 .menu-fixe li{
-  width: 160px;
+  width: 25%;
   float: left;
   text-align: center;
   list-style: none;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
-  background: url("/assets/images/interface/redbuttonb.png") no-repeat;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
   height: 46px;
   line-height: 46px;
   padding-right: 20px;
@@ -548,8 +506,6 @@ Input.input-map-editor{
 .btn-haut-editeur{
   width:33%;
   float: left;
-  position: relative;
-  z-index: 5;
 }
 
 .listEditeur{
@@ -564,7 +520,6 @@ Input.input-map-editor{
   overflow-y: scroll;
   display: inline-block;
   width: 300px;
-  padding-top: 10px;
 }
 
 .titre-error{
@@ -627,7 +582,7 @@ Input.input-map-editor{
   font-weight: 600;
   font-size: 13px;
   color: white;
-  margin-bottom: -34px;
+  margin-bottom: -25px;
 }
 
 .form_auth_error_empty{
@@ -725,32 +680,6 @@ Input.input-map-editor{
   float: left;
 }
 
-.new-level{
-  position: absolute;
-  top: 11px;
-  left: 78px;
-  z-index: 4;
-}
-
-
-.one-level-editor{
-  width:20%;
-  float: left;
-  position: relative;
-  z-index: 3;
-}
-
-.choose-level-editor {
-  width: 75px;
-  height: 75px;
-  background: url(/assets/images/levels/level.png) no-repeat;
-  background-size: contain;
-  cursor: url(/assets/images/cursor_pointer.png), pointer;
-  margin: 0 auto;
-  text-align: center;
-  line-height: 75px;
-}
-
 .choose-level {
   width: 75px;
   height: 75px;
@@ -763,12 +692,6 @@ Input.input-map-editor{
 }
 
 .choose-level div{
-  font-size: 25px;
-  color: #ffd370;
-  font-weight: bold;
-}
-
-.choose-level-editor div{
   font-size: 25px;
   color: #ffd370;
   font-weight: bold;
@@ -796,11 +719,10 @@ Input.input-map-editor{
   float: left;
   display: block;
   background-color: rgba(0, 0, 0, 0.3);
-  width: 37%;
-  height: 460px;
+  width: 40%;
+  height: 452px;
   border-right: 1px solid #fff;
   background: url(/assets/images/planche-1.png);
-  padding-left: 10px;
 }
 
 .personnage{
@@ -833,7 +755,7 @@ Input.input-map-editor{
 }
 
 .personnage-info{
-  margin-top: 30px;
+  margin-top: 35px;
   float: left;
   width: 50%;
 }
@@ -841,8 +763,6 @@ Input.input-map-editor{
 .personnage-info-pseudo{
   margin-left: 10px;
   margin-bottom: 10px;
-  word-wrap: break-word;
-  margin-right: 15px;
 }
 
 .personnage-info-class{
@@ -1057,14 +977,14 @@ progress[value].progressSkills::-webkit-progress-value {
   border: 1px solid #fff;
 }
 
-.skills{
-  width: 53px;
-  height: 53px;
+.skills {
+  width: 54px;
+  height: 54px;
   display: block;
   float: left;
-  margin: 0 23px;
+  margin: -3px 23px;
   border: 1px solid #fff;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+  cursor: url(/assets/images/cursor_pointer.png), pointer;
 }
 
 .weapon0{
@@ -1612,7 +1532,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-menu-editor{
   background: url("/assets/images/planche-1.png");
   width: 1020px;
-  height: 125px;
+  height: 135px;
 }
 
 .cadre-menu-div{
@@ -1640,24 +1560,17 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 360px;
 }
 .Link{
-  height: 53px;
-  width: 190px;
+  width: 25%;
   float: left;
   text-align: center;
   list-style: none;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
-  background-image: url(/assets/images/login/logoutbutton.png);
-  line-height:53px;
+  background: url(/assets/images/interface/redbutton.png) no-repeat;
+  height: 46px;
+  line-height: 46px;
+  padding-right: 20px;
   z-index: 7000;
   position: relative;
-  color: rgb(250, 177, 134)!important;
-  margin-left:30px;
-  text-decoration: none!important;
-
-}
-
-.Link:hover{
-  text-decoration: none !important;
 }
 .cmenu-editor {
   left: -51px;
@@ -1666,13 +1579,11 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .cadre-editor{
   width: 1025px;
-  height: 445px;
+  height: 460px;
   background-color: #16120F;
+  position: absolute;
+  z-index: 2;
   text-align: center;
-  padding-top: 10px;
-  overflow-y: scroll;
-  margin-top: 5px;
-  margin-bottom: 20px;
 }
 
 .cadre-gauche-bas{
@@ -1745,11 +1656,11 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .progress-bar-mana{
-  background-color: #240ab5;
+  background-color: blue;
 }
 
 .progress-bar-life{
-  background-color: #ba0e0e;
+  background-color: red;
 }
 
 .progress-bar {
@@ -1892,70 +1803,7 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url(/assets/images/login/info2.png) no-repeat;
 }
 
-
-// info bulle editor
-
-.edit-object-editor{
-  float: left;
-  width: 20%;
-}
-
-.edit-object-editor .info-editor{
-  display: none;
-  position: absolute;
-  width: 350px;
-  margin: 0 auto;
-  z-index: 202530;
-  background-color: #9dbac3;
-  background-size: cover;
-  height: 200px;
-  top:110px;
-  left: 385px;
-  padding: 10px 0;
-  font-size: 13px;
-  background: url(/assets/images/login/info2.png) no-repeat;
-}
-
-.edit-object-editor .info-editor ul {
-  margin: 0;
-  padding:0;
-}
-
-.edit-object-editor .info-editor ul li {
-  list-style: none;
-  width: 50%;
-  float: left;
-  margin: 7px 0;
-  color: #333;
-}
-
-.caseShowEditor{
-  width:30px;
-  height:30px;
-}
-.headerEditorObject{
-  padding-top: 20px;
-}
-
-.headerInfoPerso h3 {
-  width:100%;
-  text-align: center;
-  margin:10px 0;
-}
-
-.headerInfoPerso h4 {
-  margin: 0;
-}
-
-.info-editor:hover{
-  display: block;
-}
-
-.edit-object-editor:hover .info-editor{
-  display: block;
-}
-
-.dungeon_active .infobar-spell-number .oneSkill:hover .info{
+.infobar-spell-number .oneSkill:hover .info{
   display: block;
 }
 
@@ -2357,35 +2205,33 @@ progress[value].progressSkills::-webkit-progress-value {
 .container-classe{
   width: 70%;
   float: left;
-  padding-left: 35px;
-  height: inherit;
-  padding-top: 50px;
+  padding:50px;
 }
 
 .container-classe-pseudo {
-  width: 30%;
   text-align: center;
-  float: left;
-  height: 506px;
+  float: right;
+  height: auto;
+  background: #2a2e31;
+  position: absolute;
+  border: solid 10px #4d5354;
+  top: 0;
+  bottom: 0;
+  max-height: 350px;
+  right: 30px;
+  margin: auto;
 }
 
 
 .center-scroll{
   width: 100%;
-  padding:30px;
-  color: #c2aa97;
-  position: relative;
-  height: 100%;
-  z-index: 3;
+  padding:60px;
+  color:white;
 }
 
-.center-scroll .div-left{
+.center-scroll div{
   height: 50px;
 
-}
-
-.div-left-description{
-  text-align: justify;
 }
 
 .center-scroll .div-left span, .center-scroll .div-left .Input *{
@@ -2398,19 +2244,18 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .classe_form{
-  width: 1024px;
-  height: 596px;
+  width: 100%;
+  padding:50px;
   max-width: none!important;
 }
 
 .classe-choice{
   width: 33%;
-  height: 400px;
+  height: 500px;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
   float:left;
   text-align: center;
   position: relative;
-  z-index: 3;
 }
 .classe-choice img{
   position: absolute;
@@ -2449,6 +2294,26 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
   display: none;
+}
+
+
+@media screen and (max-width: 1050px) {
+
+  .container-classe{
+    width: 50%;
+    padding: 10px;
+  }
+  .classe-choice img{
+    height: inherit;
+    width: auto;
+  }
+
+  .classe-choice {
+    width: 100%;
+    float: none;
+    display: flex;
+    height: 150px;
+  }
 }
 
 .cadre-tutoriel {
@@ -2508,8 +2373,6 @@ progress[value].progressSkills::-webkit-progress-value {
   left: 0;
   margin: auto;
 }
-
-
 
 .tutoriel-menu-donjon .menu-dungeons{
   z-index: 8000;
@@ -2601,21 +2464,6 @@ progress[value].progressSkills::-webkit-progress-value {
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
-}
-
-.signout_editor
-{
-  width: 25%;
-  float: left;
-  text-align: center;
-  list-style: none;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
-  height: 46px;
-  line-height: 46px;
-  padding-right: 20px;
-  z-index: 7000;
-  position: relative;
 }
 
 .cadre-dungeons {
@@ -2884,7 +2732,7 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 5;
   height: 20px;
   width: 20px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 .stats {
   margin-top: 140px;
@@ -2984,64 +2832,43 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .button-dungeons{
   margin-top:200px;
-  margin-left: 30px;
+  margin-left:20px;
   width: 190px;
   text-align: center;
 }
 
 .button-dungeons div{
   background: url("/assets/images/login/button_dung.png");
-  height: 46px;
-  width: 165px;
-  line-height: 46px;
+  height: 53px;
+  width: 190px;
+  line-height: 53px;
   margin-bottom: 15px;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
   position: relative;
   z-index: 3;
-  background-size: contain;
-  color: #fab186;
 }
 
-.button-dungeons div.active{
-  background: url("/assets/images/login/button_dung_active.png");
+<<<<<<< 004e77e1798df9a7d70e072dd2b5628386da2b9b
+.btn-small {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border: 0;
+  color: #fff;
+  background-image: url("/assets/images/login/actionbutton.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
   background-size: contain;
+  height: 20px;
+  width: 70px;
+  box-shadow: none;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .pull-right{
   float:right;
 }
-
-.infoBulle.infoLoot {
-  display: block;
-  background-color: aliceblue;
-  width: 350px;
-  z-index: 202531!important;
-  background-size: cover;
-  color: #333;
-  text-align: center;
-  padding: 15px 0;
-  position: absolute;
-  top: 154px;
-  left: 6px;
-  background: url("/assets/images/login/infoperso2.png") no-repeat;
-  font-size: 13px;
-  height: 200px;
-}
-
-.infoBulle.infoLoot h2{
-  margin-top: 25px;
-}
-
-
-.loot {
-  width: 54px;
-  height: 54px;
-  display: inline-block;
-  border: 1px solid #fff;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
-}
-
-
+=======
 .compaign_dungeon0{
   position: absolute;
   top: 170px;
@@ -3064,84 +2891,5 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 10px;
 }
 
-.dungeon_editor{
-  padding: 40px;
-  overflow: auto;
-}
 
-.dungeon_editor_e{
-
-}
-
-.dungeon_editor .one-level, .dungeon_editor_e .one-level{
-  width: 10%;
-  float: left;
-}
-
-//menu active
-.menu-fixe .dungeons li.menu-dungeons{
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
-}
-.menu-fixe .perso li.menu-perso{
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
-}
-.menu-fixe .skill li.menu-spell{
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
-}
-.menu-fixe .option li.menu-option{
-  background: url("/assets/images/interface/redbutton.png") no-repeat;
-}
-
-.btn-small {
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 600;
-  border: 0;
-  color: #fff;
-  background-image: url("/assets/images/login/actionbutton.png");
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-size: contain;
-  height: 20px;
-  width: 70px;
-  box-shadow: none;
-  cursor: url("/assets/images/cursor_pointer.png"), pointer;
-}
-
-.errorClasse{
-  padding-bottom: 15px;
-  color: #9b0c0c;
-}
-
-.cadre-option{
-  position: relative;
-}
-.container-option{
-  width: 250px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin: auto;
-  top: 50px;
-}
-
-.container-option .Link{
-  margin-bottom: 20px;
-}
-
-.container-option .Button span {
-  font-weight: 100;
-}
-
-@media screen and (max-width: 1074px) {
-  .container_app, .container_app-editor {
-    left: 20px;
-  }
-}
-
-.errorEmail{
-  margin-bottom: -34px;
-  font-weight: 600;
-  font-size: 13px;
-  color: white;
-}
+>>>>>>> css dungeons

@@ -207,7 +207,7 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
           <div className="btn-haut-editeur">
             <Text onClick={() => viewObject(worldmap)}><span className="changeSelection">Objects</span></Text>
           </div>
-          <div className="listEditeur">
+          <div className="listEditeur fix-index-editor">
             <div className="blockSelection">
               {listmaptiles}
               {listmonsters}

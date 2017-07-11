@@ -23,9 +23,24 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     var monster_maxhealth = 100;
     var monster_name = '';
     var grid = "off";
+    let is_looted = false;
+    let loots = '';
+
     if(dungeon.grid)
     {
         grid = "on";
+    }
+
+    if(dungeon.is_looted)
+    {
+        is_looted = true;
+        if(dungeon.loot)
+        {
+
+            loots = dungeon.loot.map(l => {
+                return(<Image className="loot" src={l.img}/>);
+            });
+        }
     }
 
   onkeydown = (event: KeyboardEvent) => {
@@ -123,17 +138,56 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 {/*</div>*/}
                   <h2 className="titre-map">{dungeon.description} <button className="btn-small pull-right" onClick={() => changeGrid(dungeon)}>Grid {grid}</button></h2>
                 <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => doEndTurn(dungeon)}>End of turn</button></div>
-                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</button></div>
+                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Leave dungeon</button></div>
                 <div className="info-joueur"><span className="error-map">{error_msg}</span></div>
+                  {is_looted &&
+                    <div className="infoBulle infoLoot">
+                        <h2>Dungeon complete !</h2>
+                        <Text>Here is what you looted :</Text>
+                        {loots}
+                    </div>
+                  }
               </div>
               <div className="cadre">
                 { Object.keys(worldmap.maptiles).map(function (keyRow) {
                   var col = Object.keys(worldmap.maptiles[keyRow]).map(function (keyCol) {
-                    return(
-                      <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
-                               dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
-                      />
-                    );
+                      let c_row_start = parseInt(dungeon.camera.row_center) - 3;
+                      let c_col_start = parseInt(dungeon.camera.col_center) - 5;
+                      let c_row_end = parseInt(dungeon.camera.row_center) + 4;
+                      let c_col_end = parseInt(dungeon.camera.col_center) + 4;
+
+                      if(c_row_start < 0)
+                      {
+                          c_row_end = c_row_end+(c_row_start*-1);
+                          c_row_start = 0;
+                      }
+                      if(c_col_start < 0)
+                      {
+                          c_col_end = c_col_end+(c_col_start*-1);
+                          c_col_start = 0;
+                      }
+
+                      if(c_row_end > parseInt(dungeon.row_end))
+                      {
+                          c_row_start = c_row_start+(c_row_end-parseInt(dungeon.row_end));
+                          c_row_end = parseInt(dungeon.row_end);
+                      }
+                      if(c_col_end > parseInt(dungeon.col_end))
+                      {
+                          c_col_start = c_col_start+(c_col_end-parseInt(dungeon.col_end));
+                          c_col_end = parseInt(dungeon.col_end);
+                      }
+                      if(c_row_start <= keyRow && keyRow<= c_row_end)
+                      {
+                          if(c_col_start <= keyCol && keyCol <= c_col_end)
+                          {
+                              return(
+                                  <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                                           dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                                  />
+                              );
+                          }
+                      }
                   });
                 return (
                   <Flex key={keyRow} >{col}</Flex>

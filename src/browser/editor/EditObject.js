@@ -26,9 +26,22 @@ const EditObject = ({ row,col,item, viewer,worldmap,active,pickobject }: Props) 
         classImage = classImage+" selected_tile";
     }
 
+    console.log('item',item);
 
     return (
-        <Image className={classImage} src={'/assets/images/objets/' + item.image} style={styles} onClick={() => pickobject(item,viewer,worldmap,row,col)}/>
+        <div className="edit-object-editor">
+
+            <Image className={classImage} src={'/assets/images/objets/' + item.image} style={styles} onClick={() => pickobject(item,viewer,worldmap,row,col)}/>
+
+            <div className="info-editor">
+                <div className="headerInfoPerso headerEditorObject">
+                    <h3><Image className="caseShowEditor" src={'/assets/images/objets/' + item.image} style={styles}/>
+                    </h3>
+                    <h3>{item.name}</h3>
+                    <h4>{item.description}</h4>
+                </div>
+            </div>
+        </div>
     );
 };
 

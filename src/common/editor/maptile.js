@@ -7,6 +7,7 @@ const MapTile = Record({
     "id": "",
     "title" : "",
     "image" : "",
+    "type" : "",
     "completed" : "",
 }, 'maptile');
 

@@ -30,7 +30,17 @@ const EditTile = ({ maptile,picktile,viewer,worldmap,row,col,active }: Props) =>
     }
 
     return (
-      <Image className={classImage} src={src} style={styles} onClick={() => picktile(maptile,viewer,worldmap,row,col)}/>
+        <div className="edit-object-editor">
+            <Image className={classImage} src={src} style={styles} onClick={() => picktile(maptile,viewer,worldmap,row,col)}/>
+
+            <div className="info-editor">
+                <div className="headerInfoPerso headerEditorObject">
+                    <h3><Image className="caseShowEditor" src={src} style={styles}/></h3>
+                    <h3>{maptile.title}</h3>
+                    <h4>{maptile.type}</h4>
+              </div>
+            </div>
+        </div>
     );
 };
 

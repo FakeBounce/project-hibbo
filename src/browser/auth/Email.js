@@ -22,6 +22,8 @@ Div
 type State = {
   forgetPasswordIsShown: boolean,
   recoveryEmailSent: boolean,
+  errorValidation: string,
+  hasError: boolean
 };
 
 class Email extends React.Component {
@@ -38,9 +40,12 @@ class Email extends React.Component {
   state: State = {
     forgetPasswordIsShown: false,
     recoveryEmailSent: false,
+    errorValidation: "",
+    hasError: false,
   };
 
   onFormSubmit = () => {
+    this.setState({ hasError: false });
     if (this.state.forgetPasswordIsShown) {
       this.resetPassword();
     } else {
@@ -49,12 +54,21 @@ class Email extends React.Component {
   };
 
   onSignUpClick = () => {
+    this.setState({ hasError: false });
     const { fields, signUp } = this.props;
+    var validRegEx = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(!fields.email.value.match(validRegEx))
+    {
+      this.setState({ hasError: true });
+      this.setState({ error: "Email format invalid" });
+      return;
+    }
     signUp('password', fields.$values());
   };
 
   onForgetPasswordClick = () => {
     const { forgetPasswordIsShown } = this.state;
+      this.setState({ hasError: false });
       this.setState({ forgetPasswordIsShown: !forgetPasswordIsShown });
   };
 
@@ -65,6 +79,7 @@ class Email extends React.Component {
       this.setState({
         forgetPasswordIsShown: false,
         recoveryEmailSent: true,
+        hasError: false,
       });
     });
   }
@@ -76,7 +91,7 @@ class Email extends React.Component {
 
   render() {
     const { disabled, fields, intl } = this.props;
-    const { forgetPasswordIsShown, recoveryEmailSent } = this.state;
+    const { forgetPasswordIsShown, recoveryEmailSent, error, hasError } = this.state;
     const legendMessage = forgetPasswordIsShown
       ? emailMessages.passwordRecoveryLegend
       : emailMessages.emailLegend;
@@ -110,8 +125,11 @@ class Email extends React.Component {
               </Div>
 
           }
-          {!disabled &&
+          {!hasError && !disabled &&
             <SignInError />
+          }
+          {hasError && error && error != "" &&
+            <div className="errorEmail">{error}</div>
           }
 
           {disabled &&

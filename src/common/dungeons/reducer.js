@@ -16,6 +16,7 @@ const State = Record({
     tutoriel: null,
     dungeonsOP: Map(),
     classes: Map(),
+    equipments: Map(),
     division: null,
     class: null,
 }, 'dungeon');
@@ -68,9 +69,13 @@ const dungeonsReducer = (state = new State(), action) => {
             return state.set('classes', classes);
         }
 
+        case actions.LOAD_EQUIPMENTS: {
+            const equipments = action.payload;
+            return state.set('equipments', equipments);
+        }
+
         case actions.SET_CLASSE: {
-            const { classe } = action.payload;
-            return state.set('classe', classe);
+            return state.set('viewer', action.payload);
         }
 
         case actions.LOAD_TUTO_REF: {
@@ -310,6 +315,14 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.SWITCH_PANNEL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.END_DUNGEON: {
             let payload = action.payload;
             let vl = state.verifloaded;
             vl++;

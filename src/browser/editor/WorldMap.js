@@ -30,13 +30,13 @@ let WorldMap = ({ worldmap,viewer,loadWorldMap }) => {
 
     return (
         <View>
-            <div className="one-level">
-                <div className="choose-level" onClick={() => loadWorldMap(worldmap,viewer)}>
+            <div className="one-level-editor">
+                <div className="choose-level-editor" onClick={() => loadWorldMap(worldmap,viewer)}>
                     <span>!</span>
                 </div>
                 <Text style={styles.title}
                       onClick={() => loadWorldMap(worldmap,viewer)}>
-                    Description : {worldmap.name}
+                    {worldmap.name}
                 </Text>
             </div>
         </View>
