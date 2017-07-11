@@ -351,9 +351,13 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Skills</div>
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
-                          <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <Link className="btnEidteurOption" exactly to='/editor'>Editor</Link>
-                            <SignOut/>
+                            <div className="container-option">
+                                <div>
+                                    <Link className="btnEidteurOption" exactly to='/editor'>Editor</Link>
+                                </div>
+                                <SignOut/>
+                            </div>
+
                         </div>
                     </div>
                 </div>

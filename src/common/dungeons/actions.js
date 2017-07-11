@@ -50,6 +50,7 @@ export const PICK_EQUIPMENT = 'PICK_EQUIPMENT';
 export const ADD_EQUIPMENT = 'ADD_EQUIPMENT';
 export const CHANGE_TAB = 'CHANGE_TAB';
 export const SWITCH_COMPAIGN = 'SWITCH_COMPAIGN';
+export const UPDATE_ERROR = 'UPDATE_ERROR';
 
 /************ Dungeon creation in firebase *****************/
 export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => {
@@ -4863,4 +4864,17 @@ function lvl_up(dungeon,pj,firebase){
         [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
     });
     return {dungeon:dungeon,pj:pj};
+};
+
+export const updateError = (viewer, error) => ({firebase}) => {
+    viewer.errorClasse = error;
+
+    firebase.update({
+        [`users/${viewer.id}/errorClasse`]: error,
+    });
+
+    return {
+        type: UPDATE_ERROR,
+        payload: viewer,
+    }
 };

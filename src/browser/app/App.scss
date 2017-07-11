@@ -785,7 +785,7 @@ Input.input-map-editor{
 }
 
 .personnage-info{
-  margin-top: 35px;
+  margin-top: 30px;
   float: left;
   width: 50%;
 }
@@ -793,6 +793,8 @@ Input.input-map-editor{
 .personnage-info-pseudo{
   margin-left: 10px;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  margin-right: 15px;
 }
 
 .personnage-info-class{
@@ -1590,18 +1592,22 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 360px;
 }
 .Link{
-  width: 25%;
+  height: 53px;
+  width: 190px;
   float: left;
   text-align: center;
   list-style: none;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
-  background: url(/assets/images/interface/redbutton.png) no-repeat;
-  height: 46px;
-  line-height: 46px;
-  padding-right: 20px;
+  background-image: url(/assets/images/login/logoutbutton.png);
+  line-height:53px;
   z-index: 7000;
   position: relative;
+  color: rgb(250, 177, 134)!important;
+  margin-left:30px;
+  text-decoration: none!important;
+
 }
+
 .cmenu-editor {
   left: -51px;
   z-index: -1;
@@ -2309,7 +2315,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .center-scroll{
   width: 100%;
   padding:30px;
-  color:white;
+  color: #c2aa97;
   position: relative;
   height: 100%;
   z-index: 3;
@@ -2385,32 +2391,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
   display: none;
-}
-
-
-@media screen and (max-width: 1050px) {
-
-  .container-classe{
-    width: 50%;
-    padding: 10px;
-  }
-
-  .container-classe-pseudo{
-    width: 50%;
-    padding: 10px;
-  }
-
-  .classe-choice img{
-    height: inherit;
-    width: auto;
-  }
-
-  .classe-choice {
-    width: 100%;
-    float: none;
-    display: flex;
-    height: 150px;
-  }
 }
 
 .cadre-tutoriel {
@@ -3068,4 +3048,35 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 70px;
   box-shadow: none;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
+}
+
+.errorClasse{
+  padding-bottom: 15px;
+  color: #9b0c0c;
+}
+
+.cadre-option{
+  position: relative;
+}
+.container-option{
+  width: 250px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 50px;
+}
+
+.container-option .Link{
+  margin-bottom: 20px;
+}
+
+.container-option .Button span {
+  font-weight: 100;
+}
+
+@media screen and (max-width: 1074px) {
+  .container_app, .container_app-editor {
+    left: 20px;
+  }
 }
