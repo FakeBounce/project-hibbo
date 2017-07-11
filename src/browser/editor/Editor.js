@@ -147,7 +147,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                                         )
 
                                         : <Text>Il n'y a pas encore de map.</Text>
-                                : <Text>Aucun utilisateur</Text>
+                                : <Text>No users detected</Text>
                         }
                     </div>
 

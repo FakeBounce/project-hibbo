@@ -7,14 +7,15 @@ import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import Inventory from './Inventory';
 import SignOut from '../auth/SignOut';
+import Stats from './Stats';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { ChangeTab, DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
-    let weapon_list = '';
+let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+    let dungeons_list = '';
     var skills_list = '';
     var object_list = '';
     let dungeon;
@@ -29,6 +30,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
     let picture = false;
     let pick_equipment_list = '';
     let end_modal = '';
+    let tab = "dungeons";
 
     if(!dviewer)
     {
@@ -47,6 +49,8 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
             pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
                return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{dviewer.pick_equipment.benefits[benef]}</div></div>)
             });
+        if(dviewer.tab != null & dviewer.tab != 'undefined'){
+            tab = dviewer.tab;
         }
 
         picture = "/assets/images/infobar/"+dviewer.characters[dviewer.active].name+".png";
@@ -163,6 +167,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                 {
                     preLoadActiveDungeon(dviewer);
                 }
+
                 dungeonActive = false;
             }
         }
@@ -210,41 +215,13 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                             </div>
                         </div>
                     </div>
-                    {dviewer && dviewer.pick_equipment != null &&
-                        <div className="inventory_pick">
-                            <div className="inventory_pick_info">
-                                <div className="w45">
-                                    <div className="equipment-block">
-                                        <Image src={dviewer.pick_equipment.img}/>
-                                    </div>
-                                </div>
-                                <div className="w55">
-                                    <div className="inventory_pick_info_class"><div>Classe :</div><div>{dviewer.pick_equipment.classe}</div></div>
-                                    <div className="inventory_pick_info_type"><div>Type : </div><div>{dviewer.pick_equipment.type}</div></div>
-                                </div>
-                            </div>
-                            <div className="inventory_pick_benefit">
-                                {pick_equipment_list}
-                            </div>
-                            <div className="inventory_pick_action">
-                                {dviewer.pick_equipment.wear != null && dviewer.pick_equipment.wear != 'undefined' ?
-                                    dviewer.pick_equipment.wear == false?
-                                        <div className="equip"
-                                             onClick={() => AddEquipment(dviewer, dviewer.pick_equipment)}>Equiper</div>
-                                        :
-                                        <div className="equip"
-                                             onClick={() => RemoveEquipment(dviewer, dviewer.pick_equipment)}>Retirer</div>
-                                    : ""
-
-                                }
-                                <div className="supp"
-                                     onClick={() => DeleteEquipment(dviewer, dviewer.pick_equipment)}>Supprimer</div>
-                            </div>
-                            {dviewer.pick_equipment.error &&
-                                <div>
-                                    {dviewer.pick_equipment.error}
-                                </div>
-                            }
+                    {tab == "perso" && dviewer.characters[dviewer.active] &&
+                        <Stats character={dviewer.characters[dviewer.active]}/>
+                    }
+                    {tab == "dungeons" && !dungeonActive && dungeons &&
+                        <div className="button-dungeons">
+                            <div>Compaign</div>
+                            <div>Dungeons from Editor</div>
                         </div>
                     }
                 </div>
@@ -252,10 +229,22 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                     <div className="cadre-menu">
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
-                                <a href="#dungeons"><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
-                                <a href="#personnage"><li className="menu-perso"><span className="btn-menu">Personnage</span></li></a>
-                                <a href="#skill"><li className="menu-spell"><span className="btn-menu">Compétences</span></li></a>
-                                <a href="#option"><li className="menu-option"><span className="btn-menu">Options</span></li></a>
+                                {dungeon ?
+                                    <div>
+                                        <a href="#dungeons">
+                                            <li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li>
+                                        </a>
+                                        <li className="menu-perso"><span className="btn-menu">Character</span></li>
+                                        <li className="menu-spell"><span className="btn-menu">Skills</span></li>
+                                        <li className="menu-option"><span className="btn-menu">Options</span></li>
+                                    </div> :
+                                    <div>
+                                        <a href="#dungeons" onClick={() => ChangeTab(dviewer, "dungeons")}><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
+                                        <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Character</span></li></a>
+                                        <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Skills</span></li></a>
+                                        <a href="#option" onClick={() => ChangeTab(dviewer,"option")}><li className="menu-option"><span className="btn-menu">Options</span></li></a>
+                                    </div>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -269,29 +258,33 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                                         verifloaded && wdmap
                                         :
                                         dungeons ?
-                                            dungeons.map(dungeon =>
-                                                <Dungeon key={dungeon.id} dungeon={dungeon}/>
-                                            )
-                                            : <Text>Il n'y a pas encore de donjons.</Text>
-                                    : <Text>Veuillez vous connecter</Text>
+                                            <div className="container-map">
+                                                {
+                                                    dungeons.map(dungeon =>
+                                                        <Dungeon key={dungeon.id} dungeon={dungeon}/>
+                                                    )
+                                                 }
+                                             </div>
+                                            : <Text>There are no dungeons yet.</Text>
+                                    : <Text>Please login</Text>
                             }
                         </div>
                         <div className="cmenu cadre-perso">
                             <a name="personnage" id="personnage"></a>
                             <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
-                        <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
+                        <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Skills</div>
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                           <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <Link className="btnEidteurOption" exactly to='/editor'>Editeur</Link>
+                            <Link className="btnEidteurOption" exactly to='/editor'>Editor</Link>
                             <SignOut/>
                         </div>
                     </div>
                 </div>
                 <div className="cadre-bas-max">
                     {end_modal}
-                    <div>
+                  <div>
                         <div className="infobar-mana">
                             <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
                             </div>
@@ -311,6 +304,7 @@ let Dungeons = ({ tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, pre
                             </div>
                         </div>
                         <div className="infobar-spell-number">
+                          <a className="btnSwitch"></a>
                                 {skills_list}
                                 {object_list}
                         </div>
@@ -364,4 +358,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+}), { ChangeTab, AddEquipment,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);

@@ -106,7 +106,7 @@ export default [
   },
   {
     "id": "auth.email.passwordForgotten",
-    "defaultMessage": "Forgot Your Password?",
+    "defaultMessage": "Forgot your Password?",
   },
   {
     "id": "auth.email.passwordPlaceholder",

@@ -35,11 +35,153 @@ export const deleteUser = (viewer) => ({ firebase }) => {
     };
 };
 
-export const addDefaultDungeon = () => ({ firebase}) => {
+export const addDefaultDungeon = () => ({ firebase, getUid}) => {
+
+    // firebase.update({
+    //     [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
+    // });
+
+    var a = getUid();
+    var b = getUid();
+    var c = getUid();
+    var d = getUid();
+    var e = getUid();
+    var f = getUid();
+    var g = getUid();
+    var h = getUid();
+    var i = getUid();
+    var j = getUid();
+    var k = getUid();
+    var l = getUid();
+    var m = getUid();
+    var n = getUid();
+    var o = getUid();
+    var p = getUid();
+    var q = getUid();
+    var r = getUid();
+    var s = getUid();
+    var t = getUid();
+    var u = getUid();
+    var v = getUid();
+    var w = getUid();
+    var x = getUid();
+    var y = getUid();
+    var z = getUid();
 
     firebase.update({
-        [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
-    });
+        [`maptiles/${a}`]: {
+            completed: false,
+            id: a,
+            image: "/assets/images/maptiles/coin-droite-bas-new.png",
+            title: "Grey ground",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${b}`]: {
+            completed: false,
+            id: b,
+            image: "/assets/images/maptiles/coin-droite-haut-new.png",
+            title: "Grey ground",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${c}`]: {
+            completed: false,
+            id: c,
+            image: "/assets/images/maptiles/coin-gauche-bas-new.png",
+            title: "Grey ground",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${d}`]: {
+            completed: false,
+            id: d,
+            image: "/assets/images/maptiles/coin-gauche-haut-new.png",
+            title: "Grey ground",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${e}`]: {
+            completed: false,
+            id: e,
+            image: "/assets/images/maptiles/floor1.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${f}`]: {
+            completed: false,
+            id: f,
+            image: "/assets/images/maptiles/floor2.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${g}`]: {
+            completed: false,
+            id: g,
+            image: "/assets/images/maptiles/floor3.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${h}`]: {
+            completed: false,
+            id: h,
+            image: "/assets/images/maptiles/floor4.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${i}`]: {
+            completed: false,
+            id: i,
+            image: "/assets/images/maptiles/sol-new.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${j}`]: {
+            completed: false,
+            id: j,
+            image: "/assets/images/maptiles/sol2-new.png",
+            title: "Floor",
+            type: "walkable",
+        }});
+    firebase.update({
+        [`maptiles/${k}`]: {
+            completed: false,
+            id: k,
+            image: "/assets/images/maptiles/mur-bas-new.png",
+            title: "Grey wall",
+            type: "wall",
+        }});
+    firebase.update({
+        [`maptiles/${l}`]: {
+            completed: false,
+            id: l,
+            image: "/assets/images/maptiles/mur-droite-new.png",
+            title: "Grey wall",
+            type: "wall",
+        }});
+    firebase.update({
+        [`maptiles/${m}`]: {
+            completed: false,
+            id: m,
+            image: "/assets/images/maptiles/mur-gauche-new.png",
+            title: "Grey wall",
+            type: "wall",
+        }});
+    firebase.update({
+        [`maptiles/${n}`]: {
+            completed: false,
+            id: n,
+            image: "/assets/images/maptiles/mur-haut-new.png",
+            title: "Grey wall",
+            type: "wall",
+        }});
+
+
     return {
         type: ADD_DEFAULT_DUNGEON,
         payload: null,
