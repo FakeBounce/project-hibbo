@@ -14,21 +14,32 @@ import { fields } from '../../common/lib/redux-fields';
 
 
 let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse, updateError}) => {
-
+    let validRegEx = /^[A-Za-z0-9]+$/;
     const onSubmit = event => {
-        if (!fields.class.value.trim()) return;
-        if (!fields.pseudo.value.trim()) return;
-
+        if (!fields.class.value.trim()){
+            updateError(dviewer,"Select a class");
+            return;
+        }
+        if (!fields.pseudo.value.trim()){
+            updateError(dviewer,"Pseudo is required");
+            return;
+        }
+        if(!fields.pseudo.value.match(validRegEx))
+        {
+            updateError(dviewer,"Pseudo is incorrect : no spaces, no special characters");
+            return;
+        }
         var c = null;
         for (var classe in classes) {
             if(classes[classe].name == fields.class.value){
                 c = classes[classe];
             }
         }
-        CreateCharacter(dviewer,c,fields.pseudo.value)
+        CreateCharacter(dviewer,c,fields.pseudo.value);
     };
 
     let description = "";
+    let errorClasse = "";
 
     var dung = [];
     var classe_list = false;
@@ -36,6 +47,10 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
     {
         if(dviewer.description != null && dviewer.description != "undefined"){
             description = dviewer.description;
+        }
+
+        if(dviewer.errorClasse != null && dviewer.errorClasse != "undefined"){
+            errorClasse = dviewer.errorClasse;
         }
 
         if(!dviewer.characters && classes)
@@ -90,7 +105,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                                     {...fields.pseudo}
                                                     className="auth_form_email"
                                                     label="Pseudo :"
-                                                    maxLength={100}
+                                                    maxLength={25}
                                                     placeholder=""
                                                 />
                                             </div>
@@ -110,6 +125,9 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                                 bottom: '30px',
                                                 right: '0px',
                                             }}>
+                                                <div className="errorClasse">
+                                                    {errorClasse}
+                                                </div>
                                                 <Button
                                                     style={{
                                                         backgroundColor: 'transparent',
@@ -175,4 +193,4 @@ export default connect(state => ({
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
     classes: state.dungeons.classes,
-}), { LoadClasses,LoadViewer,LoadEquipments,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter })(DungeonsPage);
+}), { LoadClasses,LoadViewer,LoadEquipments,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter, updateError })(DungeonsPage);
