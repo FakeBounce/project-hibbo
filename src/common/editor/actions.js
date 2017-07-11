@@ -713,7 +713,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
                 maptiles[i][j] = {
                     completed: false,
                     id:  getUid(),
-                    image: "/assets/images/grass.png",
+                    image: "/assets/images/maptiles/grass.png",
                     title: "forest",
                     type: "walkable",
                     character: {
@@ -731,7 +731,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
                 {
                     completed: false,
                     id: getUid(),
-                    image: "/assets/images/grass.png",
+                    image: "/assets/images/maptiles/grass.png",
                     title: "forest",
                     type: "walkable",
                 };

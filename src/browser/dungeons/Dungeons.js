@@ -252,11 +252,11 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                             <a name="personnage" id="personnage"></a>
                             <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
-                        <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Competence</div>
+                        <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Skills</div>
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                           <h2 style={{textAlign: 'center'}}>Options</h2>
-                            <Link className="btnEidteurOption" exactly to='/editor'>Editeur</Link>
+                            <Link className="btnEidteurOption" exactly to='/editor'>Editor</Link>
                             <SignOut/>
                         </div>
                     </div>
