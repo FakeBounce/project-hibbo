@@ -608,7 +608,7 @@ export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase, getU
     console.log('item', item);
     if(item) {
 
-        if(item.name == "remove")
+        if(item.name == "Remove")
         {
             worldmap.camera.maptiles[row][col].item = null;
             worldmap.worldmap.maptiles[row][col].item = null;
