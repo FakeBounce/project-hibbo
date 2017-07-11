@@ -99,8 +99,6 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
 
         if(worldmaps)
         {
-
-
             worldmaps.map(list => {
                 if(list.user_id == viewer.id)
                 {

@@ -1804,6 +1804,64 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url(/assets/images/login/info2.png) no-repeat;
 }
 
+
+// info bulle editor
+
+.edit-object-editor .info-editor{
+  display: none;
+  position: absolute;
+  width: 350px;
+  margin: 0 auto;
+  z-index: 202530;
+  background-color: #9dbac3;
+  background-size: cover;
+  height: 200px;
+  top:110px;
+  left: 420px;
+  padding: 10px 0;
+  font-size: 13px;
+  background: url(/assets/images/login/info2.png) no-repeat;
+}
+
+.edit-object-editor .info-editor ul {
+  margin: 0;
+  padding:0;
+}
+
+.edit-object-editor .info-editor ul li {
+  list-style: none;
+  width: 50%;
+  float: left;
+  margin: 7px 0;
+  color: #333;
+}
+
+.caseShowEditor{
+  width:30px;
+  height:30px;
+}
+.headerEditorObject{
+  padding-top: 20px;
+}
+
+.headerInfoPerso h3 {
+  width:100%;
+  text-align: center;
+  margin:10px 0;
+}
+
+.headerInfoPerso h4 {
+  margin: 0;
+}
+
+.info-editor:hover{
+  display: block;
+}
+
+.edit-object-editor:hover .info-editor{
+  display: block;
+}
+
 .infobar-spell-number .oneSkill:hover .info{
   display: block;
 }
