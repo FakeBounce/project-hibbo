@@ -3,6 +3,8 @@
  */
 
 import { Range } from 'immutable';
+export const UNSET_RANGE_TARGET = 'UNSET_RANGE_TARGET';
+export const SHOW_RANGE_TARGET = 'SHOW_RANGE_TARGET';
 export const SHOW_AOE_SKILL = 'SHOW_AOE_SKILL';
 export const LOAD_TUTO_REF = 'LOAD_TUTO_REF';
 export const TRY_ITEM = 'TRY_ITEM';
@@ -706,9 +708,6 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                             i++;
                             j++;
                         }while(i<=movement && !found && i<(monster.movement*2));
-
-                        console.log('found : ',found);
-                        console.log('tab : ',tab);
                         if(monster.can_move_aggro && i<=monster.movement)
                         {
                             monster.can_move_aggro = false;
@@ -718,13 +717,23 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                             let rec_result = recursiveTa(found,[]);
                             moves = rec_result.m.reverse();
 
-
                             if(monster.can_move_aggro) {
                                 moves = moves.slice(0,monster.movement);
                             }
                             monster.moves = moves;
                             monster.is_moving = true;
                             monster.direction = moves[0].next;
+                            if(i>monster.movement && !monster.can_move_aggro)
+                            {
+                                monster.moves = false;
+                                monster.is_moving = false;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
+                                dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_aggro = false;
+                                cdntmv = true;
+                            }
                         }
                         else {
                             dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
@@ -734,112 +743,6 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                             dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_aggro = false;
                             cdntmv = true;
                         }
-                        /*
-                         if ( range.totalColU > 0 && !can_move)
-                         {
-                         if(typeof  maptiles[m_row][m_col - 1] !== "undefined")
-                         {
-                         if ((typeof  maptiles[m_row][m_col - 1].character === "undefined" || maptiles[m_row][m_col - 1].character == null))
-                         {
-                         if(maptiles[m_row][m_col - 1].type =="walkable")
-                         {
-                         // maptiles[m_row][m_col-1].character = monster;
-                         // maptiles[m_row][m_col].character = null;
-                         // m_col = m_col - 1;
-                         monster.direction = "left";
-                         monster.is_moving = true;
-                         moves.push(
-                         {
-                         "row":m_row,
-                         "col":m_col-1,
-                         }
-                         );
-                         can_move = true;
-                         }
-                         }
-                         }
-                         }
-                         if ( range.totalColU < 0&& !can_move)
-                         {
-                         if(typeof  maptiles[m_row][m_col + 1] !== "undefined")
-                         {
-                         if ((typeof  maptiles[m_row][m_col + 1].character === "undefined" || maptiles[m_row][m_col + 1].character == null))
-                         {
-                         if(maptiles[m_row][m_col + 1].type =="walkable")
-                         {
-                         // maptiles[m_row][m_col+1].character = monster;
-                         // maptiles[m_row][m_col].character = null;
-                         // m_col = m_col + 1;
-                         monster.direction = "right";
-                         monster.is_moving = true;
-                         moves.push(
-                         {
-                         "row":m_row,
-                         "col":m_col+1,
-                         }
-                         );
-                         can_move = true;
-                         }
-                         }
-                         }
-                         }
-                         if ( range.totalRowU > 0&& !can_move)
-                         {
-                         if(typeof  maptiles[m_row - 1][m_col] !== "undefined") {
-                         if ((typeof  maptiles[m_row - 1][m_col].character === "undefined" || maptiles[m_row - 1][m_col].character == null)) {
-
-                         if(maptiles[m_row - 1][m_col].type =="walkable")
-                         {
-                         // maptiles[m_row - 1][m_col].character = monster;
-                         // maptiles[m_row][m_col].character = null;
-                         // m_row = m_row - 1;
-                         monster.direction = "up";
-                         monster.is_moving = true;
-                         moves.push(
-                         {
-                         "row": m_row - 1,
-                         "col": m_col,
-                         }
-                         );
-                         can_move = true;
-                         }
-                         }
-                         }
-                         }
-                         if ( range.totalRowU < 0&& !can_move)
-                         {
-                         if(typeof  maptiles[m_row + 1][m_col] !== "undefined") {
-                         if ((typeof  maptiles[m_row + 1][m_col].character === "undefined" || maptiles[m_row + 1][m_col].character == null) )
-                         {
-                         if(maptiles[m_row + 1][m_col].type =="walkable") {
-                         // maptiles[m_row + 1][m_col].character = monster;
-                         // maptiles[m_row][m_col].character = null;
-                         // m_row = m_row + 1;
-                         monster.direction = "down";
-                         monster.is_moving = true;
-                         moves.push(
-                         {
-                         "row": m_row + 1,
-                         "col": m_col,
-                         }
-                         );
-                         can_move = true;
-                         }
-                         }
-                         }
-                         }
-                         if(can_move)
-                         {
-                         monster.moves = moves;
-                         }
-                         else{
-                         dungeon.dungeon.monsters[dungeon.monster_moves[0]].is_attacking = false;
-                         dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_attack = false;
-                         dungeon.dungeon.monsters[dungeon.monster_moves[0]].moves = null;
-                         dungeon.dungeon.monsters[dungeon.monster_moves[0]].can_move_attack = false;
-                         cdntmv = true;
-                         }
-                         */
                     }
                     dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                     dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
@@ -875,9 +778,7 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
     let pj = dungeon.user.character;
     if(typeof dungeon.monster_moves !== "undefined") {
         if (dungeon.monster_moves.length > 0) {
-            console.log('dungeon.monster_moves.length',dungeon.monster_moves.length);
             let monster = dungeon.dungeon.monsters[dungeon.monster_moves[0]];
-            console.log('mo',monster);
             if(monster != null || typeof monster === "undefined")
             {
                 let m_row = monster.row;
@@ -931,7 +832,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                                 dungeon.dungeon.monsters[dungeon.monster_moves[0]] = monster;
                                 dungeon.dungeon.maptiles[m_row][m_col].character = monster;
                                 dungeon.monster_moves.splice(0,1);
-                                console.log(dungeon.monster_moves);
                             }
                         }
                         else {
@@ -939,79 +839,6 @@ export const MonsterMove = (dungeon) => ({firebase}) => {
                             dungeon.user.character = pj;
                         }
                     }
-                    // if(map[monster.row][monster.col].trap)
-                    // {
-                    //     var result = false;
-                    //     map[monster.row][monster.col].trap.map((skill,index) => {
-                    //         if (skill.aoe_front) {
-                    //             result = setSkillsTarget(map, monster, skill, "up");
-                    //             map = result.map;
-                    //         }
-                    //         if (skill.aoe_back) {
-                    //             result = setSkillsTarget(map, monster, skill, "down");
-                    //             map = result.map;
-                    //         }
-                    //         if (skill.aoe_right) {
-                    //             result = setSkillsTarget(map, monster, skill, "right");
-                    //             map = result.map;
-                    //         }
-                    //         if (skill.aoe_left) {
-                    //             result = setSkillsTarget(map, monster, skill, "left");
-                    //             map = result.map;
-                    //         }
-                    //
-                    //
-                    //         let target = [];
-                    //         Object.keys(map).map(m1 => {
-                    //             Object.keys(map[m1]).map(m2 => {
-                    //                 if(map[m1][m2].is_target_aoe && map[m1][m2].character )
-                    //                 {
-                    //                     if(map[m1][m2].character.type != "pj")
-                    //                     {
-                    //                         target.push({row:m1,col:m2});
-                    //                     }
-                    //                 }
-                    //             })
-                    //         });
-                    //
-                    //         target.map(t => {
-                    //             var pnj = map[t.row][t.col].character;
-                    //             if(pnj.type != "pj")
-                    //             {
-                    //                 var positions = comparePosition(0,0,0,0);
-                    //                 if(pnj.health > 0)
-                    //                 {
-                    //                     pnj.health = pnj.health - skill.damage_instant;
-                    //                     if(skill.damage_instant_buff)
-                    //                     {
-                    //                         pnj.health = pnj.health - (pj.damage + skill.damage_instant_buff);
-                    //                     }
-                    //                     if(pnj.health<=0)
-                    //                     {
-                    //                         if(t.row == monster.row && t.col == monster.col)
-                    //                         {
-                    //                             monster = null;
-                    //                         }
-                    //                         pnj = null;
-                    //                         dungeon.monster_info_row = null;
-                    //                         dungeon.monster_info_col = null;
-                    //                     }
-                    //                 }
-                    //                 if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
-                    //                 {
-                    //                     dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
-                    //                 }
-                    //                 else {
-                    //                     delete dungeon.dungeon.monsters[map[t.row][t.col].character.number];
-                    //                 }
-                    //                 map[t.row][t.col].character = pnj;
-                    //                 dungeon.dungeon.maptiles = map;
-                    //             }
-                    //         });
-                    //         map = unsetAoeSkills(map);
-                    //         dungeon.dungeon.maptiles = map;
-                    //     });
-                    // }
                 }
                 else {
 
@@ -1134,7 +961,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 dungeon.user.character.moving_row = null;
                 dungeon.user.character.moving_col = null;
             }
-            else if(totalRow+totalCol > 1)
+            else if(totalRow+totalCol > 1 && dungeon.user.character.movement>=(totalRow+totalCol))
             {
                 var tab = [];
                 var map = dungeon.dungeon.maptiles;
@@ -1224,8 +1051,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                     }
                     i++;
                     j++;
-                }while(i<=pj.movement && !found);
-
+                }while(i<pj.movement && !found);
                 if(found)
                 {
                     var moves = [];
@@ -1247,7 +1073,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                 }
 
             }
-            else
+            else if(dungeon.user.character.movement>=(totalRow+totalCol))
             {
                 if(dungeon.dungeon.maptiles[row][col].type == "walkable" && !dungeon.dungeon.maptiles[row][col].character)
                 {
@@ -1266,6 +1092,9 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
                     dungeon.user.character.moving_row = null;
                     dungeon.user.character.moving_col = null;
                 }
+            }
+            else {
+                dungeon.error_message = 'Not enough moves';
             }
         }
         else {
@@ -1311,6 +1140,7 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
         delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
         pj.row = pj.moving_row;
         pj.col = pj.moving_col;
+        pj.movement = pj.movement - 1;
         if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
         {
             if(!pj.items)
@@ -1327,6 +1157,7 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             pj.is_moving = pj.to_move[0].next;
             pj.moving_row = pj.to_move[0].row;
             pj.moving_col = pj.to_move[0].col;
+            dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
             dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+pj.to_move[0].next+".png";
         }
         else {
@@ -1381,6 +1212,7 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
 
         if(canMove)
         {
+            pj.movement = pj.movement - 1;
             dungeon.dungeon.maptiles[pj.row][pj.col].character.image = "/assets/images/classes/"+dungeon.dungeon.maptiles[pj.row][pj.col].character.name+"/"+direction+".png";
             dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].character = dungeon.dungeon.maptiles[pj.row][pj.col].character;
             delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
@@ -1596,6 +1428,50 @@ export const endSkill = (dungeon) => ({firebase}) => {
     }
 };
 
+export const showRangeTarget = (dungeon,character) => ({firebase}) => {
+    var map = dungeon.dungeon.maptiles;
+    map.map(m1 => m1.map(m2 => {
+        m2.is_target_movement = false;
+        m2.is_target_range = false;
+    }));
+    //
+    console.log('character',character);
+    setRange(map,character,((character.movement)*-1),-1,true,99,99,"mv");
+    setRange(map,character,1,(character.movement),true,99,99,"mv");
+    setRange(map,character,((character.movement)*-1),-1,false,99,99,"mv");
+    setRange(map,character,1,(character.movement),false,99,99,"mv");
+    setRange(map,character,((character.range)*-1),-1,true,99,99,"tg");
+    setRange(map,character,1,(character.range),true,99,99,"tg");
+    setRange(map,character,((character.range)*-1),-1,false,99,99,"tg");
+    setRange(map,character,1,(character.range),false,99,99,"tg");
+    setRangeDiag(map,character,((character.movement)*-1),-1,true,99,99,"mv");
+    setRangeDiag(map,character,1,(character.movement),true,99,99,"mv");
+    setRangeDiag(map,character,((character.movement)*-1),-1,false,99,99,"mv");
+    setRangeDiag(map,character,1,(character.movement),false,9,9,"mv");
+    setRangeDiag(map,character,((character.range)*-1),-1,true,99,99,"tg");
+    setRangeDiag(map,character,1,(character.range),true,99,99,"tg");
+    setRangeDiag(map,character,((character.range)*-1),-1,false,99,99,"tg");
+    setRangeDiag(map,character,1,(character.range),false,9,9,"tg");
+
+    return {
+        type: SHOW_RANGE_TARGET,
+        payload: dungeon
+    };
+};
+
+export const unsetRangeTarget = (dungeon,character) => ({firebase}) => {
+    var map = dungeon.dungeon.maptiles;
+    map.map(m1 => m1.map(m2 => {
+        m2.is_target_movement = false;
+        m2.is_target_range = false;
+    }));
+
+    return {
+        type: UNSET_RANGE_TARGET,
+        payload: dungeon
+    };
+};
+
 export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var pj = dungeon.user.character;
     var map = dungeon.dungeon.maptiles;
@@ -1631,7 +1507,7 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
                 is_on_range_hr4 = setRangeDiag(map,pj,1,pj.range,true,row,col);
                 is_on_range_vt3 =  setRangeDiag(map,pj,(pj.range*-1),-1,false,row,col);
                 is_on_range_vt4 = setRangeDiag(map,pj,1,pj.range,false,row,col);
-                if(is_on_range_hr || is_on_range_vt || is_on_range_hr2 || is_on_range_vt2) {
+                if(is_on_range_hr || is_on_range_vt || is_on_range_hr2 || is_on_range_vt2 || is_on_range_hr3 || is_on_range_hr4 || is_on_range_vt3 || is_on_range_vt4) {
                     if (pj.action >= pj.basicCost) {
                         pj.is_attacking = true;
                         pj.attacking_row = row;
@@ -3337,7 +3213,7 @@ function setSkillsTarget(map,pj,skill,direction = "all",is_on_target = false,on_
 
         if(skill.range_diagonal > 0)
         {
-            result = setDiagonalSTSkill(map,pj,(skill.range_diagonal*-1),(skill.range_minimum*-1),true,skill.aoe_diagonal,self);
+            result = setDiagonalSTSkill(map,pj,(skill.range_minimum*-1),(skill.range_diagonal*-1),true,skill.aoe_diagonal,self);
             map = result.map;
             pj = result.pj;
         }
@@ -3433,7 +3309,7 @@ function setSkillsTarget(map,pj,skill,direction = "all",is_on_target = false,on_
 
         if(skill.range_diagonal > 0)
         {
-            result =  setDiagonalSTSkill(map,pj,(skill.range_diagonal*-1),(skill.range_minimum*-1),false,skill.aoe_diagonal,self);
+            result =  setDiagonalSTSkill(map,pj,(skill.range_minimum*-1),(skill.range_diagonal*-1),false,skill.aoe_diagonal,self);
             map = result.map;
             pj = result.pj;
         }
@@ -3728,9 +3604,9 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
     let imin = neg;
     let imax = pos;
     let crt_row = 0;
-    while(imax)
+    while(imax != 0)
     {
-        for(let j=imin;j>=imax;j++)
+        for(let j=imin;j<=imax;j++)
         {
             if(hor)
             {
@@ -3738,7 +3614,6 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 {
                     if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_movable = true;
                         if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
                         {
                             if(aoe)
@@ -3771,7 +3646,6 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 {
                     if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_movable = true;
                         if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
                             if (aoe) {
                                 map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
@@ -3804,8 +3678,6 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 {
                     if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
                     {
-
-                        map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_movable = true;
                         if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
                         {
                             if(aoe)
@@ -3838,7 +3710,6 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 {
                     if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
                     {
-                        map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_movable = true;
                         if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
                             if (aoe) {
                                 map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].is_target = true;
@@ -3863,7 +3734,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 }
             }
         }
-        imax--;
+        if(imax > 0)
+        {
+            imax--;
+        }
+        else {
+            imax++;
+        }
         crt_row++;
     }
     return {map:map,pj:pj};
@@ -4022,7 +3899,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
 
 
 
-    function setRange(map,pj,neg,pos,hor,row,col){
+    function setRange(map,pj,neg,pos,hor,row,col,movements){
         let imin = neg;
         let imax = pos;
         let crt_row = 0;
@@ -4032,7 +3909,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             {
                 if(hor)
                 {
-                    if((parseInt(pj.row)) == row && (parseInt(pj.col)+j) == col)
+                    if(((parseInt(pj.row)) == row && (parseInt(pj.col)+j) == col) && !movements)
                     {
                         return true;
                     }
@@ -4040,9 +3917,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                         {
-                            map[parseInt(pj.row)][parseInt(pj.col)+j].is_movable = true;
                             if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
                             {
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
                                 {
                                     if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj")
@@ -4059,7 +3943,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     }
                 }
                 else {
-                    if((parseInt(pj.row)+j) == row && (parseInt(pj.col)) == col)
+                    if(((parseInt(pj.row)+j) == row && (parseInt(pj.col)) == col) && !movements)
                     {
                         return true;
                     }
@@ -4067,9 +3951,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                         {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)].is_movable = true;
                             if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
                             {
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
                                 {
                                     if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"){
@@ -4089,23 +3980,26 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         else {
             for(let j=neg;j<=pos;j++)
             {
-                if((parseInt(pj.row)) == row && (parseInt(pj.col)+j) == col)
-                {
-                    return true;
-                }
-                if((parseInt(pj.row)+j) == row && (parseInt(pj.col)) == col)
-                {
-                    return true;
-                }
                 if(hor)
                 {
+                    if(((parseInt(pj.row)) == row && (parseInt(pj.col)+j) == col) && !movements)
+                    {
+                        return true;
+                    }
                     if(typeof map[parseInt(pj.row)] !== 'undefined')
                     {
                         if(typeof map[parseInt(pj.row)][parseInt(pj.col)+j] !== 'undefined')
                         {
-                            map[parseInt(pj.row)][parseInt(pj.col)+j].is_movable = true;
                             if(map[parseInt(pj.row)][parseInt(pj.col)+j].type == "walkable")
                             {
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)][parseInt(pj.col)+j].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)][parseInt(pj.col)+j].character != null)
                                 {
                                     if(map[parseInt(pj.row)][parseInt(pj.col)+j].character.type == "pnj")
@@ -4122,13 +4016,25 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     }
                 }
                 else {
+                    if(((parseInt(pj.row)+j) == row && (parseInt(pj.col)) == col) && !movements)
+                    {
+                        return true;
+                    }
                     if(typeof map[parseInt(pj.row)+j] !== 'undefined')
                     {
                         if(typeof map[parseInt(pj.row)+j][parseInt(pj.col)] !== 'undefined')
                         {
-                            map[parseInt(pj.row)+j][parseInt(pj.col)].is_movable = true;
                             if(map[parseInt(pj.row)+j][parseInt(pj.col)].type == "walkable")
                             {
+
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)+j][parseInt(pj.col)].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)+j][parseInt(pj.col)].character !== 'undefined') && map[parseInt(pj.row)+j][parseInt(pj.col)].character != null)
                                 {
                                     if(map[parseInt(pj.row)+j][parseInt(pj.col)].character.type == "pnj"){
@@ -4148,17 +4054,17 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         return false;
     }
 
-    function setRangeDiag(map,pj,neg,pos,hor,row,col){
+    function setRangeDiag(map,pj,neg,pos,hor,row,col,movements){
         let imin = neg;
         let imax = pos;
         let crt_row = 0;
-        while(imax && imax>-10)
+        while(imax != 0)
         {
-            for(let j=imin;j>=imax;j++)
+            for(let j=imin;j<=imax;j++)
             {
                 if(hor)
                 {
-                    if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+                    if(((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col) && !movements)
                     {
                         return true;
                     }
@@ -4166,10 +4072,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
                         {
-                            map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_movable = true;
-
                             if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
                             {
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
                                 {
                                     if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
@@ -4186,7 +4098,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     }
                 }
                 else {
-                    if((parseInt(pj.row)-crt_row) == row && (parseInt(pj.col)+j) == col)
+                    if(((parseInt(pj.row)-crt_row) == row && (parseInt(pj.col)+j) == col)&& !movements)
                     {
                         return true;
                     }
@@ -4194,8 +4106,17 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
                         {
-                            map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_movable = true;
                             if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
+
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_target_movement = true;
+                                }
+
                                 if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
                                     if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
                                         break;
@@ -4214,7 +4135,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             {
                 if(hor)
                 {
-                    if((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)
+                    if(((parseInt(pj.row)+crt_row) == row && (parseInt(pj.col)+j) == col)&& !movements)
                     {
                         return true;
                     }
@@ -4222,10 +4143,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j] !== 'undefined')
                         {
-
-                            map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_movable = true;
                             if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].type == "walkable")
                             {
+                                if(movements && movements == "tg")
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target_range = true;
+                                }
+                                if(movements && movements == "mv")
+                                {
+                                    map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].is_target_movement = true;
+                                }
                                 if((typeof map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character !== 'undefined') && map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character != null)
                                 {
                                     if(map[parseInt(pj.row)+crt_row][parseInt(pj.col)+j].character.type == "pnj")
@@ -4242,7 +4169,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     }
                 }
                 else {
-                    if((parseInt(pj.row)-crt_row) == row && (parseInt(pj.col)+j) == col)
+                    if(((parseInt(pj.row)-crt_row) == row && (parseInt(pj.col)+j) == col)&& !movements)
                     {
                         return true;
                     }
@@ -4250,7 +4177,14 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     {
                         if(typeof map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j] !== 'undefined')
                         {
-                            map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_movable = true;
+                            if(movements && movements == "tg")
+                            {
+                                map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_target_range = true;
+                            }
+                            if(movements && movements == "mv")
+                            {
+                                map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].is_target_movement = true;
+                            }
                             if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].type == "walkable") {
                                 if ((typeof map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character !== 'undefined') && map[parseInt(pj.row)-crt_row][parseInt(pj.col)+j].character != null) {
                                     if (map[parseInt(pj.row) - crt_row][parseInt(pj.col) + j].character.type == "pnj") {
@@ -4266,7 +4200,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                     }
                 }
             }
-            imax--;
+            if(imax > 0)
+            {
+                imax--;
+            }
+            else {
+                imax++;
+            }
             crt_row++;
         }
         return false;

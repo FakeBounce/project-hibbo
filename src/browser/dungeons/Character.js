@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Image, Flex } from '../app/components';
-import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove } from '../../common/dungeons/actions';
+import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove,unsetRangeTarget,showRangeTarget } from '../../common/dungeons/actions';
 
 type Props = {
     character: Object,
@@ -16,7 +16,7 @@ type Props = {
     is_targeted: Boolean,
 };
 
-const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attackMonster,MonsterMove,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
+const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRangeTarget, attackMonster,MonsterMove,showRangeTarget,canAttackMonster,moveCharacter,MonsterTurn }: Props) => {
     const styles = {
         margin : '0',
     };
@@ -131,8 +131,19 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill, attack
             canAttackMonster(dungeon,character,row,col);
         }
     };
+
+    const character_hover = function(){
+        if(character.row && character.col)
+        {
+            showRangeTarget(dungeon,character);
+        }
+    };
+
+    const character_unhover = function(){
+        unsetRangeTarget(dungeon,character);
+    };
     return (
-        <Image className={classes} onClick={attack_a_monster} src={character.image} style={styles}/>
+        <Image className={classes} onMouseEnter={character_hover} onMouseLeave={character_unhover} onClick={attack_a_monster} src={character.image} style={styles}/>
     );
 };
 
@@ -146,6 +157,6 @@ Character.propTypes = {
 export default connect(state => ({
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { attackMonster,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove,endSkill }) (Character);
+}), { attackMonster,canAttackMonster,moveCharacter,unsetRangeTarget,MonsterTurn,MonsterMove,endSkill,showRangeTarget }) (Character);
 
 

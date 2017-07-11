@@ -62,6 +62,20 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
             classImage = classImage+ " is_target_aoe";
         }
     }
+    if(typeof maptile.is_target_range !== 'undefined')
+    {
+        if(maptile.is_target_range)
+        {
+            classImage = classImage+ " is_target_range";
+        }
+    }
+    if(typeof maptile.is_target_movement !== 'undefined')
+    {
+        if(maptile.is_target_movement)
+        {
+            classImage = classImage+ " is_target_movement";
+        }
+    }
     if(typeof maptile.is_target_aoe !== 'undefined')
     {
             if(maptile.is_target_aoe)

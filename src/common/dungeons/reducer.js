@@ -285,6 +285,22 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('verifloaded',vl);
         }
 
+        case actions.SHOW_RANGE_TARGET: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.UNSET_RANGE_TARGET: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
         default:
             return state;
     }
