@@ -12,8 +12,8 @@ type Props = {
     viewer: Object
 };
 
+
 const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEquipment, DeleteEquipment }: Props) => {
-    console.log(character);
     let equipment = '';
     let picture = '';
     let pick_equipment_list = '';
