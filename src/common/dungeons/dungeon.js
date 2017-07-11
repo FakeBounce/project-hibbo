@@ -10,6 +10,7 @@ const Dungeon = Record({
     "description" : "",
     "lock" : false,
     "numero" : 0,
+    "from_editor" : false
 }, 'dungeon');
 
 export default Dungeon;
