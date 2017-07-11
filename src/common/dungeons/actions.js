@@ -351,17 +351,43 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                 if(monster != null)
                 {
                     monster.can_move_aggro = false;
-                    let range = comparePosition(monster.row,monster.col,pj.row,pj.col);
+
+                    var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
+                    let map = dungeon.dungeon.maptiles;
+                    let is_in_range = false;
+                    let temp_tab = [];
+                    let result = setRangeMonsters(map,pj,0,monster.range,monster.range-1,false,monster);
+                    temp_tab = result.tab;
+
+                    temp_tab.map(tt =>{
+                        if(tt.row == monster.row && tt.col == monster.col)
+                        {
+                            is_in_range = true;
+                        }
+                    });
+
+                    temp_tab = [];
+                    let is_in_range_movement = false;
+                    result = setRangeMonsters(map,pj,0,(monster.range+monster.movement),(monster.range-1+monster.movement),false,monster);
+                    temp_tab = result.tab;
+
+                    temp_tab.map(tt => {
+                        if (tt.row == monster.row && tt.col == monster.col) {
+                            is_in_range_movement = true;
+                        }
+                    });
+
                     monster.can_attack = false;
                     monster.can_move_attack = false;
-                    if(range.totalRange <= monster.range)
+
+                    if(is_in_range)
                     {
                         monster.can_attack = true;
                         monster.direction = range.direction;
                         dungeon.monster_moves = true;
                         monster_moves.push(index);
                     }
-                    else if(range.totalRange <= (monster.range+monster.movement))
+                    else if(is_in_range_movement)
                     {
                         monster.can_move_attack = true;
                         monster.direction = range.direction;
@@ -562,8 +588,6 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                     var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
                     if(monster.can_attack)
                     {
-
-
                         monster.is_moving = false;
                         monster.can_move_attack = false;
                         dungeon.monster_info_row = monster.row;
@@ -593,8 +617,7 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                         var can_move = false;
 
                         var tab_rg = [];
-                        var result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,true);
-                        result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,false);
+                        var result = setRangeMonsters(maptiles,pj,0,monster.range,monster.range-1,false);
                         tab_rg = result.tab;
 
 
@@ -1262,7 +1285,6 @@ export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
         let item = pj.items[number-1];
         item.cast_time = 0;
         item.is_item = true;
-        console.log(item);
         let result = doSkill(pj,map,dungeon,item,cast_ready,row,col,firebase);
         pj = result.pj;
         item = result.item;
@@ -1434,7 +1456,6 @@ export const showRangeTarget = (dungeon,character) => ({firebase}) => {
         m2.is_target_range = false;
     }));
     //
-    console.log('character',character);
     setRange(map,character,((character.movement)*-1),-1,true,99,99,"mv");
     setRange(map,character,1,(character.movement),true,99,99,"mv");
     setRange(map,character,((character.movement)*-1),-1,false,99,99,"mv");
@@ -4141,7 +4162,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         return false;
     }
 
-    function setRangeMonsters(map,pj,neg,pos,diag,hor){
+    function setRangeMonsters(map,pj,neg,pos,diag,hor,is_char = false){
         let imin = neg;
         let imax = pos;
         let crt_row = 0;
@@ -4162,11 +4183,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                         {
                             if(map[c_row][c_col].type == "walkable")
                             {
-                                if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
-                                {
+                                if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                     if(map[c_row][c_col].character.type == "pnj")
                                     {
-                                        break;
+                                        if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                        {
+                                            tab.push({row:c_row,col:c_col});
+                                        }
+                                        else {
+                                            break;
+                                        }
                                     }
                                 }
                                 else {
@@ -4194,7 +4220,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                                 if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                     if (map[c_row][c_col].character.type == "pnj") {
 
-                                        break;
+                                        if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                        {
+                                            tab.push({row:c_row,col:c_col});
+                                        }
+                                        else {
+                                            break;
+                                        }
                                     }
                                 }
                                 else {
@@ -4224,12 +4256,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                         {
                             if(map[c_row][c_col].type == "walkable")
                             {
-                                if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
-                                {
+                                if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                     if(map[c_row][c_col].character.type == "pnj")
                                     {
-
-                                        break;
+                                        if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                        {
+                                            tab.push({row:c_row,col:c_col});
+                                        }
+                                        else {
+                                            break;
+                                        }
                                     }
                                 }
                                 else {
@@ -4249,6 +4285,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                 else {
                     c_row = parseInt(pj.row)-crt_row;
                     c_col = parseInt(pj.col)+j;
+
                     if(typeof map[c_row] !== 'undefined')
                     {
                         if(typeof map[c_row][c_col] !== 'undefined')
@@ -4257,7 +4294,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                                 if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                     if (map[c_row][c_col].character.type == "pnj") {
 
-                                        break;
+                                        if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                        {
+                                            tab.push({row:c_row,col:c_col});
+                                        }
+                                        else {
+                                            break;
+                                        }
                                     }
                                 }
                                 else {
@@ -4283,62 +4326,68 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         imax = pos;
         for(let j=diag;j<=diag;j++)
         {
-            if(hor)
+            c_row = parseInt(pj.row)+j;
+            c_col = parseInt(pj.col)+j;
+
+            if(typeof map[c_row] !== 'undefined')
             {
-                c_row = parseInt(pj.row)+j;
-                c_col = parseInt(pj.col)+j;
-                if(typeof map[c_row] !== 'undefined')
+                if(typeof map[c_row][c_col] !== 'undefined')
                 {
-                    if(typeof map[c_row][c_col] !== 'undefined')
+                    if(map[c_row][c_col].type == "walkable")
                     {
-                        if(map[c_row][c_col].type == "walkable")
-                        {
-                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if(map[c_row][c_col].character.type == "pnj")
                             {
-                                if(map[c_row][c_col].character.type == "pnj")
-                                {
-                                    break;
-                                }
-                            }
-                            else {
-                                if(!(c_row == pj.row && c_col == pj.col))
+                                if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
                                 {
                                     tab.push({row:c_row,col:c_col});
                                 }
+                                else {
+                                    break;
+                                }
                             }
                         }
-                        else
-                        {
-                            break;
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
                         }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
-            else {
-                c_row = parseInt(pj.row)-j;
-                c_col = parseInt(pj.col)+j;
-                if(typeof map[c_row] !== 'undefined')
+            c_row = parseInt(pj.row)-j;
+            c_col = parseInt(pj.col)+j;
+            if(typeof map[c_row] !== 'undefined')
+            {
+                if(typeof map[c_row][c_col] !== 'undefined')
                 {
-                    if(typeof map[c_row][c_col] !== 'undefined')
-                    {
-                        if (map[c_row][parseInt(pj.col) + j].type == "walkable") {
-                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
-                                if (map[c_row][c_col].character.type == "pnj") {
-
-                                    break;
-                                }
-                            }
-                            else {
-                                if(!(c_row == pj.row && c_col == pj.col))
+                    if (map[c_row][parseInt(pj.col) + j].type == "walkable") {
+                        if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
+                            if (map[c_row][c_col].character.type == "pnj") {
+                                if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
                                 {
                                     tab.push({row:c_row,col:c_col});
                                 }
+                                else {
+                                    break;
+                                }
                             }
                         }
-                        else
-                        {
-                            break;
+                        else {
+                            if(!(c_row == pj.row && c_col == pj.col))
+                            {
+                                tab.push({row:c_row,col:c_col});
+                            }
                         }
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }
@@ -4349,6 +4398,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             {
                 c_row = parseInt(pj.row)+j;
                 c_col = parseInt(pj.col)+j;
+
                 if(typeof map[c_row] !== 'undefined')
                 {
                     if(typeof map[c_row][c_col] !== 'undefined')
@@ -4356,12 +4406,16 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
 
                         if(map[c_row][c_col].type == "walkable")
                         {
-                            if((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null)
-                            {
+                            if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                 if(map[c_row][c_col].character.type == "pnj")
                                 {
-
-                                    break;
+                                    if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                    {
+                                        tab.push({row:c_row,col:c_col});
+                                    }
+                                    else {
+                                        break;
+                                    }
                                 }
                             }
                             else {
@@ -4381,6 +4435,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
             else {
                 c_row = parseInt(pj.row)-j;
                 c_col = parseInt(pj.col)+j;
+
                 if(typeof map[c_row] !== 'undefined')
                 {
                     if(typeof map[c_row][c_col] !== 'undefined')
@@ -4389,7 +4444,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                             if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                                 if (map[c_row][c_col].character.type == "pnj") {
 
-                                    break;
+                                    if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                    {
+                                        tab.push({row:c_row,col:c_col});
+                                    }
+                                    else {
+                                        break;
+                                    }
                                 }
                             }
                             else {
@@ -4412,6 +4473,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         {
             c_row = parseInt(pj.row)-j;
             c_col = parseInt(pj.col);
+
             if(typeof map[c_row] !== 'undefined')
             {
                 if(typeof map[c_row][c_col] !== 'undefined')
@@ -4420,7 +4482,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                         if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                             if (map[c_row][c_col].character.type == "pnj") {
 
-                                break;
+                                if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                                else {
+                                    break;
+                                }
                             }
                         }
                         else {
@@ -4442,6 +4510,7 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
         {
             c_row = parseInt(pj.row)+j;
             c_col = parseInt(pj.col);
+
             if(typeof map[c_row] !== 'undefined')
             {
                 if(typeof map[c_row][c_col] !== 'undefined')
@@ -4450,7 +4519,13 @@ function setDiagonalSTSkill(map,pj,neg,pos,hor,aoe,self = false){
                         if ((typeof map[c_row][c_col].character !== 'undefined') && map[c_row][c_col].character != null) {
                             if (map[c_row][c_col].character.type == "pnj") {
 
-                                break;
+                                if(is_char && c_row == parseInt(is_char.row) && c_col == parseInt(is_char.col))
+                                {
+                                    tab.push({row:c_row,col:c_col});
+                                }
+                                else {
+                                    break;
+                                }
                             }
                         }
                         else {
