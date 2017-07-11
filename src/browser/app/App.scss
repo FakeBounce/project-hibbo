@@ -79,7 +79,8 @@ body {
 .top{
   position: absolute;
   top : -20px;
-  left : 5px
+  left : 5px;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .changeSelection{
@@ -126,6 +127,7 @@ body {
 span.bot {
   position: absolute;
   left: 30px;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 Input.input-map-editor{
@@ -353,12 +355,16 @@ Input.input-map-editor{
 
 .cadre-droite-interact-droite {
   float: right;
-  width:28%;
+  width:27%;
   position: relative;
   z-index: 3;
 }
 
-
+.errorSelectEquip {
+  position: absolute;
+  margin-top: -25px;
+  margin-left: -40px;
+}
 
 .map_tile {
   margin: 0 !important;
@@ -2676,7 +2682,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .inventory_pick_info_class div ,.inventory_pick_info_type div, .inventory_pick_info_benef div{
   float: left;
   text-align: left;
-  margin-right: 5px;
+  margin-right: 2px;
 }
 
 .inventory_pick .equipment-block{
