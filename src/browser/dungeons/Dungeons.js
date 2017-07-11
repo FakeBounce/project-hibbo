@@ -221,21 +221,21 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                 let compteur = 0;
                 if(dungeons) {
                     dungeons_list = dungeons.map(dung => {
-                        if (compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
+                        if (compteur < 4 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
                             let classeD = "compaign_dungeon" + compteur;
                             compteur++;
                             return (<div className={classeD}>
-                                <Dungeon key={dung.id} dungeon={dung}/>
+                                <Dungeon key={dung.id} dungeon={dung} numero={compteur}  />
                             </div>)
                         }
                         return "";
                     });
 
+                    compteur = 0;
                     dungeons_list_editor = dungeons.map(dung => {
+                        compteur++;
                         if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
-                            return (<div className="dungeon_editor">
-                                <Dungeon key={dung.id} dungeon={dung}/>
-                            </div>)
+                            return (<Dungeon key={dung.id} dungeon={dung} numero={compteur} />)
                         }
                         return "";
                     });
@@ -343,7 +343,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                         dungeons && dungeons_list ?
                                                 switchcompaign ?
                                                     dungeons_list :
-                                                    dungeons_list_editor
+                                                    <div className="dungeon_editor">{dungeons_list_editor}</div>
                                             : <Text></Text>
                                     : <Text></Text>
                             }
