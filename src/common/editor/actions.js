@@ -693,7 +693,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
     var UidMap = getUid();
     let map = {};
     let maptiles = [];
-    let character=""
+    let character="";
 
     let activeUser = false;
 

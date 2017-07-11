@@ -37,6 +37,10 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
     var classe_list = false;
     if(dviewer)
     {
+        if(dviewer.description != null && dviewer.description != "undefined"){
+            description = dviewer.description;
+        }
+        
         if(!dviewer.characters && classes)
         {
             classe_list = Object.keys(classes).map(classe => {

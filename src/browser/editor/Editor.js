@@ -123,7 +123,7 @@ let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loade
                     <div className="cadre-menu-div-editor">
                         <ul className="menu-fixe-editor">
 
-                            <Link exactly to='/game'>Dungeons</Link>
+                            <Link exactly to='/game' onClick={() => ChangeTab(dviewer, "dungeons")}>Dungeons</Link>
                             <SignOutEditor/>
 
                         </ul>
