@@ -1656,11 +1656,11 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .progress-bar-mana{
-  background-color: blue;
+  background-color: #240ab5;
 }
 
 .progress-bar-life{
-  background-color: red;
+  background-color: #ba0e0e;
 }
 
 .progress-bar {
@@ -2373,6 +2373,8 @@ progress[value].progressSkills::-webkit-progress-value {
   left: 0;
   margin: auto;
 }
+
+
 
 .tutoriel-menu-donjon .menu-dungeons{
   z-index: 8000;
