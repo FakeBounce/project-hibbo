@@ -298,9 +298,8 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                 <div onClick={() => SwitchCompaign(dviewer,true)} className="active">Campaign</div> :
                                 <div onClick={() => SwitchCompaign(dviewer,true)} >Campaign</div>}
                             { !switchcompaign ?
-                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Dungeons from
-                                    Editor</div> :
-                                <div onClick={() => SwitchCompaign(dviewer, false)}>Dungeons from Editor</div>
+                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Custom maps</div> :
+                                <div onClick={() => SwitchCompaign(dviewer, false)}>Custom maps</div>
                             }
                         </div>
                     }
