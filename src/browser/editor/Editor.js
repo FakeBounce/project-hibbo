@@ -24,6 +24,8 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
     };
     let listmaptiles = [];
     let listmonsters = [];
+    let listmaps = [];
+
     let viewmonster = false;
 
     let activeTile = false;
@@ -94,6 +96,13 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
             mapactive =false;
         }
 
+        worldmaps.map(list => {
+            if(list.user_id == viewer.id)
+            {
+                listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
+            }
+        })
+
     }
     let taille;
     if (typeof(window) !== 'undefined') {
@@ -139,14 +148,9 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                                     wdmap
                                     :
                                     worldmaps ?
-                                        worldmaps.map(activeMap =>
+                                        listmaps
 
-                                            <WorldMap key={activeMap.id} worldmap={activeMap} viewer={viewer} loadWorldMap={loadWorldMap}/>
-
-
-                                        )
-
-                                        : <Text>Il n'y a pas encore de map.</Text>
+                                        : <Text>There is no map yet.</Text>
                                 : <Text>No users detected</Text>
                         }
                     </div>

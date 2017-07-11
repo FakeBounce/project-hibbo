@@ -8,6 +8,8 @@ const Editor = Record({
     "name" : "",
     "maptiles" : null,
     "monsters" : null,
+    "user_id":"",
+    "worldmap_id":"",
 }, 'editor');
 
 export default Editor;
