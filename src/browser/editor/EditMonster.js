@@ -33,7 +33,7 @@ const EditMonster = ({ pickmonster,row,col,monster, viewer,worldmap,active }: Pr
         <Image className={classImage} src={monster.image} style={styles} onClick={() => pickmonster(monster,viewer,worldmap,row,col)}/>
             <div className="info-editor">
                 <div className="headerInfoPerso headerEditorObject">
-                    <Image className={classImage} src="caseShowEditor" style={styles}/>
+                    <Image className={classImage} src={monster.image} style={styles}/>
 
                     <h3>{monster.name}</h3>
                     <ul>
