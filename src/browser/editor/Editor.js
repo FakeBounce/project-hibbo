@@ -8,14 +8,16 @@ import EditorMap from './EditorMap';
 import EditMonster from './EditMonster';
 import EditTile from './EditTile';
 import SignOut from '../auth/SignOut';
+import SignOutEditor from '../auth/SignOutEditor';
 import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
 import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems,CreateNewWorldMap } from '../../common/editor/actions';
+import { ChangeTab } from '../../common/dungeons/actions';
 
 
 
-let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
+let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
 
     const styles = {
         bg: {
@@ -96,12 +98,15 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
             mapactive =false;
         }
 
-        worldmaps.map(list => {
-            if(list.user_id == viewer.id)
-            {
-                listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
-            }
-        })
+        if(worldmaps)
+        {
+            worldmaps.map(list => {
+                if(list.user_id == viewer.id)
+                {
+                    listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
+                }
+            });
+        }
 
     }
     let taille;
@@ -114,15 +119,17 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
             <View className="container_app-editor">
 
 
-                <div className="cadre-menu-editor">
+                <div className="cadre-menu-editor ">
                     <div className="cadre-menu-div-editor">
                         <ul className="menu-fixe-editor">
-                            <Link exactly to='/game'>Dungeons</Link>
-                            <SignOut className="test"/>
+
+                            <Link exactly to='/game' onClick={() => ChangeTab(dviewer, "dungeons")}>Dungeons</Link>
+                            <SignOutEditor/>
+
                         </ul>
                     </div>
                 </div>
-                <div className="cadre-editor">
+                <div className="cadre-editor dungeon_editor_e">
 
                         {
                             !mapactive?
@@ -210,4 +217,4 @@ export default connect(state => ({
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
     items : state.editor.items,
-}), {LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems })(Editor);
+}), {ChangeTab, LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems })(Editor);

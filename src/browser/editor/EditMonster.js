@@ -28,7 +28,22 @@ const EditMonster = ({ pickmonster,row,col,monster, viewer,worldmap,active }: Pr
     }
 
     return (
+        <div className="edit-object-editor">
+
         <Image className={classImage} src={monster.image} style={styles} onClick={() => pickmonster(monster,viewer,worldmap,row,col)}/>
+            <div className="info-editor">
+                <div className="headerInfoPerso headerEditorObject">
+                    <Image className={classImage} src="caseShowEditor" style={styles}/>
+
+                    <h3>{monster.name}</h3>
+                    <ul>
+                        <li>Damage: {monster.damage}</li>
+                        <li>Health:  {monster.health}</li>
+                        <li>Range: {monster.range}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     );
 };
 

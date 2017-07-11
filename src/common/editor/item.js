@@ -8,6 +8,7 @@ const Item = Record({
     "aoe_front":"",
     "name" : "",
     "image" : "",
+    "description":"",
     "aoe_left":"",
     "aoe_linear":"",
     "aoe_right":"",

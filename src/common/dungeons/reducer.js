@@ -75,8 +75,7 @@ const dungeonsReducer = (state = new State(), action) => {
         }
 
         case actions.SET_CLASSE: {
-            const { classe } = action.payload;
-            return state.set('classe', classe);
+            return state.set('viewer', action.payload);
         }
 
         case actions.LOAD_TUTO_REF: {

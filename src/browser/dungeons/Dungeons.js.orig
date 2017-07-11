@@ -12,12 +12,10 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { SwitchCompaign,ChangeTab, DeleteEquipment,switchPannel,endDungeon, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { ChangeTab, DeleteEquipment,switchPannel, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
-
+let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
     let dungeons_list = '';
-    let dungeons_list_editor = '';
     var skills_list = '';
     var object_list = '';
     let dungeon;
@@ -32,14 +30,13 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
     let picture = false;
     let pick_equipment_list = '';
     let end_modal = '';
+<<<<<<< 004e77e1798df9a7d70e072dd2b5628386da2b9b
     let tab = "dungeons";
-    let switchbutton = function(){return false;};
+    let switchbutton = false;
     let skill_tab = true;
-    let switchcompaign = true;
-
-    if(!window.location.hash){
-        tab = "dungeons";
-    }
+=======
+    let tab = "";   
+>>>>>>> css dungeons
 
     if(!dviewer)
     {
@@ -47,15 +44,14 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
     }
     else
     {
+        experience = dviewer.characters[dviewer.active].experience;
+        maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if(dviewer.characters && dviewer.characters[dviewer.active]){
-            experience = dviewer.characters[dviewer.active].experience;
-            maxexperience = dviewer.characters[dviewer.active].maxexperience;
             maxhealth = health = dviewer.characters[dviewer.active].health;
             maxenergy = energy = dviewer.characters[dviewer.active].energy;
 
             let cpt = 0;
             let styles;
-
             skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
                 let classSkill = 'skill';
                 cpt++;
@@ -77,10 +73,14 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
             });
         }
 
-        if(dviewer.compaign != null & dviewer.compaign != 'undefined'){
-            switchcompaign = dviewer.compaign;
+        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits) {
+            pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
+                return (<div className="inventory_pick_info_benef">
+                    <div>{benef} :</div>
+                    <div>{dviewer.pick_equipment.benefits[benef]}</div>
+                </div>)
+            });
         }
-
         if(dviewer.tab != null & dviewer.tab != 'undefined'){
             tab = dviewer.tab;
         }
@@ -196,14 +196,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
 
                 if(dungeon.is_finished)
                 {
-                    if(equipments)
-                    {
-                        endDungeon(dungeon,equipments);
-                    }
-                    else {
-                        endDungeon(dungeon,false);
-                    }
-                    dungeon.error_message = 'Dungeon complete';
+                    end_modal = 'Fin du donjon';
                 }
             }
             else {
@@ -213,27 +206,17 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                 }
 
                 let compteur = 0;
-                if(dungeons) {
-                    dungeons_list = dungeons.map(dung => {
-                        if (compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
-                            let classeD = "compaign_dungeon" + compteur;
-                            compteur++;
-                            return (<div className={classeD}>
-                                <Dungeon key={dung.id} dungeon={dung}/>
-                            </div>)
-                        }
-                        return "";
-                    });
-
-                    dungeons_list_editor = dungeons.map(dung => {
-                        if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
-                            return (<div className="dungeon_editor">
-                                <Dungeon key={dung.id} dungeon={dung}/>
-                            </div>)
-                        }
-                        return "";
-                    });
-                }
+                dungeons_list = dungeons.map(dung => {
+                    console.log("console",dung);
+                    if(compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
+                        let classeD = "compaign_dungeon" + compteur;
+                        compteur++;
+                        return (<div className={classeD}>
+                            <Dungeon key={dung.id} dungeon={dung}/>
+                        </div>)
+                    }
+                    return "";
+                });
 
                 dungeonActive = false;
             }
@@ -288,14 +271,8 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     }
                     {tab == "dungeons" && !dungeonActive && dungeons &&
                         <div className="button-dungeons">
-                            { switchcompaign ?
-                                <div onClick={() => SwitchCompaign(dviewer,true)} className="active">Campaign</div> :
-                                <div onClick={() => SwitchCompaign(dviewer,true)} >Campaign</div>}
-                            { !switchcompaign ?
-                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Dungeons from
-                                    Editor</div> :
-                                <div onClick={() => SwitchCompaign(dviewer, false)}>Dungeons from Editor</div>
-                            }
+                            <div>Campaign</div>
+                            <div>Dungeons from Editor</div>
                         </div>
                     }
                 </div>
@@ -304,7 +281,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         <div className="cadre-menu-div">
                             <ul className="menu-fixe">
                                 {dungeon ?
-                                    <div className={tab}>
+                                    <div>
                                         <a href="#dungeons">
                                             <li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li>
                                         </a>
@@ -312,7 +289,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                         <li className="menu-spell"><span className="btn-menu">Skills</span></li>
                                         <li className="menu-option"><span className="btn-menu">Options</span></li>
                                     </div> :
-                                    <div className={tab}>
+                                    <div>
                                         <a href="#dungeons" onClick={() => ChangeTab(dviewer, "dungeons")}><li className="menu-dungeons"><span className="btn-menu">Dungeons</span></li></a>
                                         <a href="#personnage" onClick={() => ChangeTab(dviewer, "perso")}><li className="menu-perso"><span className="btn-menu">Character</span></li></a>
                                         <a href="#skill" onClick={() => ChangeTab(dviewer,"skill")}><li className="menu-spell"><span className="btn-menu">Skills</span></li></a>
@@ -333,11 +310,10 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                     dungeonActive?
                                         verifloaded && wdmap
                                         :
-                                        dungeons && dungeons_list ?
+                                        dungeons ?
                                             <div className="container-map">
-                                                { switchcompaign ?
-                                                    dungeons_list :
-                                                    dungeons_list_editor
+                                                {
+                                                    dungeons_list
                                                  }
                                              </div>
                                             : <Text>There are no dungeons yet.</Text>
@@ -358,6 +334,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     </div>
                 </div>
                 <div className="cadre-bas-max">
+                    {end_modal}
                   <div>
                         <div className="infobar-mana">
                             <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
@@ -408,7 +385,6 @@ Dungeons.propTypes = {
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
-    equipments: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
@@ -436,6 +412,4 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-    equipments: state.dungeons.equipments,
-}), { SwitchCompaign,ChangeTab, AddEquipment,switchPannel,endDungeon,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
-
+}), { ChangeTab, AddEquipment,switchPannel,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
