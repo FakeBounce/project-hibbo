@@ -2312,6 +2312,7 @@ progress[value].progressSkills::-webkit-progress-value {
   color:white;
   position: relative;
   height: 100%;
+  z-index: 3;
 }
 
 .center-scroll .div-left{

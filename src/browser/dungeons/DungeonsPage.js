@@ -9,11 +9,11 @@ import linksMessages from '../../common/app/linksMessages';
 import { Block, Input, View, Button, Form } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadEquipments,LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter } from '../../common/dungeons/actions';
+import { LoadEquipments,LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter, updateError } from '../../common/dungeons/actions';
 import { fields } from '../../common/lib/redux-fields';
 
 
-let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse}) => {
+let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse, updateError}) => {
 
     const onSubmit = event => {
         if (!fields.class.value.trim()) return;
