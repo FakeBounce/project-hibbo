@@ -4676,7 +4676,7 @@ export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
         });
     }
     else{
-        viewer.pick_equipment.error = "Vous n'êtes pas " + viewer.pick_equipment.classe;
+        viewer.pick_equipment.error = "You are not " + viewer.pick_equipment.classe;
         firebase.update({
             [`users/${viewer.id}/pick_equipment`]: viewer.pick_equipment,
         });

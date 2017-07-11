@@ -627,7 +627,7 @@ Input.input-map-editor{
   font-weight: 600;
   font-size: 13px;
   color: white;
-  margin-bottom: -25px;
+  margin-bottom: -34px;
 }
 
 .form_auth_error_empty{
@@ -3137,4 +3137,11 @@ progress[value].progressSkills::-webkit-progress-value {
   .container_app, .container_app-editor {
     left: 20px;
   }
+}
+
+.errorEmail{
+  margin-bottom: -34px;
+  font-weight: 600;
+  font-size: 13px;
+  color: white;
 }
