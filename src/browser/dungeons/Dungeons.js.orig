@@ -30,9 +30,13 @@ let Dungeons = ({ switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons
     let picture = false;
     let pick_equipment_list = '';
     let end_modal = '';
-    let tab = "";   
+<<<<<<< 004e77e1798df9a7d70e072dd2b5628386da2b9b
+    let tab = "dungeons";
     let switchbutton = false;
     let skill_tab = true;
+=======
+    let tab = "";   
+>>>>>>> css dungeons
 
     if(!dviewer)
     {

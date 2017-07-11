@@ -2848,6 +2848,7 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 3;
 }
 
+<<<<<<< 004e77e1798df9a7d70e072dd2b5628386da2b9b
 .btn-small {
   font-family: inherit;
   font-size: 16px;
@@ -2867,7 +2868,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .pull-right{
   float:right;
 }
-
+=======
 .compaign_dungeon0{
   position: absolute;
   top: 170px;
@@ -2891,3 +2892,4 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 
+>>>>>>> css dungeons

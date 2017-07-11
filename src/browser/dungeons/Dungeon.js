@@ -35,7 +35,6 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
         <div className="one-level">
           <div className="level-lock"></div>
           <Text style={styles.lock}>
-            Description : {dungeon.description}
           </Text>
         </div>
       );
@@ -43,11 +42,10 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
       return (
         <div className="one-level">
           <div className="choose-level" onClick={() => test()}>
-            <span>{dungeon.numero}</span>
+            <div>{dungeon.numero}</div>
           </div>
           <Text style={styles.title}
                 onClick={() => test()}>
-            Description : {dungeon.description}
           </Text>
         </div>
       );
