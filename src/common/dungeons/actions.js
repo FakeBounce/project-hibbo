@@ -3,6 +3,8 @@
  */
 
 import { Range } from 'immutable';
+export const SWITCH_PANNEL = 'SWITCH_PANNEL';
+export const CHANGE_GRID = 'CHANGE_GRID';
 export const UNSET_RANGE_TARGET = 'UNSET_RANGE_TARGET';
 export const SHOW_RANGE_TARGET = 'SHOW_RANGE_TARGET';
 export const SHOW_AOE_SKILL = 'SHOW_AOE_SKILL';
@@ -61,10 +63,22 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     character.buffs = false;
     character.maxhealth = character.health;
     character.maxenergy = character.energy;
+    character.row = 0;
+    character.col = 0;
+    character.image = "/assets/images/classes/"+character.name+"/down.png";
     const getPromise = async () => {
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let worldmap = snapshot.val();
+                if(worldmap.row_player)
+                {
+                    character.row = worldmap.row_player;
+                }
+                if(worldmap.col_player)
+                {
+                    character.col = worldmap.col_player;
+                }
+                worldmap.maptiles[character.row][character.col].character = character;
                 let dungeonActive = {
                     id: Uid,
                     dungeon_id: dungeon.id,
@@ -72,6 +86,8 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     description: dungeon.description,
                     lock: dungeon.lock,
                     end_turn: false,
+                    pannel: true,
+                    grid: true,
                     user :
                         {
                             id:viewer.id,
@@ -4705,5 +4721,43 @@ export const ChangeTab = (viewer, tab) => ({firebase}) => {
     return {
         type: PICK_EQUIPMENT,
         payload: viewer,
+    }
+};
+
+export const changeGrid = (dungeon) => ({firebase}) => {
+    if(dungeon.grid)
+    {
+        dungeon.grid = false;
+    }
+    else {
+        dungeon.grid = true;
+    }
+
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+
+    return {
+        type: CHANGE_GRID,
+        payload: dungeon,
+    }
+};
+
+export const switchPannel = (dungeon) => ({firebase}) => {
+    if(dungeon.pannel)
+    {
+        dungeon.pannel = false;
+    }
+    else {
+        dungeon.pannel = true;
+    }
+
+    firebase.update({
+        [`activeDungeons/${dungeon.user.id}`]: dungeon,
+    });
+
+    return {
+        type: SWITCH_PANNEL,
+        payload: dungeon,
     }
 };
