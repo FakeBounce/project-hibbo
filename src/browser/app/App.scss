@@ -445,6 +445,20 @@ Input.input-map-editor{
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
   z-index: 2;
 }
+
+.container_form-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadreall.png") no-repeat;
+  z-index: 2;
+}
+
 .container_editor_app-img{
   bottom: 0;
   left:0;
@@ -2267,6 +2281,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .container-classe-pseudo {
+  width: 30%;
   text-align: center;
   float: right;
   height: auto;
@@ -2283,13 +2298,17 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .center-scroll{
   width: 100%;
-  padding:60px;
+  padding:30px 60px;
   color:white;
 }
 
-.center-scroll div{
+.center-scroll .div-left{
   height: 50px;
 
+}
+
+.div-left-description{
+  text-align: justify;
 }
 
 .center-scroll .div-left span, .center-scroll .div-left .Input *{
@@ -2361,6 +2380,12 @@ progress[value].progressSkills::-webkit-progress-value {
     width: 50%;
     padding: 10px;
   }
+
+  .container-classe-pseudo{
+    width: 50%;
+    padding: 10px;
+  }
+
   .classe-choice img{
     height: inherit;
     width: auto;

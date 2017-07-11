@@ -73,20 +73,12 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                 {dung}
                 {dviewer && !dviewer.characters && classe_list &&
                 <Form onSubmit={onSubmit} className="classe_form">
+                    <div className="container_form-img"></div>
                     <div className="container-classe" >
                         {classe_list}
                     </div>
                     <div className="container-classe-pseudo">
                         <div className="center-scroll">
-                            <div className="div-left">
-                                <span style={{
-                                    fontWeight: "600"
-                                }}>Classe :</span>
-                                <span id="classSelect">{fields.class.value}</span>
-                            </div>
-                            <div className="div-left">
-                                {description}
-                            </div>
                             <div className="div-left">
                                 <Input
                                     {...fields.pseudo}
@@ -96,6 +88,16 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                     placeholder=""
                                 />
                             </div>
+                            <div className="div-left">
+                                <span style={{
+                                    fontWeight: "600"
+                                }}>Classe :</span>
+                                <span id="classSelect">{fields.class.value}</span>
+                            </div>
+                            <div className="div-left-description">
+                                {description}
+                            </div>
+
                             <Block style={{
                                 width: '100%'
                             }}>
