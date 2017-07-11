@@ -542,6 +542,9 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
                 worldmap.user.character.row = row;
                 worldmap.user.character.col = col;
+                worldmap.worldmap.col_player = col;
+                worldmap.worldmap.row_player = row;
+
             }
 
         }
@@ -701,7 +704,6 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
     let character="";
 
     let activeUser = false;
-
     if(viewer){
         character = viewer.characters[viewer.active];
 

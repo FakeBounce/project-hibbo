@@ -204,10 +204,10 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                 {
                     if(equipments)
                     {
-                        endDungeon(dungeon,equipments);
+                        endDungeon(dungeon,equipments, dviewer);
                     }
                     else {
-                        endDungeon(dungeon,false);
+                        endDungeon(dungeon,false, dviewer);
                     }
                     dungeon.error_message = 'Dungeon complete';
                 }

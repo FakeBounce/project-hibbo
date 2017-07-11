@@ -4691,7 +4691,7 @@ export const AddEquipment = (viewer, equipment) => ({ firebase }) => {
         });
     }
     else{
-        viewer.pick_equipment.error = "Vous n'êtes pas " + viewer.pick_equipment.classe;
+        viewer.pick_equipment.error = "You are not " + viewer.pick_equipment.classe;
         firebase.update({
             [`users/${viewer.id}/pick_equipment`]: viewer.pick_equipment,
         });
@@ -4756,7 +4756,7 @@ export const switchPannel = (dungeon) => ({firebase}) => {
     }
 };
 
-export const endDungeon = (dungeon,equipments = false) => ({firebase}) => {
+export const endDungeon = (dungeon,equipments = false, dviewer) => ({firebase}) => {
     if(dungeon.is_finished)
     {
         if(equipments)
@@ -4791,8 +4791,17 @@ export const endDungeon = (dungeon,equipments = false) => ({firebase}) => {
         dungeon.is_finished = false;
         dungeon.is_looted = true;
         firebase.update({
-            [`users/${dungeon.user.id}/characters/0`]: dungeon.user.levelup_character,
+            [`users/${dungeon.user.id}/characters/0`]: dungeon.user.levelup_character
         });
+
+        if(dviewer != null && dviewer.dungeons) {
+            let dung = dviewer.dungeons[dungeon.dungeon_id];
+            if (dung != null && dung.next != null && dung.next) {
+                firebase.update({
+                    [`users/${dungeon.user.id}/dungeons/${dung.next}/lock`]: false
+                });
+            }
+        }
     }
 
     firebase.update({
