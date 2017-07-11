@@ -36,6 +36,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
     let switchbutton = function(){return false;};
     let skill_tab = true;
     let switchcompaign = true;
+    let classContainer = "container_app ";
 
     if(!window.location.hash){
         tab = "dungeons";
@@ -103,6 +104,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
 
             if(dungeon)
             {
+                classContainer = classContainer + "dungeon_active";
                 if(dungeon.user.default_character)
                 {
                     maxhealth = dungeon.user.default_character.maxhealth;
@@ -266,7 +268,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
             }
             </Block>
             <View className="container_app-img"></View>
-            <View className="container_app">
+            <View className={classContainer}>
                 <div className="cadre-gauche-max">
                     <div className="personnage-z">
                         <div className="personnage">
