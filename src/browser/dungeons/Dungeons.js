@@ -45,10 +45,14 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
             maxenergy = energy = dviewer.characters[dviewer.active].energy;
         }
 
-        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits){
+        if(dviewer && dviewer.pick_equipment && dviewer.pick_equipment.benefits) {
             pick_equipment_list = Object.keys(dviewer.pick_equipment.benefits).map(benef => {
-               return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{dviewer.pick_equipment.benefits[benef]}</div></div>)
+                return (<div className="inventory_pick_info_benef">
+                    <div>{benef} :</div>
+                    <div>{dviewer.pick_equipment.benefits[benef]}</div>
+                </div>)
             });
+        }
         if(dviewer.tab != null & dviewer.tab != 'undefined'){
             tab = dviewer.tab;
         }
