@@ -32,6 +32,7 @@ body {
   color: #cccccc;
   background-attachment:fixed;
   font-family: 'Fresca', sans-serif;
+  cursor: url("/assets/images/cursor.png"), default!important;
 }
 
 .title-hibbo{
@@ -90,7 +91,7 @@ body {
   text-decoration: none;
   display: block;
   margin: 10px auto;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   border: 0;
   color: white;
   background-color: transparent;
@@ -139,7 +140,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -149,7 +150,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -158,7 +159,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -167,7 +168,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -176,7 +177,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -185,7 +186,7 @@ Input.input-map-editor{
   width: 40px;
   height: 40px;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   float: left;
   margin: 0 10px;
 }
@@ -201,7 +202,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 5px 5px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer!important;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -226,7 +227,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 5px 5px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -251,7 +252,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 5px 5px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -276,7 +277,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 10px auto;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -300,7 +301,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 10px auto;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -325,7 +326,7 @@ Input.input-map-editor{
   display: block;
   margin: 10px auto;
   padding: 8px 16px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0px;
   color: rgb(250, 177, 134);
   background-color: transparent;
@@ -469,7 +470,7 @@ Input.input-map-editor{
   float: left;
   text-align: center;
   list-style: none;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   background: url(/assets/images/interface/redbutton.png) no-repeat;
   height: 46px;
   line-height: 46px;
@@ -487,7 +488,7 @@ Input.input-map-editor{
   float: left;
   text-align: center;
   list-style: none;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   background: url(/assets/images/interface/redbutton.png) no-repeat;
   height: 46px;
   line-height: 46px;
@@ -607,7 +608,7 @@ Input.input-map-editor{
   text-decoration: none;
   display: block;
   margin: 10px auto;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: rgb(255, 255, 255);
   background-color: transparent;
@@ -641,7 +642,7 @@ Input.input-map-editor{
   height: 39px;
   width: 140px;
   box-shadow: none;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .btn-dungeon{
@@ -653,7 +654,7 @@ Input.input-map-editor{
   display: inline-block;
   margin: 10px auto;
   padding: 8px 16px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   border: 0;
   color: #fff;
   background-color: transparent;
@@ -683,7 +684,7 @@ Input.input-map-editor{
   height:75px;
   background: url(/assets/images/levels/level.png) no-repeat;
   background-size: contain;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   margin:0 auto;
 }
 
@@ -983,55 +984,55 @@ progress[value].progressSkills::-webkit-progress-value {
   float: left;
   margin: 0 23px;
   border: 1px solid #fff;
-  cursor:pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon0{
   background: url("/assets/images/weapons/0.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon1{
   background: url("/assets/images/weapons/1.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon2{
   background: url("/assets/images/weapons/2.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon3{
   background: url("/assets/images/weapons/3.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon4{
   background: url("/assets/images/weapons/4.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon5{
   background: url("/assets/images/weapons/5.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon6{
   background: url("/assets/images/weapons/6.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .weapon7{
   background: url("/assets/images/weapons/7.jpg") no-repeat;
   background-size: cover;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .cadre-droite-ed{
@@ -1543,20 +1544,15 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .cmenu {
-  width: 779px;
+  width: 800px;
   height: 360px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 10px;
-  overflow-y: scroll;
-  display: inline-block;
-  padding: 10px;
 }
 .Link{
   width: 25%;
   float: left;
   text-align: center;
   list-style: none;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   background: url(/assets/images/interface/redbutton.png) no-repeat;
   height: 46px;
   line-height: 46px;
@@ -1703,7 +1699,7 @@ progress[value].progressSkills::-webkit-progress-value {
   height: 40px;
   width: 30px;
   box-shadow: none;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   position: absolute;
   font-size: 10px;
   text-align: center;
@@ -2244,7 +2240,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .classe-choice{
   width: 33%;
   height: 500px;
-  cursor:pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   float:left;
   text-align: center;
   position: relative;
@@ -2277,7 +2273,7 @@ progress[value].progressSkills::-webkit-progress-value {
   position: absolute; /* Remove input from document flow */
 }
 .container-classe label > input + img{ /* IMAGE STYLES */
-  cursor:pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .container-classe label > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
@@ -2342,7 +2338,7 @@ progress[value].progressSkills::-webkit-progress-value {
   position: absolute;
   text-align: center;
   line-height: 35px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 .cadre-tutoriel .tuto-text{
   margin: 75px 25px 0 25px;
@@ -2458,6 +2454,11 @@ progress[value].progressSkills::-webkit-progress-value {
   z-index: 7000;
 }
 
+.cadre-dungeons {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
 //Inventaire
 .container-inventory{
   width: 500px;
@@ -2536,13 +2537,13 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 0;
   position: absolute;
   margin: auto;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .inventory_pick_action div{
   float: left;
   font-size: 14px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   position: relative;
   z-index: 5;
 }
@@ -2624,7 +2625,7 @@ progress[value].progressSkills::-webkit-progress-value {
   left: 0;
   margin: auto;
   position: absolute;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .inventory-perso{
@@ -2712,7 +2713,7 @@ progress[value].progressSkills::-webkit-progress-value {
   width: 30px;
   margin-left: -6px;
   margin-top: -3px;
-  cursor: pointer;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
   position: absolute;
 }
 
@@ -2776,6 +2777,13 @@ progress[value].progressSkills::-webkit-progress-value {
   border:1px solid #333333;
 }
 
+.container-map{
+  background: url(/assets/images/levels/map.png);
+  height: 340px;
+  width: 770px;
+  background-size: cover;
+}
+
 .w20{
   width: 20%;
   float:left;
@@ -2809,4 +2817,22 @@ progress[value].progressSkills::-webkit-progress-value {
 .w80{
   width: 80%;
   float:left;
+}
+
+.button-dungeons{
+  margin-top:200px;
+  margin-left:20px;
+  width: 190px;
+  text-align: center;
+}
+
+.button-dungeons div{
+  background: url("/assets/images/login/button_dung.png");
+  height: 53px;
+  width: 190px;
+  line-height: 53px;
+  margin-bottom: 15px;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+  position: relative;
+  z-index: 3;
 }
