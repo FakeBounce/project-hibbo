@@ -77,15 +77,10 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
         try {
             return await firebase.database.ref(path).once('value').then(function(snapshot){
                 let worldmap = snapshot.val();
-                if(worldmap.row_player)
-                {
-                    character.row = worldmap.row_player;
-                }
-                if(worldmap.col_player)
-                {
-                    character.col = worldmap.col_player;
-                }
-                worldmap.maptiles[character.row][character.col].character = character;
+                character.row = worldmap.row_player;
+                character.col = worldmap.col_player;
+                worldmap.maptiles[0][0].character = null;
+                worldmap.maptiles[worldmap.row_player][worldmap.col_player].character = character;
                 let cam_row=worldmap.row_player ;
                 let cam_col=worldmap.col_player;
                 let camera = {row_center:cam_row,col_center:cam_col};
