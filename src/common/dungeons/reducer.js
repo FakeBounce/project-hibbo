@@ -301,6 +301,22 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('verifloaded',vl);
         }
 
+        case actions.CHANGE_GRID: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
+        case actions.SWITCH_PANNEL: {
+            let payload = action.payload;
+            let vl = state.verifloaded;
+            vl++;
+            return state.update('dungeonsOP', map => map.set(state.viewer.id,payload))
+                .set('verifloaded',vl);
+        }
+
         default:
             return state;
     }

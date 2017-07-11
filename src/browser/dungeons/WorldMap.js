@@ -7,7 +7,7 @@ import MapTile from './MapTile';
 import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
-import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill, movingCharacter  } from '../../common/dungeons/actions';
+import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill, movingCharacter,changeGrid  } from '../../common/dungeons/actions';
 
 type Props = {
     worldmap: Object,
@@ -15,13 +15,18 @@ type Props = {
     viewer: Object
 };
 
-let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter, move, character }) => {
+let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter,changeGrid, move, character }) => {
 
     var error_msg = '';
     var monster_image = '';
     var monster_health = 100;
     var monster_maxhealth = 100;
     var monster_name = '';
+    var grid = "off";
+    if(dungeon.grid)
+    {
+        grid = "on";
+    }
 
   onkeydown = (event: KeyboardEvent) => {
     var skills_list = dungeon.user.character.equipped_spells;
@@ -116,7 +121,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 {/*<Image className="monster_head" src={monster_image}/>*/}
                 {/*</div>*/}
                 {/*</div>*/}
-                <h2 className="titre-map">{dungeon.description}</h2>
+                  <h2 className="titre-map">{dungeon.description} <button className="btn-small pull-right" onClick={() => changeGrid(dungeon)}>Grid {grid}</button></h2>
                 <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => doEndTurn(dungeon)}>End of turn</button></div>
                 <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</button></div>
                 <div className="info-joueur"><span className="error-map">{error_msg}</span></div>
@@ -153,4 +158,4 @@ export default connect(state => ({
     viewer: state.dungeons.viewer,
     dungeonsOP: state.dungeons.dungeonsOP,
     verifloaded: state.dungeons.verifloaded,
-}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter })(WorldMap);
+}), { cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter,changeGrid })(WorldMap);

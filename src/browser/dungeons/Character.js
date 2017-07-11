@@ -142,14 +142,17 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     };
 
     const character_hover = function(){
-        if(character.row && character.col)
+        if(dungeon.grid)
         {
             showRangeTarget(dungeon,character);
         }
     };
 
     const character_unhover = function(){
-        unsetRangeTarget(dungeon,character);
+        if(dungeon.grid)
+        {
+            unsetRangeTarget(dungeon,character);
+        }
     };
     return (
       <div className="infoBulle">
