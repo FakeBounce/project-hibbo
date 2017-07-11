@@ -32,7 +32,11 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
     };
 
     let lock = true;
-    if(viewer && viewer.dungeons){
+    if(dungeon.from_editor){
+        lock = false;
+    }
+
+    if(viewer && viewer.dungeons && lock){
         Object.keys(viewer.dungeons).map(du => {
             if(dungeon.id == du){
                 lock = viewer.dungeons[du].lock;
