@@ -445,6 +445,36 @@ Input.input-map-editor{
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
   z-index: 2;
 }
+
+.container_form-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadre-classe.png") no-repeat;
+  z-index: 2;
+}
+
+.container_form_title{
+  height: 90px;
+  width: 1024px;
+  background: url("/assets/images/pla.png");
+  text-align: center;
+  line-height: 90px;
+  font-size: 35px;
+  color: #836854;
+}
+
+.container_form_classe{
+  height: 506px;
+  width: 1024px;
+  background-color: #16120f
+}
+
 .container_editor_app-img{
   bottom: 0;
   left:0;
@@ -2263,33 +2293,35 @@ progress[value].progressSkills::-webkit-progress-value {
 .container-classe{
   width: 70%;
   float: left;
-  padding:50px;
+  padding-left: 35px;
+  height: inherit;
+  padding-top: 50px;
 }
 
 .container-classe-pseudo {
+  width: 30%;
   text-align: center;
-  float: right;
-  height: auto;
-  background: #2a2e31;
-  position: absolute;
-  border: solid 10px #4d5354;
-  top: 0;
-  bottom: 0;
-  max-height: 350px;
-  right: 30px;
-  margin: auto;
+  float: left;
+  height: 506px;
 }
 
 
 .center-scroll{
   width: 100%;
-  padding:60px;
+  padding:30px;
   color:white;
+  position: relative;
+  height: 100%;
+  z-index: 3;
 }
 
-.center-scroll div{
+.center-scroll .div-left{
   height: 50px;
 
+}
+
+.div-left-description{
+  text-align: justify;
 }
 
 .center-scroll .div-left span, .center-scroll .div-left .Input *{
@@ -2302,18 +2334,19 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .classe_form{
-  width: 100%;
-  padding:50px;
+  width: 1024px;
+  height: 596px;
   max-width: none!important;
 }
 
 .classe-choice{
   width: 33%;
-  height: 500px;
+  height: 400px;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
   float:left;
   text-align: center;
   position: relative;
+  z-index: 3;
 }
 .classe-choice img{
   position: absolute;
@@ -2361,6 +2394,12 @@ progress[value].progressSkills::-webkit-progress-value {
     width: 50%;
     padding: 10px;
   }
+
+  .container-classe-pseudo{
+    width: 50%;
+    padding: 10px;
+  }
+
   .classe-choice img{
     height: inherit;
     width: auto;

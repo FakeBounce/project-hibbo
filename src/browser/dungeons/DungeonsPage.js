@@ -9,11 +9,11 @@ import linksMessages from '../../common/app/linksMessages';
 import { Block, Input, View, Button, Form } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadEquipments,LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter } from '../../common/dungeons/actions';
+import { LoadEquipments,LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter, updateError } from '../../common/dungeons/actions';
 import { fields } from '../../common/lib/redux-fields';
 
 
-let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse}) => {
+let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter, setClasse, updateError}) => {
 
     const onSubmit = event => {
         if (!fields.class.value.trim()) return;
@@ -72,54 +72,68 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
             <Block>
                 {dung}
                 {dviewer && !dviewer.characters && classe_list &&
-                <Form onSubmit={onSubmit} className="classe_form">
-                    <div className="container-classe" >
-                        {classe_list}
-                    </div>
-                    <div className="container-classe-pseudo">
-                        <div className="center-scroll">
-                            <div className="div-left">
-                                <span style={{
-                                    fontWeight: "600"
-                                }}>Classe :</span>
-                                <span id="classSelect">{fields.class.value}</span>
-                            </div>
-                            <div className="div-left">
-                                {description}
-                            </div>
-                            <div className="div-left">
-                                <Input
-                                    {...fields.pseudo}
-                                    className="auth_form_email"
-                                    label="Pseudo :"
-                                    maxLength={100}
-                                    placeholder=""
-                                />
-                            </div>
-                            <Block style={{
-                                width: '100%'
-                            }}>
-                                <Button
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        backgroundImage: 'url("/assets/images/interface/buttonclasse.png")',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundAttachment: 'scroll',
-                                        height: '53px',
-                                        width: '190px',
-                                        color: '#c9e6f1',
-                                        boxShadow: 'none',
-                                        textAlign: 'center',
-                                        fontSize: '16px',
-                                        cursor: 'url("/assets/images/cursor_pointer.png"), pointer',
-                                    }}
-                                >
-                                    Create my character
-                                </Button>
-                            </Block>
+                    <div>
+                        <div className="container_form-img"></div>
+                        <div className="container_app">
+                            <Form onSubmit={onSubmit} className="classe_form">
+                                <div className="container_form_title">
+                                    <span>Create a character</span>
+                                </div>
+                                <div className="container_form_classe">
+                                    <div className="container-classe" >
+                                       {classe_list}
+                                    </div>
+                                    <div className="container-classe-pseudo">
+                                        <div className="center-scroll">
+                                            <div className="div-left">
+                                                <Input
+                                                    {...fields.pseudo}
+                                                    className="auth_form_email"
+                                                    label="Pseudo :"
+                                                    maxLength={100}
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                            <div className="div-left">
+                                                <span style={{
+                                                    fontWeight: "600"
+                                                }}>Classe :</span>
+                                                <span id="classSelect">{fields.class.value}</span>
+                                            </div>
+                                            <div className="div-left-description">
+                                                {description}
+                                            </div>
+
+                                            <Block style={{
+                                                width: '100%',
+                                                position: 'absolute',
+                                                bottom: '30px',
+                                                right: '0px',
+                                            }}>
+                                                <Button
+                                                    style={{
+                                                        backgroundColor: 'transparent',
+                                                        backgroundImage: 'url("/assets/images/interface/buttonclasse.png")',
+                                                        backgroundRepeat: 'no-repeat',
+                                                        backgroundAttachment: 'scroll',
+                                                        height: '53px',
+                                                        width: '190px',
+                                                        color: '#c9e6f1',
+                                                        boxShadow: 'none',
+                                                        textAlign: 'center',
+                                                        fontSize: '16px',
+                                                        cursor: 'url("/assets/images/cursor_pointer.png"), pointer',
+                                                    }}
+                                                >
+                                                    Create my character
+                                                </Button>
+                                            </Block>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Form>
                         </div>
                     </div>
-                </Form>
                 }
             </Block>
         </View>
