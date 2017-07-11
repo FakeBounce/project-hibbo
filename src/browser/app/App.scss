@@ -952,9 +952,8 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  width: 55%;
-  height: 260px;
   float: right;
+  border: 7px solid #2D3134;
 }
 
 
@@ -2604,10 +2603,18 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 600px;
 }
 
+.cadre-droite{
+  background-color: #16120F;
+  height: 360px;
+}
+
+
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
 }
+
+
 
 .signout_editor
 {

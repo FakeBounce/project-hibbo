@@ -329,6 +329,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                             <a name="dungeons" id="dungeons">
                                 <div className="fix-h"></div>
                             </a>
+                            <div className="container-map">
                             {!loaded ?
                                 <Loading />
                                 : viewer ?
@@ -336,15 +337,13 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                         verifloaded && wdmap
                                         :
                                         dungeons && dungeons_list ?
-                                            <div className="container-map">
-                                                { switchcompaign ?
+                                                switchcompaign ?
                                                     dungeons_list :
                                                     dungeons_list_editor
-                                                 }
-                                             </div>
-                                            : <Text>There are no dungeons yet.</Text>
-                                    : <Text>Please login</Text>
+                                            : <Text></Text>
+                                    : <Text></Text>
                             }
+                            </div>
                         </div>
                         <div className="cmenu cadre-perso">
                             <a name="personnage" id="personnage"></a>
