@@ -284,147 +284,136 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         });
 
         let monsters = dungeon.dungeon.monsters;
+        console.log("1",monsters);
         let monster_moves = [];
-        monsters.map((monster,index) => {
-            if(monster != null)
-            {
-                monster.damage_time_spell = 0;
-                monster.damage_time_spell_duration = 0;
-                if(!monster.conditions)
-                {
-                    monster.conditions = false;
-                }
-                else {
-                    monster.conditions.map((skill,index) => {
-                        if(monster != null)
-                        {
-                            if(!monster.conditions[index].condition_duration)
-                            {
-                                monster.conditions[index].condition_duration = monster.conditions[index].duration-1;
-                            }
-                            else {
-                                monster.conditions[index].condition_duration = monster.conditions[index].condition_duration-1;
-                            }
-                            if(monster.conditions[index].condition_duration > 0)
-                            {
-                                monster.health = monster.health - skill.damage_time;
-                                monster.damage_time_spell = monster.damage_time_spell + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
-                                if(skill.damage_time_spell_duration)
-                                {
-                                    monster.damage_time_spell_duration = skill.damage_time_spell_duration;
+        if(monsters) {
+            monsters.map((monster, index) => {
+                if (monster != null) {
+                    monster.damage_time_spell = 0;
+                    monster.damage_time_spell_duration = 0;
+                    if (!monster.conditions) {
+                        monster.conditions = false;
+                    }
+                    else {
+                        monster.conditions.map((skill, index) => {
+                            if (monster != null) {
+                                if (!monster.conditions[index].condition_duration) {
+                                    monster.conditions[index].condition_duration = monster.conditions[index].duration - 1;
                                 }
-                                // monster.damage = monster.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
-                                //
-                                // if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
-                                // {
-                                //     monster.damage = monster.damage*skill.damage_time_buff_percent/100;
-                                //     monster.damage = monster.damage*skill.damage_time_debuff_percent/100;
-                                // }
-
-                                monster.movement = monster.movement + (skill.movement_buff - skill.movement_debuff);
-                                if(monster.health > monster.maxhealth)
-                                {
-                                    monster.health = monster.maxhealth;
+                                else {
+                                    monster.conditions[index].condition_duration = monster.conditions[index].condition_duration - 1;
                                 }
-                                dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
-                                if(monster.health<=0)
-                                {
-                                    pj.experience = pj.experience + monster.experience;
-                                    if(pj.experience >= pj.maxexperience)
-                                    {
-                                        let lvl_result = lvl_up(dungeon,pj,firebase);
-                                        dungeon = lvl_result.dungeon;
-                                        pj = lvl_result.pj;
+                                if (monster.conditions[index].condition_duration > 0) {
+                                    monster.health = monster.health - skill.damage_time;
+                                    monster.damage_time_spell = monster.damage_time_spell + (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                                    if (skill.damage_time_spell_duration) {
+                                        monster.damage_time_spell_duration = skill.damage_time_spell_duration;
                                     }
-                                    monsters[index] = null;
-                                    dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
-                                    monster = null;
-                                    dungeon.monster_info_row = null;
-                                    dungeon.monster_info_col = null;
+                                    // monster.damage = monster.damage - (skill.damage_time_buff_flat - skill.damage_time_debuff_flat);
+                                    //
+                                    // if(skill.damage_time_buff_percent || skill.damage_time_debuff_percent)
+                                    // {
+                                    //     monster.damage = monster.damage*skill.damage_time_buff_percent/100;
+                                    //     monster.damage = monster.damage*skill.damage_time_debuff_percent/100;
+                                    // }
+
+                                    monster.movement = monster.movement + (skill.movement_buff - skill.movement_debuff);
+                                    if (monster.health > monster.maxhealth) {
+                                        monster.health = monster.maxhealth;
+                                    }
+                                    dungeon.dungeon.maptiles[monster.row][monster.col].character = monster;
+                                    if (monster.health <= 0) {
+                                        pj.experience = pj.experience + monster.experience;
+                                        if (pj.experience >= pj.maxexperience) {
+                                            let lvl_result = lvl_up(dungeon, pj, firebase);
+                                            dungeon = lvl_result.dungeon;
+                                            pj = lvl_result.pj;
+                                        }
+                                        monsters[index] = null;
+                                        dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
+                                        monster = null;
+                                        dungeon.monster_info_row = null;
+                                        dungeon.monster_info_col = null;
+                                    }
+                                }
+                                else {
+                                    monster.conditions.splice(index, 1);
                                 }
                             }
-                            else {
-                                monster.conditions.splice(index,1);
+                        });
+                    }
+                    if (monster != null) {
+                        monster.can_move_aggro = false;
+
+                        var range = comparePosition(monster.row, monster.col, pj.row, pj.col);
+                        let map = dungeon.dungeon.maptiles;
+                        let is_in_range = false;
+                        let temp_tab = [];
+                        let result = setRangeMonsters(map, pj, 0, monster.range, monster.range - 1, false, monster);
+                        temp_tab = result.tab;
+
+                        temp_tab.map(tt => {
+                            if (tt.row == monster.row && tt.col == monster.col) {
+                                is_in_range = true;
                             }
+                        });
+
+                        temp_tab = [];
+                        let is_in_range_movement = false;
+                        result = setRangeMonsters(map, pj, 0, (monster.range + monster.movement), (monster.range - 1 + monster.movement), false, monster);
+                        temp_tab = result.tab;
+
+                        temp_tab.map(tt => {
+                            if (tt.row == monster.row && tt.col == monster.col) {
+                                is_in_range_movement = true;
+                            }
+                        });
+
+                        monster.can_attack = false;
+                        monster.can_move_attack = false;
+
+                        if (is_in_range) {
+                            monster.can_attack = true;
+                            monster.direction = range.direction;
+                            dungeon.monster_moves = true;
+                            monster_moves.push(index);
                         }
-                    });
-                }
-                if(monster != null)
-                {
-                    monster.can_move_aggro = false;
-
-                    var range = comparePosition(monster.row,monster.col,pj.row,pj.col);
-                    let map = dungeon.dungeon.maptiles;
-                    let is_in_range = false;
-                    let temp_tab = [];
-                    let result = setRangeMonsters(map,pj,0,monster.range,monster.range-1,false,monster);
-                    temp_tab = result.tab;
-
-                    temp_tab.map(tt =>{
-                        if(tt.row == monster.row && tt.col == monster.col)
-                        {
-                            is_in_range = true;
+                        else if (is_in_range_movement) {
+                            monster.can_move_attack = true;
+                            monster.direction = range.direction;
+                            dungeon.monster_moves = true;
+                            monster_moves.push(index);
                         }
-                    });
-
-                    temp_tab = [];
-                    let is_in_range_movement = false;
-                    result = setRangeMonsters(map,pj,0,(monster.range+monster.movement),(monster.range-1+monster.movement),false,monster);
-                    temp_tab = result.tab;
-
-                    temp_tab.map(tt => {
-                        if (tt.row == monster.row && tt.col == monster.col) {
-                            is_in_range_movement = true;
+                        else if (monster.health < monster.maxhealth && monster.movement > 0) {
+                            monster.can_move_attack = true;
+                            monster.can_move_aggro = true;
+                            monster.direction = range.direction;
+                            dungeon.monster_moves = true;
+                            monster_moves.push(index);
                         }
-                    });
-
-                    monster.can_attack = false;
-                    monster.can_move_attack = false;
-
-                    if(is_in_range)
-                    {
-                        monster.can_attack = true;
-                        monster.direction = range.direction;
-                        dungeon.monster_moves = true;
-                        monster_moves.push(index);
-                    }
-                    else if(is_in_range_movement)
-                    {
-                        monster.can_move_attack = true;
-                        monster.direction = range.direction;
-                        dungeon.monster_moves = true;
-                        monster_moves.push(index);
-                    }
-                    else if(monster.health<monster.maxhealth && monster.movement>0)
-                    {
-                        monster.can_move_attack = true;
-                        monster.can_move_aggro = true;
-                        monster.direction = range.direction;
-                        dungeon.monster_moves = true;
-                        monster_moves.push(index);
                     }
                 }
-            }
-        });
-
-        let is_monster = false;
-        Object.keys(monsters).map(m =>{
-            if(monsters[m] != null)
-            {
-                is_monster = true;
-            }
-        });
-        if(!is_monster)
-        {
-            let lvlup_char = dungeon.user.levelup_character;
-            lvlup_char.experience = pj.experience;
-
-            firebase.update({
-                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
             });
-            dungeon.is_finished = true;
-        }
 
+            let is_monster = false;
+            Object.keys(monsters).map(m => {
+                if (monsters[m] != null) {
+                    is_monster = true;
+                }
+            });
+            if (!is_monster) {
+                let lvlup_char = dungeon.user.levelup_character;
+                lvlup_char.experience = pj.experience;
+
+                firebase.update({
+                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+                });
+                dungeon.is_finished = true;
+            }
+        }
+        else{
+            monsters = [];
+        }
         dungeon.user.character = pj;
         dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
 
@@ -442,6 +431,8 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         dungeon.end_turn = false;
         dungeon.error_message = 'You can\'t end while doing an action';
     }
+
+
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
     });
