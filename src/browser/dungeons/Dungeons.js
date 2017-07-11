@@ -12,9 +12,10 @@ import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
 import { Block, View, Text, Image, Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { SwitchCompaign, ChangeTab, DeleteEquipment,switchPannel, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
+import { SwitchCompaign,ChangeTab, DeleteEquipment,switchPannel,endDungeon, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
-let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
+
     let dungeons_list = '';
     let dungeons_list_editor = '';
     var skills_list = '';
@@ -31,8 +32,8 @@ let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verif
     let picture = false;
     let pick_equipment_list = '';
     let end_modal = '';
-    let tab = "";   
-    let switchbutton = false;
+    let tab = "dungeons";
+    let switchbutton = function(){return false;};
     let skill_tab = true;
     let switchcompaign = true;
 
@@ -46,14 +47,15 @@ let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verif
     }
     else
     {
-        experience = dviewer.characters[dviewer.active].experience;
-        maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if(dviewer.characters && dviewer.characters[dviewer.active]){
+            experience = dviewer.characters[dviewer.active].experience;
+            maxexperience = dviewer.characters[dviewer.active].maxexperience;
             maxhealth = health = dviewer.characters[dviewer.active].health;
             maxenergy = energy = dviewer.characters[dviewer.active].energy;
 
             let cpt = 0;
             let styles;
+
             skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
                 let classSkill = 'skill';
                 cpt++;
@@ -194,7 +196,14 @@ let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verif
 
                 if(dungeon.is_finished)
                 {
-                    end_modal = 'Fin du donjon';
+                    if(equipments)
+                    {
+                        endDungeon(dungeon,equipments);
+                    }
+                    else {
+                        endDungeon(dungeon,false);
+                    }
+                    dungeon.error_message = 'Dungeon complete';
                 }
             }
             else {
@@ -349,7 +358,6 @@ let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verif
                     </div>
                 </div>
                 <div className="cadre-bas-max">
-                    {end_modal}
                   <div>
                         <div className="infobar-mana">
                             <div className="infobar-mana-div " dangerouslySetInnerHTML={{__html: energybar  }}>
@@ -400,6 +408,7 @@ Dungeons.propTypes = {
     tutoriel: React.PropTypes.object,
     dviewer: React.PropTypes.object,
     dungeonsOP: React.PropTypes.object,
+    equipments: React.PropTypes.object,
 };
 
 Dungeons = firebase((database, props) => {
@@ -427,4 +436,6 @@ export default connect(state => ({
     verifloaded: state.dungeons.verifloaded,
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
-}), { SwitchCompaign, ChangeTab, AddEquipment,switchPannel,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+    equipments: state.dungeons.equipments,
+}), { SwitchCompaign,ChangeTab, AddEquipment,switchPannel,endDungeon,RemoveEquipment,DeleteEquipment, LoadDungeons,LoadSkills, LoadWeapons,CanUseSkill,tryItem, preLoadActiveDungeon,cancelDungeon, loadWorldMap,LoadViewer, ReloadWorldMap ,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep})(Dungeons);
+

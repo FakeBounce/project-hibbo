@@ -456,6 +456,36 @@ Input.input-map-editor{
   background: url("/assets/images/interface/cadreall-1.png") no-repeat;
   z-index: 2;
 }
+
+.container_form-img{
+  bottom: 0;
+  left:0;
+  right: 0;
+  top: 0;
+  width: 1074px;
+  height: 646px;
+  margin: auto;
+  position: absolute;
+  background: url("/assets/images/interface/cadre-classe.png") no-repeat;
+  z-index: 2;
+}
+
+.container_form_title{
+  height: 90px;
+  width: 1024px;
+  background: url("/assets/images/pla.png");
+  text-align: center;
+  line-height: 90px;
+  font-size: 35px;
+  color: #836854;
+}
+
+.container_form_classe{
+  height: 506px;
+  width: 1024px;
+  background-color: #16120f
+}
+
 .container_editor_app-img{
   bottom: 0;
   left:0;
@@ -802,7 +832,7 @@ Input.input-map-editor{
 }
 
 .personnage-info{
-  margin-top: 35px;
+  margin-top: 30px;
   float: left;
   width: 50%;
 }
@@ -810,6 +840,8 @@ Input.input-map-editor{
 .personnage-info-pseudo{
   margin-left: 10px;
   margin-bottom: 10px;
+  word-wrap: break-word;
+  margin-right: 15px;
 }
 
 .personnage-info-class{
@@ -2318,33 +2350,35 @@ progress[value].progressSkills::-webkit-progress-value {
 .container-classe{
   width: 70%;
   float: left;
-  padding:50px;
+  padding-left: 35px;
+  height: inherit;
+  padding-top: 50px;
 }
 
 .container-classe-pseudo {
+  width: 30%;
   text-align: center;
-  float: right;
-  height: auto;
-  background: #2a2e31;
-  position: absolute;
-  border: solid 10px #4d5354;
-  top: 0;
-  bottom: 0;
-  max-height: 350px;
-  right: 30px;
-  margin: auto;
+  float: left;
+  height: 506px;
 }
 
 
 .center-scroll{
   width: 100%;
-  padding:60px;
-  color:white;
+  padding:30px;
+  color: #c2aa97;
+  position: relative;
+  height: 100%;
+  z-index: 3;
 }
 
-.center-scroll div{
+.center-scroll .div-left{
   height: 50px;
 
+}
+
+.div-left-description{
+  text-align: justify;
 }
 
 .center-scroll .div-left span, .center-scroll .div-left .Input *{
@@ -2357,18 +2391,19 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .classe_form{
-  width: 100%;
-  padding:50px;
+  width: 1024px;
+  height: 596px;
   max-width: none!important;
 }
 
 .classe-choice{
   width: 33%;
-  height: 500px;
+  height: 400px;
   cursor: url("/assets/images/cursor_pointer.png"), pointer;
   float:left;
   text-align: center;
   position: relative;
+  z-index: 3;
 }
 .classe-choice img{
   position: absolute;
@@ -2407,26 +2442,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .container-classe label > input:checked + img + img{ /* (RADIO CHECKED) IMAGE STYLES */
   display: none;
-}
-
-
-@media screen and (max-width: 1050px) {
-
-  .container-classe{
-    width: 50%;
-    padding: 10px;
-  }
-  .classe-choice img{
-    height: inherit;
-    width: auto;
-  }
-
-  .classe-choice {
-    width: 100%;
-    float: none;
-    display: flex;
-    height: 150px;
-  }
 }
 
 .cadre-tutoriel {
@@ -2985,6 +3000,41 @@ progress[value].progressSkills::-webkit-progress-value {
   background-size: contain;
 }
 
+.pull-right{
+  float:right;
+}
+
+.infoBulle.infoLoot {
+  display: block;
+  background-color: aliceblue;
+  width: 350px;
+  z-index: 202531!important;
+  background-size: cover;
+  color: #333;
+  text-align: center;
+  padding: 15px 0;
+  position: absolute;
+  top: 154px;
+  left: 6px;
+  background: url("/assets/images/login/infoperso2.png") no-repeat;
+  font-size: 13px;
+  height: 200px;
+}
+
+.infoBulle.infoLoot h2{
+  margin-top: 25px;
+}
+
+
+.loot {
+  width: 54px;
+  height: 54px;
+  display: inline-block;
+  border: 1px solid #fff;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+}
+
+
 .compaign_dungeon0{
   position: absolute;
   top: 170px;
@@ -3035,4 +3085,29 @@ progress[value].progressSkills::-webkit-progress-value {
   background: url("/assets/images/interface/redbutton.png") no-repeat;
 }
 
+.btn-small {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border: 0;
+  color: #fff;
+  background-image: url("/assets/images/login/actionbutton.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: contain;
+  height: 20px;
+  width: 70px;
+  box-shadow: none;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+}
 
+.errorClasse{
+  padding-bottom: 15px;
+  color: #9b0c0c;
+}
+
+@media screen and (max-width: 1074px) {
+  .container_app, .container_app-editor {
+    left: 20px;
+  }
+}
