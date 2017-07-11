@@ -4776,5 +4776,19 @@ export const SwitchCompaign = (viewer, compaign) => ({firebase}) => {
     }
 };
 
+export const setClasse = (viewer, description) => ({firebase}) => {
+    viewer.description = description;
+
+    firebase.update({
+        [`users/${viewer.id}/description`]: description,
+    });
+
+    return {
+        type: SET_CLASSE,
+        payload: viewer,
+    }
+};
+
+
 
 

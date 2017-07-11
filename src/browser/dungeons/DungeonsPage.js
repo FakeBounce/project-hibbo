@@ -28,6 +28,11 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
         CreateCharacter(dviewer,c,fields.pseudo.value)
     };
 
+    let description = "";
+    if(dviewer.description != null && dviewer.description != "undefined"){
+        description = dviewer.description;
+    }
+
     var dung = [];
     var classe_list = false;
     if(dviewer)
@@ -44,7 +49,11 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                     }
                     return (<label className="classe-choice"><input
                         {...fields.class} type="radio"
-                        value={classes[classe].name} checked={checked}/><img src={src}/><img src={srcf}/></label>);
+                        value={classes[classe].name}
+                        checked={checked}
+                        onClick={() => setClasse(dviewer,classes[classe].description)}/>
+                        <img src={src}/>
+                        <img src={srcf}/></label>);
                 }
                 return ("");
             });
@@ -73,6 +82,9 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                     fontWeight: "600"
                                 }}>Classe :</span>
                                 <span id="classSelect">{fields.class.value}</span>
+                            </div>
+                            <div className="div-left">
+                                {description}
                             </div>
                             <div className="div-left">
                                 <Input
@@ -104,9 +116,6 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                     Create my character
                                 </Button>
                             </Block>
-                            {!dviewer.characters && classe_list &&
-                            <SignOut/>
-                            }
                         </div>
                     </div>
                 </Form>

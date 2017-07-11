@@ -204,25 +204,27 @@ let Dungeons = ({ SwitchCompaign, switchPannel,ChangeTab, tutoriel, loaded,verif
                 }
 
                 let compteur = 0;
-                dungeons_list = dungeons.map(dung => {
-                    if(compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
-                        let classeD = "compaign_dungeon" + compteur;
-                        compteur++;
-                        return (<div className={classeD}>
-                            <Dungeon key={dung.id} dungeon={dung}/>
-                        </div>)
-                    }
-                    return "";
-                });
+                if(dungeons) {
+                    dungeons_list = dungeons.map(dung => {
+                        if (compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
+                            let classeD = "compaign_dungeon" + compteur;
+                            compteur++;
+                            return (<div className={classeD}>
+                                <Dungeon key={dung.id} dungeon={dung}/>
+                            </div>)
+                        }
+                        return "";
+                    });
 
-                dungeons_list_editor = dungeons.map(dung => {
-                    if(dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
-                        return (<div className="dungeon_editor">
-                            <Dungeon key={dung.id} dungeon={dung}/>
-                        </div>)
-                    }
-                    return "";
-                });
+                    dungeons_list_editor = dungeons.map(dung => {
+                        if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
+                            return (<div className="dungeon_editor">
+                                <Dungeon key={dung.id} dungeon={dung}/>
+                            </div>)
+                        }
+                        return "";
+                    });
+                }
 
                 dungeonActive = false;
             }
