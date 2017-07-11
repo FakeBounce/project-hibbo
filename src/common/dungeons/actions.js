@@ -86,6 +86,9 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     character.col = worldmap.col_player;
                 }
                 worldmap.maptiles[character.row][character.col].character = character;
+                let cam_row=worldmap.row_player ;
+                let cam_col=worldmap.col_player;
+                let camera = {row_center:cam_row,col_center:cam_col};
                 let dungeonActive = {
                     id: Uid,
                     dungeon_id: dungeon.id,
@@ -95,6 +98,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
                     end_turn: false,
                     pannel: true,
                     grid: false,
+                    camera:camera,
                     user :
                         {
                             id:viewer.id,
@@ -332,39 +336,9 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                                     pj.experience = pj.experience + monster.experience;
                                     if(pj.experience >= pj.maxexperience)
                                     {
-                                        let lvlup_char = dungeon.user.levelup_character;
-                                        let default_char = dungeon.user.default_character;
-
-                                        let maxxp = pj.maxexperience;
-                                        pj.health = pj.health + pj.health_lvl;
-                                        pj.energy = pj.energy + pj.energy_lvl;
-                                        pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                        pj.damage = pj.damage + pj.damage_lvl;
-                                        pj.experience = pj.experience - maxxp;
-                                        pj.maxexperience = (pj.maxexperience*120/100);
-
-                                        default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                        default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                        default_char.damage = default_char.damage + pj.damage_lvl;
-                                        default_char.maxexperience = pj.maxexperience;
-                                        default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                        lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                        lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                        lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                        lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                        lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                                        lvlup_char.maxexperience = pj.maxexperience;
-                                        lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                        firebase.update({
-                                            [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                        });
-
-                                        dungeon.user.default_character = default_char;
-                                        dungeon.user.levelup_character = lvlup_char;
+                                        let lvl_result = lvl_up(dungeon,pj,firebase);
+                                        dungeon = lvl_result.dungeon;
+                                        pj = lvl_result.pj;
                                     }
                                     monsters[index] = null;
                                     dungeon.dungeon.maptiles[monster.row][monster.col].character = null;
@@ -488,40 +462,9 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                                 pj.experience = pj.experience + pnj.experience;
                                 if(pj.experience >= pj.maxexperience)
                                 {
-                                    let lvlup_char = dungeon.user.levelup_character;
-                                    let default_char = dungeon.user.default_character;
-
-                                    let maxxp = pj.maxexperience;
-                                    pj.health = pj.health + pj.health_lvl;
-                                    pj.energy = pj.energy + pj.energy_lvl;
-                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                    pj.damage = pj.damage + pj.damage_lvl;
-                                    pj.experience = pj.experience - maxxp;
-                                    pj.maxexperience = (pj.maxexperience*120/100);
-
-                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                    default_char.damage = default_char.damage + pj.damage_lvl;
-                                    default_char.maxexperience = pj.maxexperience;
-                                    default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                                    lvlup_char.maxexperience = pj.maxexperience;
-                                    lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                    firebase.update({
-                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                    });
-
-                                    dungeon.user.default_character = default_char;
-                                    dungeon.user.levelup_character = lvlup_char;
-                                    dungeon.user.character = pj;
+                                    let lvl_result = lvl_up(dungeon,pj,firebase);
+                                    dungeon = lvl_result.dungeon;
+                                    pj = lvl_result.pj;
                                 }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
@@ -579,40 +522,9 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                                         pj.experience = pj.experience + pnj.experience;
                                         if(pj.experience >= pj.maxexperience)
                                         {
-                                            let lvlup_char = dungeon.user.levelup_character;
-                                            let default_char = dungeon.user.default_character;
-
-                                            let maxxp = pj.maxexperience;
-                                            pj.health = pj.health + pj.health_lvl;
-                                            pj.energy = pj.energy + pj.energy_lvl;
-                                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                            pj.damage = pj.damage + pj.damage_lvl;
-                                            pj.experience = pj.experience - maxxp;
-                                            pj.maxexperience = (pj.maxexperience*120/100);
-
-                                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                            default_char.damage = default_char.damage + pj.damage_lvl;
-                                            default_char.maxexperience = pj.maxexperience;
-                                            default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                            lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                                            lvlup_char.maxexperience = pj.maxexperience;
-                                            lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                            firebase.update({
-                                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                            });
-
-                                            dungeon.user.default_character = default_char;
-                                            dungeon.user.levelup_character = lvlup_char;
-                                            dungeon.user.character = pj;
+                                            let lvl_result = lvl_up(dungeon,pj,firebase);
+                                            dungeon = lvl_result.dungeon;
+                                            pj = lvl_result.pj;
                                         }
                                         pnj = null;
                                         dungeon.monster_info_row = null;
@@ -1225,6 +1137,8 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
         delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
         pj.row = pj.moving_row;
         pj.col = pj.moving_col;
+        dungeon.camera.row_center = pj.row;
+        dungeon.camera.col_center = pj.col;
         pj.movement = pj.movement - 1;
         if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
         {
@@ -1303,6 +1217,8 @@ export const moveCharacter = (dungeon) => ({ firebase }) => {
             delete dungeon.dungeon.maptiles[pj.row][pj.col].character;
             pj.row = pj.moving_row;
             pj.col = pj.moving_col;
+            dungeon.camera.row_center = pj.row;
+            dungeon.camera.col_center = pj.col;
 
             if(dungeon.dungeon.maptiles[pj.moving_row][pj.moving_col].item)
             {
@@ -1714,40 +1630,9 @@ export const attackMonster = (dungeon,character,row,col) => ({firebase}) => {
                             pj.experience = pj.experience + pnj.experience;
                             if(pj.experience >= pj.maxexperience)
                             {
-                                let lvlup_char = dungeon.user.levelup_character;
-                                let default_char = dungeon.user.default_character;
-
-                                let maxxp = pj.maxexperience;
-                                pj.health = pj.health + pj.health_lvl;
-                                pj.energy = pj.energy + pj.energy_lvl;
-                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                pj.damage = pj.damage + pj.damage_lvl;
-                                pj.experience = pj.experience - maxxp;
-                                pj.maxexperience = (pj.maxexperience*120/100);
-
-                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                default_char.damage = default_char.damage + pj.damage_lvl;
-                                default_char.maxexperience = pj.maxexperience;
-                                default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                                lvlup_char.maxexperience = pj.maxexperience;
-                                lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                                firebase.update({
-                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                });
-
-                                dungeon.user.default_character = default_char;
-                                dungeon.user.levelup_character = lvlup_char;
-                                dungeon.user.character = pj;
+                                let lvl_result = lvl_up(dungeon,pj,firebase);
+                                dungeon = lvl_result.dungeon;
+                                pj = lvl_result.pj;
                             }
                             pnj = null;
                             dungeon.monster_info_row = null;
@@ -2184,38 +2069,9 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 
                             if(pj.experience >= pj.maxexperience)
                             {
-                                let lvlup_char = dungeon.user.levelup_character;
-                                let default_char = dungeon.user.default_character;
-
-                                let maxxp = pj.maxexperience;
-                                pj.health = pj.health + pj.health_lvl;
-                                pj.energy = pj.energy + pj.energy_lvl;
-                                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                pj.damage = pj.damage + pj.damage_lvl;
-                                pj.experience = pj.experience - maxxp;
-                                pj.maxexperience = (pj.maxexperience*120/100);
-
-                                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                default_char.damage = pj.damage_lvl;
-                                default_char.maxexperience = pj.maxexperience;
-                                default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
-
-                                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                lvlup_char.damage = pj.damage;
-                                lvlup_char.maxexperience = pj.maxexperience;
-                                lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-
-                                firebase.update({
-                                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                });
-
-                                dungeon.user.default_character = default_char;
-                                dungeon.user.levelup_character = lvlup_char;
-                                dungeon.user.character = pj;
+                                let lvl_result = lvl_up(dungeon,pj,firebase);
+                                dungeon = lvl_result.dungeon;
+                                pj = lvl_result.pj;
                             }
                             pnj = null;
                             dungeon.monster_info_row = null;
@@ -2324,38 +2180,9 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 
                                 if(pj.experience >= pj.maxexperience)
                                 {
-                                    let lvlup_char = dungeon.user.levelup_character;
-                                    let default_char = dungeon.user.default_character;
-
-                                    let maxxp = pj.maxexperience;
-                                    pj.health = pj.health + pj.health_lvl;
-                                    pj.energy = pj.energy + pj.energy_lvl;
-                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                    pj.damage = pj.damage + pj.damage_lvl;
-                                    pj.experience = pj.experience - maxxp;
-                                    pj.maxexperience = (pj.maxexperience*120/100);
-
-                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                    default_char.damage = pj.damage_lvl;
-                                    default_char.maxexperience = pj.maxexperience;
-                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
-
-                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.damage = pj.damage;
-                                    lvlup_char.maxexperience = pj.maxexperience;
-                                    lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-
-                                    firebase.update({
-                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                    });
-
-                                    dungeon.user.default_character = default_char;
-                                    dungeon.user.levelup_character = lvlup_char;
-                                    dungeon.user.character = pj;
+                                    let lvl_result = lvl_up(dungeon,pj,firebase);
+                                    dungeon = lvl_result.dungeon;
+                                    pj = lvl_result.pj;
                                 }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
@@ -2603,38 +2430,9 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 
                                 if(pj.experience >= pj.maxexperience)
                                 {
-                                    let lvlup_char = dungeon.user.levelup_character;
-                                    let default_char = dungeon.user.default_character;
-
-                                    let maxxp = pj.maxexperience;
-                                    pj.health = pj.health + pj.health_lvl;
-                                    pj.energy = pj.energy + pj.energy_lvl;
-                                    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                                    pj.damage = pj.damage + pj.damage_lvl;
-                                    pj.experience = pj.experience - maxxp;
-                                    pj.maxexperience = (pj.maxexperience*120/100);
-
-                                    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                                    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                                    default_char.damage = pj.damage_lvl;
-                                    default_char.maxexperience = pj.maxexperience;
-                                    default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
-
-                                    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                                    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                                    lvlup_char.damage = pj.damage;
-                                    lvlup_char.maxexperience = pj.maxexperience;
-                                    lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-
-                                    firebase.update({
-                                        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                                    });
-
-                                    dungeon.user.default_character = default_char;
-                                    dungeon.user.levelup_character = lvlup_char;
-                                    dungeon.user.character = pj;
+                                    let lvl_result = lvl_up(dungeon,pj,firebase);
+                                    dungeon = lvl_result.dungeon;
+                                    pj = lvl_result.pj;
                                 }
                                 pnj = null;
                                 dungeon.monster_info_row = null;
@@ -2644,6 +2442,8 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
                         pj.direction = positions.direction;
                         dungeon.user.character = pj;
                         map[pj.row][pj.col].character = pj;
+                        dungeon.camera.row_center = pj.row;
+                        dungeon.camera.col_center = pj.col;
                         if(pnj != null && typeof pnj !== 'undefined' && map[t.row][t.col].character)
                         {
                             dungeon.dungeon.monsters[map[t.row][t.col].character.number] = jsonConcat(dungeon.dungeon.monsters[map[t.row][t.col].character.number],pnj);
@@ -2742,38 +2542,9 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 
                         if(pj.experience >= pj.maxexperience)
                         {
-                            let lvlup_char = dungeon.user.levelup_character;
-                            let default_char = dungeon.user.default_character;
-
-                            let maxxp = pj.maxexperience;
-                            pj.health = pj.health + pj.health_lvl;
-                            pj.energy = pj.energy + pj.energy_lvl;
-                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                            pj.damage = pj.damage + pj.damage_lvl;
-                            pj.experience = pj.experience - maxxp;
-                            pj.maxexperience = (pj.maxexperience*120/100);
-
-                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                            default_char.damage = pj.damage_lvl;
-                            default_char.maxexperience = pj.maxexperience;
-                            default_char.damage_reduction_flat = pj.damage_reduction_flat_lvl;
-
-                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                            lvlup_char.damage = pj.damage;
-                            lvlup_char.maxexperience = pj.maxexperience;
-                            lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-
-                            firebase.update({
-                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                            });
-
-                            dungeon.user.default_character = default_char;
-                            dungeon.user.levelup_character = lvlup_char;
-                            dungeon.user.character = pj;
+                            let lvl_result = lvl_up(dungeon,pj,firebase);
+                            dungeon = lvl_result.dungeon;
+                            pj = lvl_result.pj;
                         }
                         pnj = null;
                         dungeon.monster_info_row = null;
@@ -2873,40 +2644,9 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
 
                         if(pj.experience >= pj.maxexperience)
                         {
-                            let lvlup_char = dungeon.user.levelup_character;
-                            let default_char = dungeon.user.default_character;
-
-                            let maxxp = pj.maxexperience;
-                            pj.health = pj.health + pj.health_lvl;
-                            pj.energy = pj.energy + pj.energy_lvl;
-                            pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                            pj.damage = pj.damage + pj.damage_lvl;
-                            pj.experience = pj.experience - maxxp;
-                            pj.maxexperience = (pj.maxexperience*120/100);
-
-                            default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                            default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                            default_char.damage = default_char.damage + pj.damage_lvl;
-                            default_char.maxexperience = pj.maxexperience;
-                            default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                            lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                            lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                            lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                            lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                            lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                            lvlup_char.maxexperience = pj.maxexperience;
-                            lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                            firebase.update({
-                                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                            });
-
-                            dungeon.user.default_character = default_char;
-                            dungeon.user.levelup_character = lvlup_char;
-                            dungeon.user.character = pj;
+                            let lvl_result = lvl_up(dungeon,pj,firebase);
+                            dungeon = lvl_result.dungeon;
+                            pj = lvl_result.pj;
                         }
                         pnj = null;
                         dungeon.monster_info_row = null;
@@ -3310,40 +3050,9 @@ function dealDamage(pj,pnj,dungeon,map,row,col,skill,firebase)
 
             if(pj.experience >= pj.maxexperience)
             {
-                let lvlup_char = dungeon.user.levelup_character;
-                let default_char = dungeon.user.default_character;
-
-                let maxxp = pj.maxexperience;
-                pj.health = pj.health + pj.health_lvl;
-                pj.energy = pj.energy + pj.energy_lvl;
-                pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
-                pj.damage = pj.damage + pj.damage_lvl;
-                pj.experience = pj.experience - maxxp;
-                pj.maxexperience = (pj.maxexperience*120/100);
-
-                default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
-                default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
-                default_char.damage = default_char.damage + pj.damage_lvl;
-                default_char.maxexperience = pj.maxexperience;
-                default_char.damage_reduction_flat = default_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
-                lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
-                lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
-                lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
-                lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
-                lvlup_char.maxexperience = pj.maxexperience;
-                lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
-
-
-                firebase.update({
-                    [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
-                });
-
-                dungeon.user.default_character = default_char;
-                dungeon.user.levelup_character = lvlup_char;
-                dungeon.user.character = pj;
+                let lvl_result = lvl_up(dungeon,pj,firebase);
+                dungeon = lvl_result.dungeon;
+                pj = lvl_result.pj;
             }
             pnj = null;
             dungeon.monster_info_row = null;
@@ -3619,24 +3328,50 @@ function comparePosition(r1,c1,r2,c2){
     let totalCol = c1 - c2;
     let direction = "down";
     let totalRange = 0;
+
     if(totalRow < 0)
     {
         direction = 'down';
     }
-    else if(totalRow > 0)
+    if(totalRow > 0)
     {
         direction = 'up';
     }
-    else if(totalCol < 0)
-    {
-        direction = 'right';
-    }
-    else if(totalCol > 0)
-    {
-        direction = 'left';
-    }
-    //Transform total difference to positive int
     if(totalCol < 0)
+    {
+        if(totalRow<0)
+        {
+            if((totalCol*-1)>(totalRow*-1))
+            {
+                direction = 'right';
+            }
+        }
+        else {
+            if((totalCol*-1)>totalRow)
+            {
+                direction = 'right';
+            }
+        }
+    }
+    if(totalCol > 0)
+    {
+        if(totalRow>0)
+        {
+            if(totalCol>totalRow)
+            {
+                direction = 'left';
+            }
+        }
+        else {
+            if(totalCol>(totalRow*-1))
+            {
+                direction = 'left';
+            }
+        }
+    }
+
+    //Transform total difference to positive int
+    if(totalCol < 0 && totalCol<(totalRow*-1))
     {
         totalCol = totalCol*-1;
     }
@@ -4956,16 +4691,24 @@ export const endDungeon = (dungeon,equipments = false) => ({firebase}) => {
             let max = Math.floor(25);
 
             let possible_loot = [];
-            dungeon.loot = [];
-            Object.keys(equipments).map(e => {
-                possible_loot.push(equipments[e]);
-            });
-
-            for(imin;imin<=iresult;imin++)
+            if(!dungeon.loot)
             {
-                let result = Math.floor(Math.random() * (max - min)) + min;
-                dungeon.user.levelup_character.inventory[possible_loot[result].name] = (possible_loot[result]);
-                dungeon.loot.push(possible_loot[result]);
+                dungeon.loot = [];
+                Object.keys(equipments).map(e => {
+                    possible_loot.push(equipments[e]);
+                });
+
+                if(!dungeon.user.levelup_character.inventory)
+                {
+                    dungeon.user.levelup_character.inventory = {};
+                }
+
+                for(imin;imin<=iresult;imin++)
+                {
+                    let result = Math.floor(Math.random() * (max - min)) + min;
+                    dungeon.user.levelup_character.inventory[possible_loot[result].name] = (possible_loot[result]);
+                    dungeon.loot.push(possible_loot[result]);
+                }
             }
         }
         dungeon.is_finished = false;
@@ -5009,4 +4752,45 @@ export const setClasse = (viewer, description) => ({firebase}) => {
         type: SET_CLASSE,
         payload: viewer,
     }
+};
+
+function lvl_up(dungeon,pj,firebase){
+
+    let lvlup_char = dungeon.user.levelup_character;
+    let default_char = dungeon.user.default_character;
+
+    let maxxp = pj.maxexperience;
+    pj.health = pj.health + pj.health_lvl;
+    pj.energy = pj.energy + pj.energy_lvl;
+    pj.damage_reduction_flat = pj.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+    pj.damage = pj.damage + pj.damage_lvl;
+    pj.experience = pj.experience - maxxp;
+    pj.level = pj.level + 1;
+    pj.maxexperience = (pj.maxexperience*120/100);
+
+    default_char.maxhealth = default_char.maxhealth + pj.health_lvl;
+    default_char.maxenergy = default_char.maxenergy + pj.energy_lvl;
+    default_char.damage = default_char.damage + pj.damage_lvl;
+    default_char.maxexperience = pj.maxexperience;
+    default_char.damage_reduction_flat = default_char.damage_reduction_flat + pj.damage_reduction_flat_lvl;
+
+
+    lvlup_char.health = lvlup_char.maxhealth + pj.health_lvl;
+    lvlup_char.energy = lvlup_char.maxenergy + pj.energy_lvl;
+    lvlup_char.maxhealth = lvlup_char.maxhealth + pj.health_lvl;
+    lvlup_char.maxenergy = lvlup_char.maxenergy + pj.energy_lvl;
+    lvlup_char.damage = lvlup_char.damage + pj.damage_lvl;
+    lvlup_char.maxexperience = pj.maxexperience;
+    lvlup_char.level = pj.level;
+    lvlup_char.damage_reduction_flat = lvlup_char.damage_reduction_flat_lvl + pj.damage_reduction_flat_lvl;
+
+
+    dungeon.user.default_character = default_char;
+    dungeon.user.levelup_character = lvlup_char;
+    dungeon.user.character = pj;
+
+    firebase.update({
+        [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+    });
+    return {dungeon:dungeon,pj:pj};
 };
