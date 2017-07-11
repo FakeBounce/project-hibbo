@@ -673,13 +673,18 @@ export const ActiveMapDungeon = (worldmap,viewer) =>  ({ getUid,firebase }) => {
 
 export const RemoveMapDungeon = (worldmap, viewer) =>  ({firebase }) => {
 
-    if(worldmap)
+
+    if(worldmap && viewer)
     {
-        firebase.update({
-            [`dungeons/${worldmap.active_dungeon}`]: null,
-            [`editormaps/${worldmap.worldmap_id}/active_dungeon`]: "",
-            [`activeMap/${viewer.id}/active_dungeon`]: "",
-        });
+        if(viewer.id == worldmap.user.id && worldmap.active_dungeon)
+        {
+
+            firebase.update({
+                [`dungeons/${worldmap.active_dungeon}`]: null,
+                [`editormaps/${worldmap.worldmap_id}/active_dungeon`]: "",
+                [`activeMap/${viewer.id}/active_dungeon`]: "",
+            });
+        }
     }
 
     return {
@@ -739,8 +744,8 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15,user_id:viewer.id};
-        
+    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "YourMap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15,user_id:viewer.id};
+
         firebase.update({
             [`editormaps/${UidMap}`]: map,
             [`maps/${UidMap}`]: map,
@@ -774,7 +779,7 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
 
 export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
 
-    if(camera && camera.size_map > worldmap.worldmap.size_map_min)
+    if(camera && camera.size_map > worldmap.worldmap.size_map_min+11)
     {
 
         camera.row_end = camera.row_end - 1;

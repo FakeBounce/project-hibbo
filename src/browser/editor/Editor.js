@@ -134,13 +134,13 @@ let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loade
                         {
                             !mapactive?
 
-                                <div className="one-level">
+                                <div className="new-level">
 
 
                                     <div className="choose-level" onClick={() => CreateNewWorldMap(dviewer)}>
                                         <span>+</span>
                                     </div>
-                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Description : New</Text>
+                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Add map</Text>
                                 </div>
                                 :
                                 <div></div>
