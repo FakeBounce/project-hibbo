@@ -739,7 +739,7 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
         }
     }
 
-    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15};
+    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "newmap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15,user_id:viewer.id};
 
     if(viewer)
     {
