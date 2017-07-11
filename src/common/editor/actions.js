@@ -673,13 +673,18 @@ export const ActiveMapDungeon = (worldmap,viewer) =>  ({ getUid,firebase }) => {
 
 export const RemoveMapDungeon = (worldmap, viewer) =>  ({firebase }) => {
 
-    if(worldmap)
+
+    if(worldmap && viewer)
     {
-        firebase.update({
-            [`dungeons/${worldmap.active_dungeon}`]: null,
-            [`editormaps/${worldmap.worldmap_id}/active_dungeon`]: "",
-            [`activeMap/${viewer.id}/active_dungeon`]: "",
-        });
+        if(viewer.id == worldmap.user.id && worldmap.active_dungeon)
+        {
+
+            firebase.update({
+                [`dungeons/${worldmap.active_dungeon}`]: null,
+                [`editormaps/${worldmap.worldmap_id}/active_dungeon`]: "",
+                [`activeMap/${viewer.id}/active_dungeon`]: "",
+            });
+        }
     }
 
     return {

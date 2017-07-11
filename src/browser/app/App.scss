@@ -437,6 +437,7 @@ Input.input-map-editor{
   height: 596px;
   margin: auto;
   position: absolute;
+  background-color: #16120F;
 }
 
 .fix-index-editor{
@@ -1611,7 +1612,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .cadre-menu-editor{
   background: url("/assets/images/planche-1.png");
   width: 1020px;
-  height: 135px;
+  height: 125px;
 }
 
 .cadre-menu-div{
@@ -1662,10 +1663,13 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .cadre-editor{
   width: 1025px;
-  height: 460px;
+  height: 445px;
   background-color: #16120F;
   text-align: center;
   padding-top: 10px;
+  overflow-y: scroll;
+  margin-top: 5px;
+  margin-bottom: 20px;
 }
 
 .cadre-gauche-bas{
