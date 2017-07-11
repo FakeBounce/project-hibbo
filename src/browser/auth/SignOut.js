@@ -29,8 +29,7 @@ const SignOut = ({ signOut }, { router }) => {
         margin: '10px auto',
         display:'block',
         position: 'relative',
-        zindex: 20,
-
+        cursor: 'url("/assets/images/cursor_pointer.png"), pointer',
       }} onClick={onClick}>
         <FormattedMessage {...buttonsMessages.signOut} />
       </Button>

@@ -15,7 +15,7 @@ import { firebase } from '../../common/lib/redux-firebase';
 import { ChangeTab, DeleteEquipment, AddEquipment, RemoveEquipment, cancelDungeon,LoadDungeons,LoadSkills,CanUseSkill,tryItem, LoadWeapons, preLoadActiveDungeon, loadWorldMap, ReloadWorldMap,LoadViewer,LoadTutoRef,LoadNextStep,LoadViewerRef,LoadStep, Create } from '../../common/dungeons/actions';
 
 let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,tryItem, preLoadActiveDungeon,cancelDungeon,CanUseSkill,LoadViewer, loadWorldMap, viewer,dviewer, LoadTutoRef, LoadStep,LoadNextStep , AddEquipment, RemoveEquipment, DeleteEquipment}) => {
-    let weapon_list = '';
+    let dungeons_list = '';
     var skills_list = '';
     var object_list = '';
     let dungeon;
@@ -36,7 +36,6 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
     }
     else
     {
-
         experience = dviewer.characters[dviewer.active].experience;
         maxexperience = dviewer.characters[dviewer.active].maxexperience;
         if(dviewer.characters && dviewer.characters[dviewer.active]){
@@ -157,6 +156,7 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                 {
                     preLoadActiveDungeon(dviewer);
                 }
+
                 dungeonActive = false;
             }
         }
@@ -207,6 +207,12 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                     {tab == "perso" && dviewer.characters[dviewer.active] &&
                         <Stats character={dviewer.characters[dviewer.active]}/>
                     }
+                    {tab == "dungeons" && !dungeonActive && dungeons &&
+                        <div className="button-dungeons">
+                            <div>Compaign</div>
+                            <div>Dungeons from Editor</div>
+                        </div>
+                    }
                 </div>
                 <div className="cadre-droite-max">
                     <div className="cadre-menu">
@@ -241,9 +247,13 @@ let Dungeons = ({ ChangeTab, tutoriel, loaded,verifloaded, dungeons,dungeonsOP,t
                                         verifloaded && wdmap
                                         :
                                         dungeons ?
-                                            dungeons.map(dungeon =>
-                                                <Dungeon key={dungeon.id} dungeon={dungeon}/>
-                                            )
+                                            <div className="container-map">
+                                                {
+                                                    dungeons.map(dungeon =>
+                                                        <Dungeon key={dungeon.id} dungeon={dungeon}/>
+                                                    )
+                                                 }
+                                             </div>
                                             : <Text>There are no dungeons yet.</Text>
                                     : <Text>Please login</Text>
                             }

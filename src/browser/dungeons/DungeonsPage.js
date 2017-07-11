@@ -98,6 +98,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                                         boxShadow: 'none',
                                         textAlign: 'center',
                                         fontSize: '16px',
+                                        cursor: 'url("/assets/images/cursor_pointer.png"), pointer',
                                     }}
                                 >
                                     Create my character

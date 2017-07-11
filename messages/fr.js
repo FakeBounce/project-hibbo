@@ -186,7 +186,7 @@ export default [
   },
   {
     "id": "notFound.continue",
-    "defaultMessage": "Continuez ici s'il vous plaît.",
+    "defaultMessage": "Continue here please.",
   },
   {
     "id": "notFound.h1",
