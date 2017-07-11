@@ -33,7 +33,7 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
             equipment = Object.keys(character.inventory).map(equip => {
                 if(character.inventory[equip] && character.inventory[equip].img != null && character.inventory[equip].img != 'undefined') {
                     return (<div className="equipment-block">
-                        <div className="equipment"><Image src={character.inventory[equip].img} onClick={() => ShowEquipment(character.inventory[equip], false)}/></div>
+                        <div className="equipment"><Image src={character.inventory[equip].img} onDoubleClick={() => AddEquipment(viewer, character.inventory[equip]) } onClick={() => ShowEquipment(character.inventory[equip], false)}/></div>
                     </div>)
                 }
             })
