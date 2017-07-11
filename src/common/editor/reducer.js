@@ -29,12 +29,12 @@ const editorReducer = (state = new State(), action) => {
 
     switch (action.type) {
 
-        case actions.LOAD_VIEWER_SUCCESS: {
+        case actions.LOAD_VIEWER_EDITOR_SUCCESS: {
             let viewer = state.viewer;
 
             if(!viewer)
             {
-                return state.set('viewer', action.payload.username);
+                return state.set('viewer', action.payload);
             }
             return state;
         }

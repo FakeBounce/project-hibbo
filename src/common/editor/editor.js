@@ -10,6 +10,8 @@ const Editor = Record({
     "monsters" : null,
     "user_id":"",
     "worldmap_id":"",
+    "row_player":"",
+    "col_player":"",
 }, 'editor');
 
 export default Editor;

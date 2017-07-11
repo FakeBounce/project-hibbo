@@ -14,7 +14,7 @@ type Props = {
     dungeon: Object,
 };
 
-const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
+const Dungeon = ({ dungeon,loadWorldMap,viewer, numero }) => {
     const styles = {
       title: {
         cursor: 'pointer',
@@ -32,7 +32,11 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
     };
 
     let lock = true;
-    if(viewer && viewer.dungeons){
+    if(dungeon.from_editor){
+        lock = false;
+    }
+
+    if(viewer && viewer.dungeons && lock){
         Object.keys(viewer.dungeons).map(du => {
             if(dungeon.id == du){
                 lock = viewer.dungeons[du].lock;
@@ -51,8 +55,12 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
       return (
         <div className="one-level">
           <div className="choose-level" onClick={() => test()}>
-            <div>{dungeon.numero}</div>
+            <div>{numero}</div>
+
           </div>
+            { dungeon.from_editor &&
+                <span>{dungeon.description}</span>
+            }
           <Text style={styles.title}
                 onClick={() => test()}>
           </Text>
@@ -65,6 +73,7 @@ Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
     loadWorldMap: React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object.isRequired,
+    numero: React.PropTypes.object.isRequired,
 };
 
 export default connect(state => ({
