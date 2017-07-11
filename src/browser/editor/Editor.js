@@ -8,6 +8,7 @@ import EditorMap from './EditorMap';
 import EditMonster from './EditMonster';
 import EditTile from './EditTile';
 import SignOut from '../auth/SignOut';
+import SignOutEditor from '../auth/SignOutEditor';
 import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
@@ -96,12 +97,17 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
             mapactive =false;
         }
 
-        worldmaps.map(list => {
-            if(list.user_id == viewer.id)
-            {
-                listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
-            }
-        })
+        if(worldmaps)
+        {
+
+
+            worldmaps.map(list => {
+                if(list.user_id == viewer.id)
+                {
+                    listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
+                }
+            });
+        }
 
     }
     let taille;
@@ -118,7 +124,7 @@ let Editor = ({worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorl
                     <div className="cadre-menu-div-editor">
                         <ul className="menu-fixe-editor">
                             <Link exactly to='/game'>Dungeons</Link>
-                            <SignOut className="test"/>
+                            <SignOutEditor/>
                         </ul>
                     </div>
                 </div>
