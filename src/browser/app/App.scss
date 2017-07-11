@@ -3138,3 +3138,75 @@ progress[value].progressSkills::-webkit-progress-value {
     left: 20px;
   }
 }
+
+.skills_tab {
+  position: relative;
+  width: 570px;
+  height: 360px;
+  padding: 20px;
+  float: left;
+  overflow-y: auto;
+}
+
+//Inventaire
+.container-skills{
+  width: 570px;
+  height: 360px;
+  float: left;
+}
+
+//Inventaire
+.infobulle-skills{
+  display: block;
+  width: 230px;
+  z-index: 28024;
+  background-size: cover;
+  color: #333;
+  text-align: center;
+  position: relative;
+  padding: 15px;
+  top: 0px;
+  left: 0px;
+  font-size: 13px;
+  height: 200px;
+  color:white;
+}
+
+.skill-block {
+    width: 20%;
+    float: left;
+    margin-bottom: 10px;
+}
+.skills_tab .skill-block {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  background: url(/assets/images/inventory/equipement.png);
+}
+
+.skills_tab .skills {
+  width: 58px;
+  height: 58px;
+  display: block;
+  float: left;
+  margin: 8px 8px;
+  border: 1px solid #fff;
+  cursor: url(/assets/images/cursor_pointer.png), pointer;
+}
+
+.skills-perso {
+  position: relative;
+  float: left;
+  width: 230px;
+  height: 360px;
+}
+
+.infobulle-skills .equip{
+  background: url("/assets/images/inventory/buttongrey.png");
+  width: 76px;
+  height: 30px;
+  text-align:center;
+  margin-left: 25px;
+  line-height: 30px;
+  margin-bottom: 10px;
+}

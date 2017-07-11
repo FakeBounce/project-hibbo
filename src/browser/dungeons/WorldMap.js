@@ -24,6 +24,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     var monster_name = '';
     var grid = "off";
     let is_looted = false;
+    let is_dead = false;
     let loots = '';
 
     if(dungeon.grid)
@@ -41,6 +42,10 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 return(<Image className="loot" src={l.img}/>);
             });
         }
+    }
+    if(dungeon.pj_is_dead)
+    {
+        is_dead = true;
     }
 
   onkeydown = (event: KeyboardEvent) => {
@@ -145,6 +150,12 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                         <h2>Dungeon complete !</h2>
                         <Text>Here is what you looted :</Text>
                         {loots}
+                    </div>
+                  }
+                  {is_dead &&
+                    <div className="infoBulle infoLoot">
+                        <h2>You are dead.</h2>
+                        <h1>GAME OVER</h1>
                     </div>
                   }
               </div>
