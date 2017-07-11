@@ -23,9 +23,24 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     var monster_maxhealth = 100;
     var monster_name = '';
     var grid = "off";
+    let is_looted = false;
+    let loots = '';
+
     if(dungeon.grid)
     {
         grid = "on";
+    }
+
+    if(dungeon.is_looted)
+    {
+        is_looted = true;
+        if(dungeon.loot)
+        {
+
+            loots = dungeon.loot.map(l => {
+                return(<Image className="loot" src={l.img}/>);
+            });
+        }
     }
 
   onkeydown = (event: KeyboardEvent) => {
@@ -123,8 +138,15 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 {/*</div>*/}
                   <h2 className="titre-map">{dungeon.description} <button className="btn-small pull-right" onClick={() => changeGrid(dungeon)}>Grid {grid}</button></h2>
                 <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => doEndTurn(dungeon)}>End of turn</button></div>
-                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Cancel dungeon</button></div>
+                <div className="btn-map leftbtnendtour"><button className="btn-retour" onClick={() => cancelDungeon(dungeon)}>Leave dungeon</button></div>
                 <div className="info-joueur"><span className="error-map">{error_msg}</span></div>
+                  {is_looted &&
+                    <div className="infoBulle infoLoot">
+                        <h2>Dungeon complete !</h2>
+                        <Text>Here is what you looted :</Text>
+                        {loots}
+                    </div>
+                  }
               </div>
               <div className="cadre">
                 { Object.keys(worldmap.maptiles).map(function (keyRow) {

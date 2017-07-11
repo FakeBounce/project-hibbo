@@ -9,7 +9,7 @@ import linksMessages from '../../common/app/linksMessages';
 import { Block, Input, View, Button, Form } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter } from '../../common/dungeons/actions';
+import { LoadEquipments,LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter } from '../../common/dungeons/actions';
 import { fields } from '../../common/lib/redux-fields';
 
 
@@ -122,6 +122,7 @@ DungeonsPage.propTypes = {
     dviewer: React.PropTypes.object,
     classes: React.PropTypes.object,
     LoadClasses: React.PropTypes.func,
+    LoadEquipments: React.PropTypes.func,
     LoadViewer: React.PropTypes.func,
     fields: React.PropTypes.object.isRequired,
 };
@@ -135,11 +136,13 @@ DungeonsPage = firebase((database, props) => {
     const ClassesRef = database.child('classes');
     const UserRef = database.child('users/'+props.viewer.id);
     const SkillsRef = database.child('skills');
-    const WeaponsRef = database.child('weapons');
+    const EquipmentsRef = database.child('equipments');
+    // const WeaponsRef = database.child('weapons');
     return [
         [ClassesRef, 'on', 'value', props.LoadClasses],
         [UserRef, 'on', 'value', props.LoadViewerChanges],
-        [WeaponsRef, 'on', 'value', props.LoadWeapons],
+        [EquipmentsRef, 'on', 'value', props.LoadEquipments],
+        // [WeaponsRef, 'on', 'value', props.LoadWeapons],
         [SkillsRef, 'on', 'value', props.LoadSkills],
     ];
 })(DungeonsPage);
@@ -148,4 +151,4 @@ export default connect(state => ({
     viewer: state.users.viewer,
     dviewer: state.dungeons.viewer,
     classes: state.dungeons.classes,
-}), { LoadClasses,LoadViewer,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter })(DungeonsPage);
+}), { LoadClasses,LoadViewer,LoadEquipments,LoadViewerChanges,LoadSkills, LoadWeapons, setClasse, CreateCharacter })(DungeonsPage);

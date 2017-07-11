@@ -2869,3 +2869,33 @@ progress[value].progressSkills::-webkit-progress-value {
 .pull-right{
   float:right;
 }
+
+.infoBulle.infoLoot {
+  display: block;
+  background-color: aliceblue;
+  width: 350px;
+  z-index: 202531!important;
+  background-size: cover;
+  color: #333;
+  text-align: center;
+  padding: 15px 0;
+  position: absolute;
+  top: 154px;
+  left: 6px;
+  background: url("/assets/images/login/infoperso2.png") no-repeat;
+  font-size: 13px;
+  height: 200px;
+}
+
+.infoBulle.infoLoot h2{
+  margin-top: 25px;
+}
+
+
+.loot {
+  width: 54px;
+  height: 54px;
+  display: inline-block;
+  border: 1px solid #fff;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
+}
