@@ -37,11 +37,13 @@ export const deleteUser = (viewer) => ({ firebase }) => {
 
 export const addDefaultDungeon = () => ({ firebase, getUid}) => {
 
-    // firebase.update({
-    //     [`dungeons/5fc2dadf-4d19-419a-8c9a-3886acdef415`]: { description: "first", name: "first", from_editor : false,id:"5fc2dadf-4d19-419a-8c9a-3886acdef415",lock:false, name : "first",worldmap:"603414e3-d8fc-4b3f-ac56-376160eb7958" },
-    // });
+    firebase.update({
+        [`dungeons/Dungeon1`]: { description: "Dungeon 1", name: "Dungeon 1", from_editor : false,id:"Dungeon1",lock:false,worldmap:"a024ef95-98b8-4a7a-abfe-55a838c0e0c8", next: "Dungeon2" },
+        [`dungeons/Dungeon2`]: { description: "Dungeon 2", name: "Dungeon 2", from_editor : false,id:"Dungeon2",lock:true,worldmap:"24f49f73-b3f0-4bed-b938-031b70f54a24", next: "Dungeon3" },
+        [`dungeons/Dungeon3`]: { description: "Dungeon 3", name: "Dungeon 3", from_editor : false,id:"Dungeon3",lock:true,worldmap:"24f49f73-b3f0-4bed-b938-031b70f54a24", next: false },
+    });
 
-    var a = getUid();
+    /*var a = getUid();
     var b = getUid();
     var c = getUid();
     var d = getUid();
@@ -179,7 +181,7 @@ export const addDefaultDungeon = () => ({ firebase, getUid}) => {
             image: "/assets/images/maptiles/mur-haut-new.png",
             title: "Grey wall",
             type: "wall",
-        }});
+        }});*/
 
 
     return {
@@ -3632,6 +3634,8 @@ var id = getUid();
 
   //ADD FAKE MAP
     /*
+
+
     firebase.update({
       [`maps/603414e3-d8fc-4b3f-ac56-376160eb7958`]: {
           id: '603414e3-d8fc-4b3f-ac56-376160eb7958', name: `first`,

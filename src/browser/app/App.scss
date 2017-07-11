@@ -79,7 +79,8 @@ body {
 .top{
   position: absolute;
   top : -20px;
-  left : 5px
+  left : 5px;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 .changeSelection{
@@ -126,6 +127,7 @@ body {
 span.bot {
   position: absolute;
   left: 30px;
+  cursor: url("/assets/images/cursor_pointer.png"), pointer;
 }
 
 Input.input-map-editor{
@@ -353,12 +355,16 @@ Input.input-map-editor{
 
 .cadre-droite-interact-droite {
   float: right;
-  width:28%;
+  width:27%;
   position: relative;
   z-index: 3;
 }
 
-
+.errorSelectEquip {
+  position: absolute;
+  margin-top: -25px;
+  margin-left: -40px;
+}
 
 .map_tile {
   margin: 0 !important;
@@ -946,9 +952,8 @@ progress[value].progressMore::-webkit-progress-value {
 }
 
 .cadre {
-  width: 55%;
-  height: 260px;
   float: right;
+  border: 7px solid #2D3134;
 }
 
 
@@ -2598,10 +2603,18 @@ progress[value].progressSkills::-webkit-progress-value {
   right: 600px;
 }
 
+.cadre-droite{
+  background-color: #16120F;
+  height: 360px;
+}
+
+
 .tutoriel-map .cadre-droite{
   position: relative;
   z-index: 7000;
 }
+
+
 
 .signout_editor
 {
@@ -2676,7 +2689,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .inventory_pick_info_class div ,.inventory_pick_info_type div, .inventory_pick_info_benef div{
   float: left;
   text-align: left;
-  margin-right: 5px;
+  margin-right: 2px;
 }
 
 .inventory_pick .equipment-block{
@@ -3139,6 +3152,77 @@ progress[value].progressSkills::-webkit-progress-value {
   }
 }
 
+.skills_tab {
+  position: relative;
+  width: 570px;
+  height: 360px;
+  padding: 20px;
+  float: left;
+  overflow-y: auto;
+}
+
+//Inventaire
+.container-skills{
+  width: 570px;
+  height: 360px;
+  float: left;
+}
+
+//Inventaire
+.infobulle-skills{
+  display: block;
+  width: 230px;
+  z-index: 28024;
+  background-size: cover;
+  color: #333;
+  text-align: center;
+  position: relative;
+  padding: 15px;
+  top: 0px;
+  left: 0px;
+  font-size: 13px;
+  height: 200px;
+  color:white;
+}
+
+.skill-block {
+    width: 20%;
+    float: left;
+    margin-bottom: 10px;
+}
+.skills_tab .skill-block {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  background: url(/assets/images/inventory/equipement.png);
+}
+
+.skills_tab .skills {
+  width: 58px;
+  height: 58px;
+  display: block;
+  float: left;
+  margin: 8px 8px;
+  border: 1px solid #fff;
+  cursor: url(/assets/images/cursor_pointer.png), pointer;
+}
+
+.skills-perso {
+  position: relative;
+  float: left;
+  width: 230px;
+  height: 360px;
+}
+
+.infobulle-skills .equip {
+  background: url("/assets/images/inventory/buttongrey.png");
+  width: 76px;
+  height: 30px;
+  text-align: center;
+  margin-left: 25px;
+  line-height: 30px;
+  margin-bottom: 10px;
+}
 .errorEmail{
   margin-bottom: -34px;
   font-weight: 600;

@@ -30,7 +30,16 @@ const Dungeon = ({ dungeon,loadWorldMap,viewer }) => {
     {
         loadWorldMap(dungeon,viewer)
     };
-    if(dungeon.lock === true){
+
+    let lock = true;
+    if(viewer && viewer.dungeons){
+        Object.keys(viewer.dungeons).map(du => {
+            if(dungeon.id == du){
+                lock = viewer.dungeons[du].lock;
+            }
+        })
+    }
+    if(lock === true){
       return (
         <div className="one-level">
           <div className="level-lock"></div>

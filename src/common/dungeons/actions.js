@@ -3,6 +3,9 @@
  */
 
 import { Range } from 'immutable';
+export const EQUIP_SKILL = 'EQUIP_SKILL';
+export const UNEQUIP_SKILL = 'UNEQUIP_SKILL';
+export const SHOW_SKILL_INFO = 'SHOW_SKILL_INFO';
 export const LOAD_EQUIPMENTS = 'LOAD_EQUIPMENTS';
 export const END_DUNGEON = 'SWITCH_PANNEL';
 export const SWITCH_PANNEL = 'SWITCH_PANNEL';
@@ -201,7 +204,7 @@ export const LoadNextStep = (viewer,next) =>  ({ firebase }) => {
 /************ Turns *****************/
 export const EndTurn = (dungeon) => ({firebase}) => {
     dungeon.error_message = '';
-    if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.end_turn)
+    if(!dungeon.user.character.is_attacking && !dungeon.user.character.is_moving && !dungeon.end_turn && !dungeon.pj_is_dead)
     {
         dungeon.end_turn = true;
         dungeon.monster_turn = false;
@@ -413,6 +416,13 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         }
         else{
             monsters = [];
+            let lvlup_char = dungeon.user.levelup_character;
+            lvlup_char.experience = pj.experience;
+
+            firebase.update({
+                [`users/${dungeon.user.id}/characters/0`]: lvlup_char,
+            });
+            dungeon.is_finished = true;
         }
         dungeon.user.character = pj;
         dungeon.dungeon.maptiles[pj.row][pj.col].character = pj;
@@ -521,6 +531,11 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                                 if(damage > 0)
                                 {
                                     dungeon.user.character.health -= (damage);
+                                }
+                                console.log('health : ',dungeon.user.character.health);
+                                if(dungeon.user.character.health <= 0)
+                                {
+                                    dungeon.pj_is_dead = true;
                                 }
                                 pnj.is_attacking = false;
                                 pnj.can_attack = false;
@@ -917,7 +932,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
     let canMove = false;
     let message = '';
     let direction = '';
-    if(!dungeon.user.character.is_casting)
+    if(!dungeon.user.character.is_casting && !dungeon.pj_is_dead)
     {
         if(!dungeon.user.character.is_moving && !dungeon.user.character.is_attacking && !dungeon.end_turn && !dungeon.monster_turn)
         {
@@ -1111,7 +1126,7 @@ export const movingCharacter = (dungeon,row,col) => ({ firebase }) => {
         }
     }
     else {
-        dungeon.error_message = 'You cannot move while casting a spell';
+        dungeon.error_message = 'You\'re dead';
     }
     firebase.update({
         [`activeDungeons/${dungeon.user.id}`]: dungeon,
@@ -1273,7 +1288,7 @@ export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
     var map = dungeon.dungeon.maptiles;
     var cast_ready = false;
     dungeon.error_message = '';
-    if(!pj.is_moving && !pj.is_attacking && !pj.is_using_skill) {
+    if(!pj.is_moving && !pj.is_attacking && !pj.is_using_skill && !dungeon.pj_is_dead) {
         let item = pj.items[number-1];
         item.cast_time = 0;
         item.is_item = true;
@@ -1303,7 +1318,7 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
     pj.try_skill = false;
     dungeon.error_message = '';
     map = unsetAoeSkills(map);
-    if(!pj.is_casting)
+    if(!pj.is_casting && !dungeon.pj_is_dead)
     {
         if(!pj.is_moving && !pj.is_attacking && !dungeon.monster_turn && !dungeon.end_turn)
         {
@@ -1364,7 +1379,7 @@ export const CanUseSkill = (dungeon,viewer,skill) => ({firebase}) => {
         }
     }
     else {
-        dungeon.error_message = 'You cannot move while casting a spell';
+        dungeon.error_message = 'You are dead.';
     }
     return {
         type: CAN_USE_SKILL,
@@ -1489,7 +1504,7 @@ export const canAttackMonster = (dungeon,character,row,col) => ({firebase}) => {
     var map = dungeon.dungeon.maptiles;
     pj.is_attacking = false;
     dungeon.error_message = '';
-    if(!pj.is_casting)
+    if(!pj.is_casting && !dungeon.pj_is_dead)
     {
         if(!pj.is_moving  && !dungeon.end_turn && !dungeon.monster_turn)
         {
@@ -4741,7 +4756,7 @@ export const switchPannel = (dungeon) => ({firebase}) => {
     }
 };
 
-export const endDungeon = (dungeon,equipments = false) => ({firebase}) => {
+export const endDungeon = (dungeon,equipments = false, dviewer) => ({firebase}) => {
     if(dungeon.is_finished)
     {
         if(equipments)
@@ -4776,8 +4791,17 @@ export const endDungeon = (dungeon,equipments = false) => ({firebase}) => {
         dungeon.is_finished = false;
         dungeon.is_looted = true;
         firebase.update({
-            [`users/${dungeon.user.id}/characters/0`]: dungeon.user.levelup_character,
+            [`users/${dungeon.user.id}/characters/0`]: dungeon.user.levelup_character
         });
+
+        if(dviewer != null && dviewer.dungeons) {
+            let dung = dviewer.dungeons[dungeon.dungeon_id];
+            if (dung != null && dung.next != null && dung.next) {
+                firebase.update({
+                    [`users/${dungeon.user.id}/dungeons/${dung.next}/lock`]: false
+                });
+            }
+        }
     }
 
     firebase.update({
@@ -4866,6 +4890,75 @@ export const updateError = (viewer, error) => ({firebase}) => {
 
     return {
         type: UPDATE_ERROR,
+        payload: viewer,
+    }
+};
+
+export const showSkillInfos = (viewer, skill) => ({ firebase }) => {
+    viewer.info_skill = skill;
+    firebase.update({
+        [`users/${viewer.id}/info_skill`]: skill,
+    });
+    return {
+        type: SHOW_SKILL_INFO,
+        payload: viewer,
+    }
+};
+
+export const unequipSkill = (viewer, skill) => ({ firebase }) => {
+
+    if(viewer.characters[viewer.active].equipped_spells)
+    {
+        viewer.characters[viewer.active].learned_spells[skill.id].number = null;
+        viewer.characters[viewer.active].learned_spells[skill.id].is_equipped = false;
+        viewer.info_skill.is_equipped = false;
+
+        viewer.characters[viewer.active].equipped_spells.map(ep => {
+            if(skill.id == ep.id)
+            {
+                viewer.characters[viewer.active].equipped_spells.splice(skill.number,1);
+            }
+        });
+
+
+        let cpt = 0;
+        viewer.characters[viewer.active].equipped_spells.map(sk =>{
+            sk.number = cpt;
+            cpt = cpt+1;
+        });
+    }
+
+    firebase.update({
+        [`users/${viewer.id}`]: viewer,
+    });
+    return {
+        type: UNEQUIP_SKILL,
+        payload: viewer,
+    }
+};
+
+export const equipSkill = (viewer, skill) => ({ firebase }) => {
+    if(!viewer.characters[viewer.active].equipped_spells)
+    {
+        viewer.characters[viewer.active].equipped_spells = [];
+    }
+    if(viewer.characters[viewer.active].equipped_spells.length<8)
+    {
+        skill.is_equipped = true;
+        viewer.characters[viewer.active].equipped_spells.push(skill);
+
+        let cpt = 0;
+        viewer.characters[viewer.active].equipped_spells.map(sk =>{
+            sk.number = cpt;
+            cpt = cpt+1;
+        });
+    }
+    viewer.info_skill = skill;
+    firebase.update({
+        [`users/${viewer.id}`]: viewer,
+    });
+    return {
+        type: EQUIP_SKILL,
         payload: viewer,
     }
 };

@@ -72,6 +72,11 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
                             </div>
                         </div>
                         <div className="w20">
+                            {viewer.pick_equipment.error &&
+                                <div className="errorSelectEquip">
+                                    {viewer.pick_equipment.error}
+                                </div>
+                            }
                             <div className="inventory_pick_action">
                                 {viewer.pick_equipment.wear != null && viewer.pick_equipment.wear != 'undefined' ?
                                     viewer.pick_equipment.wear == false ?
@@ -87,11 +92,6 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
                                      onClick={() => DeleteEquipment(viewer, viewer.pick_equipment)}>Delete
                                 </div>
                             </div>
-                            {viewer.pick_equipment.error &&
-                            <div>
-                                {viewer.pick_equipment.error}
-                            </div>
-                            }
                         </div>
                     </div>
                 </div>
