@@ -819,10 +819,15 @@ export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
 
     if(camera && camera.size_map != worldmap.worldmap.size_map)
     {
-
         camera.row_end = camera.row_end + 1;
         camera.col_end = camera.col_end +1;
         camera.size_map = camera.size_map + 1;
+
+        if(camera.row_end > worldmap.worldmap.size_map )
+        {
+            camera.row_start = camera.row_start +1
+        }
+
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
