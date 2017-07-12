@@ -54,11 +54,6 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
       });
     }
 
-  onkeydown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowUp") {
-      }
-  };
-
     if(character.is_attacking && character.type == "pj")
     {
         gif = 'pj-'+character.direction;
