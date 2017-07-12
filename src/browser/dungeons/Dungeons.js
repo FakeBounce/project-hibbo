@@ -235,8 +235,8 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
 
                     compteur = 0;
                     dungeons_list_editor = dungeons.map(dung => {
-                        compteur++;
                         if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
+                            compteur++;
                             return (<Dungeon key={dung.id} dungeon={dung} numero={compteur} />)
                         }
                         return "";
