@@ -549,44 +549,44 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
         }
         else {
-            var mo = monster;
-            mo.row = row;
-            mo.col = col;
-            if(typeof  worldmap.worldmap.monsters === 'undefined')
+            if(worldmap.worldmap.maptiles[row][col].type !== "wall")
             {
-                worldmap.worldmap.monsters = [];
-                worldmap.camera.monsters = [];
-            }
-            var is_here = false;
-            worldmap.worldmap.monsters.map(m => {
-               if(parseInt(m.row) == row && parseInt(m.col) == col)
-               {
-                   is_here = m;
-                   return true;
-               }
+                var mo = monster;
+                mo.row = row;
+                mo.col = col;
+                if (typeof  worldmap.worldmap.monsters === 'undefined') {
+                    worldmap.worldmap.monsters = [];
+                    worldmap.camera.monsters = [];
+                }
+                var is_here = false;
+                worldmap.worldmap.monsters.map(m => {
+                    if (parseInt(m.row) == row && parseInt(m.col) == col) {
+                        is_here = m;
+                        return true;
+                    }
 
-            });
-            worldmap.camera.monsters.map(m => {
-               if(parseInt(m.row) == row && parseInt(m.col) == col)
-               {
-                   is_here = m;
-                   return true;
-               }
+                });
+                worldmap.camera.monsters.map(m => {
+                    if (parseInt(m.row) == row && parseInt(m.col) == col) {
+                        is_here = m;
+                        return true;
+                    }
 
-            });
-            if(is_here)
-            {
-                worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
-                worldmap.camera.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
-            }
-            else {
+                });
+                if (is_here) {
+                    worldmap.worldmap.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
+                    worldmap.camera.monsters[worldmap.worldmap.maptiles[row][col].character.number] = mo;
+                }
+                else {
 
-                var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
-                var testRowIndex = worldmap.camera.monsters.push(mo) - 1;
-                mo.number = testRowIndex;
+                    var testRowIndex = worldmap.worldmap.monsters.push(mo) - 1;
+                    var testRowIndex = worldmap.camera.monsters.push(mo) - 1;
+                    mo.number = testRowIndex;
+                }
+                worldmap.worldmap.maptiles[row][col].character = mo;
+                worldmap.camera.maptiles[row][col].character = mo;
             }
-            worldmap.worldmap.maptiles[row][col].character = mo;
-            worldmap.camera.maptiles[row][col].character = mo;
+
         }
 
         firebase.update({
@@ -794,12 +794,12 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
 
 export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
 
-    if(camera && camera.size_map > worldmap.worldmap.size_map_min+11)
+    if(camera && (camera.row_end-camera.row_start) >=11  &&  (camera.col_end-camera.col_start) >= 11)
     {
-
+        camera.row_start = camera.row_start+1;
+        camera.col_start = camera.col_start +1;
         camera.row_end = camera.row_end - 1;
         camera.col_end = camera.col_end -1;
-        camera.size_map = camera.size_map - 1;
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
@@ -814,22 +814,30 @@ export const ZoomEditMap = (camera, viewer,worldmap) =>  ({firebase}) => {
 
 export const ZoomMinorEditMap = (camera, viewer,worldmap) => ({firebase}) => {
 
-    if(camera && camera.size_map != worldmap.worldmap.size_map)
-    {
-        camera.row_end = camera.row_end + 1;
-        camera.col_end = camera.col_end +1;
-        camera.size_map = camera.size_map + 1;
-
-        if(camera.row_end > worldmap.worldmap.size_map )
-        {
-            camera.row_start = camera.row_start +1
-        }
+     if(camera)
+     {
+            if(camera.row_start - 1 >= 0)
+            {
+                camera.row_start = camera.row_start -1;
+            }
+            if(camera.col_start - 1 >= 0)
+            {
+                camera.col_start = camera.col_start -1;
+            }
+            if(camera.row_end + 1 <= worldmap.worldmap.size_map)
+            {
+                camera.row_end = camera.row_end + 1;
+            }
+            if(camera.col_end +1 <= worldmap.worldmap.size_map)
+            {
+                camera.col_end = camera.col_end +1;
+            }
 
 
         firebase.update({
             [`activeMap/${viewer.id}/camera`]: camera,
         });
-    }
+ }
 
     return {
         type: ZOOM_MINUS_EDIT,
