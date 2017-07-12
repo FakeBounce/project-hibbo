@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
+import { keyHandler, KEYPRESS} from 'react-key-handler';
 import { Image, Flex } from '../app/components';
 import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove,unsetRangeTarget,showRangeTarget } from '../../common/dungeons/actions';
 
@@ -23,18 +23,18 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     let classes = 'monster';
     var gif = '';
     var opposed_img = '';
-    let conditions = false
+    let conditions = false;
 
     if(character.conditions) {
         conditions = character.conditions.map(cond => {
             if(cond.is_item)
             {
                 let cond_image = '/assets/images/objets/' + cond.image;
-                return (<Image className="imgConditionPersonnage" src={cond_image}/>);
+                return (<Image key={cond.id} className="imgConditionPersonnage" src={cond_image}/>);
             }
             else {
                 let cond_image = '/assets/images/skills/' + cond.image;
-                return (<Image className="imgConditionPersonnage" src={cond_image}/>);
+                return (<Image key={cond.id} className="imgConditionPersonnage" src={cond_image}/>);
             }
         });
     }
@@ -45,19 +45,14 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
           if(buff.is_item)
           {
               let buff_image = 'assets/images/objets/' + buff.image;
-              return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+              return(<Image key={buff.id} className="imgConditionPersonnage" src={buff_image}/>);
           }
           else {
               let buff_image = 'assets/images/skills/' + buff.image;
-              return(<Image className="imgConditionPersonnage" src={buff_image}/>);
+              return(<Image key={buff.id} className="imgConditionPersonnage" src={buff_image}/>);
           }
       });
     }
-
-  onkeydown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowUp") {
-      }
-  };
 
     if(character.is_attacking && character.type == "pj")
     {

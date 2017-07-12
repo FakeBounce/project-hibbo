@@ -64,8 +64,9 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     let classSkill = 'skill';
                     cpt++;
                     let skill_image = "assets/images/skills/"+skill.image;
+                    let key = "aoneSkill" + cpt;
                     return (
-                        <div className="oneSkill">
+                        <div className="oneSkill" key={key} >
                             <span>{cpt}</span>
                             <Image style={styles} key={skill.id} className={`skills ${classSkill}`} src={skill_image}></Image>
                             <div className="info">
@@ -130,6 +131,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     skills_list = false;
                     skills_list = dungeon.user.character.equipped_spells.map(skill => {
                         var classSkill = 'skill';
+                        let key = "oneSkill" + cpt;
                         if(dungeonActive)
                         {
                             skill_function = function (sk) {
@@ -146,8 +148,9 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         styles = {
                             opacity: cd_percent
                         };
+                        
                       return (
-                          <div className="oneSkill">
+                          <div className="oneSkill" key={key}>
                               <span>{cpt}</span>
                               <Image style={styles} key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image>
                               <div className="info">
@@ -224,7 +227,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         if (compteur < 4 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
                             let classeD = "compaign_dungeon" + compteur;
                             compteur++;
-                            return (<div className={classeD}>
+                            return (<div className={classeD} key={classeD}>
                                 <Dungeon key={dung.id} dungeon={dung} numero={compteur}  />
                             </div>)
                         }
@@ -233,8 +236,8 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
 
                     compteur = 0;
                     dungeons_list_editor = dungeons.map(dung => {
-                        compteur++;
                         if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
+                            compteur++;
                             return (<Dungeon key={dung.id} dungeon={dung} numero={compteur} />)
                         }
                         return "";
@@ -349,14 +352,17 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                             </div>
                         </div>
                         <div className="cmenu cadre-perso">
+                            <div className="fix-h-moz"></div>
                             <a name="personnage" id="personnage"></a>
                             <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
                         <div className="cmenu cadre-competence">
+                            <div className="fix-h-moz"></div>
                             <a name="skill" id="skill"></a>
                             <Skills character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
                         <div className="cmenu cadre-option">
+                            <div className="fix-h-moz"></div>
                             <a name="option" id="option"></a>
                             <div className="container-option">
                                 <div>

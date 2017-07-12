@@ -73,7 +73,7 @@ Dungeon.propTypes = {
     dungeon: React.PropTypes.object.isRequired,
     loadWorldMap: React.PropTypes.func.isRequired,
     viewer: React.PropTypes.object.isRequired,
-    numero: React.PropTypes.object.isRequired,
+    numero: React.PropTypes.number.isRequired,
 };
 
 export default connect(state => ({

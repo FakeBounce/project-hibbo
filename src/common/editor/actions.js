@@ -605,7 +605,6 @@ export const pickmapmonster = (monster,viewer,worldmap,row,col) => ({ getUid,fir
 
 export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase, getUid }) => {
 
-    console.log('item', item);
     if(item) {
 
         if(item.name == "Remove")
@@ -704,8 +703,6 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
     let character="";
 
     let activeUser = false;
-
-    console.log(viewer);
     if(viewer) {
         if(viewer.characters)
         {

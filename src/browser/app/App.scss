@@ -2679,10 +2679,12 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .inventory_pick_info_benef div:nth-child(1){
+  word-wrap: break-word;
    width: 70%;
 }
 
 .inventory_pick_info_benef div:nth-child(2){
+  word-wrap: break-word;
   width: 30%;
 }
 
@@ -2917,6 +2919,7 @@ progress[value].progressSkills::-webkit-progress-value {
 .stats .stat, .stats .stat_large{
   min-height: 20px;
   font-size: 12px;
+  word-wrap: break-word;
 }
 
 .stats .stat div, .stats .stat_large div{
@@ -3257,4 +3260,14 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .hidden_maptile {
   display:none!important;
+}
+
+@-moz-document url-prefix() {
+  .menu-fixe li{
+    width: 157px;
+  }
+
+  .fix-h-moz{
+    height: 10px;
+  }
 }
