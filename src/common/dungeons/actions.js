@@ -69,6 +69,7 @@ export const loadWorldMap = (dungeon,viewer) =>  ({ getUid, now, firebase }) => 
     levelup_character = JSON.parse(JSON.stringify(character));
     character.row = 0;
     character.col = 0;
+    character.damage_time = 0;
     character.is_attacking = false;
     character.is_moving = false;
     character.is_casting = 0;
@@ -287,7 +288,6 @@ export const EndTurn = (dungeon) => ({firebase}) => {
         });
 
         let monsters = dungeon.dungeon.monsters;
-        console.log("1",monsters);
         let monster_moves = [];
         if(monsters) {
             monsters.map((monster, index) => {
@@ -352,7 +352,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
                         let map = dungeon.dungeon.maptiles;
                         let is_in_range = false;
                         let temp_tab = [];
-                        let result = setRangeMonsters(map, pj, 0, monster.range, monster.range - 1, false, monster);
+                        let result = setRangeMonsters(map, pj, 0, monster.range, (monster.range-1), false, monster);
                         temp_tab = result.tab;
 
                         temp_tab.map(tt => {
@@ -532,7 +532,6 @@ export const MonsterTurn = (dungeon,attack = false,monster_aggro = false) => ({f
                                 {
                                     dungeon.user.character.health -= (damage);
                                 }
-                                console.log('health : ',dungeon.user.character.health);
                                 if(dungeon.user.character.health <= 0)
                                 {
                                     dungeon.pj_is_dead = true;
@@ -1397,7 +1396,6 @@ export const trySkill = (dungeon,row,col) => ({firebase}) => {
         pj.is_using_skill = false;
         let skill = dungeon.user.character.equipped_spells[dungeon.user.character.current_skill];
         let result = doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase);
-
         dungeon = result.dungeon;
     }
     firebase.update({
@@ -1933,7 +1931,7 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
                 var fake_pj = {row:row,col:col,can_use_skill:false};
                 let res;
                 let rg = comparePosition(pj.row,pj.col,row,col);
-                let dr = '';
+                let dr = 'down';
                 if (skill.aoe_front) {
                     res = setSkillsTarget(map, fake_pj, skill, rg.direction,true);
                     map = res.map;
