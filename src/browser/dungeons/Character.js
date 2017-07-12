@@ -194,7 +194,11 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
             </h3>
           </div>
           <ul>
-            <li>Action Point: {character.damage}</li>
+              {character.type == "pnj" ?
+                <li>Health: {character.health}</li> :
+                  <li>Action Point: {character.action}</li>
+              }
+
             <li>Movement: {character.movement}</li>
             <li>Dmg Reduction: {character.damage_reduction}</li>
             <li>Damage: {character.damage}</li>
