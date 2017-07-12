@@ -18,7 +18,7 @@ type Props = {
 
 const Maptile = ({ row,col,maptile,pickmaptile,pickmapmonster,pickmapobject, viewer,worldmap,activemaptile,activemapmonster,activemapobject }: Props) => {
 
-    let widthTile = 20 * (16 / (worldmap.camera.size_map+1) );
+    let widthTile = 17 * (16 / (worldmap.camera.row_end - worldmap.camera.row_start) );
     const styles = {
         bg: {
             backgroundImage: "url("+maptile.image+")",

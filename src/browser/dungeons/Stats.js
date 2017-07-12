@@ -64,11 +64,11 @@ const Stats = ({ character }: Props) => {
                 <div>{character.damage_return_percent}</div>
             </div>
             <div className="stat">
-                <div>Dmg reduction flat: </div>
+                <div>Dmg reduction : </div>
                 <div>{character.damage_reduction_flat}</div>
             </div>
             <div className="stat">
-                <div>Dmg reduct° flat per lvl: </div>
+                <div>Dmg reduct° per lvl: </div>
                 <div>{character.damage_reduction_flat_lvl}</div>
             </div>
             <div className="stat">

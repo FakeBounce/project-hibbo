@@ -1677,7 +1677,6 @@ progress[value].progressSkills::-webkit-progress-value {
 
 .cadre-editor{
   width: 1025px;
-  height: 445px;
   background-color: #16120F;
   text-align: center;
   padding-top: 10px;
@@ -1971,7 +1970,7 @@ progress[value].progressSkills::-webkit-progress-value {
 }
 
 .infobar-spell-number .oneSkill .info ul{
-  margin: 0 50px 0 auto;
+  //margin: 0 50px 0 auto;
 }
 
 .infobar-spell-number .oneSkill .info ul li{
@@ -1980,7 +1979,9 @@ progress[value].progressSkills::-webkit-progress-value {
   float: left;
   margin: 0;
   color: #333;
-  padding: 0 10px;
+  font-size: 11px;
+  bottom: 0;
+  text-align: left;
 }
 
 .infobar-spell-number .oneSkill .info h3{
