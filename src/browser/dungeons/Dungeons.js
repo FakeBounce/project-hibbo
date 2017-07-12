@@ -131,6 +131,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     skills_list = false;
                     skills_list = dungeon.user.character.equipped_spells.map(skill => {
                         var classSkill = 'skill';
+                        let key = "oneSkill" + cpt;
                         if(dungeonActive)
                         {
                             skill_function = function (sk) {
@@ -147,7 +148,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         styles = {
                             opacity: cd_percent
                         };
-                        let key = "oneSkill" + cpt;
+                        
                       return (
                           <div className="oneSkill" key={key}>
                               <span>{cpt}</span>
@@ -351,14 +352,17 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                             </div>
                         </div>
                         <div className="cmenu cadre-perso">
+                            <div className="fix-h-moz"></div>
                             <a name="personnage" id="personnage"></a>
                             <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
                         <div className="cmenu cadre-competence">
+                            <div className="fix-h-moz"></div>
                             <a name="skill" id="skill"></a>
                             <Skills character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
                         <div className="cmenu cadre-option">
+                            <div className="fix-h-moz"></div>
                             <a name="option" id="option"></a>
                             <div className="container-option">
                                 <div>

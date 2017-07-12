@@ -23,7 +23,8 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
 
     if(viewer && viewer.pick_equipment && viewer.pick_equipment.benefits){
         pick_equipment_list = Object.keys(viewer.pick_equipment.benefits).map(benef => {
-            return(<div className="inventory_pick_info_benef"><div>{benef} : </div><div>{viewer.pick_equipment.benefits[benef]}</div></div>)
+            let key = "benef" + benef;
+            return(<div className="inventory_pick_info_benef" key={key}><div>{benef} : </div><div>{viewer.pick_equipment.benefits[benef]}</div></div>)
         });
     }
 
@@ -32,7 +33,8 @@ const Inventory = ({ character , viewer , PickEquipment, RemoveEquipment, AddEqu
         if (character.inventory) {
             equipment = Object.keys(character.inventory).map(equip => {
                 if(character.inventory[equip] && character.inventory[equip].img != null && character.inventory[equip].img != 'undefined') {
-                    return (<div className="equipment-block">
+                    let key1 = "inventory" + equip;
+                    return (<div className="equipment-block" key={key1}>
                         <div className="equipment"><Image src={character.inventory[equip].img} onDoubleClick={() => AddEquipment(viewer, character.inventory[equip]) } onClick={() => ShowEquipment(character.inventory[equip], false)}/></div>
                     </div>)
                 }
