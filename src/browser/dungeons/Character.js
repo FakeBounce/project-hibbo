@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { connect } from 'react-redux';
-import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
+import { keyHandler, KEYPRESS} from 'react-key-handler';
 import { Image, Flex } from '../app/components';
 import { attackMonster,endSkill,canAttackMonster,moveCharacter,MonsterTurn,MonsterMove,unsetRangeTarget,showRangeTarget } from '../../common/dungeons/actions';
 
@@ -23,7 +23,7 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     let classes = 'monster';
     var gif = '';
     var opposed_img = '';
-    let conditions = false
+    let conditions = false;
 
     if(character.conditions) {
         conditions = character.conditions.map(cond => {
