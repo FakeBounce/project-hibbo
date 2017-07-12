@@ -126,6 +126,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
             EndTurn(dungeon);
         }
     };
+    let hidden = true;
     return (
         <View>
             <div className="cadre-droite">
@@ -192,12 +193,29 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                       {
                           if(c_col_start <= keyCol && keyCol <= c_col_end)
                           {
+                              hidden = false;
                               return(
-                                  <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                                  <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
                                            dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
                                   />
                               );
                           }
+                          else {
+                              hidden = true;
+                              return(
+                                  <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
+                                           dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                                  />
+                              );
+                          }
+                      }
+                      else {
+                          hidden = true;
+                          return(
+                              <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
+                                       dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                              />
+                          );
                       }
                   });
                 return (

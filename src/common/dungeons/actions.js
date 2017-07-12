@@ -363,7 +363,7 @@ export const EndTurn = (dungeon) => ({firebase}) => {
 
                         temp_tab = [];
                         let is_in_range_movement = false;
-                        result = setRangeMonsters(map, pj, 0, (monster.range + monster.movement), (monster.range - 1 + monster.movement), false, monster);
+                        result = setRangeMonsters(map, pj, 0, (monster.range + monster.movement), (monster.range - 1 + monster.movement-1), false, monster);
                         temp_tab = result.tab;
 
                         temp_tab.map(tt => {
