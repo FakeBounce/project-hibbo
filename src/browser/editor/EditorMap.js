@@ -123,7 +123,6 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
         {
             editor = Object.keys(worldmap.camera.maptiles).map(function (keyRow) {
                 var col = Object.keys(worldmap.camera.maptiles[keyRow]).map(function (keyCol) {
-
                         activeConstructMapTop = false;
                         activeConstructMapRight = false;
 
@@ -138,11 +137,9 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
                             }
                             if(keyRow >= worldmap.camera.row_start && keyRow <= worldmap.camera.row_end && keyCol >= worldmap.camera.col_start && keyCol <= worldmap.camera.col_end )
                             {
-
-
-
+                                let keyu = "flex-relative-editor" + keyCol + keyRow
                                     return(
-                                    <div className="flex-relative-editor">
+                                    <div className="flex-relative-editor" key={keyu}>
                                         {
                                             activeConstructMapTop &&
                                             <div><span className="top" onClick={() => FullBlockTop(keyCol,worldmap, viewer, activeTile)} >+</span></div>

@@ -78,8 +78,9 @@ const Skills = ({ character , viewer,showSkillInfos,equipSkill,unequipSkill }: P
                 showSkillInfos(viewer,sk);
             };
             var skill_image = "assets/images/skills/"+skill.image;
+            let keyu = "skill-block" + key;
             return (
-                <div className="skill-block">
+                <div className="skill-block" key={keyu}>
                     <div className="oneSkill">
                         <Image key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image>
                     </div>

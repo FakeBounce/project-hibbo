@@ -75,7 +75,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
             });
         }
         else {
-            dung.push(<Dungeons/>);
+            dung.push(<Dungeons key="dungeonsPage" />);
         }
     }
     else {

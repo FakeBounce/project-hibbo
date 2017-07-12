@@ -64,8 +64,9 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                     let classSkill = 'skill';
                     cpt++;
                     let skill_image = "assets/images/skills/"+skill.image;
+                    let key = "aoneSkill" + cpt;
                     return (
-                        <div className="oneSkill">
+                        <div className="oneSkill" key={key} >
                             <span>{cpt}</span>
                             <Image style={styles} key={skill.id} className={`skills ${classSkill}`} src={skill_image}></Image>
                             <div className="info">
@@ -146,8 +147,9 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         styles = {
                             opacity: cd_percent
                         };
+                        let key = "oneSkill" + cpt;
                       return (
-                          <div className="oneSkill">
+                          <div className="oneSkill" key={key}>
                               <span>{cpt}</span>
                               <Image style={styles} key={skill.id} className={`skills ${classSkill}`} onClick={() => skill_function(skill)} src={skill_image}></Image>
                               <div className="info">
@@ -224,7 +226,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                         if (compteur < 4 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
                             let classeD = "compaign_dungeon" + compteur;
                             compteur++;
-                            return (<div className={classeD}>
+                            return (<div className={classeD} key={classeD}>
                                 <Dungeon key={dung.id} dungeon={dung} numero={compteur}  />
                             </div>)
                         }
