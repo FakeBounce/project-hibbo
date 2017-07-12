@@ -63,7 +63,7 @@ let DungeonsPage = ({viewer,dviewer,classes,LoadViewer, fields, CreateCharacter,
                     if (fields.class.value == classes[classe].name) {
                         checked = true;
                     }
-                    return (<label className="classe-choice"><input
+                    return (<label className="classe-choice" key={classe}><input
                         {...fields.class} type="radio"
                         value={classes[classe].name}
                         checked={checked}

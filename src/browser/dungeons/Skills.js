@@ -45,6 +45,97 @@ const Skills = ({ character , viewer,showSkillInfos,equipSkill,unequipSkill }: P
             equipped_spell = <div className="equip" onClick={() => unequipSkill(viewer,viewer.info_skill)}>Unequip spell</div>;
         }
 
+        let skill_effect = [];
+        let skill = viewer.info_skill;
+        if(skill.action_cost != ""){
+            skill_effect.push(<li>PA: {skill.action_cost}</li>);
+        }
+        if(skill.energy_cost != ""){
+            skill_effect.push(<li>Energy: {skill.energy_cost}</li>);
+        }
+        if(skill.damage_instant != ""){
+            skill_effect.push(<li>Dmg: {skill.damage_instant}</li>);
+        }
+        if(skill.damage_type != ""){
+            skill_effect.push(<li>Dmg type: {skill.damage_type}</li>);
+        }
+        if(skill.rest != ""){
+            skill_effect.push(<li>Cooldown: {skill.rest}</li>);
+        }
+        if(skill.uses != ""){
+            skill_effect.push(<li>Limited use: {skill.uses}</li>);
+        }
+        if(skill.range_diagonal != ""){
+            skill_effect.push(<li>Range diagonal: {skill.range_diagonal}</li>);
+        }
+        if(skill.range_linear != ""){
+            skill_effect.push(<li>Range linear: {skill.range_linear}</li>);
+        }
+        if(skill.range_minimum != ""){
+            skill_effect.push(<li>Range minimum: {skill.range_minimum}</li>);
+        }
+        if(skill.range_on_target != ""){
+            skill_effect.push(<li>Range target: {skill.range_on_target}</li>);
+        }
+        if(skill.damage_buff_flat != ""){
+            skill_effect.push(<li>Dmg buff: {skill.damage_buff_flat}</li>);
+        }
+        if(skill.damage_buff_percent != ""){
+            skill_effect.push(<li>% Dmg buff: {skill.damage_buff_percent}</li>);
+        }
+        if(skill.damage_instant_buff != ""){
+            skill_effect.push(<li>Dmg instant buff: {skill.damage_instant_buff}</li>);
+        }
+        if(skill.damage_reduction_flat != ""){
+            skill_effect.push(<li>Dmg reduct°: {skill.damage_reduction_flat}</li>);
+        }
+        if(skill.damage_reduction_percent != ""){
+            skill_effect.push(<li>% Dmg reduct°: {skill.damage_reduction_percent}</li>);
+        }
+        if(skill.damage_return != ""){
+            skill_effect.push(<li>Dmg return: {skill.damage_return}</li>);
+        }
+        if(skill.damage_return_percent != ""){
+            skill_effect.push(<li>% Dmg return: {skill.damage_return_percent}</li>);
+        }
+        if(skill.damage_time != ""){
+            skill_effect.push(<li>Dmg time: {skill.damage_time}</li>);
+        }
+        if(skill.damage_time_buff_flat != ""){
+            skill_effect.push(<li>Dmg time buff: {skill.damage_time_buff_flat}</li>);
+        }
+        if(skill.damage_time_buff_percent != ""){
+            skill_effect.push(<li>% Dmg time buff: {skill.damage_time_buff_percent}</li>);
+        }
+        if(skill.duration != ""){
+            skill_effect.push(<li>Duration: {skill.duration}</li>);
+        }
+        if(skill.energy_heal != ""){
+            skill_effect.push(<li>Energy heal: {skill.energy_heal}</li>);
+        }
+        if(skill.energy_percent_heal != ""){
+            skill_effect.push(<li>% Energy heal: {skill.energy_percent_heal}</li>);
+        }
+        if(skill.energy_percent_time != ""){
+            skill_effect.push(<li>% Energy time: {skill.energy_percent_time}</li>);
+        }
+        if(skill.heal_instant != ""){
+            skill_effect.push(<li>Heal: {skill.heal_instant}</li>);
+        }
+        if(skill.heal_time != ""){
+            skill_effect.push(<li>Heal time: {skill.heal_time}</li>);
+        }
+        if(skill.movement_buff != ""){
+            skill_effect.push(<li>Mvt buff: {skill.movement_buff}</li>);
+        }
+        if(skill.movement_instant != ""){
+            skill_effect.push(<li>Movement: {skill.movement_instant}</li>);
+        }
+        if(skill.aoe_back != "" || skill.aoe_diagonal != "" || skill.aoe_front  != "" || skill.aoe_left  != "" || skill.aoe_linear  != "" || skill.aoe_right  != "")
+        {
+            skill_effect.push(<li>This skill is AOE.</li>);
+        }
+
 
         info_skill =
             <div className="infobulle-skills">
@@ -52,9 +143,7 @@ const Skills = ({ character , viewer,showSkillInfos,equipSkill,unequipSkill }: P
                 <h3>{viewer.info_skill.name}</h3>
                 <h4>Description: {viewer.info_skill.description}</h4>
                 <ul>
-                <li>Action cost: {viewer.info_skill.action_cost}</li>
-                <li>Energy cost: {viewer.info_skill.energy_cost}</li>
-                <li>Damage instant: {viewer.info_skill.damage_instant}</li>
+                    {skill_effect}
                 </ul>
             </div>;
     }

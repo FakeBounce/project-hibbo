@@ -2748,9 +2748,9 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
             type: "helmet",
             classe: "All",
             benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
+                damage: 10,
+                health: 10,
+                energy: 10,
             },
         }});
 
@@ -2761,9 +2761,9 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
             type: "armor",
             classe: "All",
             benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
+                damage: 10,
+                health: 10,
+                energy: 10,
             },
         }});
 
@@ -2774,9 +2774,9 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
             type: "boots",
             classe: "All",
             benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
+                damage: 10,
+                health: 10,
+                energy: 10,
             },
         }});
 
@@ -2787,9 +2787,9 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
             type: "weapon",
             classe: "All",
             benefits: {
-                damage: 100,
-                health: 100,
-                energy: 100,
+                damage: 10,
+                health: 10,
+                energy: 10,
             },
         }});
 
@@ -2818,7 +2818,7 @@ export const CreateCharacter = (viewer, classe, pseudo) =>  ({ firebase }) => {
             from_editor: false,
             id: "Dungeon3",
             lock: true,
-            worldmap: "24f49f73-b3f0-4bed-b938-031b70f54a24",
+            worldmap: "a213364c-deba-4ac2-ab99-d0f32f974844",
             next: false,
         },
     });
