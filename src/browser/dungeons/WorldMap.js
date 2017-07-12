@@ -8,6 +8,7 @@ import { Block, Flex, Text, View,Image } from '../app/components';
 import { firebase } from '../../common/lib/redux-firebase';
 import { connect } from 'react-redux';
 import { cancelDungeon, EndTurn, MonsterTurn, CanUseSkill, movingCharacter,changeGrid  } from '../../common/dungeons/actions';
+import { keyHandler, KEYPRESS} from 'react-key-handler';
 
 type Props = {
     worldmap: Object,
@@ -16,7 +17,6 @@ type Props = {
 };
 
 let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,MonsterTurn, CanUseSkill, movingCharacter,changeGrid, move, character }) => {
-
     var error_msg = '';
     var monster_image = '';
     var monster_health = 100;
@@ -49,6 +49,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     }
 
   onkeydown = (event: KeyboardEvent) => {
+      console.log("passe ici");
     var skills_list = dungeon.user.character.equipped_spells;
     var gif = '';
     let classes= "monster";
