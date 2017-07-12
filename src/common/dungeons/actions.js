@@ -1291,6 +1291,7 @@ export const tryItem = (dungeon,row,col,number) => ({firebase}) => {
         let item = pj.items[number-1];
         item.cast_time = 0;
         item.is_item = true;
+        pj.current_skill = false;
         let result = doSkill(pj,map,dungeon,item,cast_ready,row,col,firebase);
         pj = result.pj;
         item = result.item;
@@ -1891,13 +1892,18 @@ function doSkill(pj,map,dungeon,skill,cast_ready,row,col,firebase)
         {
             pj.health = pj.health + (skill.energy_cost*pj.heal_on_energy_percent/100);
         }
+        console.log('pj.equipped_spells',pj.equipped_spells);
         skill = skillCd(skill);
         pj.can_use_skill = false;
         pj.is_attacking = false;
         pj.attacking_row = null;
         pj.attacking_col = null;
         pj.direction = positions.direction;
-        pj.equipped_spells[pj.current_skill] = skill;
+        if(!skill.is_item)
+        {
+            pj.equipped_spells[pj.current_skill] = skill;
+        }
+        console.log('pj.equipped_spells',pj.equipped_spells);
         pj.direction = "down";
         pj.try_skill = true;
         dungeon.user.character = pj;
