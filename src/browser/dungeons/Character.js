@@ -56,6 +56,10 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
 
     if(character.is_attacking && character.type == "pj")
     {
+        if(typeof character.direction === "undefined" || character.direction == "")
+        {
+            character.direction = "down";
+        }
         gif = 'pj-'+character.direction;
         classes= "monster a"+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/a"+character.direction+".gif";
@@ -83,6 +87,10 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     }
     if(character.is_moving && character.type == "pnj")
     {
+        if(typeof character.direction === "undefined" || character.direction == "")
+        {
+            character.direction = "down";
+        }
         classes= "monster pj-"+character.direction;
         setTimeout(function(){
             MonsterMove(dungeon);
@@ -90,6 +98,10 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     }
     if(move && character.type == "pj")
     {
+        if(typeof move === "undefined" || move == "")
+        {
+            move = "down";
+        }
         gif = 'pj-'+move;
         classes= "monster "+gif;
         character.image = "/assets/images/classes/"+character.name+"/anime/"+move+".gif";
@@ -100,6 +112,11 @@ const Character = ({ character,dungeon,row,col,move,is_targeted,endSkill,unsetRa
     }
     if(character.try_skill && character.type == "pj")
     {
+
+        if(typeof character.direction === "undefined" || character.direction == "")
+        {
+            character.direction = "down";
+        }
         if(character.is_moving_instant)
         {
             gif = 'mv'+character.is_moving_instant+'-pj-'+character.direction;
