@@ -28,15 +28,15 @@ const Stats = ({ character }: Props) => {
                 <div>{character.energy}</div>
             </div>
             <div className="stat">
-                <div>PA: </div>
+                <div>AP: </div>
                 <div>{character.action}</div>
             </div>
             <div className="stat">
-                <div>PA per level: </div>
+                <div>AP per level: </div>
                 <div>{character.action_lvl}</div>
             </div>
             <div className="stat">
-                <div>PM: </div>
+                <div>Movement: </div>
                 <div>{character.movement}</div>
             </div>
             <div className="stat">
