@@ -69,20 +69,24 @@ let EditorMap = ({ MoveLeftEditMap,MoveRightEditMap,MoveDownEditMap,MoveUpEditMa
             {
                 dungeon = true;
             }
-            items.map(listm => {
-                if (activeObject) {
-                    if (listm.id == activeObject.id) {
-                        listobjects.push(<EditObject key={listm.id} item={listm} active="active"/>);
+            if(items)
+            {
+                items.map(listm => {
+                    if (activeObject) {
+                        if (listm.id == activeObject.id) {
+                            listobjects.push(<EditObject key={listm.id} item={listm} active="active"/>);
+                        }
+                        else {
+                            listobjects.push(<EditObject key={listm.id} item={listm}/>);
+                        }
+                    } else {
+                        listobjects.push(<EditObject key={listm.id} item={listm} />);
                     }
-                    else {
-                        listobjects.push(<EditObject key={listm.id} item={listm}/>);
-                    }
-                } else {
-                    listobjects.push(<EditObject key={listm.id} item={listm} />);
-                }
 
 
-            });
+                });
+            }
+
 
         }
         else

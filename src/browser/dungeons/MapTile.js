@@ -11,11 +11,12 @@ import { moveCharacter,movingCharacter,trySkill,endSkill,showAoeSkill } from '..
 type Props = {
     dungeon: Object,
     maptile: Object,
+    is_hidden: Boolean,
     row: Object,
     col: Object
 };
 
-const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill,showAoeSkill }: Props) => {
+const Maptile = ({ is_hidden,maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeonsOP,trySkill,endSkill,showAoeSkill }: Props) => {
     const styles = {
         title: {
             cursor: 'pointer',
@@ -26,6 +27,10 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
     };
     var character = false;
     var classImage = "case ";
+    if(is_hidden)
+    {
+        classImage = classImage+" hidden_maptile";
+    }
     let error_message = '';
     var move = false;
     let maptileAction;
@@ -140,6 +145,7 @@ const Maptile = ({ maptile,row,col,dungeon, moveCharacter,movingCharacter,dungeo
 Maptile.propTypes = {
     maptile: React.PropTypes.object.isRequired,
     dungeon: React.PropTypes.object.isRequired,
+    dungeon: React.PropTypes.bool.isRequired,
     verifloaded: React.PropTypes.number,
     moveCharacter: React.PropTypes.func.isRequired,
     movingCharacter: React.PropTypes.func.isRequired,

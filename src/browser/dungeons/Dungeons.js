@@ -6,6 +6,7 @@ import React from 'react';
 import Dungeon from './Dungeon';
 import WorldMap from './WorldMap';
 import Inventory from './Inventory';
+import Skills from './Skills';
 import SignOut from '../auth/SignOut';
 import Stats from './Stats';
 import {KEYPRESS} from '../../../node_modules/react-key-handler/dist/index';
@@ -57,25 +58,28 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
             let cpt = 0;
             let styles;
 
-            skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
-                let classSkill = 'skill';
-                cpt++;
-                let skill_image = "assets/images/skills/"+skill.image;
-                return (
-                    <div className="oneSkill">
-                        <span>{cpt}</span>
-                        <Image style={styles} key={skill.id} className={`skills ${classSkill}`} src={skill_image}></Image>
-                        <div className="info">
-                            <h3>{skill.name}</h3>
-                            <h4>Description: {skill.description}</h4>
-                            <ul>
-                                <li>Action cost: {skill.action_cost}</li>
-                                <li>Energy cost: {skill.energy_cost}</li>
-                                <li>Damage instant: {skill.damage_instant}</li>
-                            </ul>
-                        </div>
-                    </div>);
-            });
+            if(dviewer.characters[dviewer.active].equipped_spells)
+            {
+                skills_list = dviewer.characters[dviewer.active].equipped_spells.map(skill => {
+                    let classSkill = 'skill';
+                    cpt++;
+                    let skill_image = "assets/images/skills/"+skill.image;
+                    return (
+                        <div className="oneSkill">
+                            <span>{cpt}</span>
+                            <Image style={styles} key={skill.id} className={`skills ${classSkill}`} src={skill_image}></Image>
+                            <div className="info">
+                                <h3>{skill.name}</h3>
+                                <h4>Description: {skill.description}</h4>
+                                <ul>
+                                    <li>Action cost: {skill.action_cost}</li>
+                                    <li>Energy cost: {skill.energy_cost}</li>
+                                    <li>Damage instant: {skill.damage_instant}</li>
+                                </ul>
+                            </div>
+                        </div>);
+                });
+            }
         }
 
         if(dviewer.compaign != null & dviewer.compaign != 'undefined'){
@@ -200,10 +204,10 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                 {
                     if(equipments)
                     {
-                        endDungeon(dungeon,equipments);
+                        endDungeon(dungeon,equipments, dviewer);
                     }
                     else {
-                        endDungeon(dungeon,false);
+                        endDungeon(dungeon,false, dviewer);
                     }
                     dungeon.error_message = 'Dungeon complete';
                 }
@@ -217,21 +221,21 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                 let compteur = 0;
                 if(dungeons) {
                     dungeons_list = dungeons.map(dung => {
-                        if (compteur < 3 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
+                        if (compteur < 4 && dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == false) {
                             let classeD = "compaign_dungeon" + compteur;
                             compteur++;
                             return (<div className={classeD}>
-                                <Dungeon key={dung.id} dungeon={dung}/>
+                                <Dungeon key={dung.id} dungeon={dung} numero={compteur}  />
                             </div>)
                         }
                         return "";
                     });
 
+                    compteur = 0;
                     dungeons_list_editor = dungeons.map(dung => {
+                        compteur++;
                         if (dung.from_editor != null && dung.from_editor != 'undefined' && dung.from_editor == true) {
-                            return (<div className="dungeon_editor">
-                                <Dungeon key={dung.id} dungeon={dung}/>
-                            </div>)
+                            return (<Dungeon key={dung.id} dungeon={dung} numero={compteur} />)
                         }
                         return "";
                     });
@@ -294,9 +298,8 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                 <div onClick={() => SwitchCompaign(dviewer,true)} className="active">Campaign</div> :
                                 <div onClick={() => SwitchCompaign(dviewer,true)} >Campaign</div>}
                             { !switchcompaign ?
-                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Dungeons from
-                                    Editor</div> :
-                                <div onClick={() => SwitchCompaign(dviewer, false)}>Dungeons from Editor</div>
+                                <div onClick={() => SwitchCompaign(dviewer, false)} className="active">Custom maps</div> :
+                                <div onClick={() => SwitchCompaign(dviewer, false)}>Custom maps</div>
                             }
                         </div>
                     }
@@ -329,6 +332,7 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                             <a name="dungeons" id="dungeons">
                                 <div className="fix-h"></div>
                             </a>
+                            <div className="container-map">
                             {!loaded ?
                                 <Loading />
                                 : viewer ?
@@ -336,21 +340,22 @@ let Dungeons = ({ equipments,SwitchCompaign,endDungeon, switchPannel,ChangeTab, 
                                         verifloaded && wdmap
                                         :
                                         dungeons && dungeons_list ?
-                                            <div className="container-map">
-                                                { switchcompaign ?
+                                                switchcompaign ?
                                                     dungeons_list :
-                                                    dungeons_list_editor
-                                                 }
-                                             </div>
-                                            : <Text>There are no dungeons yet.</Text>
-                                    : <Text>Please login</Text>
+                                                    <div className="dungeon_editor">{dungeons_list_editor}</div>
+                                            : <Text></Text>
+                                    : <Text></Text>
                             }
+                            </div>
                         </div>
                         <div className="cmenu cadre-perso">
                             <a name="personnage" id="personnage"></a>
                             <Inventory character={dviewer.characters[dviewer.active]} viewer={dviewer} />
                         </div>
-                        <div className="cmenu cadre-competence"><a name="skill" id="skill"></a>Skills</div>
+                        <div className="cmenu cadre-competence">
+                            <a name="skill" id="skill"></a>
+                            <Skills character={dviewer.characters[dviewer.active]} viewer={dviewer} />
+                        </div>
                         <div className="cmenu cadre-option">
                             <a name="option" id="option"></a>
                             <div className="container-option">

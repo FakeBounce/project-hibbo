@@ -12,12 +12,12 @@ import SignOutEditor from '../auth/SignOutEditor';
 import { Block, View, Text, Image,Loading,Link } from '../app/components';
 import { connect } from 'react-redux';
 import { firebase } from '../../common/lib/redux-firebase';
-import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems,CreateNewWorldMap } from '../../common/editor/actions';
+import { LoadEditorMaps,LoadMapTiles,picktile,pickmonster,loadWorldMap,LoadViewerEditor,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems,CreateNewWorldMap } from '../../common/editor/actions';
 import { ChangeTab } from '../../common/dungeons/actions';
 
 
 
-let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewer,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
+let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loaded, loadWorldMap, LoadViewerEditor,activeMap,LoadMapActive,maptiles,monsters,CreateNewWorldMap }) => {
 
     const styles = {
         bg: {
@@ -33,26 +33,31 @@ let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loade
     let activeTile = false;
     let activeMonster = false;
     let isPlayerMap = false;
+    let isviewer = false;
 
-    if (monsters) {
-        monsters.map(listm => {
+    if(!dviewer)
+    {
+        LoadViewerEditor(viewer);
+    }
+    else {
+        isviewer = true;
+        if (monsters) {
+            monsters.map(listm => {
 
-            if (activeMonster) {
-                if (listm.id == activeMonster.id) {
-                    listmonsters.push(<EditMonster key={listm.id} monster={listm} active="active"/>);
-                }
-                else {
+                if (activeMonster) {
+                    if (listm.id == activeMonster.id) {
+                        listmonsters.push(<EditMonster key={listm.id} monster={listm} active="active"/>);
+                    }
+                    else {
+                        listmonsters.push(<EditMonster key={listm.id} monster={listm}/>);
+                    }
+                } else {
                     listmonsters.push(<EditMonster key={listm.id} monster={listm}/>);
                 }
-            } else {
-                listmonsters.push(<EditMonster key={listm.id} monster={listm} />);
-            }
-        });
-    }
-    else
-    {
-        if(maptiles)
-        {
+            });
+        }
+
+        if (maptiles) {
             maptiles.map(list => {
                 if (activeTile) {
                     if (list.id == activeTile.id) {
@@ -66,52 +71,43 @@ let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loade
                 }
             });
         }
-    }
 
-    if(!dviewer)
-    {
-        LoadViewer(viewer);
-    }else
-    {
-        if(activeMap){
+        if (activeMap) {
 
             var wdmap = [];
             var mapactive = false;
             let mapViewer;
             activeMap.map(activeMap => mapViewer = activeMap);
 
-            if(mapViewer)
-            {
+            if (mapViewer) {
                 mapactive = true;
-                if(viewer)
-                {
-                    wdmap.push(<EditorMap key={mapViewer.id} worldmap={mapViewer} viewer={viewer} maptiles={maptiles} monsters={monsters}/>);
+                if (viewer) {
+                    wdmap.push(<EditorMap key={mapViewer.id} worldmap={mapViewer} viewer={viewer} maptiles={maptiles}
+                                          monsters={monsters}/>);
                 }
             }
         }
-        else
-        {
-            if(viewer && !viewer.active_map)
-            {
+        else {
+            if (viewer && !viewer.active_map) {
                 LoadMapActive(viewer);
             }
-            mapactive =false;
+            mapactive = false;
         }
 
-        if(worldmaps)
-        {
+        if (worldmaps) {
             worldmaps.map(list => {
-                if(list.user_id == viewer.id)
-                {
-                    listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer} loadWorldMap={loadWorldMap}/>);
+                if (list.user_id == viewer.id) {
+                    listmaps.push(<WorldMap key={list.id} worldmap={list} viewer={viewer}
+                                            loadWorldMap={loadWorldMap}/>);
                 }
             });
         }
 
-    }
-    let taille;
-    if (typeof(window) !== 'undefined') {
-        taille = window.location.origin;
+
+        let taille;
+        if (typeof(window) !== 'undefined') {
+            taille = window.location.origin;
+        }
     }
     return (
         <View className="">
@@ -140,7 +136,10 @@ let Editor = ({ChangeTab, worldmaps, picktile,pickmonster, viewer,dviewer, loade
                                     <div className="choose-level" onClick={() => CreateNewWorldMap(dviewer)}>
                                         <span>+</span>
                                     </div>
-                                    <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Add map</Text>
+                                    {isviewer?
+                                        <Text style={styles.title} onClick={() => CreateNewWorldMap(dviewer)}>Add map</Text>
+                                    :
+                                    <div></div>}
                                 </div>
                                 :
                                 <div></div>
@@ -217,4 +216,4 @@ export default connect(state => ({
     maptiles : state.editor.maptiles,
     monsters : state.editor.monsters,
     items : state.editor.items,
-}), {ChangeTab, LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewer,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems })(Editor);
+}), {ChangeTab, LoadEditorMaps, CreateNewWorldMap,LoadMapTiles,loadWorldMap,picktile,pickmonster,LoadViewerEditor,LoadMapActive,ReloadActiveMap,LoadMonsters,LoadItems })(Editor);

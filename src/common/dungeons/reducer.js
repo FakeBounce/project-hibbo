@@ -330,6 +330,24 @@ const dungeonsReducer = (state = new State(), action) => {
                 .set('verifloaded',vl);
         }
 
+        case actions.SHOW_SKILL_INFO: {
+            let vl = state.verifloaded;
+            vl++;
+            return state.set('verifloaded',vl);
+        }
+
+        case actions.UNEQUIP_SKILL: {
+            let vl = state.verifloaded;
+            vl++;
+            return state.set('verifloaded',vl);
+        }
+
+        case actions.EQUIP_SKILL: {
+            let vl = state.verifloaded;
+            vl++;
+            return state.set('verifloaded',vl);
+        }
+
         default:
             return state;
     }

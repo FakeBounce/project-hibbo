@@ -24,6 +24,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
     var monster_name = '';
     var grid = "off";
     let is_looted = false;
+    let is_dead = false;
     let loots = '';
 
     if(dungeon.grid)
@@ -41,6 +42,10 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                 return(<Image className="loot" src={l.img}/>);
             });
         }
+    }
+    if(dungeon.pj_is_dead)
+    {
+        is_dead = true;
     }
 
   onkeydown = (event: KeyboardEvent) => {
@@ -121,6 +126,7 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
             EndTurn(dungeon);
         }
     };
+    let hidden = true;
     return (
         <View>
             <div className="cadre-droite">
@@ -145,6 +151,12 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                         <h2>Dungeon complete !</h2>
                         <Text>Here is what you looted :</Text>
                         {loots}
+                    </div>
+                  }
+                  {is_dead &&
+                    <div className="infoBulle infoLoot">
+                        <h2>You are dead.</h2>
+                        <h1>GAME OVER</h1>
                     </div>
                   }
               </div>
@@ -181,12 +193,29 @@ let WorldMap = ({ worldmap, dungeon, viewer,dungeonsOP,cancelDungeon,EndTurn,Mon
                       {
                           if(c_col_start <= keyCol && keyCol <= c_col_end)
                           {
+                              hidden = false;
                               return(
-                                  <MapTile key={worldmap.maptiles[keyRow][keyCol].id}
+                                  <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
                                            dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
                                   />
                               );
                           }
+                          else {
+                              hidden = true;
+                              return(
+                                  <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
+                                           dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                                  />
+                              );
+                          }
+                      }
+                      else {
+                          hidden = true;
+                          return(
+                              <MapTile is_hidden={hidden} key={worldmap.maptiles[keyRow][keyCol].id}
+                                       dungeon={dungeon} row={keyRow} col={keyCol} maptile={worldmap.maptiles[keyRow][keyCol]}
+                              />
+                          );
                       }
                   });
                 return (

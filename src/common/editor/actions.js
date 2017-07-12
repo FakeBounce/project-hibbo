@@ -4,8 +4,8 @@ export const LOAD_EDITOR_MAPS = 'LOAD_EDITOR_MAPS';
 export const LOAD_MAPTILES = 'LOAD_MAPTILES';
 export const LOAD_EDIT_MAP = 'LOAD_EDIT_MAP';
 export const LOAD_EDIT_MAP_SUCCESS = 'LOAD_EDIT_MAP_SUCCESS';
-export const LOAD_VIEWER = 'LOAD_VIEWER';
-export const LOAD_VIEWER_SUCCESS = 'LOAD_VIEWER_SUCCESS';
+export const LOAD_VIEWER_EDITOR = 'LOAD_VIEWER_EDITOR';
+export const LOAD_VIEWER_EDITOR_SUCCESS = 'LOAD_VIEWER_EDITOR_SUCCESS';
 export const LOAD_ACTIVE_MAP = 'LOAD_ACTIVE_MAP';
 export const CANCEL_WORLDMAP = 'CANCEL_WORLDMAP';
 export const PICK_TILE = 'PICK_TILE';
@@ -169,7 +169,7 @@ export const LoadMapActive = (viewer) => ({firebase}) => {
 
 };
 
-export const LoadViewer = (viewer) => ({ firebase }) => {
+export const LoadViewerEditor = (viewer) => ({ firebase }) => {
     if(viewer)
     {
         const getPromise = async () => {
@@ -184,13 +184,13 @@ export const LoadViewer = (viewer) => ({ firebase }) => {
             }
         };
         return {
-            type: 'LOAD_VIEWER',
+            type: 'LOAD_VIEWER_EDITOR',
             payload: getPromise(),
         };
     }else
     {
         return {
-            type: 'LOAD_VIEWER',
+            type: 'LOAD_VIEWER_EDITOR',
             payload: ''
         }
     }
@@ -608,7 +608,7 @@ export const pickmapobject = (item,viewer,worldmap,row,col) => ({ firebase, getU
     console.log('item', item);
     if(item) {
 
-        if(item.name == "remove")
+        if(item.name == "Remove")
         {
             worldmap.camera.maptiles[row][col].item = null;
             worldmap.worldmap.maptiles[row][col].item = null;
@@ -704,60 +704,70 @@ export const CreateNewWorldMap = (viewer) =>  ({firebase,getUid }) => {
     let character="";
 
     let activeUser = false;
-    if(viewer){
-        character = viewer.characters[viewer.active];
 
-    for(var i = 0 ; i <16 ;i ++)
-    {
-        maptiles[i]=[];
-
-        for(var j = 0 ; j <16 ;j ++)
+    console.log(viewer);
+    if(viewer) {
+        if(viewer.characters)
         {
-            maptiles[i][j]=[];
-
-            if(j == 0 && i == 0)
-            {
-                maptiles[i][j] = {
-                    completed: false,
-                    id:  getUid(),
-                    image: "/assets/images/maptiles/grass.png",
-                    title: "forest",
-                    type: "walkable",
-                    character: {
-                        image: "/assets/images/classes/gface.png",
-                        damage: 100,
-                        health: 15000,
-                        name: "Warrior",
-                        type: "pj",
-                    }
-                };
-            }
-            else
-            {
-                maptiles[i][j] =
-                {
-                    completed: false,
-                    id: getUid(),
-                    image: "/assets/images/maptiles/grass.png",
-                    title: "forest",
-                    type: "walkable",
-                };
-            }
+            character = viewer.characters[viewer.active];
         }
-    }
 
-    map = {id: UidMap,row_player: character.row,col_player: character.col, name: "YourMap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15,user_id:viewer.id};
+        for (var i = 0; i < 16; i++) {
+            maptiles[i] = [];
+
+            for (var j = 0; j < 16; j++) {
+                maptiles[i][j] = [];
+
+                if (j == 0 && i == 0) {
+                    maptiles[i][j] = {
+                        completed: false,
+                        id: getUid(),
+                        image: "/assets/images/maptiles/grass.png",
+                        title: "forest",
+                        type: "walkable",
+                        character: {
+                            image: "/assets/images/classes/gface.png",
+                            damage: 100,
+                            health: 15000,
+                            name: "Warrior",
+                            type: "pj",
+                        }
+                    };
+                }
+                else {
+                    maptiles[i][j] =
+                        {
+                            completed: false,
+                            id: getUid(),
+                            image: "/assets/images/maptiles/grass.png",
+                            title: "forest",
+                            type: "walkable",
+                        };
+                }
+            }
+
+        }
+        map = {id: UidMap,row_player: character.row,col_player: character.col, name: "YourMap", maptiles : maptiles, active_dungeon:"", size_map:15, size_map_min:0,character : character, row_start:0, row_end:15,col_start:0,col_end:15,user_id:viewer.id};
 
         firebase.update({
             [`editormaps/${UidMap}`]: map,
             [`maps/${UidMap}`]: map,
         });
-    }
 
-    return {
-        type: ADD_NEW_MAP,
-        payload: map,
-    };
+
+
+        return {
+            type: ADD_NEW_MAP,
+            payload: map,
+        };
+    }
+    else
+    {
+        return {
+            type: ADD_NEW_MAP,
+            payload: "FAILED",
+        };
+    }
 };
 
 export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
@@ -768,9 +778,15 @@ export const RemoveWorldmap = (worldmap) =>  ({firebase }) => {
             [`editormaps/${worldmap.worldmap_id}`]: null,
             [`activeMap/${worldmap.user.id}`]: null,
             [`maps/${worldmap.worldmap_id}`]: null,
-            [`dungeons/${worldmap.active_dungeon}`]: null,
 
         });
+
+        if(worldmap.active_dungeon != "")
+        {
+            firebase.update({
+                 [`dungeons/${worldmap.active_dungeon}`]: null
+            });
+        }
     }
 
     return {
